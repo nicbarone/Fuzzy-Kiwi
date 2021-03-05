@@ -1,3 +1,4 @@
+@ -1,32 +1,8 @@
 # Prerequisites
 *.d
 
@@ -30,3 +31,12 @@
 *.exe
 *.out
 *.app
+
+*.VC.opendb
+*.VC.db
+*.sdf
+.vs
+Release
+Debug
+x86
+x64
