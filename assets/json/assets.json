@@ -20,6 +20,13 @@
 			"magfilter":"linear",
 			"wrapS":    "clamp",
 			"wrapT":    "clamp"
+		},
+		"cat-placeholder": {
+			"file":     "textures/CatPlaceholder.png",
+			"minfilter":"nearest",
+			"magfilter":"linear",
+			"wrapS":    "clamp",
+			"wrapT":    "clamp"
 		}
 	}
 }

@@ -30,7 +30,7 @@
 #ifndef __HELLO_APP_H__
 #define __HELLO_APP_H__
 #include <cugl/cugl.h>
-
+#include "Player.h"
 /**
  * Class for a simple Hello World style application
  *
@@ -41,13 +41,15 @@ class HelloApp : public cugl::Application {
 protected:
     /** The loaders to (synchronously) load in assets */
     std::shared_ptr<cugl::AssetManager> _assets;
-
     /** A scene graph, used to display our 2D scenes */
     std::shared_ptr<cugl::Scene2> _scene;
     /** A 3152 style SpriteBatch to render the scene */
     std::shared_ptr<cugl::SpriteBatch>  _batch;
     /** A reference to the logo, so that we can move it around */
     std::shared_ptr<cugl::scene2::SceneNode>  _logo;
+    /** A reference to the player*/
+    std::shared_ptr<Player> _player;
+
 
     /** A countdown used to move the logo */
     int  _countdown;
