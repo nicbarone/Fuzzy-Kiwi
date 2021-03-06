@@ -1,6 +1,7 @@
 #ifndef __INPUT_MANAGER_H__
 #define __INPUT_MANAGER_H__
 #include <cugl/cugl.h>
+#include "Player.h"
 /** The portion of the screen used for the left zone */
 #define LEFT_ZONE       0.35f
 /** The portion of the screen used for the right zone */
@@ -14,7 +15,7 @@ private:
     /** If pressed possess button then true, otherwise false */
     bool _possessButton;
     bool _keyPossessButton;
-    //std::shared_ptr<Player> _player;
+    std::shared_ptr<Player> _player;
     //std::vector<std::shared_ptr<Enemy>> _enemies;
     //std::vector<std::shared_ptr<Interactables>> _interactable_objects;
     //std::vector<std::shared_ptr<Blocker>> _blocking_objects;

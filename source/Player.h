@@ -4,7 +4,7 @@
 #include <cugl/cugl.h>
 #include "Entity.h"
 using namespace cugl;
-class Player : Entity {
+class Player : public Entity {
 
 private:
 	/** number of possessions remaining*/

@@ -11,6 +11,7 @@ private:
 	Vec2 _size;
 	float _angle = 0;
 	Color4 _color;
+	int _level;
 
 
 public:
@@ -41,9 +42,22 @@ public:
 		return _angle;
 	}
 
+	/** sets a Vec2 representing the width and height of the entity*/
+	void set_size(Vec2 size) {
+		_size = size;
+	}
+
 	/** returns a Vec2 representing the width and height of the entity*/
 	Vec2 get_size() {
 		return _size;
+	}
+
+	void set_level(int level) {
+		_level = level;
+	}
+
+	Vec2 get_level() {
+		return _level;
 	}
 
 	void set_texture(const std::shared_ptr<Texture> texture) {

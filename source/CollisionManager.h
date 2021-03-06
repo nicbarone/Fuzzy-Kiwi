@@ -2,6 +2,7 @@
 #define __COLLISION_MANAGER_H__
 #include <cugl/cugl.h>
 #include "Entity.h"
+#include "Player.h"
 
 /**
  * Namespace of functions implementing simple game physics.
@@ -11,14 +12,14 @@
  */
 namespace collisions {
 	/**
-	 *  Handles collisions the player and wall, causing the cat to stop further movement.
+	 *  Handles collisions the player and wall, causing the player to stop further movement.
 	 *
 	 *  This method updates the velocities of the cat.
 	 *
 	 *  @param player    Player in candidate collision
 	 *  @param entity    Entity in candidate collision
 	 */
-	//void checkForCollision(const std::shared_ptr<Player>& player, const std::shared_ptr<Entity>& entity);
+	void checkForCollision(const std::shared_ptr<Player>& player, const std::shared_ptr<Entity>& entity);
 
 	/**
 	 * Nudge the player to ensure it does not do out of view.
@@ -28,7 +29,7 @@ namespace collisions {
 	 * @param player      They player which may have collided
 	 * @param bounds    The rectangular bounds of the playing field
 	 */
-	//void checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds);
+	void checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds);
 }
 
 #endif /* __COLLISION_MANAGER_H__ */
