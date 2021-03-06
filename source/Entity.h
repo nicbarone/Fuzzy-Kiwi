@@ -21,15 +21,27 @@ public:
 
 	void dispose();
 
-#pragma setters and getters
+	/** sets the position of the entity*/
+	void set_pos(Vec2 pos) {
+		_pos = pos;
+	}
+
+	/** returns a Vec2 representing the position of the entity*/
 	Vec2 get_pos() {
 		return _pos;
 	}
 
+	/** sets the angle of the entity*/
+	void set_angle(float angle) {
+		_angle = angle;
+	}
+
+	/** returns a float representing the angle of the entity*/
 	float get_angle() {
 		return _angle;
 	}
 
+	/** returns a Vec2 representing the width and height of the entity*/
 	Vec2 get_size() {
 		return _size;
 	}
@@ -46,10 +58,12 @@ public:
 		
 	}
 
+	/** sets the color of the entity*/
 	void set_color(Color4 color) {
 		_color = color;
 	}
 
+	/** returns a Color4 representing the color of the entity*/
 	Color4 get_color() {
 		return _color;
 	}

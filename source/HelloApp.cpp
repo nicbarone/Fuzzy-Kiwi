@@ -195,9 +195,17 @@ void HelloApp::buildScene() {
     std::shared_ptr<Texture> up   = _assets->get<Texture>("close-normal");
     std::shared_ptr<Texture> down = _assets->get<Texture>("close-selected");
     
+    // Placeholder cat
+    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
+
+    // Create the player
+    _player = Player::alloc(50,50,0,cat);
+
     Size bsize = up->getSize();
     std::shared_ptr<scene2::Button> button = scene2::Button::alloc(scene2::PolygonNode::allocWithTexture(up),
                                                                    scene2::PolygonNode::allocWithTexture(down));
+
+
     
     // Create a callback function for the button
     button->setName("close");
@@ -225,6 +233,7 @@ void HelloApp::buildScene() {
     // Add the logo and button to the scene graph
     _scene->addChild(_logo);
     _scene->addChild(button);
+    _scene->addChild(_player->get_scene_node());
     
     // We can only activate a button AFTER it is added to a scene
     button->activate();

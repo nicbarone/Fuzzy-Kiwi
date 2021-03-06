@@ -6,6 +6,7 @@ Entity::Entity() :
 	_pos = Vec2::ZERO;
 	_size = Vec2::ZERO;
 	_color = Color4::WHITE;
+
 }
 
 
