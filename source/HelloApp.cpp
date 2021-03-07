@@ -79,6 +79,8 @@ void HelloApp::onStartup() {
     Input::activate<Touchscreen>();
 #else
     Input::activate<Mouse>();
+    Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
+    Input::activate<Keyboard>();
 #endif
     
     // Build the scene from these assets
@@ -150,6 +152,46 @@ void HelloApp::update(float timestep) {
     } else {
         _countdown--;
     }
+    Size  size = getDisplaySize();
+    float scale = GAME_WIDTH / size.width;
+    size *= scale;
+    Rect safe = getSafeBounds();
+    safe.origin *= scale;
+    safe.size *= scale;
+    Size bpsize = possessButton->getSize();
+    // Get the right and bottom offsets.
+    float bOffset = safe.origin.y;
+    float rOffset = (size.width) - (safe.origin.x + safe.size.width);
+    // Check if possess button is clicked
+    if (_possessButton->getClicked()) {
+        _possessButton->getButton()->deactivate();
+        _scene->removeChild(_possessButton->getButton());
+        if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
+            _possessButton->set_texture(unpossessButton);
+            _possessButton->setButtonState(ui::ButtonState::UNPOSSESS);
+        }
+        else {
+            _possessButton->set_texture(possessButton);
+            _possessButton->setButtonState(ui::ButtonState::POSSESS);
+        }
+        _possessButton->getButton()->setName("possess");
+        _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _possessButton->setClicked(true);
+            }
+        });
+        _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
+        _possessButton->set_pos(Vec2(size.width - (bpsize.width + rOffset) / 2, (bpsize.height + bOffset) / 2));
+        _scene->addChild(_possessButton->getButton());
+        _possessButton->getButton()->activate();
+        _possessButton->setClicked(false);
+    }
+
+    // Read input controller input
+    _inputManager.readInput();
 }
 
 /**
@@ -191,32 +233,29 @@ void HelloApp::buildScene() {
     _logo->setPosition(size.width/2,size.height/2);
 
     
-    // Create a button.  A button has an up image and a down image
-    std::shared_ptr<Texture> up   = _assets->get<Texture>("close-normal");
-    std::shared_ptr<Texture> down = _assets->get<Texture>("close-selected");
-    
     // Placeholder cat
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
 
     // Create the player
     _player = Player::alloc(50,50,0,cat);
 
-    Size bsize = up->getSize();
-    std::shared_ptr<scene2::Button> button = scene2::Button::alloc(scene2::PolygonNode::allocWithTexture(up),
-                                                                   scene2::PolygonNode::allocWithTexture(down));
-
-
-    
+    // Create a button.  A button has an up image and a down image
+    possessButton = _assets->get<Texture>("possess-button");
+    unpossessButton = _assets->get<Texture>("unpossess-button");
+    Size pbsize = possessButton->getSize();
+    // set up the ui element of possess button
+    _possessButton = ui::ButtonElement::alloc(0,0,0,0,ui::ButtonState::POSSESS);
+    _possessButton->set_texture(possessButton);
     // Create a callback function for the button
-    button->setName("close");
-    button->addListener([=] (const std::string& name, bool down) {
+    _possessButton->getButton()->setName("possess");
+    _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
-            CULog("Goodbye!");
-            this->quit();
+            CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _possessButton->setClicked(true);
         }
     });
-    
     // Find the safe area, adapting to the iPhone X
     Rect safe = getSafeBounds();
     safe.origin *= scale;
@@ -226,19 +265,22 @@ void HelloApp::buildScene() {
     float bOffset = safe.origin.y;
     float rOffset = (size.width)-(safe.origin.x+safe.size.width);
 
-    // Position the button in the bottom right corner
-    button->setAnchor(Vec2::ANCHOR_CENTER);
-    button->setPosition(size.width-(bsize.width+rOffset)/2,(bsize.height+bOffset)/2);
-    
+    _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
+    _possessButton->set_pos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
+
     // Add the logo and button to the scene graph
     _scene->addChild(_logo);
-    _scene->addChild(button);
+    _scene->addChild(_possessButton->getButton());
     _scene->addChild(_player->get_scene_node());
     
     // We can only activate a button AFTER it is added to a scene
-    button->activate();
+    _possessButton->getButton()->activate();
 
     // Start the logo countdown and C-style random number generator
     _countdown = TIME_STEP;
     std::srand((int)std::time(0));
+
+    // Initialize input manager
+    _inputManager = InputManager();
+    _inputManager.init(_player, _scene->getBounds());
 }

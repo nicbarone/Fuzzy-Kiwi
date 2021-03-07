@@ -1,32 +1,46 @@
 {
 	"textures": {
 		"logo": {
-			"file":     "textures/logo.png",
-			"minfilter":"nearest",
-			"magfilter":"linear",
-			"wrapS":    "clamp",
-			"wrapT":    "clamp"
+			"file": "textures/logo.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		},
 		"close-normal": {
-			"file":     "textures/CloseNormal.png",
-			"minfilter":"nearest",
-			"magfilter":"linear",
-			"wrapS":    "clamp",
-			"wrapT":    "clamp"
+			"file": "textures/CloseNormal.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		},
 		"close-selected": {
-			"file":     "textures/CloseSelected.png",
-			"minfilter":"nearest",
-			"magfilter":"linear",
-			"wrapS":    "clamp",
-			"wrapT":    "clamp"
+			"file": "textures/CloseSelected.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		},
 		"cat-placeholder": {
-			"file":     "textures/CatPlaceholder.png",
-			"minfilter":"nearest",
-			"magfilter":"linear",
-			"wrapS":    "clamp",
-			"wrapT":    "clamp"
+			"file": "textures/CatPlaceholder.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"possess-button": {
+			"file": "textures/Possess.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"unpossess-button": {
+			"file": "textures/Unpossess.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
 	}
 }

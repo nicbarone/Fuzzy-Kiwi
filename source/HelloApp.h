@@ -31,6 +31,8 @@
 #define __HELLO_APP_H__
 #include <cugl/cugl.h>
 #include "Player.h"
+#include "InputManager.h"
+#include "CollisionManager.h"
 /**
  * Class for a simple Hello World style application
  *
@@ -49,8 +51,13 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode>  _logo;
     /** A reference to the player*/
     std::shared_ptr<Player> _player;
-
-
+    /** A reference to the input manager*/
+    InputManager _inputManager;
+    /** The button to possess and release*/
+    std::shared_ptr<ui::ButtonElement> _possessButton;
+    // Create a button.  A button has an up image and a down image
+    std::shared_ptr<Texture> possessButton;
+    std::shared_ptr<Texture> unpossessButton;
     /** A countdown used to move the logo */
     int  _countdown;
     

@@ -284,8 +284,8 @@ void InputManager::readInput() {
     // Figure out, based on which player we are, which keys
     // control our actions (depends on player).
     KeyCode left, right;
-    left = KeyCode::ARROW_LEFT;
-    right = KeyCode::ARROW_RIGHT;
+    left = KeyCode::A;
+    right = KeyCode::D;
 
     // Convert keyboard state into game commands
     _forward = 0;
@@ -293,9 +293,11 @@ void InputManager::readInput() {
     // Movement left/right
     Keyboard* keys = Input::get<Keyboard>();
     if (keys->keyDown(right) && !keys->keyDown(left)) {
+        CULog("Going right");
         _forward = 1;
     }
     else if (keys->keyDown(left) && !keys->keyDown(right)) {
+        CULog("Goring left");
         _forward = -1;
     }
 #endif
