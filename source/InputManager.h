@@ -2,6 +2,7 @@
 #define __INPUT_MANAGER_H__
 #include <cugl/cugl.h>
 #include "Player.h"
+#include "UIElement.h"
 /** The portion of the screen used for the left zone */
 #define LEFT_ZONE       0.35f
 /** The portion of the screen used for the right zone */
@@ -13,9 +14,9 @@ private:
     int  _forward;
     int _keyForward;
     /** If pressed possess button then true, otherwise false */
-    bool _possessButton;
-    bool _keyPossessButton;
     std::shared_ptr<Player> _player;
+    std::shared_ptr<ui::ButtonElement> _possessButton;
+    std::shared_ptr<ui::ButtonElement> _unPossessButton;
     //std::vector<std::shared_ptr<Enemy>> _enemies;
     //std::vector<std::shared_ptr<Interactables>> _interactable_objects;
     //std::vector<std::shared_ptr<Blocker>> _blocking_objects;
@@ -79,7 +80,7 @@ public:
     /**
      * Disposses this input manager, releasing all resources.
      */
-    ~InputManager() {}
+    ~InputManager();
 
     /**
      * Initializes a new input controller for the specified player.
@@ -94,7 +95,7 @@ public:
      *
      * @return true if the player was initialized correctly
      */
-    //bool init(std::shared_ptr<Player> player, cugl::Rect bounds);
+    bool init(std::shared_ptr<Player> player, cugl::Rect bounds);
 
     /**
      * Reads the input for this player and converts the result into game logic.

@@ -187,16 +187,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\source\CollisionManager.h" />
     <ClInclude Include="..\..\source\Entity.h" />
     <ClInclude Include="..\..\source\HelloApp.h" />
+    <ClInclude Include="..\..\source\InputManager.h" />
     <ClInclude Include="..\..\source\Player.h" />
+    <ClInclude Include="..\..\source\UIElement.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\CollisionManager.cpp" />
     <ClCompile Include="..\..\source\Entity.cpp" />
     <ClCompile Include="..\..\source\HelloApp.cpp" />
+    <ClCompile Include="..\..\source\InputManager.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\Player.cpp" />
+    <ClCompile Include="..\..\source\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HelloWorld.rc" />

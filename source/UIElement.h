@@ -2,38 +2,41 @@
 #define __UI_ELEMENT_H__
 #include <cugl/cugl.h>
 #include "Entity.h"
-#include "UINode.h"
 
+/** How far we can click outside of the button but still be recognized as clicking on it */
+#define BUTTON_TOUCH_ERROR       10.0f
 namespace ui {
 #pragma button
+	/** Enumeration identifying a button for its current state */
+	enum class ButtonState {
+		/** The button is now a possess button */
+		POSSESS,
+		/** The button is now a free button */
+		UNPOSSESS,
+		/** The button is now a available for clicks */
+		AVAILABLE,
+		/** The button is now a unavailable for clicks */
+		UNAVAILABLE
+	};
 	class ButtonElement : public Entity {
 	private:
-		bool _clicked;
-		bool _available;
-		std::shared_ptr<ui_node::ButtonNode> _buttonNode;
+		ButtonState _buttonState;
+		std::shared_ptr<cugl::scene2::Button> _button;
 	public:
+		
 		ButtonElement();
 		~ButtonElement() { dispose(); }
 		void dispose();
-		void init(float x, float y, float width, float height);
+		void init(float x, float y, float width, float height, ButtonState buttonState);
 		void set_texture(const std::shared_ptr<Texture> texture);
-		bool isAvailable() {
-			return _available;
+		ButtonState getButtonState() {
+			return _buttonState;
 		}
-		void setAvailable(bool available) {
-			_available = available;
+		void setButtonState(ButtonState buttonState) {
+			_buttonState = buttonState;
 		}
-		bool getClicked() {
-			return _clicked;
-		}
-		std::shared_ptr<ui_node::ButtonNode> getButtonNode() {
-			return _buttonNode;
-		}
-		void clickButton() {
-			_clicked = true;
-		}
-		void unClickButton() {
-			_clicked = false;
+		std::shared_ptr<cugl::scene2::Button> getButton() {
+			return _button;
 		}
 	};
 

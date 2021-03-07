@@ -56,7 +56,7 @@ public:
 		_level = level;
 	}
 
-	Vec2 get_level() {
+	int get_level() {
 		return _level;
 	}
 

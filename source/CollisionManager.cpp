@@ -23,7 +23,7 @@ void collisions::checkForCollision(const std::shared_ptr<Player>& player, const 
         player->set_pos(player->get_pos() + temp);
 
         // Stop the movement of player
-        player->setVelocity(Vec2::ZERO);
+        //player->setVelocity(Vec2::ZERO);
         return; // Collision checked and complete
     }
 }
@@ -38,33 +38,33 @@ void collisions::checkForCollision(const std::shared_ptr<Player>& player, const 
  */
 void collisions::checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds)
 {
-    Vec2 vel = player->getVelocity();
+    //Vec2 vel = player->getVelocity();
     Vec2 pos = player->get_pos();
 
     //Ensure player doesn't go out of view. Stop by walls
     if (pos.x <= bounds.origin.x) {
-        vel.x = 0;
+        //vel.x = 0;
         pos.x = bounds.origin.x;
-        player->setVelocity(vel);
+        //player->setVelocity(vel);
         player->set_pos(pos);
     }
     else if (pos.x >= bounds.size.width + bounds.origin.x) {
-        vel.x = 0;
+        //vel.x = 0;
         pos.x = bounds.size.width + bounds.origin.x - 1.0f;
-        player->setVelocity(vel);
+        //player->setVelocity(vel);
         player->set_pos(pos);
     }
 
     if (pos.y <= bounds.origin.y) {
-        vel.y = 0;
+        //vel.y = 0;
         pos.y = bounds.origin.y;
-        player->setVelocity(vel);
+        //player->setVelocity(vel);
         player->set_pos(pos);
     }
     else if (pos.y >= bounds.size.height + bounds.origin.y) {
-        vel.y = 0;
+        //vel.y = 0;
         pos.y = bounds.size.height + bounds.origin.y - 1.0f;
-        player->setVelocity(vel);
+        //player->setVelocity(vel);
         player->set_pos(pos);
     }
 }

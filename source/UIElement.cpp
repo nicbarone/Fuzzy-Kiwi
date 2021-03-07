@@ -4,29 +4,34 @@ using namespace cugl;
 
 ui::ButtonElement::ButtonElement()
 {
-	_clicked = false;
-	_available = false;
-	_buttonNode = nullptr;
 	set_pos(Vec2::ZERO);
+	set_size(Vec2::ZERO);
+	_button = nullptr;
+	_buttonState = ButtonState::UNAVAILABLE;
 }
 
 void ui::ButtonElement::dispose()
 {
-	_clicked = false;
-	_available = false;
-	_buttonNode = nullptr;
+	set_pos(Vec2::ZERO);
+	set_size(Vec2::ZERO);
+	_button = nullptr;
+	_buttonState = ButtonState::UNAVAILABLE;
 }
 
-void ui::ButtonElement::init(float x, float y, float width, float height)
+void ui::ButtonElement::init(float x, float y, float width, float height, ButtonState buttonState)
 {
 	set_pos(Vec2(x, y));
 	set_size(Vec2(width, height));
+	_buttonState = buttonState;
 }
 
 void ui::ButtonElement::set_texture(const std::shared_ptr<Texture> texture)
 {
 	// Initialize button scene graph
-    _buttonNode = scene2::PolygonNode::alloc(Rect(get_pos(),get_size()));
-	//_buttonNode->setColor(Color4f(0.5f, 0.5f, 1.0f, 1.0f));   // Color yet to decide
-	_buttonNode->setTexture(texture);
+	// Only temp node
+	std::shared_ptr<cugl::scene2::PolygonNode> buttonUpNode = cugl::scene2::PolygonNode::alloc((Rect(get_pos(), get_size())));
+	buttonUpNode->setTexture(texture);
+	Color4 downColor = Color4f::CORNFLOWER;
+    _button = cugl::scene2::Button::alloc(buttonUpNode, downColor);
+	
 }

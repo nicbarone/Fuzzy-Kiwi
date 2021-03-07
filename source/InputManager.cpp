@@ -11,8 +11,6 @@ using namespace cugl;
 #define JSTICK_RADIUS    25
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    80
-/** How far we must turn the tablet for the accelerometer to register */
-#define EVENT_ACCEL_THRESH  M_PI/10.0f
 
 /**
  * Creates a new input controller with the default settings
@@ -20,6 +18,16 @@ using namespace cugl;
  * To use this controller, you will need to initialize it first
  */
 InputManager::InputManager() {
+    _player = nullptr;
+    _possessButton = nullptr;
+    _unPossessButton = nullptr;
+}
+
+InputManager::~InputManager()
+{
+    _player = nullptr;
+    _possessButton = nullptr;
+    _unPossessButton = nullptr;
 }
 
 /**
@@ -75,7 +83,7 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
  *
  * @return true if the player was initialized correctly
  */
-/*bool InputManager::init(std::shared_ptr<Player> player, cugl::Rect bounds) {
+bool InputManager::init(std::shared_ptr<Player> player, cugl::Rect bounds) {
     _player = player;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
@@ -83,7 +91,6 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
     clearTouchInstance(_ltouch);
     clearTouchInstance(_rtouch);
     clearTouchInstance(_mtouch);
-
 #ifdef CU_MOBILE
     // Touch Screen
     Touchscreen* touch = Input::get<Touchscreen>();
@@ -98,7 +105,7 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
         });
 #endif
     return true;
-}*/
+}
 
 /**
  * Returns the scene location of a touch
@@ -276,10 +283,9 @@ void InputManager::readInput() {
 #else
     // Figure out, based on which player we are, which keys
     // control our actions (depends on player).
-    KeyCode left, right, possess;
+    KeyCode left, right;
     left = KeyCode::ARROW_LEFT;
     right = KeyCode::ARROW_RIGHT;
-    possess = KeyCode::F;
 
     // Convert keyboard state into game commands
     _forward = 0;
@@ -291,10 +297,6 @@ void InputManager::readInput() {
     }
     else if (keys->keyDown(left) && !keys->keyDown(right)) {
         _forward = -1;
-    }
-
-    if (keys->keyDown(possess)) {
-        _possessButton = true;
     }
 #endif
 }
