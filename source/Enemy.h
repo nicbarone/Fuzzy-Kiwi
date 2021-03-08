@@ -10,20 +10,25 @@ class Enemy : public Entity {
 private:
 
 	/** the x position of the start enemy's patrol path*/
-	float _patrol_start;
+	float _patrolStart;
 	/** the x position of the end enemy's patrol path*/
-	float _patrol_end;
+	float _patrolEnd;
 	/** ray cast distance of the enemy*/
-	float _vision_range;
+	float _visionRange;
+	/** movement speed of the enemy*/
+	float _speed;
+	/** keeps track of which direction the enemy is moving*/
+	bool _movingRight;
 	/** whether the enemy is blocked by a closed door*/
-	bool _is_stuck;
+	bool _isStuck;
 	/** whether the enemy has been possessed*/
-	bool _is_possessed;
+	bool _isPossessed;
 	/** whether the enemy is patrolling*/
-	bool _is_active;
+	bool _isActive;
 
 
-	std::shared_ptr<scene2::AnimationNode> _scene_node;
+
+	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
 
 
@@ -44,9 +49,14 @@ public:
 
 
 	/** returns the AnimationNode associated with the player*/
-	std::shared_ptr<scene2::AnimationNode> get_scene_node() {
-		return _scene_node;
+	std::shared_ptr<scene2::AnimationNode> getSceneNode() {
+		return _sceneNode;
 	}
+
+	/** changes the x position of the enemy based on its patrol path and current position*/
+	void move();
+
+
 
 };
 

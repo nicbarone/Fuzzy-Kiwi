@@ -28,6 +28,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"enemy-placeholder": {
+			"file": "textures/EnemyPlaceholder.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"possess-button": {
 			"file": "textures/Possess.png",
 			"minfilter": "nearest",

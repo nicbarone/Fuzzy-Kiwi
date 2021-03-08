@@ -161,6 +161,13 @@ public:
      */
     void clearTouchInstance(TouchInstance& touchInstance);
 
+    /**
+     * Getter for the forward variable
+     */
+    float getForward() {
+        return _forward;
+    }
+
 private:
     /** The current touch location for the left zone */
     TouchInstance _ltouch;
