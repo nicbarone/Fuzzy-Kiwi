@@ -8,13 +8,13 @@ class Player : public Entity {
 
 private:
 	/** number of possessions remaining*/
-	int _n_possessions;
+	int _nPossessions;
 	/** whether the player is possessing an enemy*/
-	bool _is_possessing;
+	bool _isPossessing;
 	/** whether the player is hidden, i.e. in staircase or in den*/
-	bool _is_hidden;
+	bool _isHidden;
 
-	std::shared_ptr<scene2::AnimationNode> _scene_node;
+	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
 
 
@@ -34,29 +34,31 @@ public:
 	}
 
 	/** true if the player has possessions remaining and is in cat form*/
-	bool can_possess() {
-		return _n_possessions > 0 && !_is_possessing;
+	bool canPossess() {
+		return _nPossessions > 0 && !_isPossessing;
 	}
 
 	/** sets possessions remaining*/
-	void set_n_possess(int count) {
-		_n_possessions = count;
+	void set_nPossess(int count) {
+		_nPossessions = count;
 	}
 
 	/** sets the possession state of the cat*/
-	void set_possess(bool value) {
-		_is_possessing = value;
+	void setPossess(bool value) {
+		_isPossessing = value;
 	}
 	
 	/** sets the hiding state of the cat*/
-	void set_hidden(bool value) {
-		_is_hidden;
+	void setHidden(bool value) {
+		_isHidden;
 	}
 
+	/** changes the x position of the player based on the direction*/
+	void move(float direction);
 
 	/** returns the AnimationNode associated with the player*/
-	std::shared_ptr<scene2::AnimationNode> get_scene_node() {
-		return _scene_node;
+	std::shared_ptr<scene2::AnimationNode> getSceneNode() {
+		return _sceneNode;
 	}
 
 };

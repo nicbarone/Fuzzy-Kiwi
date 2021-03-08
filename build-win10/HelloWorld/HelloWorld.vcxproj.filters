@@ -36,6 +36,12 @@
     <ClInclude Include="..\..\source\UIElement.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\Enemy.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Floor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\HelloApp.cpp">
@@ -57,6 +63,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\UIElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Floor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

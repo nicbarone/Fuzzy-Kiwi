@@ -167,11 +167,11 @@ void HelloApp::update(float timestep) {
         _possessButton->getButton()->deactivate();
         _scene->removeChild(_possessButton->getButton());
         if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
-            _possessButton->set_texture(unpossessButton);
+            _possessButton->setTexture(unpossessButton);
             _possessButton->setButtonState(ui::ButtonState::UNPOSSESS);
         }
         else {
-            _possessButton->set_texture(possessButton);
+            _possessButton->setTexture(possessButton);
             _possessButton->setButtonState(ui::ButtonState::POSSESS);
         }
         _possessButton->getButton()->setName("possess");
@@ -184,7 +184,7 @@ void HelloApp::update(float timestep) {
             }
         });
         _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
-        _possessButton->set_pos(Vec2(size.width - (bpsize.width + rOffset) / 2, (bpsize.height + bOffset) / 2));
+        _possessButton->setPos(Vec2(size.width - (bpsize.width + rOffset) / 2, (bpsize.height + bOffset) / 2));
         _scene->addChild(_possessButton->getButton());
         _possessButton->getButton()->activate();
         _possessButton->setClicked(false);
@@ -192,6 +192,10 @@ void HelloApp::update(float timestep) {
 
     // Read input controller input
     _inputManager.readInput();
+    _player->move(_inputManager.getForward());
+
+    // Enemy movement
+    _enemy->move();
 }
 
 /**
@@ -237,7 +241,17 @@ void HelloApp::buildScene() {
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
 
     // Create the player
-    _player = Player::alloc(50,50,0,cat);
+    _player = Player::alloc(150,128,0,cat);
+
+    //floor creation
+    std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
+    vector<Vec2> g1 = {  Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(1100.0f, 90.0f)};
+    _floor = Floor::alloc(500, 42, 0, g1, floor);
+
+
+    // Enemy creation
+    std::shared_ptr<Texture> enemy = _assets->get<Texture>("enemy-placeholder");
+    _enemy = Enemy::alloc(50, 500, 0, enemy);
 
     // Create a button.  A button has an up image and a down image
     possessButton = _assets->get<Texture>("possess-button");
@@ -245,7 +259,7 @@ void HelloApp::buildScene() {
     Size pbsize = possessButton->getSize();
     // set up the ui element of possess button
     _possessButton = ui::ButtonElement::alloc(0,0,0,0,ui::ButtonState::POSSESS);
-    _possessButton->set_texture(possessButton);
+    _possessButton->setTexture(possessButton);
     // Create a callback function for the button
     _possessButton->getButton()->setName("possess");
     _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
@@ -266,12 +280,15 @@ void HelloApp::buildScene() {
     float rOffset = (size.width)-(safe.origin.x+safe.size.width);
 
     _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
-    _possessButton->set_pos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
+    _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
 
     // Add the logo and button to the scene graph
+    _scene->addChild(_floor->getSceneNode()); 
     _scene->addChild(_logo);
     _scene->addChild(_possessButton->getButton());
-    _scene->addChild(_player->get_scene_node());
+    _scene->addChild(_player->getSceneNode());
+    _scene->addChild(_enemy->getSceneNode());
+    
     
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();

@@ -33,14 +33,14 @@ namespace ui {
 			return (result->init(x, y, width, height, buttonState) ? result : nullptr);
 		}
 		bool init(float x, float y, float width, float height, ButtonState buttonState);
-		void set_pos(Vec2 pos);
+		void setPos(Vec2 pos);
 		void setClicked(bool click) {
 			_clicked = click;
 		}
 		bool getClicked() {
 			return _clicked;
 		}
-		void set_texture(const std::shared_ptr<Texture> texture);
+		void setTexture(const std::shared_ptr<Texture> texture);
 		ButtonState getButtonState() {
 			return _buttonState;
 		}
