@@ -53,6 +53,8 @@ public:
 		_is_hidden;
 	}
 
+	void move(float direction);
+
 
 	/** returns the AnimationNode associated with the player*/
 	std::shared_ptr<scene2::AnimationNode> get_scene_node() {

@@ -1,5 +1,8 @@
 #include "Player.h"
 using namespace cugl;
+
+/** how fast the player moves*/
+#define SPEED 100
 Player::Player() :
 
 	_n_possessions(0),
@@ -8,7 +11,7 @@ Player::Player() :
 {
 
 	_scene_node = nullptr;
-	
+	_texture = nullptr;
 }
 
 
@@ -28,6 +31,15 @@ bool Player::init(float x, float y, float ang, std::shared_ptr<Texture> cat)
 	_texture = cat;
 	_scene_node = scene2::AnimationNode::alloc(_texture, 1, 1);
 	return true;
+}
+
+void Player::move(float direction) {
+	if (direction != 0.0f) {
+		Entity::set_velocity(direction * SPEED);
+	}
+	else {
+		Entity::set_velocity(0);
+	}
 }
 
 

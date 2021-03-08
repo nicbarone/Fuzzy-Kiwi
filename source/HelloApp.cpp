@@ -192,6 +192,7 @@ void HelloApp::update(float timestep) {
 
     // Read input controller input
     _inputManager.readInput();
+ 
 }
 
 /**

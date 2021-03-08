@@ -9,10 +9,11 @@ private:
 
 	Vec2 _pos;
 	Vec2 _size;
-	float _angle = 0;
+	float _angle;
 	Color4 _color;
 	int _level;
-
+	/** float because velocity can only be in the x direction*/
+	float _velocity;
 
 public:
 
@@ -80,6 +81,16 @@ public:
 	/** returns a Color4 representing the color of the entity*/
 	Color4 get_color() {
 		return _color;
+	}
+
+	/** sets the velocity of the entity*/
+	void set_velocity(float velocity) {
+		_velocity = velocity;
+	}
+
+	/** returns a float representing the velocity of the entity*/
+	float get_velocity() {
+		return _velocity;
 	}
 
 	
