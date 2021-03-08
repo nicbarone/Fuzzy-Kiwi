@@ -241,12 +241,12 @@ void HelloApp::buildScene() {
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
 
     // Create the player
-    _player = Player::alloc(150,150,0,cat);
+    _player = Player::alloc(150,128,0,cat);
 
     //floor creation
     std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
-    vector<Vec2> g1 = {  Vec2(1500.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(1500.0f, 90.0f)};
-    _floor = Floor::alloc(100, 111, 0, g1, floor);
+    vector<Vec2> g1 = {  Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(1100.0f, 90.0f)};
+    _floor = Floor::alloc(500, 42, 0, g1, floor);
 
 
     // Enemy creation
@@ -283,11 +283,12 @@ void HelloApp::buildScene() {
     _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
 
     // Add the logo and button to the scene graph
+    _scene->addChild(_floor->getSceneNode()); 
     _scene->addChild(_logo);
     _scene->addChild(_possessButton->getButton());
     _scene->addChild(_player->getSceneNode());
     _scene->addChild(_enemy->getSceneNode());
-    _scene->addChild(_floor->getSceneNode());
+    
     
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();
