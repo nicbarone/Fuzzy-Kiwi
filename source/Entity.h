@@ -9,10 +9,11 @@ private:
 
 	Vec2 _pos;
 	Vec2 _size;
-	float _angle = 0;
+	float _angle;
 	Color4 _color;
 	int _level;
-
+	/** float because velocity can only be in the x direction*/
+	float _velocity;
 
 public:
 
@@ -23,63 +24,73 @@ public:
 	void dispose();
 
 	/** sets the position of the entity*/
-	void set_pos(Vec2 pos) {
+	void setPos(Vec2 pos) {
 		_pos = pos;
 	}
 
 	/** returns a Vec2 representing the position of the entity*/
-	Vec2 get_pos() {
+	Vec2 getPos() {
 		return _pos;
 	}
 
 	/** sets the angle of the entity*/
-	void set_angle(float angle) {
+	void setAngle(float angle) {
 		_angle = angle;
 	}
 
 	/** returns a float representing the angle of the entity*/
-	float get_angle() {
+	float getAngle() {
 		return _angle;
 	}
 
 	/** sets a Vec2 representing the width and height of the entity*/
-	void set_size(Vec2 size) {
+	void setSize(Vec2 size) {
 		_size = size;
 	}
 
 	/** returns a Vec2 representing the width and height of the entity*/
-	Vec2 get_size() {
+	Vec2 getSize() {
 		return _size;
 	}
 
-	void set_level(int level) {
+	void setLevel(int level) {
 		_level = level;
 	}
 
-	int get_level() {
+	int getLevel() {
 		return _level;
 	}
 
-	void set_texture(const std::shared_ptr<Texture> texture) {
+	void setTexture(const std::shared_ptr<Texture> texture) {
 		
 	}
 
-	void set_textures(vector<std::shared_ptr<Texture>> textures) {
+	void setTextures(vector<std::shared_ptr<Texture>> textures) {
 
 	}
 
-	std::shared_ptr<Texture> get_texture() {
+	std::shared_ptr<Texture> getTexture() {
 		
 	}
 
 	/** sets the color of the entity*/
-	void set_color(Color4 color) {
+	void setColor(Color4 color) {
 		_color = color;
 	}
 
 	/** returns a Color4 representing the color of the entity*/
-	Color4 get_color() {
+	Color4 getColor() {
 		return _color;
+	}
+
+	/** sets the velocity of the entity*/
+	void setVelocity(float velocity) {
+		_velocity = velocity;
+	}
+
+	/** returns a float representing the velocity of the entity*/
+	float getVelocity() {
+		return _velocity;
 	}
 
 	

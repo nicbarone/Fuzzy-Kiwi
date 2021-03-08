@@ -31,6 +31,7 @@
 #define __HELLO_APP_H__
 #include <cugl/cugl.h>
 #include "Player.h"
+#include "Enemy.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
 /**
@@ -51,6 +52,8 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode>  _logo;
     /** A reference to the player*/
     std::shared_ptr<Player> _player;
+    /** A reference to the enemy*/
+    std::shared_ptr<Enemy> _enemy;
     /** A reference to the input manager*/
     InputManager _inputManager;
     /** The button to possess and release*/

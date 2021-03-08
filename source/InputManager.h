@@ -161,8 +161,10 @@ public:
      */
     void clearTouchInstance(TouchInstance& touchInstance);
 
-#pragma getters and setters
-    int getForward() {
+    /**
+     * Getter for the forward variable
+     */
+    float getForward() {
         return _forward;
     }
 
