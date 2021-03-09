@@ -56,7 +56,20 @@ public:
 	/** changes the x position of the enemy based on its patrol path and current position*/
 	void move();
 
+	/** changes possessed state of the enemy*/
+	void setPossessed();
 
+	/** sets the _patrolStart and _patrolEnd of the enemy*/
+	void setPatrol(float x1, float x2) {
+		_patrolStart = x1;
+		_patrolEnd = x2;
+	}
+
+	/** returns a Vec2 containing _patrolStart and _patrolEnd of the enemy*/
+	// Vec2 without a y might be bad practice? can change if needed
+	Vec2 getPatrol() {
+		return Vec2(_patrolStart, _patrolEnd);
+	}
 
 };
 

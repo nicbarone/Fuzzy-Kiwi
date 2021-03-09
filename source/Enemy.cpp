@@ -36,32 +36,39 @@ void Enemy::dispose() {
 	Entity::dispose();
 }
 
-bool Enemy::init(float x, float y, float ang, std::shared_ptr<Texture> enemy)
-{
+bool Enemy::init(float x, float y, float ang, std::shared_ptr<Texture> enemy) {
 	Entity::setPos(Vec2(x, y));
 	Entity::setAngle(0);
 	_texture = enemy;
+	_isActive = true;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 1);
 	_sceneNode->setPosition(Vec2(x, y));
 	return true;
 }
 
 void Enemy::move() {
-	if (_movingRight) {
-		Entity::setVelocity(_speed);
+	if (_isActive) {
+		if (_movingRight) {
+			Entity::setVelocity(_speed);
+		}
+		else {
+			Entity::setVelocity(-_speed);
+		}
+		Vec2 original = Entity::getPos();
+		Entity::setPos(Vec2(original.x + Entity::getVelocity(), original.y));
+		_sceneNode->setPositionX(original.x + Entity::getVelocity());
+		if (Entity::getPos().x > _patrolEnd) {
+			_movingRight = false;
+		}
+		else if (Entity::getPos().x < _patrolStart) {
+			_movingRight = true;
+		}
 	}
-	else {
-		Entity::setVelocity(-_speed);
-	}
-	Vec2 original = Entity::getPos();
-	Entity::setPos(Vec2(original.x + Entity::getVelocity(), original.y));
-	_sceneNode->setPositionX(original.x + Entity::getVelocity());
-	if (Entity::getPos().x > _patrolEnd) {
-		_movingRight = false;
-	}
-	else if (Entity::getPos().x < _patrolStart) {
-		_movingRight = true;
-	}
+}
+
+void Enemy::setPossessed() {
+	_isPossessed = true;
+	_isActive = false;
 }
 
 
