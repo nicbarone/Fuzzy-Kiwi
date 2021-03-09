@@ -31,7 +31,7 @@
 #define __HELLO_APP_H__
 #include <cugl/cugl.h>
 #include "Player.h"
-#include "Construction.h"
+#include "Floor.h"
 #include "Enemy.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
@@ -54,7 +54,7 @@ protected:
     /** A reference to the player*/
     std::shared_ptr<Player> _player;
     /** A reference to the player*/
-    std::shared_ptr<Construction> _floor;
+    std::shared_ptr<Floor> _floor;
     /** A reference to the enemy*/
     std::shared_ptr<Enemy> _enemy;
     /** A reference to the input manager*/

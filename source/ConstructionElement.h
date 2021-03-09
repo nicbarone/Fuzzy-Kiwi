@@ -72,7 +72,7 @@ public:
 	}
 
 	/** sets a vector representing the vertices of the construction element*/
-	std::vector<Vec2> setVertices(vector<Vec2> vertices) {
+	void setVertices(vector<Vec2> vertices) {
 		_vertices = vertices;
 	}
 
