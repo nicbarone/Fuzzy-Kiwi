@@ -246,7 +246,7 @@ void HelloApp::buildScene() {
     //floor creation
     std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
     vector<Vec2> g1 = {  Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(1100.0f, 90.0f)};
-    _floor = Floor::alloc(500, 42, 0, g1, floor);
+    _floor = Floor::alloc(500, 42, 0, 0, cugl::Color4::WHITE, g1, floor);
 
 
     // Enemy creation

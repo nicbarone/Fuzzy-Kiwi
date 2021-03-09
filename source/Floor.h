@@ -1,17 +1,14 @@
 #pragma once
 #ifndef __FLOOR_H__
 #define __FLOOR_H__
+#include <ConstructionElement.h>
 #include <cugl/cugl.h>
-#include "Entity.h"
 using namespace cugl;
-class Floor : public Entity {
+
+class Floor : public ConstructionElement {
 
 private:
-
 	std::shared_ptr<scene2::PolygonNode> _sceneNode;
-	std::shared_ptr<Texture> _texture;
-	std::vector<Vec2> _vertices;
-
 
 public:
 
@@ -21,11 +18,13 @@ public:
 
 	void dispose();
 
-	bool init(float x, float y, float ang, std::vector<Vec2> vertices, std::shared_ptr<Texture> cat);
+	bool init(float x, float y, float ang, int level, Color4 color,
+		std::vector<Vec2> vertices, std::shared_ptr<Texture> cat);
 
-	static std::shared_ptr<Floor> alloc(float x, float y, float ang, std::vector<Vec2> vertices, std::shared_ptr<Texture> cat) {
+	static std::shared_ptr<Floor> alloc(float x, float y, float ang, int level, Color4 color, 
+		std::vector<Vec2> vertices, std::shared_ptr<Texture> cat) {
 		std::shared_ptr<Floor> result = std::make_shared<Floor>();
-		return (result->init(x, y, ang, vertices, cat) ? result : nullptr);
+		return (result->init(x, y, ang, level, color, vertices, cat) ? result : nullptr);
 	}
 
 
