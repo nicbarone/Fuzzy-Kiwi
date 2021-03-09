@@ -13,6 +13,8 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
+    /** Position of single tap on screen, updated upon leaving, if not exist then Vec2::ZERO */
+    Vec2 _tap_pos;
     /** If pressed possess button then true, otherwise false */
     std::shared_ptr<Player> _player;
     std::shared_ptr<ui::ButtonElement> _possessButton;
@@ -168,7 +170,16 @@ public:
         return _forward;
     }
 
+    /**
+     * Getter for the tap position variable
+     */
+    Vec2 getTapPos() {
+        return _tap_pos;
+    }
+
 private:
+    /** The current touch location for the the entire screen */
+    TouchInstance _stouch;
     /** The current touch location for the left zone */
     TouchInstance _ltouch;
     /** The current touch location for the right zone */

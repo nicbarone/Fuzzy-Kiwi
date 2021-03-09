@@ -11,6 +11,8 @@ using namespace cugl;
 #define JSTICK_RADIUS    25
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    80
+/** This how far before we no longer regard a touch on screen as a click */
+#define TAP_THRESHOLD    10
 
 /**
  * Creates a new input controller with the default settings
@@ -88,6 +90,7 @@ bool InputManager::init(std::shared_ptr<Player> player, cugl::Rect bounds) {
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
     createZones();
+    clearTouchInstance(_stouch);
     clearTouchInstance(_ltouch);
     clearTouchInstance(_rtouch);
     clearTouchInstance(_mtouch);
@@ -170,6 +173,12 @@ void InputManager::processJoystick(const cugl::Vec2 pos) {
 void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
+    // general touch (for tap on screen)
+    if (_stouch.touchids.empty()) {
+        _stouch.position = event.position;
+        _stouch.timestamp.mark();
+        _stouch.touchids.insert(event.touch);
+    }
     switch (zone) {
     case Zone::LEFT:
         // Only process if no touch in zone
@@ -207,6 +216,9 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
 void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
     // Reset all keys that might have been set
     Vec2 pos = event.position;
+    if (_stouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+        _stouch.touchids.clear();
+    }
     Zone zone = getZone(pos);
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
         _ltouch.touchids.clear();
@@ -230,6 +242,10 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
  */
 void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
     Vec2 pos = event.position;
+    if (_stouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+        if ((pos-_stouch.position).length()>TAP_THRESHOLD) 
+            _stouch.touchids.clear();
+    }
     // Only check for swipes in the main zone if there is more than one finger.
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
         processJoystick(pos);
@@ -278,6 +294,13 @@ void InputManager::readInput() {
         if (fbpitch > EVENT_ACCEL_THRESH) _forward = 1;
         else if (fbpitch < -EVENT_ACCEL_THRESH) _forward = -1;
         else _forward = 0;
+        // if stouch is not null, then it is a tap
+        if (!_stouch.empty()) {
+            _tap_pos = _stouch.position;
+        } else {
+            _tap_pos = Vec2::ZERO;
+        }
+        
     } */
 
 #else
@@ -299,6 +322,13 @@ void InputManager::readInput() {
     else if (keys->keyDown(left) && !keys->keyDown(right)) {
         CULog("Goring left");
         _forward = -1;
+    }
+    if (Input::get<Mouse>()->buttonPressed().hasLeft()) {
+        _tap_pos = Input::get<Mouse>()->pointerPosition();
+        CULog("Clicked left");
+    }
+    else {
+        _tap_pos = Vec2::ZERO;
     }
 #endif
 }
