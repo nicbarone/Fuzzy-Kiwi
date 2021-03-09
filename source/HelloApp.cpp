@@ -115,7 +115,6 @@ void HelloApp::onStartup() {
  */
 void HelloApp::onShutdown() {
     // Delete all smart pointers
-    _logo = nullptr;
     _scene = nullptr;
     _batch = nullptr;
     _assets = nullptr;
@@ -141,17 +140,7 @@ void HelloApp::onShutdown() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void HelloApp::update(float timestep) {
-    if (_countdown == 0) {
-        // Move the logo about the screen
-        Size size = getDisplaySize();
-        size *= GAME_WIDTH/size.width;
-		float x = (float)(std::rand() % (int)(size.width/2))+size.width/4;
-		float y = (float)(std::rand() % (int)(size.height/2))+size.height/8;
-        _logo->setPosition(Vec2(x,y));
-        _countdown = TIME_STEP;
-    } else {
-        _countdown--;
-    }
+
     Size  size = getDisplaySize();
     float scale = GAME_WIDTH / size.width;
     size *= scale;
@@ -195,7 +184,12 @@ void HelloApp::update(float timestep) {
     _player->move(_inputManager.getForward());
 
     // Enemy movement
-    _enemy->move();
+    _enemyController->moveEnemies();
+    _enemyController->findClosest(_player->getPos());
+    if (_enemyController->closestEnemy() != nullptr) {
+        //very temporary modification to test whether it works, dont want to work with angles right now
+        _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
+    }
 }
 
 /**
@@ -224,17 +218,6 @@ void HelloApp::buildScene() {
     float scale = GAME_WIDTH/size.width;
     size *= scale;
     
-    // The logo is actually an image+label.  We need a parent node
-    _logo = scene2::SceneNode::alloc();
-    
-    // Get the image and add it to the node.
-    std::shared_ptr<Texture> texture  = _assets->get<Texture>("logo");
-    _logo = scene2::PolygonNode::allocWithTexture(texture);
-    _logo->setScale(0.2f); // Magic number to rescale asset
-
-    // Put the logo in the middle of the screen
-    _logo->setAnchor(Vec2::ANCHOR_CENTER);
-    _logo->setPosition(size.width/2,size.height/2);
 
     
     // Placeholder cat
@@ -250,8 +233,10 @@ void HelloApp::buildScene() {
 
 
     // Enemy creation
-    std::shared_ptr<Texture> enemy = _assets->get<Texture>("enemy-placeholder");
-    _enemy = Enemy::alloc(50, 500, 0, enemy);
+    _enemyController = make_shared<EnemyController>();
+    std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy-placeholder");
+    _enemyController->addEnemy(50, 500, 0, enemyTexture);
+    _enemyController->addEnemy(50, 128, 0, enemyTexture);
 
     // Create a button.  A button has an up image and a down image
     possessButton = _assets->get<Texture>("possess-button");
@@ -284,18 +269,21 @@ void HelloApp::buildScene() {
 
     // Add the logo and button to the scene graph
     _scene->addChild(_floor->getSceneNode()); 
-    _scene->addChild(_logo);
     _scene->addChild(_possessButton->getButton());
     _scene->addChild(_player->getSceneNode());
-    _scene->addChild(_enemy->getSceneNode());
+
+    vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
+
+    for (auto it = begin(enemies); it != end(enemies); ++it) {
+        _scene->addChild(it->get()->getSceneNode());
+    }
+
     
     
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();
 
-    // Start the logo countdown and C-style random number generator
-    _countdown = TIME_STEP;
-    std::srand((int)std::time(0));
+
 
     // Initialize input manager
     _inputManager = InputManager();

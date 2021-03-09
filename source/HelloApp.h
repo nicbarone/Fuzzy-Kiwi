@@ -32,7 +32,7 @@
 #include <cugl/cugl.h>
 #include "Player.h"
 #include "Floor.h"
-#include "Enemy.h"
+#include "EnemyController.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
 /**
@@ -49,14 +49,12 @@ protected:
     std::shared_ptr<cugl::Scene2> _scene;
     /** A 3152 style SpriteBatch to render the scene */
     std::shared_ptr<cugl::SpriteBatch>  _batch;
-    /** A reference to the logo, so that we can move it around */
-    std::shared_ptr<cugl::scene2::SceneNode>  _logo;
+    /** A reference to the enemy controller*/
+    std::shared_ptr<EnemyController> _enemyController;
     /** A reference to the player*/
     std::shared_ptr<Player> _player;
     /** A reference to the player*/
     std::shared_ptr<Floor> _floor;
-    /** A reference to the enemy*/
-    std::shared_ptr<Enemy> _enemy;
     /** A reference to the input manager*/
     InputManager _inputManager;
     /** The button to possess and release*/
