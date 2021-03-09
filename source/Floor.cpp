@@ -10,16 +10,18 @@ Floor::Floor()
 
 
 void Floor::dispose() {
-	_texture = nullptr;
 	_sceneNode = nullptr;
-	Entity::dispose();
+	ConstructionElement::dispose();
 }
 
-bool Floor::init(float x, float y, float ang, std::vector<Vec2> vertices, std::shared_ptr<Texture> cat)
+bool Floor::init(float x, float y, float ang, int level, Color4 color, std::vector<Vec2> vertices, std::shared_ptr<Texture> cat)
 {
-	_texture = cat;
-	_vertices = vertices;
+	ConstructionElement::setTexture(cat);
+	ConstructionElement::setVertices(vertices);
 	_sceneNode = scene2::PolygonNode::allocWithTexture(cat, vertices);
-	_sceneNode->setPosition(Vec2(x, y));
+	ConstructionElement::setPos(Vec2(x, y));
+	ConstructionElement::setAngle(ang);
+	ConstructionElement::setLevel(level);
+	ConstructionElement::setColor(color);
 	return true;
 }

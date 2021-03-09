@@ -1,17 +1,14 @@
 #pragma once
 #ifndef __FLOOR_H__
 #define __FLOOR_H__
+#include <ConstructionElement.h>
 #include <cugl/cugl.h>
-#include "Entity.h"
 using namespace cugl;
-class Floor : public Entity {
+
+class Floor : public ConstructionElement {
 
 private:
-
 	std::shared_ptr<scene2::PolygonNode> _sceneNode;
-	std::shared_ptr<Texture> _texture;
-	std::vector<Vec2> _vertices;
-
 
 public:
 

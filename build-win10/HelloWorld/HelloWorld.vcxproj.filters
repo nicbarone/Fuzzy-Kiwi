@@ -39,7 +39,7 @@
     <ClInclude Include="..\..\source\Enemy.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\Floor.h">
+    <ClInclude Include="..\..\source\Construction.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,7 +68,7 @@
     <ClCompile Include="..\..\source\Enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\Floor.cpp">
+    <ClCompile Include="..\..\source\Construction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
