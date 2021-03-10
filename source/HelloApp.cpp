@@ -156,10 +156,13 @@ void HelloApp::update(float timestep) {
         _possessButton->getButton()->deactivate();
         _scene->removeChild(_possessButton->getButton());
         if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
-            _possessButton->setTexture(unpossessButton);
-            _possessButton->setButtonState(ui::ButtonState::UNPOSSESS);
+            if (attemptPossess()) {
+                _possessButton->setTexture(unpossessButton);
+                _possessButton->setButtonState(ui::ButtonState::UNPOSSESS);
+            }
         }
         else {
+            unpossess();
             _possessButton->setTexture(possessButton);
             _possessButton->setButtonState(ui::ButtonState::POSSESS);
         }
@@ -184,12 +187,35 @@ void HelloApp::update(float timestep) {
     _player->move(_inputManager.getForward());
 
     // Enemy movement
-    _enemyController->moveEnemies();
+    _enemyController->moveEnemies(_inputManager.getForward());
     _enemyController->findClosest(_player->getPos());
-    if (_enemyController->closestEnemy() != nullptr) {
-        //very temporary modification to test whether it works, dont want to work with angles right now
+    if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
+        //very temporary modification to test whether it works, dont want to work with highlight right now
         _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
     }
+}
+
+bool HelloApp::attemptPossess() {
+    std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
+    if (enemy != nullptr) {
+        _player->getSceneNode()->setVisible(false);
+        _player->setPossess(true);
+        _enemyController->updatePossessed(enemy);
+        enemy->setPossessed();
+        enemy->getSceneNode()->setAngle(0);
+        return true;
+    }
+    return false;
+}
+
+void HelloApp::unpossess() {
+    std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
+    _player->setPos((enemy->getPos()));
+    _player->getSceneNode()->setVisible(true);
+    _player->setPossess(false);
+    enemy->getSceneNode()->setVisible(false);
+    enemy->dispose();
+
 }
 
 /**
@@ -235,8 +261,9 @@ void HelloApp::buildScene() {
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy-placeholder");
-    _enemyController->addEnemy(50, 500, 0, enemyTexture);
-    _enemyController->addEnemy(50, 128, 0, enemyTexture);
+    std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
+    _enemyController->addEnemy(50, 500, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(50, 128, 0, enemyTexture, altTexture);
 
     // Create a button.  A button has an up image and a down image
     possessButton = _assets->get<Texture>("possess-button");

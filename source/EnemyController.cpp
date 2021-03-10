@@ -6,14 +6,18 @@ using namespace cugl;
 EnemyController::EnemyController() 
 {
 	_enemies = {};
+	_closestEnemy = nullptr;
+	_possessedEnemy = nullptr;
 }
 
 void EnemyController::dispose() {
 	_enemies = {};
+	_closestEnemy = nullptr;
+	_possessedEnemy = nullptr;
 }
 
-void EnemyController::addEnemy(float x, float y, float ang, std::shared_ptr<Texture> enemy) {
-	_enemies.push_back(Enemy::alloc(x,y,ang,enemy));
+void EnemyController::addEnemy(float x, float y, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
+	_enemies.push_back(Enemy::alloc(x,y,ang,enemy,alt));
 }
 
 std::shared_ptr<Enemy> EnemyController::closestEnemy() {
@@ -25,7 +29,7 @@ void EnemyController::findClosest(Vec2 pos) {
 	int index = -1;
 	for (int i = 0; i < _enemies.size(); i++) {
 		//eventually the y condition should be checking levels, not the actual y
-		if (_enemies[i]->getPos().y == pos.y && abs(_enemies[i]->getPos().x - pos.x) < dist) {
+		if (_enemies[i]->getPos().y == pos.y && abs(_enemies[i]->getPos().x - pos.x) < dist && _enemies[i]->isActive()) {
 			dist = abs(_enemies[i]->getPos().x - pos.x);
 			index = i;
 		}
@@ -37,8 +41,8 @@ void EnemyController::findClosest(Vec2 pos) {
 	_closestEnemy = index == -1 ? nullptr : _enemies[index];
 }
 
-void EnemyController::moveEnemies() {
+void EnemyController::moveEnemies(float direction) {
 	for (auto it = begin(_enemies); it != end(_enemies); ++it) {
-		it->get()->move();
+		it->get()->move(direction);
 	}
 }

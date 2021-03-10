@@ -30,6 +30,7 @@ private:
 
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
+	std::shared_ptr<Texture> _altTexture;
 
 
 public:
@@ -40,11 +41,11 @@ public:
 
 	void dispose();
 
-	bool init(float x, float y, float ang, std::shared_ptr<Texture> cat);
+	bool init(float x, float y, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
 
-	static std::shared_ptr<Enemy> alloc(float x, float y, float ang, std::shared_ptr<Texture> enemy) {
+	static std::shared_ptr<Enemy> alloc(float x, float y, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
-		return (result->init(x, y, ang, enemy) ? result : nullptr);
+		return (result->init(x, y, ang, enemy, alt) ? result : nullptr);
 	}
 
 
@@ -54,7 +55,7 @@ public:
 	}
 
 	/** changes the x position of the enemy based on its patrol path and current position*/
-	void move();
+	void move(float direction);
 
 	/** changes possessed state of the enemy*/
 	void setPossessed();
@@ -64,6 +65,8 @@ public:
 		_patrolStart = x1;
 		_patrolEnd = x2;
 	}
+
+	bool isActive() {return _isActive; }
 
 	/** returns a Vec2 containing _patrolStart and _patrolEnd of the enemy*/
 	// Vec2 without a y might be bad practice? can change if needed

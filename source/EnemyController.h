@@ -10,6 +10,8 @@ private:
 	vector<std::shared_ptr<Enemy>> _enemies;
 	/** reference to the closest enemy to the player*/
 	std::shared_ptr<Enemy> _closestEnemy;
+	/** reference to the currently possessed enemy*/
+	std::shared_ptr<Enemy> _possessedEnemy;
 
 public:
 
@@ -20,7 +22,7 @@ public:
 	void dispose();
 
 	/** creates and adds an enemy to this controller*/
-	void addEnemy(float x, float y, float ang, std::shared_ptr<Texture> enemy);
+	void addEnemy(float x, float y, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
 
 	/** returns the vector of enemies managed by this controller*/
 	vector<std::shared_ptr<Enemy>> getEnemies() {
@@ -34,9 +36,16 @@ public:
 	std::shared_ptr<Enemy> closestEnemy();
 
 	/** moves active enemies*/
-	void moveEnemies();
+	void moveEnemies(float direction);
 
-	
+	/** setter for _possessedEnemy*/
+	void updatePossessed(std::shared_ptr<Enemy> enemy) {
+		_possessedEnemy = enemy;
+	}
+	/** getter for _possessedEnemy*/
+	std::shared_ptr<Enemy> getPossessed() {
+		return _possessedEnemy;
+	}
 
 };
 #endif
