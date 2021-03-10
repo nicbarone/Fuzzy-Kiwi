@@ -43,6 +43,10 @@ using namespace cugl;
 // This is adjusted by screen aspect ratio to get the height
 #define GAME_WIDTH 1024
 
+vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(1100.0f, 90.0f) };
+
+vector<Vec2> level2Floor = { Vec2(110.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 9.0f), Vec2(100.0f, 9.0f) };
+
 /**
  * The method called after OpenGL is initialized, but before running the application.
  *
@@ -254,8 +258,8 @@ void HelloApp::buildScene() {
 
     //floor creation
     std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
-    vector<Vec2> g1 = {  Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(1100.0f, 90.0f)};
-    _floor = Floor::alloc(500, 42, 0, 0, cugl::Color4::WHITE, g1, floor);
+    //_level1Floor = Floor::alloc(500, 42, 0, 0, cugl::Color4::WHITE, level1Floor, floor);
+    _level2Floor = Floor::alloc(111, 0, 0, 0, cugl::Color4::WHITE, level2Floor, floor);
 
 
     // Enemy creation
@@ -295,7 +299,8 @@ void HelloApp::buildScene() {
     _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
 
     // Add the logo and button to the scene graph
-    _scene->addChild(_floor->getSceneNode()); 
+    //_scene->addChild(_level1Floor->getSceneNode()); 
+    _scene->addChild(_level2Floor->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _scene->addChild(_player->getSceneNode());
 

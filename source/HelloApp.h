@@ -53,8 +53,10 @@ protected:
     std::shared_ptr<EnemyController> _enemyController;
     /** A reference to the player*/
     std::shared_ptr<Player> _player;
-    /** A reference to the player*/
-    std::shared_ptr<Floor> _floor;
+    /** A reference to the level 1 floor*/
+    std::shared_ptr<Floor> _level1Floor;
+    /** A reference to the level 2 floor*/
+    std::shared_ptr<Floor> _level2Floor;
     /** A reference to the input manager*/
     InputManager _inputManager;
     /** The button to possess and release*/

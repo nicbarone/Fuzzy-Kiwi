@@ -1,16 +1,9 @@
 #include "Floor.h"
 using namespace cugl;
 
-Floor::Floor()
-{
-
-	_sceneNode = nullptr;
-
-}
-
+Floor::Floor() {}
 
 void Floor::dispose() {
-	_sceneNode = nullptr;
 	ConstructionElement::dispose();
 }
 
@@ -20,8 +13,8 @@ bool Floor::init(float x, float y, float ang, int level, Color4 color, std::vect
 	ConstructionElement::setVertices(vertices);
 	_sceneNode = scene2::PolygonNode::allocWithTexture(cat, vertices);
 	ConstructionElement::setPos(Vec2(x, y));
-	ConstructionElement::setAngle(ang);
+	_sceneNode->setAngle(ang);
 	ConstructionElement::setLevel(level);
-	ConstructionElement::setColor(color);
+	_sceneNode->setColor(color);
 	return true;
 }

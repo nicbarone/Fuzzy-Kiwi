@@ -2,6 +2,7 @@
 #ifndef __CONSTRUCTIONELEMENT_H__
 #define __CONSTRUCTIONELEMENT_H__
 #include <cugl/cugl.h>
+#include <cugl/scene2/graph/CUSceneNode.h>
 using namespace cugl;
 class ConstructionElement {
 
@@ -14,6 +15,7 @@ private:
 	int _level;
 	std::shared_ptr<Texture> _texture;
 	std::vector<Vec2> _vertices;
+	std::shared_ptr<scene2::SceneNode> _sceneNode;
 
 
 public:
@@ -27,6 +29,7 @@ public:
 	/** sets the position of the construction element*/
 	void setPos(Vec2 pos) {
 		_pos = pos;
+		_sceneNode->setPosition(pos);
 	}
 
 	/** returns a Vec2 representing the position of the construction element*/
@@ -79,6 +82,11 @@ public:
 	/** returns a vector representing the vertices of the construction element*/
 	std::vector<Vec2> getVertices() {
 		return _vertices;
+	}
+
+	/** returns the SceneNode associated with the construction element*/
+	std::shared_ptr<scene2::SceneNode> getSceneNode() {
+		return _sceneNode;
 	}
 
 	

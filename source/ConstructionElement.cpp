@@ -10,6 +10,7 @@ ConstructionElement::ConstructionElement():
 		_color = cugl::Color4::WHITE;
 		_texture = nullptr;
 		_vertices.resize(1000);
+		_sceneNode = nullptr;
 
 	}
 
@@ -21,6 +22,8 @@ void ConstructionElement::dispose() {
 	_angle = 0;
 	_color = cugl::Color4::WHITE;
 	_texture = nullptr;
+	_sceneNode = nullptr;
 	_vertices.clear();
+
 }
 
