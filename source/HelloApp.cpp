@@ -201,18 +201,17 @@ void HelloApp::update(float timestep) {
     }
 
     if (_player->getPos().distance(_level1Door->getPos()) < 110.0f  &&
-        abs(_inputManager.getTapPos().x - _level1Door->getPos().x) <50.0f && 
-        _player->getPossess()== 1 ) {
+        abs(_inputManager.getTapPos().x - _level1Door->getPos().x) <50.0f) {
         _player->setHidden(true);
         _player->getSceneNode()->setVisible(false);
-       
+       //_player->getPossess()== 1
     }
     if (_inputManager.getTapPos().x != 0) {
         /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
         CULog("x: %f, y: %f", _level1Door->getPos().x, _level1Door->getPos().y);*/
         //CULog("x: %f", abs(_player->getPos().x - _level1Door->getPos().x));
         //CULog("Is possessing: %d", _player->getPossess());
-        CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
+        //CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
 
     }    //546 546
 
