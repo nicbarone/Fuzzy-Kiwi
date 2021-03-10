@@ -316,16 +316,16 @@ void InputManager::readInput() {
     // Movement left/right
     Keyboard* keys = Input::get<Keyboard>();
     if (keys->keyDown(right) && !keys->keyDown(left)) {
-        CULog("Going right");
+        //CULog("Going right");
         _forward = 1;
     }
     else if (keys->keyDown(left) && !keys->keyDown(right)) {
-        CULog("Goring left");
+        //CULog("Goring left");
         _forward = -1;
     }
     if (Input::get<Mouse>()->buttonPressed().hasLeft()) {
         _tap_pos = Input::get<Mouse>()->pointerPosition();
-        CULog("Clicked left");
+        //CULog("Clicked left");
     }
     else {
         _tap_pos = Vec2::ZERO;

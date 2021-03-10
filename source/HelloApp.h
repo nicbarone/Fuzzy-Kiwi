@@ -55,6 +55,8 @@ protected:
     std::shared_ptr<Player> _player;
     /** A reference to the level 1 floor*/
     std::shared_ptr<Floor> _level1Floor;
+    /** A reference to the level 1 Door*/
+    std::shared_ptr<Floor> _level1Door;
     /** A reference to the level 2 floor*/
     std::shared_ptr<Floor> _level2Floor;
     /** A reference to the input manager*/

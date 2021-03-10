@@ -9,8 +9,8 @@ class ConstructionElement {
 private:
 	/** Position of the ship */
 	Vec2 _pos;
-	Vec2 _size;
 	float _angle;
+	Vec2 _scale;
 	Color4 _color;
 	int _level;
 	std::shared_ptr<Texture> _texture;
@@ -40,12 +40,25 @@ public:
 	/** sets the angle of the construction element*/
 	void setAngle(float angle) {
 		_angle = angle;
+		_sceneNode->setAngle(angle);
 	}
 
 	/** returns a float representing the angle of the construction element*/
 	float getAngle() {
 		return _angle;
 	}
+
+	/** sets the scale of the construction element*/
+	void setScale(Vec2 scale) {
+		_scale = scale;
+		_sceneNode->setScale(scale);
+	}
+
+	/** returns a Vec2 representing the scale of the construction element*/
+	Vec2 getScale() {
+		return _scale;
+	}
+
 	/** sets the level of the entity*/
 	void setLevel(int level) {
 		_level = level;
@@ -56,17 +69,20 @@ public:
 		return _level;
 	}
 
-	void setTexture(const std::shared_ptr<Texture> texture) {
+	/** returns a texture representing the floor level of the construction element*/
+	void  setTexture(std::shared_ptr<Texture> texture) {
 		_texture = texture;
 	}
+
 	/** returns a texture representing the floor level of the construction element*/
-	std::shared_ptr<Texture>  getTextures() {
+	std::shared_ptr<Texture>  getTexture() {
 		return _texture;
 	}
 
 	/** sets the color of the construction element*/
 	void setColor(Color4 color) {
 		_color = color;
+		_sceneNode->setColor(color);
 	}
 
 	/** returns a Color4 representing the color of the construction element*/
@@ -84,11 +100,16 @@ public:
 		return _vertices;
 	}
 
+
+
 	/** returns the SceneNode associated with the construction element*/
 	std::shared_ptr<scene2::SceneNode> getSceneNode() {
 		return _sceneNode;
 	}
-
+	/** sets the SceneNode associated with the construction element*/
+	void setSceneNode(shared_ptr<scene2::SceneNode>sceneNode) {
+		_sceneNode = sceneNode;
+	}
 	
 };
 

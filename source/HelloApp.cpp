@@ -43,9 +43,11 @@ using namespace cugl;
 // This is adjusted by screen aspect ratio to get the height
 #define GAME_WIDTH 1024
 
-vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(1100.0f, 90.0f) };
+vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
 
-vector<Vec2> level2Floor = { Vec2(110.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 9.0f), Vec2(100.0f, 9.0f) };
+vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(150.0f, 90.0f) };
+
+vector<Vec2> level2Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
 
 /**
  * The method called after OpenGL is initialized, but before running the application.
@@ -174,7 +176,7 @@ void HelloApp::update(float timestep) {
         _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
             if (!down) {
-                CULog("Clicking on possess button!");
+                //CULog("Clicking on possess button!");
                 // Mark this button as clicked, proper handle will take place in update()
                 _possessButton->setClicked(true);
             }
@@ -197,6 +199,24 @@ void HelloApp::update(float timestep) {
         //very temporary modification to test whether it works, dont want to work with highlight right now
         _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
     }
+
+    if (_player->getPos().distance(_level1Door->getPos()) < 110.0f  &&
+        abs(_inputManager.getTapPos().x - _level1Door->getPos().x) <50.0f && 
+        _player->getPossess()== 1 ) {
+        _player->setHidden(true);
+        _player->getSceneNode()->setVisible(false);
+       
+    }
+    if (_inputManager.getTapPos().x != 0) {
+        /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
+        CULog("x: %f, y: %f", _level1Door->getPos().x, _level1Door->getPos().y);*/
+        //CULog("x: %f", abs(_player->getPos().x - _level1Door->getPos().x));
+        //CULog("Is possessing: %d", _player->getPossess());
+        CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
+
+    }    //546 546
+
+
 }
 
 bool HelloApp::attemptPossess() {
@@ -258,8 +278,11 @@ void HelloApp::buildScene() {
 
     //floor creation
     std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
-    //_level1Floor = Floor::alloc(500, 42, 0, 0, cugl::Color4::WHITE, level1Floor, floor);
-    _level2Floor = Floor::alloc(111, 0, 0, 0, cugl::Color4::WHITE, level2Floor, floor);
+    _level1Floor = Floor::alloc(Vec2(550, 30), 0,Vec2(1,1), 0, cugl::Color4::WHITE, level1Floor, floor);
+
+    _level1Door = Floor::alloc(Vec2(550, 130), 4.71239, Vec2(1,1), 0, cugl::Color4::WHITE, level1Door, floor);
+
+    _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 0, cugl::Color4::WHITE, level2Floor, floor);
 
 
     // Enemy creation
@@ -281,7 +304,7 @@ void HelloApp::buildScene() {
     _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
-            CULog("Clicking on possess button!");
+            //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
             _possessButton->setClicked(true);
         }
@@ -299,7 +322,8 @@ void HelloApp::buildScene() {
     _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
 
     // Add the logo and button to the scene graph
-    //_scene->addChild(_level1Floor->getSceneNode()); 
+    _scene->addChild(_level1Floor->getSceneNode()); 
+    _scene->addChild(_level1Door->getSceneNode());
     _scene->addChild(_level2Floor->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _scene->addChild(_player->getSceneNode());

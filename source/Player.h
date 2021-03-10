@@ -47,6 +47,11 @@ public:
 	void setPossess(bool value) {
 		_isPossessing = value;
 	}
+
+	/** gets the possession state of the cat*/
+	bool getPossess() {
+		return _isPossessing;
+	}
 	
 	/** sets the hiding state of the cat*/
 	void setHidden(bool value) {
