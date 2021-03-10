@@ -5,8 +5,8 @@ using namespace cugl;
 #define SPEED 10
 Player::Player() :
 
-	_nPossessions(0),
-	_isPossessing(true),
+	_nPossessions(1),
+	_isPossessing(false),
 	_isHidden(false)
 {
 

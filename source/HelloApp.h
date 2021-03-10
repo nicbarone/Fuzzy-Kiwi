@@ -133,6 +133,16 @@ public:
      */
     virtual void update(float timestep) override;
     
+    /** function called when the possess button is clicked
+        returns true if an enemy is within range and possession is successful
+        should it be in this file? who knows*/
+    bool attemptPossess();
+
+    /** function called when the unpossess button is clicked
+        does whatever is necessary to unpossess, kind of a mess right now
+    should it be in this file? who knows*/
+    void unpossess();
+    
     /**
      * The method called to draw the application to the screen.
      *
