@@ -55,10 +55,12 @@ protected:
     std::shared_ptr<Player> _player;
     /** A reference to the level 1 floor*/
     std::shared_ptr<Floor> _level1Floor;
-    /** A reference to the level 1 Door*/
+    /** A reference to the level 1 door*/
     std::shared_ptr<Floor> _level1Door;
     /** A reference to the level 2 floor*/
     std::shared_ptr<Floor> _level2Floor;
+    /** A reference to the level 2 door*/
+    std::shared_ptr<Floor> _level2Door;
     /** A reference to the input manager*/
     InputManager _inputManager;
     /** The button to possess and release*/
@@ -160,6 +162,11 @@ public:
      * at all. The default implmentation does nothing.
      */
     virtual void draw() override;
+
+    /*Function called every update to check if the player is trying to exit
+    or enter a staircase door*/
+    void checkStaircaseDoors();
+
     
 };
 

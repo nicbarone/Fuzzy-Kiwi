@@ -49,6 +49,10 @@ vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0
 
 vector<Vec2> level2Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
 
+vector<Vec2> level2Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(150.0f, 90.0f) };
+
+
+
 /**
  * The method called after OpenGL is initialized, but before running the application.
  *
@@ -157,13 +161,6 @@ void HelloApp::update(float timestep) {
         //very temporary modification to test whether it works, dont want to work with highlight right now
         _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
     }
-
-    if (_player->getPos().distance(_level1Door->getPos()) < 110.0f &&
-        abs(_inputManager.getTapPos().x - _level1Door->getPos().x) < 50.0f) {
-        _player->setHidden(true);
-        _player->getSceneNode()->setVisible(false);
-        //_player->getPossess()== 1
-    }
     if (_inputManager.getTapPos().x != 0) {
         /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
         CULog("x: %f, y: %f", _level1Door->getPos().x, _level1Door->getPos().y);*/
@@ -232,9 +229,12 @@ void HelloApp::update(float timestep) {
         _possessButton->getButton()->activate();
         _possessButton->setClicked(false);
     }
-    if (_enemyController->getPossessed() != nullptr) {
+    if(_enemyController->getPossessed() != nullptr) {
         CULog("%f", _enemyController->getPossessed()->getPos().x);
     }
+
+    checkStaircaseDoors();
+  
     
 
 }
@@ -304,6 +304,8 @@ void HelloApp::buildScene() {
 
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 0, cugl::Color4::WHITE, level2Floor, floor);
 
+    _level2Door = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 0, cugl::Color4::WHITE, level2Door, floor);
+
 
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
@@ -345,6 +347,7 @@ void HelloApp::buildScene() {
     _scene->addChild(_level1Floor->getSceneNode()); 
     _scene->addChild(_level1Door->getSceneNode());
     _scene->addChild(_level2Floor->getSceneNode());
+    _scene->addChild(_level2Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _scene->addChild(_player->getSceneNode());
 
@@ -364,4 +367,37 @@ void HelloApp::buildScene() {
     // Initialize input manager
     _inputManager = InputManager();
     _inputManager.init(_player, _scene->getBounds());
+}
+
+void HelloApp::checkStaircaseDoors() {
+    bool visibility;
+    //CULog("door 1 y position: %d", _level1Door->getPos().y);
+    if (_inputManager.getTapPos().y != 0) {
+        CULog("input y position: %d", _inputManager.getTapPos().x);
+    }
+   
+    if (_enemyController->getPossessed() != nullptr &&
+        abs(_enemyController->getPossessed()->getPos().x - _level1Door->getPos().x) < 510.0f &&
+        abs(_inputManager.getTapPos().x - _level1Door->getPos().x) < 20.0f ){
+        visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
+        CULog("1");
+        _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+    }
+
+  /*  else if (_enemyController->getPossessed() != nullptr &&
+        abs(_enemyController->getPossessed()->getPos().x - _level2Door->getPos().x) < 110.0f &&
+        abs(_inputManager.getTapPos().x - _level2Door->getPos().x) < 50.0f) {
+        visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
+        CULog("g");
+        _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+    }*/
+
+  /*  else if (_enemyController->getPossessed() != nullptr &&
+        !_enemyController->getPossessed()->getSceneNode()->isVisible() &&
+        abs(_inputManager.getTapPos().x - _level2Door->getPos().x) < 50.0f) {
+        visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
+        CULog("2");
+        _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+        _enemyController->getPossessed()->getSceneNode()->setPosition(_level2Door->getPos());
+    }*/
 }
