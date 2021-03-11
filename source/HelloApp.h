@@ -59,6 +59,8 @@ protected:
     std::shared_ptr<Floor> _level1Door;
     /** A reference to the level 2 floor*/
     std::shared_ptr<Floor> _level2Floor;
+    /** A reference to the level 1 Door*/
+    std::shared_ptr<Floor> _level2Door;
     /** A reference to the input manager*/
     InputManager _inputManager;
     /** The button to possess and release*/
@@ -146,6 +148,10 @@ public:
         does whatever is necessary to unpossess, kind of a mess right now
     should it be in this file? who knows*/
     void unpossess();
+    
+    /*Function called every update to check if the player is trying to exit
+    or enter a staircase door*/
+    void checkStaircaseDoors();
     
     /**
      * The method called to draw the application to the screen.
