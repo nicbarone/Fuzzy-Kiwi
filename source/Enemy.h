@@ -74,6 +74,8 @@ public:
 		return Vec2(_patrolStart, _patrolEnd);
 	}
 
+	void changeFloor();
+
 };
 
 #endif

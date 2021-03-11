@@ -44,6 +44,9 @@ void Player::move(float direction) {
 	Vec2 original = Entity::getPos();
 	Entity::setPos(Vec2(original.x + Entity::getVelocity(), original.y));
 	_sceneNode->setPositionX(original.x + Entity::getVelocity());
+	_sceneNode->setPositionY(Entity::getPos().y);
 }
+
+
 
 

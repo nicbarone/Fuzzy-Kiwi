@@ -376,7 +376,8 @@ void HelloApp::checkStaircaseDoors() {
     bool visibility;
 
     if (_enemyController->getPossessed() != nullptr) {
-        _enemyController->getPossessed()->setPos(Vec2(500,900));
+        _enemyController->getPossessed()->setPos(Vec2(500,200));
+        _enemyController->getPossessed()->changeFloor();
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
         if (abs(_enemyController->getPossessed()->getPos().x - _level1Door->getPos().x) < 110.0f &&
             abs(_inputManager.getTapPos().y - _level1Door->getPos().y -320) < 80.0f) {

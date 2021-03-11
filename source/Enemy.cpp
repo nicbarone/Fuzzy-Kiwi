@@ -85,4 +85,7 @@ void Enemy::setPossessed() {
 	_sceneNode->setTexture(_altTexture);
 }
 
+void Enemy::changeFloor() {
+	_sceneNode->setPositionY(Entity::getPos().y);
+}
 
