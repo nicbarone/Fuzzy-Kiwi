@@ -146,6 +146,32 @@ void HelloApp::onShutdown() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void HelloApp::update(float timestep) {
+    // Read input controller input
+    _inputManager.readInput();
+    _player->move(_inputManager.getForward());
+
+    // Enemy movement
+    _enemyController->moveEnemies(_inputManager.getForward());
+    _enemyController->findClosest(_player->getPos());
+    if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
+        //very temporary modification to test whether it works, dont want to work with highlight right now
+        _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
+    }
+
+    if (_player->getPos().distance(_level1Door->getPos()) < 110.0f &&
+        abs(_inputManager.getTapPos().x - _level1Door->getPos().x) < 50.0f) {
+        _player->setHidden(true);
+        _player->getSceneNode()->setVisible(false);
+        //_player->getPossess()== 1
+    }
+    if (_inputManager.getTapPos().x != 0) {
+        /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
+        CULog("x: %f, y: %f", _level1Door->getPos().x, _level1Door->getPos().y);*/
+        //CULog("x: %f", abs(_player->getPos().x - _level1Door->getPos().x));
+        //CULog("Is possessing: %d", _player->getPossess());
+        //CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
+
+    }    //546 546
 
     Size  size = getDisplaySize();
     float scale = GAME_WIDTH / size.width;
@@ -157,6 +183,25 @@ void HelloApp::update(float timestep) {
     // Get the right and bottom offsets.
     float bOffset = safe.origin.y;
     float rOffset = (size.width) - (safe.origin.x + safe.size.width);
+    // Check if we need to set the possess button to grey, or turn the button to colored
+    if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
+        if (_enemyController->closestEnemy() == nullptr || !_player->canPossess()) {
+            // turn the button to grey
+            _possessButton->getButton()->setColor(Color4f(1.0f, 1.0f, 1.0f,0.5f));
+            _possessButton->setButtonState(ui::ButtonState::UNAVAILABLE);
+        }
+    }
+    else if (_possessButton->getButtonState() == ui::ButtonState::UNAVAILABLE) {
+        if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
+            // turn the button to colored
+            _possessButton->getButton()->setColor(Color4f::WHITE);
+            _possessButton->setButtonState(ui::ButtonState::POSSESS);
+        }
+    }
+    // Any clicks on Unavailable buttons should be ignored
+    if (_possessButton->getButtonState() == ui::ButtonState::UNAVAILABLE) {
+        _possessButton->setClicked(false);
+    }
     // Check if possess button is clicked
     if (_possessButton->getClicked()) {
         _possessButton->getButton()->deactivate();
@@ -188,33 +233,7 @@ void HelloApp::update(float timestep) {
         _possessButton->setClicked(false);
     }
 
-    // Read input controller input
-    _inputManager.readInput();
-    _player->move(_inputManager.getForward());
-
-    // Enemy movement
-    _enemyController->moveEnemies(_inputManager.getForward());
-    _enemyController->findClosest(_player->getPos());
-    if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
-        //very temporary modification to test whether it works, dont want to work with highlight right now
-        _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
-    }
-
-    if (_player->getPos().distance(_level1Door->getPos()) < 110.0f  &&
-        abs(_inputManager.getTapPos().x - _level1Door->getPos().x) <50.0f) {
-        _player->setHidden(true);
-        _player->getSceneNode()->setVisible(false);
-       //_player->getPossess()== 1
-    }
-    if (_inputManager.getTapPos().x != 0) {
-        /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
-        CULog("x: %f, y: %f", _level1Door->getPos().x, _level1Door->getPos().y);*/
-        //CULog("x: %f", abs(_player->getPos().x - _level1Door->getPos().x));
-        //CULog("Is possessing: %d", _player->getPossess());
-        //CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
-
-    }    //546 546
-
+    
 
 }
 

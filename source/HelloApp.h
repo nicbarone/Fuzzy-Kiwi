@@ -137,6 +137,9 @@ public:
      */
     virtual void update(float timestep) override;
     
+    /** Used to check if there exists current possessable enemy in range */
+    bool enemyInPossessRange();
+
     /** function called when the possess button is clicked
         returns true if an enemy is within range and possession is successful
         should it be in this file? who knows*/
