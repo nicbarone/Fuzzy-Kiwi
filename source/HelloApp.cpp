@@ -344,8 +344,6 @@ void HelloApp::checkStaircaseDoors() {
         //_player->getPossess()== 1
     }
 
-    else if(_player->getHidden())
-
 
     CULog("x: %f", abs(_player->getPos().x - _level1Door->getPos().x));
 
