@@ -55,11 +55,11 @@ protected:
     std::shared_ptr<Player> _player;
     /** A reference to the level 1 floor*/
     std::shared_ptr<Floor> _level1Floor;
-    /** A reference to the level 1 Door*/
+    /** A reference to the level 1 door*/
     std::shared_ptr<Floor> _level1Door;
     /** A reference to the level 2 floor*/
     std::shared_ptr<Floor> _level2Floor;
-    /** A reference to the level 1 Door*/
+    /** A reference to the level 2 door*/
     std::shared_ptr<Floor> _level2Door;
     /** A reference to the input manager*/
     InputManager _inputManager;
@@ -139,6 +139,9 @@ public:
      */
     virtual void update(float timestep) override;
     
+    /** Used to check if there exists current possessable enemy in range */
+    bool enemyInPossessRange();
+
     /** function called when the possess button is clicked
         returns true if an enemy is within range and possession is successful
         should it be in this file? who knows*/
@@ -148,10 +151,6 @@ public:
         does whatever is necessary to unpossess, kind of a mess right now
     should it be in this file? who knows*/
     void unpossess();
-    
-    /*Function called every update to check if the player is trying to exit
-    or enter a staircase door*/
-    void checkStaircaseDoors();
     
     /**
      * The method called to draw the application to the screen.
@@ -163,6 +162,11 @@ public:
      * at all. The default implmentation does nothing.
      */
     virtual void draw() override;
+
+    /*Function called every update to check if the player is trying to exit
+    or enter a staircase door*/
+    void checkStaircaseDoors();
+
     
 };
 
