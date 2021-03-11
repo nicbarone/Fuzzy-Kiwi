@@ -232,7 +232,9 @@ void HelloApp::update(float timestep) {
         _possessButton->getButton()->activate();
         _possessButton->setClicked(false);
     }
-
+    if (_enemyController->getPossessed() != nullptr) {
+        CULog("%f", _enemyController->getPossessed()->getPos().x);
+    }
     
 
 }
