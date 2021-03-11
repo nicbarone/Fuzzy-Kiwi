@@ -178,11 +178,11 @@ void HelloApp::update(float timestep) {
         _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
             if (!down) {
-                //CULog("Clicking on possess button!");
+                CULog("Clicking on possess button!");
                 // Mark this button as clicked, proper handle will take place in update()
                 _possessButton->setClicked(true);
             }
-        });
+            });
         _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
         _possessButton->setPos(Vec2(size.width - (bpsize.width + rOffset) / 2, (bpsize.height + bOffset) / 2));
         _scene->addChild(_possessButton->getButton());
@@ -201,7 +201,6 @@ void HelloApp::update(float timestep) {
         //very temporary modification to test whether it works, dont want to work with highlight right now
         _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
     }
-
     //check staircase doors for player entry or exit
     checkStaircaseDoors();
 }
@@ -345,12 +344,12 @@ void HelloApp::checkStaircaseDoors() {
     }
 
 
-    CULog("x: %f", abs(_player->getPos().x - _level1Door->getPos().x));
+    //CULog("x: %f", abs(_player->getPos().x - _level1Door->getPos().x));
 
     bool check = false;
-//    if (_enemyController->getPossessed() != nullptr) {
-//        //CULog("Possessed Enemy distance: %d", _enemyController->getPossessed()->getPos().x);
-//]    }
+    if (_enemyController->getPossessed() != nullptr) {
+        CULog("Possessed Enemy distance: %d", _enemyController->getPossessed()->getPos().x);
+    }
 
     //_enemyController->getPossessed() != nullptr
     if (_inputManager.getTapPos().x != 0) {
