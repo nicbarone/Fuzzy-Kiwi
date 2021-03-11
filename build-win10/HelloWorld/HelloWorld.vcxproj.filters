@@ -39,10 +39,13 @@
     <ClInclude Include="..\..\source\Enemy.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\Construction.h">
+    <ClInclude Include="..\..\source\EnemyController.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\EnemyController.h">
+    <ClInclude Include="..\..\source\ConstructionElement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Floor.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,10 +74,13 @@
     <ClCompile Include="..\..\source\Enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\Construction.cpp">
+    <ClCompile Include="..\..\source\EnemyController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\EnemyController.cpp">
+    <ClCompile Include="..\..\source\ConstructionElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Floor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
