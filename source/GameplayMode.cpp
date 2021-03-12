@@ -45,11 +45,11 @@ using namespace cugl;
 
 vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
 
-vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(150.0f, 90.0f) };
+vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
 
 vector<Vec2> level2Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
 
-vector<Vec2> level2Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 90.0f), Vec2(150.0f, 90.0f) };
+vector<Vec2> level2Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
 
 
 
@@ -298,15 +298,17 @@ void GameplayMode::buildScene() {
     // Create the player
     _player = Player::alloc(150,128,0,cat);
 
-    //floor creation
+    //floor texture creation
     std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
+    //door texture creation
+    std::shared_ptr<Texture> door = _assets->get<Texture>("door");
     _level1Floor = Floor::alloc(Vec2(550, 30), 0,Vec2(1,1), 0, cugl::Color4::WHITE, level1Floor, floor);
 
-    _level1Door = Floor::alloc(Vec2(550, 130), 4.71239, Vec2(1,1), 0, cugl::Color4::WHITE, level1Door, floor);
+    _level1Door = Floor::alloc(Vec2(550, 130), 4.71239, Vec2(1,1), 0, cugl::Color4::WHITE, level1Door, door);
 
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 0, cugl::Color4::WHITE, level2Floor, floor);
 
-    _level2Door = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 0, cugl::Color4::WHITE, level2Door, floor);
+    _level2Door = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 0, cugl::Color4::WHITE, level2Door, door);
 
 
     // Enemy creation
@@ -403,6 +405,7 @@ void GameplayMode::checkStaircaseDoors() {
             CULog("3");
         }
         else if (visibility && 
+            abs(_enemyController->getPossessed()->getPos().x - _level2Door->getPos().x) < 110.0f &&
             abs(_inputManager.getTapPos().y - _level2Door->getPos().y + 350) < 180.0f&&
             abs(_inputManager.getTapPos().x - _level2Door->getPos().x) < 60.0f) {
             _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
