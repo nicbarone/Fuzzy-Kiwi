@@ -12,8 +12,7 @@ private:
 	float _angle;
 	Color4 _color;
 	int _level;
-	/** float because velocity can only be in the x direction*/
-	float _velocity;
+	Vec2 _velocity;
 
 public:
 
@@ -84,15 +83,17 @@ public:
 	}
 
 	/** sets the velocity of the entity*/
-	void setVelocity(float velocity) {
+	void setVelocity(Vec2 velocity) {
 		_velocity = velocity;
 	}
 
 	/** returns a float representing the velocity of the entity*/
-	float getVelocity() {
+	Vec2 getVelocity() {
 		return _velocity;
 	}
 
+	/** handling movement with player input*/
+	void manualMove(float direction, float speed);
 	
 };
 #endif

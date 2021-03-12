@@ -152,11 +152,9 @@ void HelloApp::onShutdown() {
 void HelloApp::update(float timestep) {
     // Read input controller input
     _inputManager.readInput();
-    _player->move(_inputManager.getForward());
 
-    // Enemy movement
-    _enemyController->moveEnemies(_inputManager.getForward());
-    _enemyController->findClosest(_player->getPos());
+
+  
     if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
         //very temporary modification to test whether it works, dont want to work with highlight right now
         _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
@@ -233,7 +231,12 @@ void HelloApp::update(float timestep) {
     checkStaircaseDoors();
   
     
-
+    /**possess code works a bit better when movement is processed last (scene node position is updated here)
+        else you get one frame of wrong position*/
+    _player->move(_inputManager.getForward());
+    // Enemy movement
+    _enemyController->moveEnemies(_inputManager.getForward());
+    _enemyController->findClosest(_player->getPos());
 }
 
 bool HelloApp::attemptPossess() {
@@ -256,6 +259,7 @@ void HelloApp::unpossess() {
     _player->setPossess(false);
     enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
+    //may want to remove the enemy from the vector in enemy controller eventually, seems good for now
     _enemyController->updatePossessed(nullptr);
 
 }

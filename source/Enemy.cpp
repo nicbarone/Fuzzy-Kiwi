@@ -49,16 +49,16 @@ bool Enemy::init(float x, float y, float ang, std::shared_ptr<Texture> enemy, st
 }
 
 void Enemy::move(float direction) {
+	Vec2 original = Entity::getPos();
 	if (_isActive) {
 		if (_movingRight) {
-			Entity::setVelocity(_speed);
+			Entity::setVelocity(Vec2(_speed,0));
 		}
 		else {
-			Entity::setVelocity(-_speed);
+			Entity::setVelocity(Vec2(-_speed, 0));
 		}
-		Vec2 original = Entity::getPos();
-		Entity::setPos(Vec2(original.x + Entity::getVelocity(), original.y));
-		_sceneNode->setPositionX(original.x + Entity::getVelocity());
+		Entity::setPos(Vec2(original + Entity::getVelocity()));
+		_sceneNode->setPosition(original + Entity::getVelocity());
 		if (Entity::getPos().x > _patrolEnd) {
 			_movingRight = false;
 		}
@@ -67,15 +67,8 @@ void Enemy::move(float direction) {
 		}
 	}
 	else if (_isPossessed) {
-		if (direction != 0.0f) {
-			Entity::setVelocity(direction * SPEED);
-		}
-		else {
-			Entity::setVelocity(0);
-		}
-		Vec2 original = Entity::getPos();
-		Entity::setPos(Vec2(original.x + Entity::getVelocity(), original.y));
-		_sceneNode->setPositionX(original.x + Entity::getVelocity());
+		manualMove(direction, SPEED);
+		_sceneNode->setPosition(original + getVelocity());
 	}
 }
 

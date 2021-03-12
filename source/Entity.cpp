@@ -17,3 +17,8 @@ void Entity::dispose() {
 	_angle = 0;
 	_color = cugl::Color4::WHITE;
 }
+
+void Entity::manualMove(float direction, float speed) {
+	setVelocity(Vec2(direction * speed, 0));
+	setPos(Vec2(getPos() + getVelocity()));
+}

@@ -35,18 +35,7 @@ bool Player::init(float x, float y, float ang, std::shared_ptr<Texture> cat)
 }
 
 void Player::move(float direction) {
-	if (direction != 0.0f) {
-		Entity::setVelocity(direction * SPEED);
-	}
-	else {
-		Entity::setVelocity(0);
-	}
-	Vec2 original = Entity::getPos();
-	Entity::setPos(Vec2(original.x + Entity::getVelocity(), original.y));
-	_sceneNode->setPositionX(original.x + Entity::getVelocity());
-	_sceneNode->setPositionY(Entity::getPos().y);
+	Vec2 original = getPos();
+	manualMove(direction, SPEED);
+	_sceneNode->setPosition(original + getVelocity());
 }
-
-
-
-
