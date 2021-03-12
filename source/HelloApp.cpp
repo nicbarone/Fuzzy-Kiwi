@@ -256,6 +256,7 @@ void HelloApp::unpossess() {
     _player->setPossess(false);
     enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
+    _enemyController->updatePossessed(nullptr);
 
 }
 
@@ -368,49 +369,41 @@ void HelloApp::buildScene() {
 
 void HelloApp::checkStaircaseDoors() {
   
-    //CULog("door 1 y position: %d", _level1Door->getPos().y);
-    /**if (_inputManager.getTapPos().y != 0) {
-        */
-    /*        CULog("input y position: %d", _level1Door->getPos().y);
-    }*/
+
     bool visibility;
 
     if (_enemyController->getPossessed() != nullptr) {
-        visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
-        
-
-
-      /*  if (_enemyController->getPossessed()->getPos().x != _player) {
-            CULog("y position: %d", _enemyController->getPossessed()->getPos().y);
-        }*/
-        
-        
-        
+        visibility = _enemyController->getPossessed()->getSceneNode()->isVisible(); 
         if (visibility && abs(_enemyController->getPossessed()->getPos().x - _level1Door->getPos().x) < 110.0f &&
             abs(_inputManager.getTapPos().y - _level1Door->getPos().y -320) < 80.0f&&
             abs(_inputManager.getTapPos().x - _level1Door->getPos().x) < 60.0f) {
-            /*_enemyController->getPossessed()->setPos(_level2Door->getPos());
-            _enemyController->getPossessed()->changeFloor();*/
-            CULog("y position: %d", _inputManager.getTapPos().y);
             _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+            CULog("1");
         }
 
-        /*else if (!visibility && abs(_inputManager.getTapPos().y - _level1Door->getPos().y - 320) < 80.0f &&
-            abs(_inputManager.getTapPos().y - _level2Door->getPos().y) < 80.0f &&
+        else if (!visibility &&
+            abs(_inputManager.getTapPos().y - _level2Door->getPos().y + 270) < 80.0f &&
             abs(_inputManager.getTapPos().x - _level2Door->getPos().x) < 60.0f) {
+            _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
             _enemyController->getPossessed()->setPos(_level2Door->getPos());
             _enemyController->getPossessed()->changeFloor();
+            CULog("2");
+        }
+
+        else if (!visibility &&
+            abs(_inputManager.getTapPos().y - _level1Door->getPos().y - 320) < 80.0f &&
+            abs(_inputManager.getTapPos().x - _level1Door->getPos().x) < 60.0f) {
             _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
-
-        }*/
-
-
-        //else if (abs(_enemyController->getPossessed()->getPos().x - _level2Door->getPos().x) < 110.0f &&
-        //    abs(_inputManager.getTapPos().y - _level1Door->getPos().y - 320) < 80.0f) {
-        //    _enemyController->getPossessed()->setPos(_level2Door->getPos());
-        //    _enemyController->getPossessed()->changeFloor();
-        //    //_enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
-
-        //}
+            _enemyController->getPossessed()->setPos(_level1Door->getPos());
+            _enemyController->getPossessed()->changeFloor();
+            CULog("3");
+        }
+        else if (visibility && 
+            abs(_inputManager.getTapPos().y - _level2Door->getPos().y + 350) < 180.0f&&
+            abs(_inputManager.getTapPos().x - _level2Door->getPos().x) < 60.0f) {
+            _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+            CULog("4");
+        }
+        }
+  //compare possesed enemy level and door level and see if it works 
     }
-}
