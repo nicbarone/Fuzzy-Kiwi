@@ -227,7 +227,10 @@ void GameplayMode::update(float timestep) {
         _possessButton->getButton()->activate();
         _possessButton->setClicked(false);
     }
+    
 
+    //CULog("%i", _level1Door->getSceneNode()->getPositionX());
+    //CULog("%d", _level2Door->getPos().x);
     checkStaircaseDoors();
   
     
@@ -306,6 +309,8 @@ void GameplayMode::buildScene() {
 
     _level1Door = Floor::alloc(Vec2(550, 130), 4.71239, Vec2(1,1), 1, cugl::Color4::WHITE, level1Door, door);
 
+    
+
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Floor, floor);
 
     _level2Door = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, door);
@@ -380,19 +385,25 @@ void GameplayMode::checkStaircaseDoors() {
 
     if (_enemyController->getPossessed() != nullptr) {
         
+        /*CULog("%f", _enemyController->getPossessed()->getPos().y);*/
+        if (_inputManager.touch2Screen(_inputManager.getTapPos()).y != 576) {
+            CULog("%f", _inputManager.touch2Screen(_inputManager.getTapPos()).y);
+       }
         
+
+
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible(); 
         if (visibility && abs(_enemyController->getPossessed()->getPos().x - _level1Door->getPos().x) < 110.0f &&
-            abs(_inputManager.getTapPos().y - _level1Door->getPos().y -320) < 80.0f&&
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - _level1Door->getPos().y) < 80.0f&&
             _enemyController->getPossessed()->getLevel() == _level1Door->getLevel()&&
-            abs(_inputManager.getTapPos().x - _level1Door->getPos().x) < 60.0f) {
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - _level1Door->getPos().x) < 60.0f) {
             _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
             CULog("1");
         }
 
         else if (!visibility &&
-            abs(_inputManager.getTapPos().y - _level2Door->getPos().y + 270) < 80.0f &&
-            abs(_inputManager.getTapPos().x - _level2Door->getPos().x) < 60.0f) {
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - _level2Door->getPos().y) < 80.0f &&
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - _level2Door->getPos().x) < 60.0f) {
             _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
             _enemyController->getPossessed()->setPos(_level2Door->getPos());
             _enemyController->getPossessed()->changeFloor();
@@ -402,8 +413,8 @@ void GameplayMode::checkStaircaseDoors() {
         }
 
         else if (!visibility &&
-            abs(_inputManager.getTapPos().y - _level1Door->getPos().y - 320) < 80.0f &&
-            abs(_inputManager.getTapPos().x - _level1Door->getPos().x) < 60.0f) {
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - _level1Door->getPos().y) < 80.0f &&
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - _level1Door->getPos().x) < 60.0f) {
             _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
             _enemyController->getPossessed()->setPos(_level1Door->getPos());
             _enemyController->getPossessed()->changeFloor();
@@ -412,9 +423,9 @@ void GameplayMode::checkStaircaseDoors() {
         }
         else if (visibility && 
             abs(_enemyController->getPossessed()->getPos().x - _level2Door->getPos().x) < 110.0f &&
-            abs(_inputManager.getTapPos().y - _level2Door->getPos().y + 350) < 180.0f&&
-            _enemyController->getPossessed()->getLevel() == _level2Door->getLevel()&&
-            abs(_inputManager.getTapPos().x - _level2Door->getPos().x) < 60.0f) {
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - _level2Door->getPos().y) < 80.0f &&
+            _enemyController->getPossessed()->getLevel() == _level2Door->getLevel() &&
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - _level2Door->getPos().x) < 60.0f) {
             _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
             CULog("4");
         }

@@ -34,6 +34,7 @@ public:
 
 	/** returns a Vec2 representing the position of the construction element*/
 	Vec2 getPos() {
+		//CULog("pos %d", _pos.x);
 		return _pos;
 	}
 
