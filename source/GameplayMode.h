@@ -61,6 +61,8 @@ protected:
     std::shared_ptr<Floor> _level2Floor;
     /** A reference to the level 2 door*/
     std::shared_ptr<Floor> _level2Door;
+    /** A reference to the list of all staircase doors in the level*/
+    std::vector<shared_ptr<Floor>> _staircaseDoors;
     /** A reference to the input manager*/
     InputManager _inputManager;
     /** The button to possess and release*/
