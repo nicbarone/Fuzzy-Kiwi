@@ -1,11 +1,11 @@
 #pragma once
 #ifndef __DOOR_H__
 #define __DOOR_H__
-#include <Interactable.h>
+#include <ConstructionElement.h>
 #include <cugl/cugl.h>
 using namespace cugl;
 
-class Door : public Interactable {
+class Door : public ConstructionElement {
 
 public:
 

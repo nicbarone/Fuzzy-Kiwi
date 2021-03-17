@@ -58,14 +58,16 @@ protected:
     std::shared_ptr<Player> _player;
     /** A reference to the level 1 floor*/
     std::shared_ptr<Floor> _level1Floor;
-    /** A reference to the level 1 door*/
+    /** A reference to the level 1 staircase door*/
     std::shared_ptr<Floor> _level1StairDoor;
     /** A reference to the level 2 floor*/
     std::shared_ptr<Floor> _level2Floor;
-    /** A reference to the level 2 door*/
+    /** A reference to the level 2 staircase door*/
     std::shared_ptr<Floor> _level2StairDoor;
     /** A reference to the list of all staircase doors in the level*/
     std::vector<shared_ptr<Floor>> _staircaseDoors;
+    /** A reference to the level 1 door*/
+    std::shared_ptr<Door> _level1Door;
     /** A reference to the level 2 door*/
     InputManager _inputManager;
     /** The button to possess and release*/

@@ -308,17 +308,21 @@ void GameplayMode::buildScene() {
 
     //floor texture creation
     std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
-    //door texture creation
+    //Staircase door texture creation
+    std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
+    //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
     _level1Floor = Floor::alloc(Vec2(550, 30), 0,Vec2(1,1), 1, cugl::Color4::WHITE, level1Floor, floor);
 
-    _level1StairDoor = Floor::alloc(Vec2(550, 130), 4.71239, Vec2(1,1), 1, cugl::Color4::WHITE, level1Door, door);
+    _level1StairDoor = Floor::alloc(Vec2(750, 130), 4.71239, Vec2(1,1), 1, cugl::Color4::WHITE, level1Door, staircaseDoor);
 
     
 
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Floor, floor);
 
-    _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, door);
+    _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, staircaseDoor);
+
+    _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 2, cugl::Color4::WHITE, door);
 
 
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
@@ -363,9 +367,10 @@ void GameplayMode::buildScene() {
     // Add the logo and button to the scene graph
     _scene->addChild(_rootScene);
     _rootScene->addChild(_level1Floor->getSceneNode()); 
-    _rootScene->addChild(_level1Door->getSceneNode());
+    _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2Floor->getSceneNode());
-    _rootScene->addChild(_level2Door->getSceneNode());
+    _rootScene->addChild(_level2StairDoor->getSceneNode());
+    _rootScene->addChild(_level1Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
 
@@ -421,5 +426,4 @@ void GameplayMode::checkStaircaseDoors() {
 
         }
     }
-  //compare possesed enemy level and door level and see if it works 
     }

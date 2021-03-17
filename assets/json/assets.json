@@ -63,6 +63,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"staircaseDoor": {
+			"file": "textures/StaircaseDoor.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"door": {
 			"file": "textures/Door.png",
 			"minfilter": "nearest",
