@@ -13,6 +13,8 @@ using namespace cugl;
 #define JSTICK_OFFSET    80
 /** This how far before we no longer regard a touch on screen as a click */
 #define TAP_THRESHOLD    10
+/** This tells how sensitive the camera is to zooming */
+#define ZOOM_SENSITIVITY    0.1f
 
 /**
  * Creates a new input controller with the default settings
@@ -23,6 +25,7 @@ InputManager::InputManager() {
     _player = nullptr;
     _possessButton = nullptr;
     _unPossessButton = nullptr;
+    _rootSceneNode = nullptr;
 }
 
 InputManager::~InputManager()
@@ -30,6 +33,7 @@ InputManager::~InputManager()
     _player = nullptr;
     _possessButton = nullptr;
     _unPossessButton = nullptr;
+    _rootSceneNode = nullptr;
 }
 
 /**
@@ -85,10 +89,11 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
  *
  * @return true if the player was initialized correctly
  */
-bool InputManager::init(std::shared_ptr<Player> player, cugl::Rect bounds) {
+bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::SceneNode> rootNode, cugl::Rect bounds) {
     _player = player;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
+    _rootSceneNode = rootNode;
     createZones();
     clearTouchInstance(_stouch);
     clearTouchInstance(_ltouch);
@@ -263,45 +268,14 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
 void InputManager::readInput() {
     // TODO: mobile controls disabled right now
 #ifdef CU_MOBILE
-    /**
-    // YOU NEED TO PUT SOME CODE HERE
-    // if not your turn, don't take inputs
-    if (!_yourTurn) {
-        return;
-    }
-    _forward = _turning = 0;
-    _didFire = false;
-    if (_player == 0) {
-        _didFire = _keyFire;
-        _turning = _turnAngle;
-        _forward = _keyForward ? 1 : 0;
+    _forward = _keyForward;
+    // if stouch is not null, then it is a tap
+    if (!_stouch.empty()) {
+        _tap_pos = _stouch.position;
     }
     else {
-        Vec3 acc = Input::get<Accelerometer>()->getAcceleration();
-
-        // Measure the "left-right" tilt of the device
-        float lrpitch = atan2(-acc.x, sqrt(acc.y * acc.y + acc.z * acc.z));
-
-        // Check if we turned left or right
-        if (lrpitch > EVENT_ACCEL_THRESH) _turning = -1;
-        else if (lrpitch < -EVENT_ACCEL_THRESH) _turning = 1;
-        else _turning = 0;
-
-        // Measure the "forward-backword" tilt of the device
-        float fbpitch = atan2(-acc.y, sqrt(acc.x * acc.x + acc.z * acc.z));
-
-        // Check if we turned left or right
-        if (fbpitch > EVENT_ACCEL_THRESH) _forward = 1;
-        else if (fbpitch < -EVENT_ACCEL_THRESH) _forward = -1;
-        else _forward = 0;
-        // if stouch is not null, then it is a tap
-        if (!_stouch.empty()) {
-            _tap_pos = _stouch.position;
-        } else {
-            _tap_pos = Vec2::ZERO;
-        }
-        
-    } */
+        _tap_pos = Vec2::ZERO;
+    }
 
 #else
     // Figure out, based on which player we are, which keys
@@ -330,5 +304,7 @@ void InputManager::readInput() {
     else {
         _tap_pos = Vec2::ZERO;
     }
+    // Handle Zoom in/out
+    int zoomFactor = Input::get<Mouse>()->wheelDirection().y;
 #endif
 }

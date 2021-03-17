@@ -150,6 +150,8 @@ void GameplayMode::onShutdown() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void GameplayMode::update(float timestep) {
+    // update camera
+    _scene->getCamera()->update();
     // Read input controller input
     _inputManager.readInput();
 
@@ -375,7 +377,7 @@ void GameplayMode::buildScene() {
 
     // Initialize input manager
     _inputManager = InputManager();
-    _inputManager.init(_player, _scene->getBounds());
+    _inputManager.init(_player, _scene->getChild(0),_scene->getBounds());
 }
 
 void GameplayMode::checkStaircaseDoors() {
