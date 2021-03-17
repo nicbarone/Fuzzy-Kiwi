@@ -70,7 +70,8 @@ void GameplayMode::onStartup() {
     // Create a scene graph the same size as the window
     _scene = Scene2::alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
-    _rootScene->setAnchor(Vec2(0.5, 0.5));
+    _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
+    _rootScene->setContentSize(getSafeBounds().size);
     
     // Create a sprite batch (and background color) to render the scene
     _batch = SpriteBatch::alloc();
@@ -381,7 +382,7 @@ void GameplayMode::buildScene() {
 
     // Initialize input manager
     _inputManager = InputManager();
-    _inputManager.init(_player, _scene->getChild(0),_scene->getBounds());
+    _inputManager.init(_player, _rootScene,_scene->getBounds());
 }
 
 void GameplayMode::checkStaircaseDoors() {

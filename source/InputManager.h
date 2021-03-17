@@ -13,8 +13,11 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
+    bool _camMovement;
+    Vec2 _camMoveDirection;
     /** Position of single tap on screen, updated upon leaving, if not exist then Vec2::ZERO */
     Vec2 _tap_pos;
+    Vec2 _mouse_rightJoystick_startPos;
     /** If pressed possess button then true, otherwise false */
     std::shared_ptr<Player> _player;
     std::shared_ptr<ui::ButtonElement> _possessButton;
@@ -130,7 +133,18 @@ public:
      *
      * @param  pos  the current joystick position
      */
-    void processJoystick(const cugl::Vec2 pos);
+    void processLeftJoystick(const cugl::Vec2 pos);
+
+    /**
+     * Processes movement for the floating joystick.
+     *
+     * This will register movement as left or right (or neither).  It
+     * will also move the joystick anchor if the touch position moves
+     * too far.
+     *
+     * @param  pos  the current joystick position
+     */
+    void processRightJoystick(const cugl::Vec2 pos);
 
 #pragma mark Touch and Mouse Callbacks
     /**
@@ -202,9 +216,13 @@ private:
     /** The current touch location for the bottom zone */
     TouchInstance _mtouch;
     /** Whether the virtual joystick is active */
-    bool _joystick;
+    bool _leftJoystick;
     /** The position of the virtual joystick */
-    cugl::Vec2 _joycenter;
+    cugl::Vec2 _leftJoycenter;
+    /** Whether the virtual joystick is active */
+    bool _rightJoystick;
+    /** The position of the virtual joystick */
+    cugl::Vec2 _rightJoycenter;
 };
 
 #endif /* __INPUT_MANAGER_H__ */
