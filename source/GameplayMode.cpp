@@ -234,10 +234,8 @@ void GameplayMode::update(float timestep) {
     }
     
 
-    //CULog("%i", _level1StairDoor->getSceneNode()->getPositionX());
-    //CULog("%d", _level2StairDoor->getPos().x);
     checkStaircaseDoors();
-  
+    checkDoors();
     
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
@@ -322,7 +320,7 @@ void GameplayMode::buildScene() {
 
     _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, staircaseDoor);
 
-    _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 2, cugl::Color4::WHITE, door);
+    _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 1, cugl::Color4::WHITE, door);
 
 
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
@@ -390,6 +388,19 @@ void GameplayMode::buildScene() {
     // Initialize input manager
     _inputManager = InputManager();
     _inputManager.init(_player, _scene->getBounds());
+}
+
+
+void GameplayMode::checkDoors() {
+    bool doorVisibility = _level1Door->getSceneNode()->isVisible();
+    if (_enemyController->getPossessed() != nullptr) {
+        if (abs(_enemyController->getPossessed()->getPos().x - _level1Door->getPos().x) < 110.0f &&
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - _level1Door->getPos().y) < 80.0f &&
+            _enemyController->getPossessed()->getLevel() == _level1Door->getLevel() &&
+            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - _level1Door->getPos().x) < 60.0f) {
+            _level1Door->getSceneNode()->setVisible(!doorVisibility);
+        }
+    }
 }
 
 void GameplayMode::checkStaircaseDoors() {

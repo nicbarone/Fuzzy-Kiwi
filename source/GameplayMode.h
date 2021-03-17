@@ -170,6 +170,10 @@ public:
      */
     virtual void draw() override;
 
+    /*Function called every update to check if the player is trying to close or 
+    open a door*/
+    void checkDoors();
+
     /*Function called every update to check if the player is trying to exit
     or enter a staircase door*/
     void checkStaircaseDoors();
