@@ -71,6 +71,9 @@ void GameplayMode::onStartup() {
     
     // Create a scene graph the same size as the window
     _scene = Scene2::alloc(size.width, size.height);
+    _rootScene = scene2::SceneNode::alloc();
+    _rootScene->setAnchor(Vec2(0.5, 0.5));
+    
     // Create a sprite batch (and background color) to render the scene
     _batch = SpriteBatch::alloc();
     setClearColor(Color4(229,229,229,255));
@@ -358,17 +361,18 @@ void GameplayMode::buildScene() {
     _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
 
     // Add the logo and button to the scene graph
-    _scene->addChild(_level1Floor->getSceneNode()); 
-    _scene->addChild(_level1StairDoor->getSceneNode());
-    _scene->addChild(_level2Floor->getSceneNode());
-    _scene->addChild(_level2StairDoor->getSceneNode());
+    _scene->addChild(_rootScene);
+    _rootScene->addChild(_level1Floor->getSceneNode()); 
+    _rootScene->addChild(_level1Door->getSceneNode());
+    _rootScene->addChild(_level2Floor->getSceneNode());
+    _rootScene->addChild(_level2Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
-    _scene->addChild(_player->getSceneNode());
+    _rootScene->addChild(_player->getSceneNode());
 
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
     for (auto it = begin(enemies); it != end(enemies); ++it) {
-        _scene->addChild(it->get()->getSceneNode());
+        _rootScene->addChild(it->get()->getSceneNode());
     }
 
     
