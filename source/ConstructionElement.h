@@ -34,6 +34,7 @@ public:
 
 	/** returns a Vec2 representing the position of the construction element*/
 	Vec2 getPos() {
+		//CULog("pos %d", _pos.x);
 		return _pos;
 	}
 
@@ -59,16 +60,6 @@ public:
 		return _scale;
 	}
 
-	/** sets the level of the entity*/
-	void setLevel(int level) {
-		_level = level;
-	}
-
-	/** returns a int representing the level of the construction element*/
-	int getLevel() {
-		return _level;
-	}
-
 	/** returns a texture representing the floor level of the construction element*/
 	void  setTexture(std::shared_ptr<Texture> texture) {
 		_texture = texture;
@@ -88,6 +79,16 @@ public:
 	/** returns a Color4 representing the color of the construction element*/
 	Color4 getColor() {
 		return _color;
+	}
+
+	/** sets the floor level of the construction element*/
+	void setLevel(int level) {
+		_level = level;
+	}
+
+	/** returns an int representing the floor level of the construction element*/
+	int getLevel() {
+		return _level;
 	}
 
 	/** sets a vector representing the vertices of the construction element*/

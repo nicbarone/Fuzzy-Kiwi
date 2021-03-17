@@ -37,9 +37,10 @@ void Enemy::dispose() {
 	Entity::dispose();
 }
 
-bool Enemy::init(float x, float y, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
+bool Enemy::init(float x, float y, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
 	Entity::setPos(Vec2(x, y));
 	Entity::setAngle(0);
+	Entity::setLevel(level);
 	_texture = enemy;
 	_altTexture = alt;
 	_isActive = true;
