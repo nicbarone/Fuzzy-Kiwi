@@ -32,6 +32,7 @@
 #include <cugl/cugl.h>
 #include "Player.h"
 #include "Floor.h"
+#include "Door.h"
 #include "EnemyController.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
@@ -56,14 +57,14 @@ protected:
     /** A reference to the level 1 floor*/
     std::shared_ptr<Floor> _level1Floor;
     /** A reference to the level 1 door*/
-    std::shared_ptr<Floor> _level1Door;
+    std::shared_ptr<Floor> _level1StairDoor;
     /** A reference to the level 2 floor*/
     std::shared_ptr<Floor> _level2Floor;
     /** A reference to the level 2 door*/
-    std::shared_ptr<Floor> _level2Door;
+    std::shared_ptr<Floor> _level2StairDoor;
     /** A reference to the list of all staircase doors in the level*/
     std::vector<shared_ptr<Floor>> _staircaseDoors;
-    /** A reference to the input manager*/
+    /** A reference to the level 2 door*/
     InputManager _inputManager;
     /** The button to possess and release*/
     std::shared_ptr<ui::ButtonElement> _possessButton;

@@ -163,8 +163,8 @@ void GameplayMode::update(float timestep) {
     }
     if (_inputManager.getTapPos().x != 0) {
         /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
-        CULog("x: %f, y: %f", _level1Door->getPos().x, _level1Door->getPos().y);*/
-        //CULog("x: %f", abs(_player->getPos().x - _level1Door->getPos().x));
+        CULog("x: %f, y: %f", _level1StairDoor->getPos().x, _level1StairDoor->getPos().y);*/
+        //CULog("x: %f", abs(_player->getPos().x - _level1StairDoor->getPos().x));
         //CULog("Is possessing: %d", _player->getPossess());
         //CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
 
@@ -231,8 +231,8 @@ void GameplayMode::update(float timestep) {
     }
     
 
-    //CULog("%i", _level1Door->getSceneNode()->getPositionX());
-    //CULog("%d", _level2Door->getPos().x);
+    //CULog("%i", _level1StairDoor->getSceneNode()->getPositionX());
+    //CULog("%d", _level2StairDoor->getPos().x);
     checkStaircaseDoors();
   
     
@@ -309,16 +309,16 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
     _level1Floor = Floor::alloc(Vec2(550, 30), 0,Vec2(1,1), 1, cugl::Color4::WHITE, level1Floor, floor);
 
-    _level1Door = Floor::alloc(Vec2(550, 130), 4.71239, Vec2(1,1), 1, cugl::Color4::WHITE, level1Door, door);
+    _level1StairDoor = Floor::alloc(Vec2(550, 130), 4.71239, Vec2(1,1), 1, cugl::Color4::WHITE, level1Door, door);
 
     
 
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Floor, floor);
 
-    _level2Door = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, door);
+    _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, door);
 
 
-    _staircaseDoors = { _level1Door , _level2Door };
+    _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
 
     // Enemy creation
@@ -359,9 +359,9 @@ void GameplayMode::buildScene() {
 
     // Add the logo and button to the scene graph
     _scene->addChild(_level1Floor->getSceneNode()); 
-    _scene->addChild(_level1Door->getSceneNode());
+    _scene->addChild(_level1StairDoor->getSceneNode());
     _scene->addChild(_level2Floor->getSceneNode());
-    _scene->addChild(_level2Door->getSceneNode());
+    _scene->addChild(_level2StairDoor->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _scene->addChild(_player->getSceneNode());
 
