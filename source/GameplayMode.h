@@ -43,6 +43,8 @@
  */
 class GameplayMode : public cugl::Application {
 protected:
+    /** The parent scene node for a level*/
+    std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
     /** The loaders to (synchronously) load in assets */
     std::shared_ptr<cugl::AssetManager> _assets;
     /** A scene graph, used to display our 2D scenes */

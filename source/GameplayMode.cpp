@@ -69,6 +69,9 @@ void GameplayMode::onStartup() {
     
     // Create a scene graph the same size as the window
     _scene = Scene2::alloc(size.width, size.height);
+    _rootScene = scene2::SceneNode::alloc();
+    _rootScene->setAnchor(Vec2(0.5, 0.5));
+    
     // Create a sprite batch (and background color) to render the scene
     _batch = SpriteBatch::alloc();
     setClearColor(Color4(229,229,229,255));
@@ -315,7 +318,7 @@ void GameplayMode::buildScene() {
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy-placeholder");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
-    _enemyController->addEnemy(50, 500, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(50, 400, 0, enemyTexture, altTexture);
     _enemyController->addEnemy(50, 128, 0, enemyTexture, altTexture);
 
     // Create a button.  A button has an up image and a down image
@@ -348,17 +351,18 @@ void GameplayMode::buildScene() {
     _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
 
     // Add the logo and button to the scene graph
-    _scene->addChild(_level1Floor->getSceneNode()); 
-    _scene->addChild(_level1Door->getSceneNode());
-    _scene->addChild(_level2Floor->getSceneNode());
-    _scene->addChild(_level2Door->getSceneNode());
+    _scene->addChild(_rootScene);
+    _rootScene->addChild(_level1Floor->getSceneNode()); 
+    _rootScene->addChild(_level1Door->getSceneNode());
+    _rootScene->addChild(_level2Floor->getSceneNode());
+    _rootScene->addChild(_level2Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
-    _scene->addChild(_player->getSceneNode());
+    _rootScene->addChild(_player->getSceneNode());
 
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
     for (auto it = begin(enemies); it != end(enemies); ++it) {
-        _scene->addChild(it->get()->getSceneNode());
+        _rootScene->addChild(it->get()->getSceneNode());
     }
 
     
