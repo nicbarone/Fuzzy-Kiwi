@@ -5,14 +5,20 @@ using namespace cugl;
 #define ACCEL_KEY      2
 /** How close we need to be for a multi touch */
 #define NEAR_TOUCH      100
-/** This defines the how far the joystick has to move horizontally to be recognized*/
+/** This defines the how far the left joystick has to move horizontally to be recognized*/
 #define JSTICK_XDIFF_MIN  15
+/** This defines the how far the right joystick has to move to be recognized*/
+#define JSTICK_DIFF_MIN  15
 /** This defines the joystick radial size (for reseting the anchor) */
 #define JSTICK_RADIUS    25
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    80
 /** This how far before we no longer regard a touch on screen as a click */
 #define TAP_THRESHOLD    10
+/** This tells how sensitive the camera is to zooming */
+#define ZOOM_SENSITIVITY    0.1f
+/** This tells how fast the camera is to moving */
+#define CAMERA_MAX_SPEED    15.0f
 
 /**
  * Creates a new input controller with the default settings
@@ -23,6 +29,8 @@ InputManager::InputManager() {
     _player = nullptr;
     _possessButton = nullptr;
     _unPossessButton = nullptr;
+    _rootSceneNode = nullptr;
+    _camMovement = false;
 }
 
 InputManager::~InputManager()
@@ -30,6 +38,8 @@ InputManager::~InputManager()
     _player = nullptr;
     _possessButton = nullptr;
     _unPossessButton = nullptr;
+    _rootSceneNode = nullptr;
+    _camMovement = false;
 }
 
 /**
@@ -85,10 +95,13 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
  *
  * @return true if the player was initialized correctly
  */
-bool InputManager::init(std::shared_ptr<Player> player, cugl::Rect bounds) {
+bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::SceneNode> rootNode, cugl::Rect bounds) {
     _player = player;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
+    _rootSceneNode = rootNode;
+    _camMovement = false;
+    _camMoveDirection = Vec2::ZERO;
     createZones();
     clearTouchInstance(_stouch);
     clearTouchInstance(_ltouch);
@@ -106,6 +119,8 @@ bool InputManager::init(std::shared_ptr<Player> player, cugl::Rect bounds) {
     touch->addMotionListener(LISTENER_KEY, [=](const TouchEvent& event, const Vec2& previous, bool focus) {
         this->touchesMovedCB(event, previous, focus);
         });
+#else
+    _mouse_rightJoystick_startPos = Vec2::ZERO;
 #endif
     return true;
 }
@@ -137,7 +152,7 @@ Vec2 InputManager::touch2Screen(const Vec2 pos) const {
  *
  * @param  pos  the current joystick position
  */
-void InputManager::processJoystick(const cugl::Vec2 pos) {
+void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
     Vec2 diff = _ltouch.position - pos;
 
     // Reset the anchor if we drifted too far
@@ -146,10 +161,10 @@ void InputManager::processJoystick(const cugl::Vec2 pos) {
         diff *= (JSTICK_RADIUS + JSTICK_XDIFF_MIN) / 2;
         _ltouch.position = pos + diff;
     }
-    _joycenter = touch2Screen(_ltouch.position);
+    _leftJoycenter = touch2Screen(_ltouch.position);
 
     if (std::abs(diff.x) > JSTICK_XDIFF_MIN) {
-        _joystick = true;
+        _leftJoystick = true;
         if (diff.x > 0) {
             _keyForward = 1;
         }
@@ -158,8 +173,38 @@ void InputManager::processJoystick(const cugl::Vec2 pos) {
         }
     }
     else {
-        _joystick = false;
+        _leftJoystick = false;
         _keyForward = 0;
+    }
+}
+
+/**
+ * Processes movement for the floating joystick.
+ *
+ * This will register movement as left or right (or neither).  It
+ * will also move the joystick anchor if the touch position moves
+ * too far.
+ *
+ * @param  pos  the current joystick position
+ */
+void InputManager::processRightJoystick(const cugl::Vec2 pos) {
+    Vec2 diff = _rtouch.position - pos;
+
+    // Reset the anchor if we drifted too far
+    if (diff.lengthSquared() > JSTICK_RADIUS * JSTICK_RADIUS) {
+        diff.normalize();
+        diff *= (JSTICK_RADIUS + JSTICK_DIFF_MIN) / 2;
+        _rtouch.position = pos + diff;
+    }
+    _rightJoycenter = touch2Screen(_rtouch.position);
+
+    if (diff.length() > JSTICK_DIFF_MIN) {
+        _rightJoystick = true;
+        _camMoveDirection = diff;
+    }
+    else {
+        _keyForward = 0;
+        _camMoveDirection = Vec2::ZERO;
     }
 }
 
@@ -188,14 +233,23 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
             _ltouch.timestamp.mark();
             _ltouch.touchids.insert(event.touch);
 
-            _joystick = true;
-            _joycenter = touch2Screen(event.position);
-            _joycenter.y += JSTICK_OFFSET;
+            _leftJoystick = true;
+            _leftJoycenter = touch2Screen(event.position);
+            _leftJoycenter.y += JSTICK_OFFSET;
         }
         break;
     case Zone::RIGHT:
-        // No actions for right right now
-        _rtouch.touchids.insert(event.touch);
+        // Only process if no touch in zone
+        if (_rtouch.touchids.empty()) {
+            // Right is the floating joystick
+            _rtouch.position = event.position;
+            _rtouch.timestamp.mark();
+            _rtouch.touchids.insert(event.touch);
+
+            _rightJoystick = true;
+            _rightJoycenter = touch2Screen(event.position);
+            _rightJoycenter.y += JSTICK_OFFSET;
+        }
         break;
     case Zone::MID:
         // No actions for right right now
@@ -216,17 +270,18 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
 void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
     // Reset all keys that might have been set
     Vec2 pos = event.position;
-    if (_stouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+    if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
         _stouch.touchids.clear();
     }
     Zone zone = getZone(pos);
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
         _ltouch.touchids.clear();
         _keyForward = 0;
-        _joystick = false;
+        _leftJoystick = false;
     }
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         _rtouch.touchids.clear();
+        _rightJoystick = false;
     }
     else if (zone == Zone::MID) {
         _mtouch.touchids.clear();
@@ -242,13 +297,16 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
  */
 void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
     Vec2 pos = event.position;
-    if (_stouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
-        if ((pos-_stouch.position).length()>TAP_THRESHOLD) 
+    if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
+        if ((pos-_rtouch.position).length()>TAP_THRESHOLD) 
             _stouch.touchids.clear();
     }
     // Only check for swipes in the main zone if there is more than one finger.
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
-        processJoystick(pos);
+        processLeftJoystick(pos);
+    }
+    if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+        processRightJoystick(pos);
     }
 }
 
@@ -263,52 +321,25 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
 void InputManager::readInput() {
     // TODO: mobile controls disabled right now
 #ifdef CU_MOBILE
-    /**
-    // YOU NEED TO PUT SOME CODE HERE
-    // if not your turn, don't take inputs
-    if (!_yourTurn) {
-        return;
-    }
-    _forward = _turning = 0;
-    _didFire = false;
-    if (_player == 0) {
-        _didFire = _keyFire;
-        _turning = _turnAngle;
-        _forward = _keyForward ? 1 : 0;
+    _forward = _keyForward;
+    // if stouch is not null, then it is a tap
+    if (!_stouch.empty()) {
+        _tap_pos = _stouch.position;
     }
     else {
-        Vec3 acc = Input::get<Accelerometer>()->getAcceleration();
-
-        // Measure the "left-right" tilt of the device
-        float lrpitch = atan2(-acc.x, sqrt(acc.y * acc.y + acc.z * acc.z));
-
-        // Check if we turned left or right
-        if (lrpitch > EVENT_ACCEL_THRESH) _turning = -1;
-        else if (lrpitch < -EVENT_ACCEL_THRESH) _turning = 1;
-        else _turning = 0;
-
-        // Measure the "forward-backword" tilt of the device
-        float fbpitch = atan2(-acc.y, sqrt(acc.x * acc.x + acc.z * acc.z));
-
-        // Check if we turned left or right
-        if (fbpitch > EVENT_ACCEL_THRESH) _forward = 1;
-        else if (fbpitch < -EVENT_ACCEL_THRESH) _forward = -1;
-        else _forward = 0;
-        // if stouch is not null, then it is a tap
-        if (!_stouch.empty()) {
-            _tap_pos = _stouch.position;
-        } else {
-            _tap_pos = Vec2::ZERO;
-        }
-        
-    } */
+        _tap_pos = Vec2::ZERO;
+    }
 
 #else
     // Figure out, based on which player we are, which keys
     // control our actions (depends on player).
-    KeyCode left, right;
+    KeyCode left, right, camLeft, camRight, camUp, camDown;
     left = KeyCode::A;
     right = KeyCode::D;
+    camLeft = KeyCode::ARROW_LEFT;
+    camRight = KeyCode::ARROW_RIGHT;
+    camUp = KeyCode::ARROW_UP;
+    camDown = KeyCode::ARROW_DOWN;
 
     // Convert keyboard state into game commands
     _forward = 0;
@@ -330,5 +361,32 @@ void InputManager::readInput() {
     else {
         _tap_pos = Vec2::ZERO;
     }
+    // Handle Zoom in/out
+    int zoomFactor = Input::get<Mouse>()->wheelDirection().y;
+    float newScale = min(max(_rootSceneNode->getScale().x + zoomFactor * ZOOM_SENSITIVITY,0.3f), 1.0f);
+    _rootSceneNode->setScale(Vec2(newScale,newScale));
+    // Mimic phone tap on right screen with mouse right click
+    if (Input::get<Mouse>()->buttonDown().hasRight()) {
+        if (!_rightJoystick) {
+            _rightJoystick = true;
+            _mouse_rightJoystick_startPos = Input::get<Mouse>()->pointerPosition();
+        }
+        else {
+            _camMoveDirection = (Input::get<Mouse>()->pointerPosition() - _mouse_rightJoystick_startPos);
+            _camMoveDirection.x = -_camMoveDirection.x;
+        }
+    }
+    else {
+        _rightJoystick = false;
+    }
 #endif
+    // Handle Camera Drag
+    if (_rightJoystick) {
+        _camMoveDirection.normalize();
+        _camMoveDirection *= CAMERA_MAX_SPEED;
+        _rootSceneNode->setPosition(_rootSceneNode->getPosition() + _camMoveDirection/5);
+    }
+    else {
+        _camMoveDirection = Vec2::ZERO;
+    }
 }

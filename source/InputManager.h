@@ -13,12 +13,16 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
+    bool _camMovement;
+    Vec2 _camMoveDirection;
     /** Position of single tap on screen, updated upon leaving, if not exist then Vec2::ZERO */
     Vec2 _tap_pos;
+    Vec2 _mouse_rightJoystick_startPos;
     /** If pressed possess button then true, otherwise false */
     std::shared_ptr<Player> _player;
     std::shared_ptr<ui::ButtonElement> _possessButton;
     std::shared_ptr<ui::ButtonElement> _unPossessButton;
+    std::shared_ptr<cugl::scene2::SceneNode> _rootSceneNode;
     //std::vector<std::shared_ptr<Enemy>> _enemies;
     //std::vector<std::shared_ptr<Interactables>> _interactable_objects;
     //std::vector<std::shared_ptr<Blocker>> _blocking_objects;
@@ -97,7 +101,7 @@ public:
      *
      * @return true if the player was initialized correctly
      */
-    bool init(std::shared_ptr<Player> player, cugl::Rect bounds);
+    bool init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::SceneNode> rootNode, cugl::Rect bounds);
 
     /**
      * Reads the input for this player and converts the result into game logic.
@@ -129,7 +133,18 @@ public:
      *
      * @param  pos  the current joystick position
      */
-    void processJoystick(const cugl::Vec2 pos);
+    void processLeftJoystick(const cugl::Vec2 pos);
+
+    /**
+     * Processes movement for the floating joystick.
+     *
+     * This will register movement as left or right (or neither).  It
+     * will also move the joystick anchor if the touch position moves
+     * too far.
+     *
+     * @param  pos  the current joystick position
+     */
+    void processRightJoystick(const cugl::Vec2 pos);
 
 #pragma mark Touch and Mouse Callbacks
     /**
@@ -177,6 +192,20 @@ public:
         return _tap_pos;
     }
 
+    /**
+     * Getter for the scene camera
+     */
+    std::shared_ptr<cugl::scene2::SceneNode> getRootSceneNode() {
+        return _rootSceneNode;
+    }
+
+    /**
+     * Getter for the scene camera
+     */
+    void setRootSceneNode(std::shared_ptr<cugl::scene2::SceneNode> rootNode) {
+        _rootSceneNode = rootNode;
+    }
+
 private:
     /** The current touch location for the the entire screen */
     TouchInstance _stouch;
@@ -187,9 +216,13 @@ private:
     /** The current touch location for the bottom zone */
     TouchInstance _mtouch;
     /** Whether the virtual joystick is active */
-    bool _joystick;
+    bool _leftJoystick;
     /** The position of the virtual joystick */
-    cugl::Vec2 _joycenter;
+    cugl::Vec2 _leftJoycenter;
+    /** Whether the virtual joystick is active */
+    bool _rightJoystick;
+    /** The position of the virtual joystick */
+    cugl::Vec2 _rightJoycenter;
 };
 
 #endif /* __INPUT_MANAGER_H__ */
