@@ -239,6 +239,7 @@ void GameplayMode::update(float timestep) {
 
     checkStaircaseDoors();
     checkDoors();
+    collisions::checkForDoorCollision(_enemyController->getPossessed(), _level1Door);
     
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/

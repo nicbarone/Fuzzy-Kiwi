@@ -10,22 +10,18 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
-void collisions::checkForCollision(const std::shared_ptr<Player>& player, const std::shared_ptr<Entity>& entity)
+void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy, 
+    const std::shared_ptr<Door>& door)
 {
-    // Calculate the normal of the (possible) point of collision
-    float distance = player->getPos().x - entity->getPos().x;
-    float impactDistance = player->getSize().x;
-
-    // If this normal is too small, there was a collision
-    if (distance < impactDistance) {
-        // "Roll back" time so that the ships are barely touching (e.g. point of impact).
-        Vec2 temp = Vec2(0, distance > 0 ? 1 : -1) * ((impactDistance - distance) / 2);
-        player->setPos(player->getPos() + temp);
-
-        // Stop the movement of player
-        //player->setVelocity(Vec2::ZERO);
-        return; // Collision checked and complete
+    if (possessedEnemy != nullptr) {
+        Vec2 pos = possessedEnemy->getPos();
+        if (door->getSceneNode()->isVisible() &&
+            door->getPos().x -possessedEnemy->getPos().x < 10) {
+            pos = Vec2(door->getPos().x - 40, possessedEnemy->getPos().y);
+            possessedEnemy->setPos(pos);
+        }
     }
+    
 }
 /**
  * Nudge the player to ensure it does not do out of view.
