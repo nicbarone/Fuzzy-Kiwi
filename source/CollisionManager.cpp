@@ -16,6 +16,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
 	const std::vector<shared_ptr<Door>>& doors)
 {
+
 	std::shared_ptr<Entity> currentPlayer;
 	if (possessedEnemy != nullptr) {
 		currentPlayer = possessedEnemy;
