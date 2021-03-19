@@ -239,7 +239,7 @@ void GameplayMode::update(float timestep) {
 
     checkStaircaseDoors();
     checkDoors();
-    collisions::checkForDoorCollision(_enemyController->getPossessed(), _level1Door);
+    collisions::checkForDoorCollision(_enemyController->getPossessed(),_player, _doors);
     
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
@@ -323,11 +323,14 @@ void GameplayMode::buildScene() {
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Floor, floor);
 
     _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, staircaseDoor);
+    _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
     _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 1, cugl::Color4::WHITE, door);
+    
+    _doors = { _level1Door };
 
 
-    _staircaseDoors = { _level1StairDoor , _level2StairDoor };
+   
 
 
     // Enemy creation
