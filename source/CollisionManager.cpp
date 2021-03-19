@@ -13,6 +13,7 @@ using namespace cugl;
 void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
 	const std::shared_ptr<Player>& player, const  std::vector<shared_ptr<Door>>& doors)
 {
+	
 
 	if (possessedEnemy != nullptr) {
 		std::vector<shared_ptr<Entity>> possiblePlayer;
@@ -38,8 +39,24 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 
 			}
 		}
-		
-
+	else {
+		Vec2 pos = player->getPos();
+		for (shared_ptr<Door> door : doors) {
+			if (door->getSceneNode()->isVisible() &&
+				door->getPos().x - player->getPos().x <= 70 &&
+				door->getPos().x - player->getPos().x >= 0) {
+				pos = Vec2(door->getPos().x - 70, player->getPos().y);
+				player->setPos(pos);
+				CULog("1");
+			}
+			else if (door->getSceneNode()->isVisible() &&
+				player->getPos().x - door->getPos().x <= 70 &&
+				player->getPos().x - door->getPos().x > 0) {
+				pos = Vec2(door->getPos().x + 70, player->getPos().y);
+				player->setPos(pos);
+				CULog("2");
+			}
+		}
 	}
 
 }
