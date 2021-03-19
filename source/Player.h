@@ -3,6 +3,7 @@
 #define __PLAYER_H__
 #include <cugl/cugl.h>
 #include "Entity.h"
+#include "Enemy.h"
 using namespace cugl;
 class Player : public Entity {
 
@@ -16,7 +17,7 @@ private:
 
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
-
+	std::shared_ptr<Enemy> _possessingEnemy;
 
 public:
 
@@ -41,6 +42,16 @@ public:
 	/** sets possessions remaining*/
 	void set_nPossess(int count) {
 		_nPossessions = count;
+	}
+
+	/** sets possess enemy */
+	void set_possessEnemy(std::shared_ptr<Enemy> enemy) {
+		_possessingEnemy = enemy;
+	}
+
+	/** gets possess enemy */
+	std::shared_ptr<Enemy> get_possessEnemy() {
+		return _possessingEnemy;
 	}
 
 	/** sets the possession state of the cat*/

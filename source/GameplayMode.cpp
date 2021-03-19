@@ -160,8 +160,6 @@ void GameplayMode::update(float timestep) {
     _scene->getCamera()->update();
     // Read input controller input
     _inputManager.readInput();
-
-
   
     if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
         //very temporary modification to test whether it works, dont want to work with highlight right now
@@ -244,7 +242,13 @@ void GameplayMode::update(float timestep) {
     
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
-    _player->move(_inputManager.getForward());
+    // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
+    if (_player->getPossess()) {
+        _player->setPos(_player->get_possessEnemy()->getPos());
+    }
+    else {
+        _player->move(_inputManager.getForward());
+    }
     // Enemy movement
     _enemyController->moveEnemies(_inputManager.getForward());
     _enemyController->findClosest(_player->getPos());
@@ -255,6 +259,7 @@ bool GameplayMode::attemptPossess() {
     if (enemy != nullptr) {
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
+        _player->set_possessEnemy(enemy);
         _enemyController->updatePossessed(enemy);
         enemy->setPossessed();
         enemy->getSceneNode()->setAngle(0);

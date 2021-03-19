@@ -13,6 +13,7 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
+    Vec2 _catOriginalPos;
     bool _camMovement;
     Vec2 _camMoveDirection;
     /** Position of single tap on screen, updated upon leaving, if not exist then Vec2::ZERO */
@@ -123,6 +124,17 @@ public:
      * @return the scene location of a touch
      */
     cugl::Vec2 touch2Screen(const cugl::Vec2 pos) const;
+
+    /**
+     * Returns the world location of a screen (game) point
+     *
+     * Touch coordinates are inverted, with y origin in the top-left
+     * corner. This method corrects for this and scales the screen
+     * coordinates down on to the scene graph size.
+     *
+     * @return the world location of a screen point
+     */
+    cugl::Vec2 screen2World(const cugl::Vec2 pos) const;
 
     /**
      * Processes movement for the floating joystick.
