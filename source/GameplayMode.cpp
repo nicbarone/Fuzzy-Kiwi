@@ -43,6 +43,8 @@ using namespace cugl;
 // This is adjusted by screen aspect ratio to get the height
 #define GAME_WIDTH 1024
 
+
+
 vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
 
 vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
@@ -239,7 +241,7 @@ void GameplayMode::update(float timestep) {
 
     checkStaircaseDoors();
     checkDoors();
-    collisions::checkForDoorCollision(_enemyController->getPossessed(),_player, _doors);
+    collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(),_player, _doors);
     
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/

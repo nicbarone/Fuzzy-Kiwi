@@ -22,7 +22,8 @@ namespace collisions {
 	 *  @param entity    Entity in candidate collision
 	 */
 	void checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
-		const std::shared_ptr<Player>& player, const  std::vector<shared_ptr<Door>>& doors);
+		const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
+		const std::vector<shared_ptr<Door>>& doors);
 
 	/**
 	 * Nudge the player to ensure it does not do out of view.

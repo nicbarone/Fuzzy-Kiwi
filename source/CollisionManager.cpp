@@ -10,54 +10,36 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
+#define DOOR_WIDTH 140
+
 void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
-	const std::shared_ptr<Player>& player, const  std::vector<shared_ptr<Door>>& doors)
+	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
+	const std::vector<shared_ptr<Door>>& doors)
 {
-	
-
+	std::shared_ptr<Entity> currentPlayer;
 	if (possessedEnemy != nullptr) {
-		std::vector<shared_ptr<Entity>> possiblePlayer;
-		possiblePlayer = { player, possessedEnemy };
-
-		Vec2 pos = possessedEnemy->getPos();
-		for (shared_ptr<Entity> currentPlayer : possiblePlayer) {
+		currentPlayer = possessedEnemy;
+	}
+	else {
+		currentPlayer = player;
+	}
+		Vec2 pos = currentPlayer->getPos();
 			for (shared_ptr<Door> door : doors) {
 				if (door->getSceneNode()->isVisible() &&
-					door->getPos().x - currentPlayer->getPos().x <= 70 &&
+					door->getPos().x - currentPlayer->getPos().x <= DOOR_WIDTH/2 &&
 					door->getPos().x - currentPlayer->getPos().x >= 0) {
-					pos = Vec2(door->getPos().x - 70, currentPlayer->getPos().y);
+					pos = Vec2(door->getPos().x - DOOR_WIDTH/2, currentPlayer->getPos().y);
 					currentPlayer->setPos(pos);
 					CULog("1");
 				}
 				else if (door->getSceneNode()->isVisible() &&
-					currentPlayer->getPos().x - door->getPos().x <= 70 &&
+					currentPlayer->getPos().x - door->getPos().x <= DOOR_WIDTH/2 &&
 					currentPlayer->getPos().x - door->getPos().x > 0) {
-					pos = Vec2(door->getPos().x + 70, currentPlayer->getPos().y);
+					pos = Vec2(door->getPos().x + DOOR_WIDTH/2, currentPlayer->getPos().y);
 					currentPlayer->setPos(pos);
 					CULog("2");
 				}
-
 			}
-		}
-	else {
-		Vec2 pos = player->getPos();
-		for (shared_ptr<Door> door : doors) {
-			if (door->getSceneNode()->isVisible() &&
-				door->getPos().x - player->getPos().x <= 70 &&
-				door->getPos().x - player->getPos().x >= 0) {
-				pos = Vec2(door->getPos().x - 70, player->getPos().y);
-				player->setPos(pos);
-				CULog("1");
-			}
-			else if (door->getSceneNode()->isVisible() &&
-				player->getPos().x - door->getPos().x <= 70 &&
-				player->getPos().x - door->getPos().x > 0) {
-				pos = Vec2(door->getPos().x + 70, player->getPos().y);
-				player->setPos(pos);
-				CULog("2");
-			}
-		}
-	}
 
 }
 
