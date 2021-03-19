@@ -69,6 +69,8 @@ protected:
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;
     /** A reference to the level 2 door*/
+    /** A reference to the list of all doors in the level*/
+    std::vector<shared_ptr<Door>> _doors;
     InputManager _inputManager;
     /** The button to possess and release*/
     std::shared_ptr<ui::ButtonElement> _possessButton;
@@ -169,6 +171,10 @@ public:
      * at all. The default implmentation does nothing.
      */
     virtual void draw() override;
+
+    /*Function called every update to check if the player is trying to close or 
+    open a door*/
+    void checkDoors();
 
     /*Function called every update to check if the player is trying to exit
     or enter a staircase door*/

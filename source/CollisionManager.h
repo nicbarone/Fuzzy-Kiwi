@@ -3,6 +3,8 @@
 #include <cugl/cugl.h>
 #include "Entity.h"
 #include "Player.h"
+#include "Door.h"
+#include "Enemy.h"
 
 /**
  * Namespace of functions implementing simple game physics.
@@ -19,7 +21,9 @@ namespace collisions {
 	 *  @param player    Player in candidate collision
 	 *  @param entity    Entity in candidate collision
 	 */
-	void checkForCollision(const std::shared_ptr<Player>& player, const std::shared_ptr<Entity>& entity);
+	void checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
+		const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
+		const std::vector<shared_ptr<Door>>& doors);
 
 	/**
 	 * Nudge the player to ensure it does not do out of view.
