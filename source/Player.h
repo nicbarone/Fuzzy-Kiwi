@@ -26,11 +26,11 @@ public:
 
 	void dispose();
 	
-	bool init(float x, float y, float ang, const std::shared_ptr<Texture> cat);
+	bool init(float x, float y, float ang, int level, const std::shared_ptr<Texture> cat);
 
-	static std::shared_ptr<Player> alloc(float x, float y, float ang, const std::shared_ptr<Texture> cat) {
+	static std::shared_ptr<Player> alloc(float x, float y, float ang, int level, const std::shared_ptr<Texture> cat) {
 		std::shared_ptr<Player> result = std::make_shared<Player>();
-		return (result->init(x, y, ang, cat) ? result : nullptr);
+		return (result->init(x, y, ang, level, cat) ? result : nullptr);
 	}
 
 	/** true if the player has possessions remaining and is in cat form*/
