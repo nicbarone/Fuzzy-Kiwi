@@ -4,6 +4,9 @@
 #include <cugl/cugl.h>
 #include "Entity.h"
 using namespace cugl;
+
+extern const float PLAYER_SPEED;
+
 class Player : public Entity {
 
 private:
@@ -26,11 +29,11 @@ public:
 
 	void dispose();
 	
-	bool init(float x, float y, float ang, const std::shared_ptr<Texture> cat);
+	bool init(float x, int level, float ang, const std::shared_ptr<Texture> cat);
 
-	static std::shared_ptr<Player> alloc(float x, float y, float ang, const std::shared_ptr<Texture> cat) {
+	static std::shared_ptr<Player> alloc(float x, int level, float ang, const std::shared_ptr<Texture> cat) {
 		std::shared_ptr<Player> result = std::make_shared<Player>();
-		return (result->init(x, y, ang, cat) ? result : nullptr);
+		return (result->init(x, level, ang, cat) ? result : nullptr);
 	}
 
 	/** true if the player has possessions remaining and is in cat form*/
@@ -66,6 +69,8 @@ public:
 		return _sceneNode;
 	}
 
+	/** setter for level, overloaded for this class to also change scene node position, deprecates changeFloor()*/
+	void setLevel(int level);
 
 
 };

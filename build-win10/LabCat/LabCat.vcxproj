@@ -188,6 +188,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\CollisionManager.h" />
+    <ClInclude Include="..\..\source\Constants.h" />
     <ClInclude Include="..\..\source\Door.h" />
     <ClInclude Include="..\..\source\Enemy.h" />
     <ClInclude Include="..\..\source\EnemyController.h" />
@@ -204,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\CollisionManager.cpp" />
+    <ClCompile Include="..\..\source\Constants.cpp" />
     <ClCompile Include="..\..\source\Door.cpp" />
     <ClCompile Include="..\..\source\Enemy.cpp" />
     <ClCompile Include="..\..\source\EnemyController.cpp" />

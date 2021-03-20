@@ -2,7 +2,7 @@
 using namespace cugl;
 
 /** how fast the player moves*/
-#define SPEED 10
+
 Player::Player() :
 
 	_nPossessions(1),
@@ -24,18 +24,24 @@ void Player::dispose() {
 	Entity::dispose();
 }
 
-bool Player::init(float x, float y, float ang, std::shared_ptr<Texture> cat)
+bool Player::init(float x, int level, float ang, std::shared_ptr<Texture> cat)
 {
-	Entity::setPos(Vec2(x, y));
+	Entity::setPos(x);
+	Entity::setLevel(level);
 	Entity::setAngle(0);
 	_texture = cat;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 1);
-	_sceneNode->setPosition(Vec2(x, y));
+	_sceneNode->setPosition(Vec2(x, level*FLOOR_HEIGHT+FLOOR_OFFSET));
 	return true;
 }
 
 void Player::move(float direction) {
-	Vec2 original = getPos();
-	manualMove(direction, SPEED);
-	_sceneNode->setPosition(original + getVelocity());
+	float original = getPos();
+	manualMove(direction, PLAYER_SPEED);
+	_sceneNode->setPositionX(original + getVelocity().x);
+}
+
+void Player::setLevel(int level) {
+	Entity::setLevel(level);
+	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
 }
