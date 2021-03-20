@@ -13,6 +13,9 @@ private:
 	float _patrolStart;
 	/** the x position of the end enemy's patrol path*/
 	float _patrolEnd;
+	/**the old patrol coordinates that have been adjusted due to 
+	a door*/
+	Vec2 _oldPatrol;
 	/** ray cast distance of the enemy*/
 	float _visionRange;
 	/** movement speed of the enemy*/
@@ -64,6 +67,16 @@ public:
 	void setPatrol(float x1, float x2) {
 		_patrolStart = x1;
 		_patrolEnd = x2;
+	}
+	/** sets the _patrolStart and _patrolEnd of the old patrol of the enemy that 
+	is changed due to hitting a door*/
+	void setOldPatrol(Vec2 patrol) {
+		_oldPatrol = patrol;
+	}
+
+	/** returns a Vec2 containing _patrolStart and _patrolEnd of the old patrol of the enemy*/
+	Vec2 getOldPatrol() {
+		return _oldPatrol;
 	}
 
 	bool isActive() {return _isActive; }

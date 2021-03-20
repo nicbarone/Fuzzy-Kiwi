@@ -2,10 +2,13 @@
 #ifndef __DOOR_H__
 #define __DOOR_H__
 #include <ConstructionElement.h>
+#include <Enemy.h>
 #include <cugl/cugl.h>
 using namespace cugl;
 
 class Door : public ConstructionElement {
+private:
+	std::shared_ptr<Enemy> _blockedEnemy;
 
 public:
 
@@ -22,6 +25,24 @@ public:
 		std::shared_ptr<Texture> texture) {
 		std::shared_ptr<Door> result = std::make_shared<Door>();
 		return (result->init(pos, ang, scale, level, color, texture) ? result : nullptr);
+	}
+	
+	void setBlockedEnemy(shared_ptr<Enemy> blockedEnemy) {
+		_blockedEnemy = blockedEnemy;
+	}
+	shared_ptr<Enemy> getBlockedEnemy() {
+		return _blockedEnemy;
+	}
+	void setVisibility(bool visibility) {
+		ConstructionElement::getSceneNode()->setVisible(visibility);
+		if (_blockedEnemy != nullptr) {
+			CULog("%d", _blockedEnemy->getOldPatrol().y);
+			_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
+			_blockedEnemy->setOldPatrol(Vec2(0, 0));
+			setBlockedEnemy(nullptr);
+		}
+		
+
 	}
 
 

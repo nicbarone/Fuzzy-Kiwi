@@ -16,7 +16,20 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
 	const std::vector<shared_ptr<Door>>& doors)
 {
+	
+	for (shared_ptr<Enemy> enemy : enemies) {
+		for (shared_ptr<Door> door : doors) {
+			if (door->getSceneNode()->isVisible() &&
+				door->getPos().x - enemy->getPos().x <= DOOR_WIDTH / 2 &&
+				door->getPos().x - enemy->getPos().x >= 0 &&
+				door->getLevel() == enemy->getLevel()) {
+				enemy->setOldPatrol(enemy->getPatrol());
+				enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
+				door->setBlockedEnemy(enemy);
+			}
+		}
 
+	}
 	std::shared_ptr<Entity> currentPlayer;
 	if (possessedEnemy != nullptr) {
 		currentPlayer = possessedEnemy;
@@ -28,17 +41,17 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 			for (shared_ptr<Door> door : doors) {
 				if (door->getSceneNode()->isVisible() &&
 					door->getPos().x - currentPlayer->getPos().x <= DOOR_WIDTH/2 &&
-					door->getPos().x - currentPlayer->getPos().x >= 0) {
+					door->getPos().x - currentPlayer->getPos().x >= 0 &&
+					door->getLevel() == currentPlayer->getLevel()) {
 					pos = Vec2(door->getPos().x - DOOR_WIDTH/2, currentPlayer->getPos().y);
 					currentPlayer->setPos(pos);
-					CULog("1");
 				}
 				else if (door->getSceneNode()->isVisible() &&
 					currentPlayer->getPos().x - door->getPos().x <= DOOR_WIDTH/2 &&
-					currentPlayer->getPos().x - door->getPos().x > 0) {
+					currentPlayer->getPos().x - door->getPos().x > 0 &&
+					door->getLevel() == currentPlayer->getLevel()) {
 					pos = Vec2(door->getPos().x + DOOR_WIDTH/2, currentPlayer->getPos().y);
 					currentPlayer->setPos(pos);
-					CULog("2");
 				}
 			}
 

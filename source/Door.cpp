@@ -5,6 +5,7 @@ Door::Door() {}
 
 void Door::dispose() {
 	ConstructionElement::dispose();
+	_blockedEnemy = nullptr;
 }
 
 bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, std::shared_ptr<Texture> texture)
@@ -16,5 +17,6 @@ bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, std::s
 	ConstructionElement::setScale(scale);
 	ConstructionElement::setLevel(level);
 	ConstructionElement::setColor(color);
+	_blockedEnemy = nullptr;
 	return true;
 }

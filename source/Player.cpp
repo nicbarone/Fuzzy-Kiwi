@@ -24,10 +24,11 @@ void Player::dispose() {
 	Entity::dispose();
 }
 
-bool Player::init(float x, float y, float ang, std::shared_ptr<Texture> cat)
+bool Player::init(float x, float y, float ang, int level, std::shared_ptr<Texture> cat)
 {
 	Entity::setPos(Vec2(x, y));
 	Entity::setAngle(0);
+	Entity::setLevel(level);
 	_texture = cat;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 1);
 	_sceneNode->setPosition(Vec2(x, y));
