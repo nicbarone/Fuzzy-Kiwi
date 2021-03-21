@@ -274,6 +274,7 @@ void GameplayMode::unpossess() {
     _player->setPos((enemy->getPos()));
     _player->getSceneNode()->setVisible(true);
     _player->setPossess(false);
+    _player->setLevel(_enemyController->getPossessed()->getLevel());
     enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
     //may want to remove the enemy from the vector in enemy controller eventually, seems good for now

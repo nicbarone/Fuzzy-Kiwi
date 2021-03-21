@@ -20,3 +20,13 @@ bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, std::s
 	_blockedEnemy = nullptr;
 	return true;
 }
+
+void Door::setVisibility(bool visibility) {
+	if (_blockedEnemy != nullptr) {
+		//CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
+		_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
+		_blockedEnemy->setOldPatrol(Vec2(0, 0));
+		setBlockedEnemy(nullptr);
+	}
+	ConstructionElement::getSceneNode()->setVisible(visibility);
+}

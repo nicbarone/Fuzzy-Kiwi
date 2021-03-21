@@ -23,13 +23,30 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				door->getPos().x - enemy->getPos().x <= DOOR_WIDTH / 2 &&
 				door->getPos().x - enemy->getPos().x >= 0 &&
 				door->getLevel() == enemy->getLevel()) {
-				enemy->setOldPatrol(enemy->getPatrol());
-				enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
-				door->setBlockedEnemy(enemy);
+				if (door->getBlockedEnemy() == nullptr) {
+					enemy->setOldPatrol(enemy->getPatrol());
+					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
+					door->setBlockedEnemy(enemy);
+					
+				}
+				
 			}
+			else if (door->getSceneNode()->isVisible() &&
+				enemy->getPos().x - door->getPos().x <= DOOR_WIDTH / 2 &&
+				enemy->getPos().x - door->getPos().x >= 0 &&
+				door->getLevel() == enemy->getLevel()) {
+				if (door->getBlockedEnemy() == nullptr) {
+					enemy->setOldPatrol(enemy->getPatrol());
+					enemy->setPatrol(door->getPos().x + DOOR_WIDTH / 2, enemy->getPatrol().y);
+					door->setBlockedEnemy(enemy);
+					CULog("blocked enemys old patrol: %f", door->getBlockedEnemy()->getOldPatrol().y);
+				}
+			}
+
 		}
 
 	}
+
 	std::shared_ptr<Entity> currentPlayer;
 	if (possessedEnemy != nullptr) {
 		currentPlayer = possessedEnemy;

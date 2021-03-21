@@ -33,18 +33,7 @@ public:
 	shared_ptr<Enemy> getBlockedEnemy() {
 		return _blockedEnemy;
 	}
-	void setVisibility(bool visibility) {
-		ConstructionElement::getSceneNode()->setVisible(visibility);
-		if (_blockedEnemy != nullptr) {
-			CULog("%d", _blockedEnemy->getOldPatrol().y);
-			_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
-			_blockedEnemy->setOldPatrol(Vec2(0, 0));
-			setBlockedEnemy(nullptr);
-		}
-		
-
-	}
-
+	void setVisibility(bool visibility);
 
 
 };
