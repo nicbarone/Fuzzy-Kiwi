@@ -10,8 +10,13 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
-void collisions::checkForCollision(const std::shared_ptr<Player>& player, const std::shared_ptr<Entity>& entity)
+#define DOOR_WIDTH 130
+
+void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
+	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
+	const std::vector<shared_ptr<Door>>& doors)
 {
+
     // Calculate the normal of the (possible) point of collision
     float distance = player->getPos() - entity->getPos();
     float impactDistance = player->getSize().x;
@@ -22,11 +27,68 @@ void collisions::checkForCollision(const std::shared_ptr<Player>& player, const 
         Vec2 temp = Vec2(0, distance > 0 ? 1 : -1) * ((impactDistance - distance) / 2);
         player->setPos(player->getPos() + temp.x);
 
-        // Stop the movement of player
-        //player->setVelocity(Vec2::ZERO);
-        return; // Collision checked and complete
-    }
+	
+	for (shared_ptr<Enemy> enemy : enemies) {
+		for (shared_ptr<Door> door : doors) {
+			/*if (door->getLevel() == 2&&!enemy->getPossessed()) {
+				CULog("%d", door->getBlockedEnemy() == nullptr);
+			}*/
+			if (door->getSceneNode()->isVisible() &&
+				door->getPos().x - enemy->getPos().x <= DOOR_WIDTH / 2 &&
+				door->getPos().x - enemy->getPos().x >= 0 &&
+				door->getLevel() == enemy->getLevel()) {
+				if (door->getBlockedEnemy() == nullptr) {
+					enemy->setOldPatrol(enemy->getPatrol());
+					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
+					door->setBlockedEnemy(enemy);
+					CULog(" f2f4f24f24gf4frfwefwefcshdfbsdfbsdbfjsdhbfsdhfsdsdbjsdhbhsdbfdjfdfwefefewfwefwefwefwefwefwefewfwefwe");
+				}
+				
+			}
+			else if (door->getSceneNode()->isVisible() &&
+				enemy->getPos().x - door->getPos().x <= DOOR_WIDTH / 2 &&
+				enemy->getPos().x - door->getPos().x >= 0 &&
+				door->getLevel() == enemy->getLevel()) {
+				if (door->getBlockedEnemy() == nullptr) {
+					enemy->setOldPatrol(enemy->getPatrol());
+					enemy->setPatrol(door->getPos().x + DOOR_WIDTH / 2, enemy->getPatrol().y);
+					door->setBlockedEnemy(enemy);
+					
+				}
+			}
+
+		}
+
+	}
+
+	std::shared_ptr<Entity> currentPlayer;
+	if (possessedEnemy != nullptr) {
+		currentPlayer = possessedEnemy;
+	}
+	else {
+		currentPlayer = player;
+	}
+		Vec2 pos = currentPlayer->getPos();
+			for (shared_ptr<Door> door : doors) {
+				if (door->getSceneNode()->isVisible() &&
+					door->getPos().x - currentPlayer->getPos().x <= DOOR_WIDTH/2 &&
+					door->getPos().x - currentPlayer->getPos().x >= 0 &&
+					door->getLevel() == currentPlayer->getLevel()) {
+					pos = Vec2(door->getPos().x - DOOR_WIDTH/2, currentPlayer->getPos().y);
+					currentPlayer->setPos(pos);
+				}
+				else if (door->getSceneNode()->isVisible() &&
+					currentPlayer->getPos().x - door->getPos().x <= DOOR_WIDTH/2 &&
+					currentPlayer->getPos().x - door->getPos().x > 0 &&
+					door->getLevel() == currentPlayer->getLevel()) {
+					pos = Vec2(door->getPos().x + DOOR_WIDTH/2, currentPlayer->getPos().y);
+					currentPlayer->setPos(pos);
+				}
+			}
+
+
 }
+
 /**
  * Nudge the player to ensure it does not do out of view.
  *
@@ -38,6 +100,7 @@ void collisions::checkForCollision(const std::shared_ptr<Player>& player, const 
  */
 void collisions::checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds)
 {
+
     //Vec2 vel = player->getVelocity();
     float pos = player->getPos();
 
@@ -67,4 +130,5 @@ void collisions::checkInBounds(const std::shared_ptr<Player>& player, const cugl
     //    //player->setVelocity(vel);
     //    player->setPos(pos);
     //}
+
 }

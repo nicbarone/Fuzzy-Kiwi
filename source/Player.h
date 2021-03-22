@@ -3,6 +3,7 @@
 #define __PLAYER_H__
 #include <cugl/cugl.h>
 #include "Entity.h"
+#include "Enemy.h"
 using namespace cugl;
 
 extern const float PLAYER_SPEED;
@@ -19,7 +20,7 @@ private:
 
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
-
+	std::shared_ptr<Enemy> _possessingEnemy;
 
 public:
 
@@ -29,11 +30,13 @@ public:
 
 	void dispose();
 	
+
 	bool init(float x, int level, float ang, const std::shared_ptr<Texture> cat);
 
 	static std::shared_ptr<Player> alloc(float x, int level, float ang, const std::shared_ptr<Texture> cat) {
 		std::shared_ptr<Player> result = std::make_shared<Player>();
 		return (result->init(x, level, ang, cat) ? result : nullptr);
+
 	}
 
 	/** true if the player has possessions remaining and is in cat form*/
@@ -44,6 +47,16 @@ public:
 	/** sets possessions remaining*/
 	void set_nPossess(int count) {
 		_nPossessions = count;
+	}
+
+	/** sets possess enemy */
+	void set_possessEnemy(std::shared_ptr<Enemy> enemy) {
+		_possessingEnemy = enemy;
+	}
+
+	/** gets possess enemy */
+	std::shared_ptr<Enemy> get_possessEnemy() {
+		return _possessingEnemy;
 	}
 
 	/** sets the possession state of the cat*/

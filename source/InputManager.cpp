@@ -19,6 +19,7 @@ using namespace cugl;
 #define ZOOM_SENSITIVITY    0.1f
 /** This tells how fast the camera is to moving */
 #define CAMERA_MAX_SPEED    15.0f
+#define CAM_CENTER_OFFSET_Y 0.0f
 
 /**
  * Creates a new input controller with the default settings
@@ -102,6 +103,7 @@ bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::sc
     _rootSceneNode = rootNode;
     _camMovement = false;
     _camMoveDirection = Vec2::ZERO;
+    _catOriginalPos = _player->getPos();
     createZones();
     clearTouchInstance(_stouch);
     clearTouchInstance(_ltouch);
@@ -138,8 +140,26 @@ Vec2 InputManager::touch2Screen(const Vec2 pos) const {
     float px = pos.x / _tbounds.size.width - _tbounds.origin.x;
     float py = pos.y / _tbounds.size.height - _tbounds.origin.y;
     Vec2 result;
-    result.x = px * _sbounds.size.width + _sbounds.origin.x;
-    result.y = (1 - py) * _sbounds.size.height + _sbounds.origin.y;
+    result.x = px * _sbounds.size.width + _sbounds.origin.x - _sbounds.size.width / 2;
+    result.y = (1 - py) * _sbounds.size.height + _sbounds.origin.y - _sbounds.size.height / 2 - CAM_CENTER_OFFSET_Y;
+    return result + _player->getPos();
+}
+
+/**
+     * Returns the world location of a screen (game) point
+     *
+     * Touch coordinates are inverted, with y origin in the top-left
+     * corner. This method corrects for this and scales the screen
+     * coordinates down on to the scene graph size.
+     *
+     * @return the world location of a screen point
+     */
+Vec2 InputManager::screen2World(const cugl::Vec2 pos) const {
+    float sx = (pos.x - _sbounds.origin.x) / _sbounds.size.width;
+    float sy = 1 - (pos.y - _sbounds.origin.y) / _sbounds.size.height;
+    Vec2 result;
+    result.x = (sx + _tbounds.origin.x) * _tbounds.size.width;
+    result.y = (sy + _tbounds.origin.y) * _tbounds.size.height;
     return result;
 }
 
@@ -356,7 +376,11 @@ void InputManager::readInput() {
     }
     if (Input::get<Mouse>()->buttonPressed().hasLeft()) {
         _tap_pos = Input::get<Mouse>()->pointerPosition();
-        //CULog("Clicked left");
+        //CULog("orignal cat pos is %f, %f", _catOriginalPos.x, _catOriginalPos.y);
+        ////CULog("current cam pos is %f, %f", touch2Screen(_rootSceneNode->getPosition()).x, touch2Screen(_rootSceneNode->getPosition()).y);
+        //CULog("sbound is %f, %f", _sbounds.size.width, _sbounds.size.height);
+        //CULog("cat pos %f, %f", _player->getPos().x, _player->getPos().y);
+        //CULog("Clicked at %f, %f", touch2Screen(_tap_pos).x, touch2Screen(_tap_pos).y);
     }
     else {
         _tap_pos = Vec2::ZERO;
@@ -387,6 +411,8 @@ void InputManager::readInput() {
         _rootSceneNode->setPosition(_rootSceneNode->getPosition() + _camMoveDirection/5);
     }
     else {
+        // Otherwise center on the cat
         _camMoveDirection = Vec2::ZERO;
+        _rootSceneNode->setPosition(-screen2World(_player->getPos()).x + _tbounds.size.width, screen2World(_player->getPos()).y +CAM_CENTER_OFFSET_Y);
     }
 }

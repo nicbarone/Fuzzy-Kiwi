@@ -43,6 +43,8 @@ using namespace cugl;
 // This is adjusted by screen aspect ratio to get the height
 #define GAME_WIDTH 1024
 
+
+
 vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
 
 vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
@@ -160,8 +162,6 @@ void GameplayMode::update(float timestep) {
     _scene->getCamera()->update();
     // Read input controller input
     _inputManager.readInput();
-
-
   
     if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
         //very temporary modification to test whether it works, dont want to work with highlight right now
@@ -239,12 +239,18 @@ void GameplayMode::update(float timestep) {
 
     checkStaircaseDoors();
     checkDoors();
+    collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(),_player, _doors);
     
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
-    _player->move(_inputManager.getForward());
-    if (_player->getPossess()){
-        //_player->setPos()
+
+    // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
+    if (_player->getPossess()) {
+        _player->setPos(_player->get_possessEnemy()->getPos());
+    }
+    else {
+        _player->move(_inputManager.getForward());
+
     }
     // Enemy movement
     _enemyController->moveEnemies(_inputManager.getForward());
@@ -275,6 +281,7 @@ bool GameplayMode::attemptPossess() {
     if (enemy != nullptr) {
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
+        _player->set_possessEnemy(enemy);
         _enemyController->updatePossessed(enemy);
         enemy->setPossessed();
         enemy->getSceneNode()->setAngle(0);
@@ -289,6 +296,7 @@ void GameplayMode::unpossess() {
     _player->setLevel(enemy->getLevel());
     _player->getSceneNode()->setVisible(true);
     _player->setPossess(false);
+    _player->setLevel(_enemyController->getPossessed()->getLevel());
     enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
     //may want to remove the enemy from the vector in enemy controller eventually, seems good for now
@@ -328,7 +336,9 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
 
     // Create the player
+
     _player = Player::alloc(150,0,0,cat);
+
 
     //floor texture creation
     std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
@@ -344,12 +354,18 @@ void GameplayMode::buildScene() {
 
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Floor, floor);
 
+
     _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 1, cugl::Color4::WHITE, level2Door, staircaseDoor);
+    _staircaseDoors = { _level1StairDoor , _level2StairDoor };
+
 
     _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 1, cugl::Color4::WHITE, door);
+    _level2Door = Door::alloc(Vec2(390, 410), 4.71239, Vec2(3, 1), 2, cugl::Color4::WHITE, door);
+    
+    _doors = { _level1Door, _level2Door };
 
 
-    _staircaseDoors = { _level1StairDoor , _level2StairDoor };
+   
 
 
     // Enemy creation
@@ -395,6 +411,7 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_level2Floor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
     _rootScene->addChild(_level1Door->getSceneNode());
+    _rootScene->addChild(_level2Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
 
@@ -418,6 +435,7 @@ void GameplayMode::buildScene() {
 
 
 void GameplayMode::checkDoors() {
+
     bool doorVisibility = _level1Door->getSceneNode()->isVisible();
     if (_enemyController->getPossessed() != nullptr) {
         if (abs(_enemyController->getPossessed()->getPos() - _level1Door->getPos().x) < 110.0f &&
@@ -425,8 +443,11 @@ void GameplayMode::checkDoors() {
             _enemyController->getPossessed()->getLevel() == _level1Door->getLevel() &&
             abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - _level1Door->getPos().x) < 60.0f) {
             _level1Door->getSceneNode()->setVisible(!doorVisibility);
+
         }
+    
     }
+  
 }
 
 void GameplayMode::checkStaircaseDoors() {
@@ -445,7 +466,6 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
                 abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - staircaseDoor->getPos().x) < 60.0f) {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
-                CULog("1");
                 break;
             }
 
@@ -455,8 +475,6 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
-                CULog("%d", _enemyController->getPossessed()->getLevel());
-                CULog("2");
                 break;
             }
 

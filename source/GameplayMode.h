@@ -69,6 +69,9 @@ protected:
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;
     /** A reference to the level 2 door*/
+    std::shared_ptr<Door> _level2Door;
+    /** A reference to the list of all doors in the level*/
+    std::vector<shared_ptr<Door>> _doors;
     InputManager _inputManager;
     /** The button to possess and release*/
     std::shared_ptr<ui::ButtonElement> _possessButton;
