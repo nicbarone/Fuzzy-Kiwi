@@ -17,7 +17,16 @@ void Entity::dispose() {
 	_color = cugl::Color4::WHITE;
 }
 
-void Entity::manualMove(float direction, float speed) {
-	setVelocity(Vec2(direction * speed, 0));
-	setPos(getPos() + getVelocity().x);
-}
+void Entity::manualMove(float direction, float speed) 
+	{
+		if (0 < _pos) {
+			setVelocity(Vec2(direction * speed, 0));
+			setPos(getPos() + getVelocity().x);
+			
+		}
+		else {
+			setPos(0.0001);
+
+
+		}
+	}
