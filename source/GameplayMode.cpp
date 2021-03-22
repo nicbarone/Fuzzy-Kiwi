@@ -331,8 +331,8 @@ void GameplayMode::buildScene() {
 
 
     // Placeholder cat
-    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
-
+    //std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
+    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
     // Create the player
 
     _player = Player::alloc(150, 0, 0, cat);
