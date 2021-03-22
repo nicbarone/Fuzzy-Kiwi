@@ -301,9 +301,9 @@ void GameplayMode::unpossess() {
     _player->setLevel(_enemyController->getPossessed()->getLevel());
     enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
+
     //may want to remove the enemy from the vector in enemy controller eventually, seems good for now
     _enemyController->updatePossessed(nullptr);
-
 }
 
 /**
@@ -374,8 +374,8 @@ void GameplayMode::buildScene() {
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
-    _enemyController->addEnemy(50, 1, 0, enemyTexture, altTexture);
-    _enemyController->addEnemy(50, 0,0, enemyTexture, altTexture);
+    _enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
 
     // Create a button.  A button has an up image and a down image
     possessButton = _assets->get<Texture>("possess-button");

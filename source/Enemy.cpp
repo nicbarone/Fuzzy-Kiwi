@@ -8,8 +8,8 @@ using namespace cugl;
 
 Enemy::Enemy() :
 
-	_patrolStart(PATROL_START),
-	_patrolEnd(PATROL_END),
+	_patrolStart(0),
+	_patrolEnd(0),
 	_visionRange(DEFAULT_VISION),
 	_speed(ENEMY_SPEED),
 	_movingRight(true),
@@ -41,17 +41,19 @@ void Enemy::dispose() {
 	Entity::dispose();
 }
 
-bool Enemy::init(float x, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
+bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolEnd,  std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
 	Entity::setLevel(level);
+	_patrolStart = patrolStart;
+	_patrolEnd = patrolEnd;
 	_texture = enemy;
 	_altTexture = alt;
 	_isActive = true;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	_frame = 0;
-	_sceneNode->setScale(0.05, 0.05);
+	//_sceneNode->setScale(0.05, 0.05);
 	return true;
 }
 
@@ -62,9 +64,9 @@ void Enemy::move(float direction) {
 			_frameCounter--;
 		}
 		else {
-			_frameCounter = 15;
+			_frameCounter = 7;
 			_frame++;
-			_frame = _frame % 4;
+			_frame = _frame % 5;
 		}
 		
 		if (_movingRight) {
@@ -95,7 +97,9 @@ void Enemy::move(float direction) {
 			_movingRight = false;
 		}
 	}
-	_sceneNode->setFrame(_frame);
+	if (_isActive || isPossessed()) {
+		_sceneNode->setFrame(_frame);
+	}
 }
 
 void Enemy::setPossessed() {

@@ -51,11 +51,11 @@ public:
 
 	void dispose();
 
-	bool init(float x, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
+	bool init(float x, int level, float ang, float patrolStart, float patrolEnd,  std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
 
-	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
+	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
-		return (result->init(x, level, ang, enemy, alt) ? result : nullptr);
+		return (result->init(x, level, ang, patrolStart, patrolEnd, enemy, alt) ? result : nullptr);
 	}
 
 

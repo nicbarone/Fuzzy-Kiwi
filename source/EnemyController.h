@@ -25,7 +25,7 @@ public:
 	void dispose();
 
 	/** creates and adds an enemy to this controller*/
-	void addEnemy(float x, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
+	void addEnemy(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
 
 	/** returns the vector of enemies managed by this controller*/
 	vector<std::shared_ptr<Enemy>> getEnemies() {
@@ -52,5 +52,7 @@ public:
 
 	/** returns true if the input point is currently being seen by this enemy and false otherwise*/
 	bool detectedPlayer(float x, int level, vector<Vec2> vision_blockers);
+
+	void removePossessed();
 };
 #endif
