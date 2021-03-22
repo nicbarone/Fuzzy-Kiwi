@@ -359,8 +359,8 @@ void GameplayMode::buildScene() {
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
 
-    _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 1, cugl::Color4::WHITE, door);
-    _level2Door = Door::alloc(Vec2(390, 410), 4.71239, Vec2(3, 1), 2, cugl::Color4::WHITE, door);
+    _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 0, cugl::Color4::WHITE, door);
+    _level2Door = Door::alloc(Vec2(390, 410), 4.71239, Vec2(3, 1), 1, cugl::Color4::WHITE, door);
     
     _doors = { _level1Door, _level2Door };
 

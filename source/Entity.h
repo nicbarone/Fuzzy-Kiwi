@@ -65,6 +65,10 @@ public:
 		return _level;
 	}
 
+	float getPosY() {
+		return _level * FLOOR_HEIGHT + FLOOR_OFFSET;
+	}
+
 	void setTexture(const std::shared_ptr<Texture> texture) {
 		
 	}

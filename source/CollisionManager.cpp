@@ -17,16 +17,6 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	const std::vector<shared_ptr<Door>>& doors)
 {
 
-    // Calculate the normal of the (possible) point of collision
-    float distance = player->getPos() - entity->getPos();
-    float impactDistance = player->getSize().x;
-
-    // If this normal is too small, there was a collision
-    if (distance < impactDistance) {
-        // "Roll back" time so that the ships are barely touching (e.g. point of impact).
-        Vec2 temp = Vec2(0, distance > 0 ? 1 : -1) * ((impactDistance - distance) / 2);
-        player->setPos(player->getPos() + temp.x);
-
 	
 	for (shared_ptr<Enemy> enemy : enemies) {
 		for (shared_ptr<Door> door : doors) {
@@ -34,20 +24,19 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				CULog("%d", door->getBlockedEnemy() == nullptr);
 			}*/
 			if (door->getSceneNode()->isVisible() &&
-				door->getPos().x - enemy->getPos().x <= DOOR_WIDTH / 2 &&
-				door->getPos().x - enemy->getPos().x >= 0 &&
+				door->getPos().x - enemy->getPos() <= DOOR_WIDTH / 2 &&
+				door->getPos().x - enemy->getPos() >= 0 &&
 				door->getLevel() == enemy->getLevel()) {
 				if (door->getBlockedEnemy() == nullptr) {
 					enemy->setOldPatrol(enemy->getPatrol());
 					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
 					door->setBlockedEnemy(enemy);
-					CULog(" f2f4f24f24gf4frfwefwefcshdfbsdfbsdbfjsdhbfsdhfsdsdbjsdhbhsdbfdjfdfwefefewfwefwefwefwefwefwefewfwefwe");
 				}
 				
 			}
 			else if (door->getSceneNode()->isVisible() &&
-				enemy->getPos().x - door->getPos().x <= DOOR_WIDTH / 2 &&
-				enemy->getPos().x - door->getPos().x >= 0 &&
+				enemy->getPos() - door->getPos().x <= DOOR_WIDTH / 2 &&
+				enemy->getPos() - door->getPos().x >= 0 &&
 				door->getLevel() == enemy->getLevel()) {
 				if (door->getBlockedEnemy() == nullptr) {
 					enemy->setOldPatrol(enemy->getPatrol());
@@ -68,21 +57,18 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	else {
 		currentPlayer = player;
 	}
-		Vec2 pos = currentPlayer->getPos();
 			for (shared_ptr<Door> door : doors) {
 				if (door->getSceneNode()->isVisible() &&
-					door->getPos().x - currentPlayer->getPos().x <= DOOR_WIDTH/2 &&
-					door->getPos().x - currentPlayer->getPos().x >= 0 &&
+					door->getPos().x - currentPlayer->getPos() <= DOOR_WIDTH/2 &&
+					door->getPos().x - currentPlayer->getPos() >= 0 &&
 					door->getLevel() == currentPlayer->getLevel()) {
-					pos = Vec2(door->getPos().x - DOOR_WIDTH/2, currentPlayer->getPos().y);
-					currentPlayer->setPos(pos);
+					currentPlayer->setPos(door->getPos().x - DOOR_WIDTH / 2);
 				}
 				else if (door->getSceneNode()->isVisible() &&
-					currentPlayer->getPos().x - door->getPos().x <= DOOR_WIDTH/2 &&
-					currentPlayer->getPos().x - door->getPos().x > 0 &&
+					currentPlayer->getPos() - door->getPos().x <= DOOR_WIDTH/2 &&
+					currentPlayer->getPos() - door->getPos().x > 0 &&
 					door->getLevel() == currentPlayer->getLevel()) {
-					pos = Vec2(door->getPos().x + DOOR_WIDTH/2, currentPlayer->getPos().y);
-					currentPlayer->setPos(pos);
+					currentPlayer->setPos(door->getPos().x + DOOR_WIDTH / 2);
 				}
 			}
 
