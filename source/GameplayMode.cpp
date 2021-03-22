@@ -29,11 +29,11 @@
 //
 // Include the class header, which includes all of the CUGL classes
 #include "GameplayMode.h"
-#include <cugl/base/CUBase.h>
+#include "cugl/base/CUBase.h"
 
 // Add support for simple random number generation
-#include <cstdlib>
-#include <ctime>
+#include "cstdlib"
+#include "ctime"
 
 // This keeps us from having to write cugl:: all the time
 using namespace cugl;
@@ -94,7 +94,6 @@ void GameplayMode::onStartup() {
     // Activate mouse or touch screen input as appropriate
     // We have to do this BEFORE the scene, because the scene has a button
 #if defined (CU_TOUCH_SCREEN)
-    CULog("activating touch screen");
     Input::activate<Touchscreen>();
 #else
     Input::activate<Mouse>();
@@ -253,7 +252,26 @@ void GameplayMode::update(float timestep) {
     }
     // Enemy movement
     _enemyController->moveEnemies(_inputManager.getForward());
-    _enemyController->findClosest(_player->getPos());
+    _enemyController->findClosest(_player->getPos(), _player->getLevel());
+    
+    if (_enemyController->getPossessed() != nullptr) {
+        CULog("%d", _enemyController->getPossessed()->facingRight());
+    }
+    if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), vector<Vec2> {})) {
+        _player->getSceneNode()->setAngle(3.14159265358979f);
+        if (_enemyController->getPossessed() != nullptr) {
+          
+            _enemyController->getPossessed()->getSceneNode()->setAngle(3.14159265358979f);
+        }
+
+    }
+    else {
+        _player->getSceneNode()->setAngle(0);
+        if (_enemyController->getPossessed() != nullptr) {
+            _enemyController->getPossessed()->getSceneNode()->setAngle(0);
+        }
+    }
+
 }
 
 bool GameplayMode::attemptPossess() {
@@ -273,14 +291,15 @@ bool GameplayMode::attemptPossess() {
 void GameplayMode::unpossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
     _player->setPos((enemy->getPos()));
+    _player->setLevel(enemy->getLevel());
     _player->getSceneNode()->setVisible(true);
     _player->setPossess(false);
     _player->setLevel(_enemyController->getPossessed()->getLevel());
     enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
+
     //may want to remove the enemy from the vector in enemy controller eventually, seems good for now
     _enemyController->updatePossessed(nullptr);
-
 }
 
 /**
@@ -315,7 +334,9 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
 
     // Create the player
-    _player = Player::alloc(150,128,0,1,cat);
+
+    _player = Player::alloc(150,0,0,cat);
+
 
     //floor texture creation
     std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
@@ -325,17 +346,19 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
     _level1Floor = Floor::alloc(Vec2(550, 30), 0,Vec2(1,1), 1, cugl::Color4::WHITE, level1Floor, floor);
 
-    _level1StairDoor = Floor::alloc(Vec2(750, 130), 4.71239, Vec2(1,1), 1, cugl::Color4::WHITE, level1Door, staircaseDoor);
+    _level1StairDoor = Floor::alloc(Vec2(750, 130), 4.71239, Vec2(1,1), 0, cugl::Color4::WHITE, level1Door, staircaseDoor);
 
     
 
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Floor, floor);
 
-    _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, staircaseDoor);
+
+    _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 1, cugl::Color4::WHITE, level2Door, staircaseDoor);
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
-    _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 1, cugl::Color4::WHITE, door);
-    _level2Door = Door::alloc(Vec2(390, 410), 4.71239, Vec2(3, 1), 2, cugl::Color4::WHITE, door);
+
+    _level1Door = Door::alloc(Vec2(590, 140), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, door);
+    _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, door);
     
     _doors = { _level1Door, _level2Door };
 
@@ -345,10 +368,10 @@ void GameplayMode::buildScene() {
 
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
-    std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy-placeholder");
+    std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
-    _enemyController->addEnemy(50, 400, 2, 0, enemyTexture, altTexture);
-    _enemyController->addEnemy(50, 128, 1,0, enemyTexture, altTexture);
+    _enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
 
     // Create a button.  A button has an up image and a down image
     possessButton = _assets->get<Texture>("possess-button");
@@ -410,7 +433,7 @@ void GameplayMode::buildScene() {
 
 
 void GameplayMode::checkDoors() {
-    
+
     for (shared_ptr<Door> door : _doors) {
         bool doorVisibility = door->getSceneNode()->isVisible();
         if (_enemyController->getPossessed() != nullptr) {
@@ -421,7 +444,6 @@ void GameplayMode::checkDoors() {
                 door->setVisibility(!doorVisibility);
             }
         }
-    
     }
   
 }
@@ -448,9 +470,9 @@ void GameplayMode::checkStaircaseDoors() {
                 abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - staircaseDoor->getPos().y) < 80.0f &&
                 abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - staircaseDoor->getPos().x) < 60.0f) {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
-                _enemyController->getPossessed()->setPos(staircaseDoor->getPos());
-                _enemyController->getPossessed()->changeFloor();
+                _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                _player->setLevel(_player->get_possessEnemy()->getLevel());
                 break;
             }*/
             CULog("scale x %f", _inputManager.getRootSceneNode()->getScaleX());

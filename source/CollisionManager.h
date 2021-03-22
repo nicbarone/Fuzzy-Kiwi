@@ -1,6 +1,6 @@
 #ifndef __COLLISION_MANAGER_H__
 #define __COLLISION_MANAGER_H__
-#include <cugl/cugl.h>
+#include "cugl/cugl.h"
 #include "Entity.h"
 #include "Player.h"
 #include "Door.h"

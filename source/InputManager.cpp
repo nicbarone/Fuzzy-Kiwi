@@ -103,7 +103,7 @@ bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::sc
     _rootSceneNode = rootNode;
     _camMovement = false;
     _camMoveDirection = Vec2::ZERO;
-    _catOriginalPos = _player->getPos();
+    _catOriginalPos = Vec2(_player->getPos(),_player->getPosY());
     createZones();
     clearTouchInstance(_stouch);
     clearTouchInstance(_ltouch);
@@ -111,24 +111,13 @@ bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::sc
     clearTouchInstance(_mtouch);
 #ifdef CU_MOBILE
     // Touch Screen
-    CULog("Initialize Touch!");
     Touchscreen* touch = Input::get<Touchscreen>();
-    if (touch->addBeginListener(LISTENER_KEY, [=](const TouchEvent& event, bool focus) {
+    touch->addBeginListener(LISTENER_KEY, [=](const TouchEvent& event, bool focus) {
         this->touchBeganCB(event, focus);
-        })) {
-        CULog("touch began CB add successful");
-    }
-    else {
-        CULog("touch began CB add failure");
-    }
-    if (touch->addEndListener(LISTENER_KEY, [=](const TouchEvent& event, bool focus) {
+        });
+    touch->addEndListener(LISTENER_KEY, [=](const TouchEvent& event, bool focus) {
         this->touchEndedCB(event, focus);
-})) {
-        CULog("touch end CB add successful");
-    }
-    else {
-        CULog("touch end CB add failure");
-    }
+        });
     touch->addMotionListener(LISTENER_KEY, [=](const TouchEvent& event, const Vec2& previous, bool focus) {
         this->touchesMovedCB(event, previous, focus);
         });
@@ -153,7 +142,9 @@ Vec2 InputManager::touch2Screen(const Vec2 pos) const {
     Vec2 result;
     result.x = px * _sbounds.size.width + _sbounds.origin.x - _sbounds.size.width / 2;
     result.y = (1 - py) * _sbounds.size.height + _sbounds.origin.y - _sbounds.size.height / 2 - CAM_CENTER_OFFSET_Y;
-    return result + _player->getPos();
+    result.x += _player->getPos();
+    result.y += _player->getPosY();
+    return result;
 }
 
 /**

@@ -10,43 +10,12 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
-#define DOOR_WIDTH 140
+#define DOOR_WIDTH 130
 
 void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
 	const std::vector<shared_ptr<Door>>& doors)
 {
-	
-	for (shared_ptr<Enemy> enemy : enemies) {
-		for (shared_ptr<Door> door : doors) {
-			if (door->getSceneNode()->isVisible() &&
-				door->getPos().x - enemy->getPos().x <= DOOR_WIDTH / 2 &&
-				door->getPos().x - enemy->getPos().x >= 0 &&
-				door->getLevel() == enemy->getLevel()) {
-				if (door->getBlockedEnemy() == nullptr) {
-					enemy->setOldPatrol(enemy->getPatrol());
-					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
-					door->setBlockedEnemy(enemy);
-					
-				}
-				
-			}
-			else if (door->getSceneNode()->isVisible() &&
-				enemy->getPos().x - door->getPos().x <= DOOR_WIDTH / 2 &&
-				enemy->getPos().x - door->getPos().x >= 0 &&
-				door->getLevel() == enemy->getLevel()) {
-				if (door->getBlockedEnemy() == nullptr) {
-					enemy->setOldPatrol(enemy->getPatrol());
-					enemy->setPatrol(door->getPos().x + DOOR_WIDTH / 2, enemy->getPatrol().y);
-					door->setBlockedEnemy(enemy);
-					CULog("blocked enemys old patrol: %f", door->getBlockedEnemy()->getOldPatrol().y);
-				}
-			}
-
-		}
-
-	}
-
 	std::shared_ptr<Entity> currentPlayer;
 	if (possessedEnemy != nullptr) {
 		currentPlayer = possessedEnemy;
@@ -54,24 +23,56 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	else {
 		currentPlayer = player;
 	}
-		Vec2 pos = currentPlayer->getPos();
-			for (shared_ptr<Door> door : doors) {
-				if (door->getSceneNode()->isVisible() &&
-					door->getPos().x - currentPlayer->getPos().x <= DOOR_WIDTH/2 &&
-					door->getPos().x - currentPlayer->getPos().x >= 0 &&
-					door->getLevel() == currentPlayer->getLevel()) {
-					pos = Vec2(door->getPos().x - DOOR_WIDTH/2, currentPlayer->getPos().y);
-					currentPlayer->setPos(pos);
+	Vec2 pos;
+	for (shared_ptr<Door> door : doors) {
+		if (door->getSceneNode()->isVisible() &&
+			door->getPos().x - currentPlayer->getPos() - 20 <= DOOR_WIDTH / 2 &&
+			door->getPos().x - currentPlayer->getPos() >= 0 &&
+			door->getLevel() == currentPlayer->getLevel()) {
+			currentPlayer->setPos(door->getPos().x - 20 - DOOR_WIDTH / 2);
+		}
+		else if (door->getSceneNode()->isVisible() &&
+			currentPlayer->getPos() - door->getPos().x - 20 <= DOOR_WIDTH / 2 &&
+			currentPlayer->getPos() - door->getPos().x > 0 &&
+			door->getLevel() == currentPlayer->getLevel()) {
+			currentPlayer->setPos(door->getPos().x + 20 + DOOR_WIDTH / 2);
+		}
+	}
+
+	
+	for (shared_ptr<Enemy> enemy : enemies) {
+		for (shared_ptr<Door> door : doors) {
+			/*if (door->getLevel() == 2&&!enemy->getPossessed()) {
+				CULog("%d", door->getBlockedEnemy() == nullptr);
+			}*/
+			if (door->getSceneNode()->isVisible() &&
+				door->getPos().x - enemy->getPos() <= DOOR_WIDTH / 2 &&
+				door->getPos().x - enemy->getPos() >= 0 &&
+				door->getLevel() == enemy->getLevel()) {
+				if (door->getBlockedEnemy() == nullptr) {
+					enemy->setOldPatrol(enemy->getPatrol());
+					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
+					door->setBlockedEnemy(enemy);
 				}
-				else if (door->getSceneNode()->isVisible() &&
-					currentPlayer->getPos().x - door->getPos().x <= DOOR_WIDTH/2 &&
-					currentPlayer->getPos().x - door->getPos().x > 0 &&
-					door->getLevel() == currentPlayer->getLevel()) {
-					pos = Vec2(door->getPos().x + DOOR_WIDTH/2, currentPlayer->getPos().y);
-					currentPlayer->setPos(pos);
+				
+			}
+			else if (door->getSceneNode()->isVisible() &&
+				enemy->getPos() - door->getPos().x <= DOOR_WIDTH / 2 &&
+				enemy->getPos() - door->getPos().x >= 0 &&
+				door->getLevel() == enemy->getLevel()) {
+				if (door->getBlockedEnemy() == nullptr) {
+					enemy->setOldPatrol(enemy->getPatrol());
+					enemy->setPatrol(door->getPos().x + DOOR_WIDTH / 2, enemy->getPatrol().y);
+					door->setBlockedEnemy(enemy);
+					
 				}
 			}
 
+		}
+
+	}
+
+	
 }
 
 /**
@@ -85,33 +86,35 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
  */
 void collisions::checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds)
 {
-	//Vec2 vel = player->getVelocity();
-	Vec2 pos = player->getPos();
 
-	//Ensure player doesn't go out of view. Stop by walls
-	if (pos.x <= bounds.origin.x) {
-		//vel.x = 0;
-		pos.x = bounds.origin.x;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
-	else if (pos.x >= bounds.size.width + bounds.origin.x) {
-		//vel.x = 0;
-		pos.x = bounds.size.width + bounds.origin.x - 1.0f;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
+    //Vec2 vel = player->getVelocity();
+    float pos = player->getPos();
 
-	if (pos.y <= bounds.origin.y) {
-		//vel.y = 0;
-		pos.y = bounds.origin.y;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
-	else if (pos.y >= bounds.size.height + bounds.origin.y) {
-		//vel.y = 0;
-		pos.y = bounds.size.height + bounds.origin.y - 1.0f;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
+    //Ensure player doesn't go out of view. Stop by walls
+    if (pos <= bounds.origin.x) {
+        //vel.x = 0;
+        pos = bounds.origin.x;
+        //player->setVelocity(vel);
+        player->setPos(pos);
+    }
+    else if (pos >= bounds.size.width + bounds.origin.x) {
+        //vel.x = 0;
+        pos = bounds.size.width + bounds.origin.x - 1.0f;
+        //player->setVelocity(vel);
+        player->setPos(pos);
+    }
+
+    //if (pos.y <= bounds.origin.y) {
+    //    //vel.y = 0;
+    //    pos.y = bounds.origin.y;
+    //    //player->setVelocity(vel);
+    //    player->setPos(pos);
+    //}
+    //else if (pos.y >= bounds.size.height + bounds.origin.y) {
+    //    //vel.y = 0;
+    //    pos.y = bounds.size.height + bounds.origin.y - 1.0f;
+    //    //player->setVelocity(vel);
+    //    player->setPos(pos);
+    //}
+
 }

@@ -10,7 +10,7 @@ void Door::dispose() {
 
 bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, std::shared_ptr<Texture> texture)
 {
-	ConstructionElement::setSceneNode(scene2::AnimationNode::alloc(texture, 1, 1));
+	ConstructionElement::setSceneNode(scene2::AnimationNode::alloc(texture, 1, 11));
 	ConstructionElement::setTexture(texture);
 	ConstructionElement::setPos(pos);
 	ConstructionElement::setAngle(ang);
@@ -22,11 +22,15 @@ bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, std::s
 }
 
 void Door::setVisibility(bool visibility) {
+	ConstructionElement::getSceneNode()->setVisible(visibility);
 	if (_blockedEnemy != nullptr) {
 		//CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
+		Vec2 temp = Vec2(_blockedEnemy->getPatrol().x, _blockedEnemy->getPatrol().y);
 		_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
-		_blockedEnemy->setOldPatrol(Vec2(0, 0));
-		setBlockedEnemy(nullptr);
+		_blockedEnemy->setOldPatrol(temp);
+		_blockedEnemy = nullptr;
+		//setBlockedEnemy(nullptr);
+		CULog("%d", _blockedEnemy == nullptr);
 	}
-	ConstructionElement::getSceneNode()->setVisible(visibility);
+	
 }

@@ -1,8 +1,8 @@
 #pragma once
 #ifndef __Interactable_H__
 #define __Interactable_H__
-#include <cugl/cugl.h>
-#include <cugl/scene2/graph/CUSceneNode.h>
+#include "cugl/cugl.h"
+#include "cugl/scene2/graph/CUSceneNode.h"
 using namespace cugl;
 class Interactable {
 

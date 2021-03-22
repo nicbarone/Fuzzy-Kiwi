@@ -1,7 +1,7 @@
 #include "EnemyController.h"
 using namespace cugl;
 /** how far the player can possess an enemy from, also determines highlighting distance*/
-#define POSSESS_RANGE 150
+
 
 EnemyController::EnemyController() 
 {
@@ -16,21 +16,21 @@ void EnemyController::dispose() {
 	_possessedEnemy = nullptr;
 }
 
-void EnemyController::addEnemy(float x, float y, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
-	_enemies.push_back(Enemy::alloc(x,y,level,ang,enemy,alt));
+void EnemyController::addEnemy(float x, int level, float patrolStart, float patrolEnd, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
+	_enemies.push_back(Enemy::alloc(x,level,ang,patrolStart, patrolEnd,enemy,alt));
 }
 
 std::shared_ptr<Enemy> EnemyController::closestEnemy() {
 	return _closestEnemy;
 }
 
-void EnemyController::findClosest(Vec2 pos) {
+void EnemyController::findClosest(float pos, int level) {
 	float dist = POSSESS_RANGE;
 	int index = -1;
 	for (int i = 0; i < _enemies.size(); i++) {
 		//eventually the y condition should be checking levels, not the actual y
-		if (_enemies[i]->getPos().y == pos.y && abs(_enemies[i]->getPos().x - pos.x) < dist && _enemies[i]->isActive()) {
-			dist = abs(_enemies[i]->getPos().x - pos.x);
+		if (_enemies[i]->getLevel() == level && abs(_enemies[i]->getPos() - pos) < dist && _enemies[i]->isActive()) {
+			dist = abs(_enemies[i]->getPos() - pos);
 			index = i;
 		}
 	}
@@ -46,3 +46,31 @@ void EnemyController::moveEnemies(float direction) {
 		it->get()->move(direction);
 	}
 }
+
+bool EnemyController::detectedPlayer(float x, int level, vector<Vec2> vision_blockers) {
+	for (auto it = begin(_enemies); it != end(_enemies); ++it) {
+		auto enemy = it->get();
+		if (_possessedEnemy == nullptr) { //if player is not possessing
+		//if on the same floor, is active and not possessed
+			if (level == enemy->getLevel() && enemy->isActive() && !enemy->isPossessed()) {
+				if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > x && enemy->getPos() < x)
+					|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < x) && enemy->getPos() > x) {
+					return true;
+				}
+			}
+		}
+		else { //if player possessing, compare with possessed and also checks possessed facing
+			//if on the same floor, is active and not possessed
+			if (_possessedEnemy->getLevel() == enemy->getLevel() && enemy->isActive() && !enemy->isPossessed()) {
+				if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > _possessedEnemy->getPos()
+					&& enemy->getPos() < _possessedEnemy->getPos() && _possessedEnemy->facingRight())
+					|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < _possessedEnemy->getPos())
+					&& enemy->getPos() > _possessedEnemy->getPos() && !_possessedEnemy->facingRight()) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
