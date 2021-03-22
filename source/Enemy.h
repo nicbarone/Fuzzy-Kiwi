@@ -4,7 +4,13 @@
 #define __ENEMY_H__
 #include "cugl/cugl.h"
 #include "Entity.h"
+#include "Constants.h"
 using namespace cugl;
+
+extern const float DEFAULT_VISION;
+extern const float ENEMY_SPEED;
+
+
 class Enemy : public Entity {
 
 private:
@@ -20,7 +26,7 @@ private:
 	float _visionRange;
 	/** movement speed of the enemy*/
 	float _speed;
-	/** keeps track of which direction the enemy is moving*/
+	/** keeps track of which direction the enemy is moving/facing*/
 	bool _movingRight;
 	/** whether the enemy is blocked by a closed door*/
 	bool _isStuck;
@@ -28,7 +34,8 @@ private:
 	bool _isPossessed;
 	/** whether the enemy is patrolling*/
 	bool _isActive;
-
+	int _frame;
+	int _frameCounter;
 
 
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
@@ -44,11 +51,11 @@ public:
 
 	void dispose();
 
-	bool init(float x, float y, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
+	bool init(float x, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
 
-	static std::shared_ptr<Enemy> alloc(float x, float y, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
+	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
-		return (result->init(x, y,level, ang, enemy, alt) ? result : nullptr);
+		return (result->init(x, level, ang, enemy, alt) ? result : nullptr);
 	}
 
 
@@ -66,6 +73,9 @@ public:
 	}
 	/** changes possessed state of the enemy*/
 	void setPossessed();
+
+	/** changes possessed state of the enemy*/
+	bool isPossessed() { return _isPossessed; }
 
 	/** sets the _patrolStart and _patrolEnd of the enemy*/
 	void setPatrol(float x1, float x2) {
@@ -91,7 +101,18 @@ public:
 		return Vec2(_patrolStart, _patrolEnd);
 	}
 
-	void changeFloor();
+	/** getter for enemy facing direction*/
+	bool facingRight() {
+		return _movingRight;
+	}
+
+	/** getter for enemy vision range*/
+	float getVision() {
+		return _visionRange;
+	}
+
+	/** setter for level, overloaded for this class to also change scene node position, deprecates changeFloor()*/
+	void setLevel(int level);
 
 };
 

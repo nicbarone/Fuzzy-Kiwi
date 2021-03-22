@@ -4,6 +4,9 @@
 #include "cugl/cugl.h"
 #include "Enemy.h"
 using namespace cugl;
+
+extern const float POSSESS_RANGE;
+
 class EnemyController {
 private:
 	/** reference to vector of enemies managed by this controller*/
@@ -22,7 +25,7 @@ public:
 	void dispose();
 
 	/** creates and adds an enemy to this controller*/
-	void addEnemy(float x, float y, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
+	void addEnemy(float x, int level, float ang, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
 
 	/** returns the vector of enemies managed by this controller*/
 	vector<std::shared_ptr<Enemy>> getEnemies() {
@@ -30,7 +33,7 @@ public:
 	}
 
 	/** updates the controller's reference _closestEnemy*/
-	void findClosest(Vec2 pos);
+	void findClosest(float pos, int level);
 
 	/** returns the closest enemy*/
 	std::shared_ptr<Enemy> closestEnemy();
@@ -47,5 +50,7 @@ public:
 		return _possessedEnemy;
 	}
 
+	/** returns true if the input point is currently being seen by this enemy and false otherwise*/
+	bool detectedPlayer(float x, int level, vector<Vec2> vision_blockers);
 };
 #endif

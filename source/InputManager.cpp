@@ -103,7 +103,7 @@ bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::sc
     _rootSceneNode = rootNode;
     _camMovement = false;
     _camMoveDirection = Vec2::ZERO;
-    _catOriginalPos = _player->getPos();
+    _catOriginalPos = Vec2(_player->getPos(),_player->getPosY());
     createZones();
     clearTouchInstance(_stouch);
     clearTouchInstance(_ltouch);
@@ -142,7 +142,9 @@ Vec2 InputManager::touch2Screen(const Vec2 pos) const {
     Vec2 result;
     result.x = px * _sbounds.size.width + _sbounds.origin.x - _sbounds.size.width / 2;
     result.y = (1 - py) * _sbounds.size.height + _sbounds.origin.y - _sbounds.size.height / 2 - CAM_CENTER_OFFSET_Y;
-    return result + _player->getPos();
+    result.x += _player->getPos();
+    result.y += _player->getPosY();
+    return result;
 }
 
 /**
@@ -413,6 +415,7 @@ void InputManager::readInput() {
     else {
         // Otherwise center on the cat
         _camMoveDirection = Vec2::ZERO;
-        _rootSceneNode->setPosition(-screen2World(_player->getPos()).x + _tbounds.size.width, screen2World(_player->getPos()).y +CAM_CENTER_OFFSET_Y);
+        Vec2 _playerPos = Vec2(_player->getPos(), _player->getPosY());
+        _rootSceneNode->setPosition(-screen2World(_playerPos).x + _tbounds.size.width, screen2World(_playerPos).y +CAM_CENTER_OFFSET_Y);
     }
 }

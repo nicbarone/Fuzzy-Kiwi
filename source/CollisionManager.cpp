@@ -48,20 +48,19 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				CULog("%d", door->getBlockedEnemy() == nullptr);
 			}*/
 			if (door->getSceneNode()->isVisible() &&
-				door->getPos().x - enemy->getPos().x <= DOOR_WIDTH / 2 &&
-				door->getPos().x - enemy->getPos().x >= 0 &&
+				door->getPos().x - enemy->getPos() <= DOOR_WIDTH / 2 &&
+				door->getPos().x - enemy->getPos() >= 0 &&
 				door->getLevel() == enemy->getLevel()) {
 				if (door->getBlockedEnemy() == nullptr) {
 					enemy->setOldPatrol(enemy->getPatrol());
 					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
 					door->setBlockedEnemy(enemy);
-					CULog(" f2f4f24f24gf4frfwefwefcshdfbsdfbsdbfjsdhbfsdhfsdsdbjsdhbhsdbfdjfdfwefefewfwefwefwefwefwefwefewfwefwe");
 				}
 				
 			}
 			else if (door->getSceneNode()->isVisible() &&
-				enemy->getPos().x - door->getPos().x <= DOOR_WIDTH / 2 &&
-				enemy->getPos().x - door->getPos().x >= 0 &&
+				enemy->getPos() - door->getPos().x <= DOOR_WIDTH / 2 &&
+				enemy->getPos() - door->getPos().x >= 0 &&
 				door->getLevel() == enemy->getLevel()) {
 				if (door->getBlockedEnemy() == nullptr) {
 					enemy->setOldPatrol(enemy->getPatrol());
@@ -89,33 +88,35 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
  */
 void collisions::checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds)
 {
-	//Vec2 vel = player->getVelocity();
-	Vec2 pos = player->getPos();
 
-	//Ensure player doesn't go out of view. Stop by walls
-	if (pos.x <= bounds.origin.x) {
-		//vel.x = 0;
-		pos.x = bounds.origin.x;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
-	else if (pos.x >= bounds.size.width + bounds.origin.x) {
-		//vel.x = 0;
-		pos.x = bounds.size.width + bounds.origin.x - 1.0f;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
+    //Vec2 vel = player->getVelocity();
+    float pos = player->getPos();
 
-	if (pos.y <= bounds.origin.y) {
-		//vel.y = 0;
-		pos.y = bounds.origin.y;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
-	else if (pos.y >= bounds.size.height + bounds.origin.y) {
-		//vel.y = 0;
-		pos.y = bounds.size.height + bounds.origin.y - 1.0f;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
+    //Ensure player doesn't go out of view. Stop by walls
+    if (pos <= bounds.origin.x) {
+        //vel.x = 0;
+        pos = bounds.origin.x;
+        //player->setVelocity(vel);
+        player->setPos(pos);
+    }
+    else if (pos >= bounds.size.width + bounds.origin.x) {
+        //vel.x = 0;
+        pos = bounds.size.width + bounds.origin.x - 1.0f;
+        //player->setVelocity(vel);
+        player->setPos(pos);
+    }
+
+    //if (pos.y <= bounds.origin.y) {
+    //    //vel.y = 0;
+    //    pos.y = bounds.origin.y;
+    //    //player->setVelocity(vel);
+    //    player->setPos(pos);
+    //}
+    //else if (pos.y >= bounds.size.height + bounds.origin.y) {
+    //    //vel.y = 0;
+    //    pos.y = bounds.size.height + bounds.origin.y - 1.0f;
+    //    //player->setVelocity(vel);
+    //    player->setPos(pos);
+    //}
+
 }
