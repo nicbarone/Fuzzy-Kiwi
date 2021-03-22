@@ -335,7 +335,7 @@ void GameplayMode::buildScene() {
 
     
     // Placeholder cat
-    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
+    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
 
     // Create the player
 
@@ -373,7 +373,7 @@ void GameplayMode::buildScene() {
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
-    std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
+    std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     _enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     _enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
 
@@ -483,4 +483,15 @@ void GameplayMode::checkStaircaseDoors() {
 
         }
     }
+}
+
+vector<Vec2> GameplayMode::closedDoors() {
+    vector<Vec2> closedDoors;
+    for (auto it = begin(_doors); it != end(_doors); ++it) {
+        auto door = it->get();
+        if (door->getSceneNode()->isVisible()) {
+            closedDoors.push_back(Vec2(door->getPos()));
+        }
     }
+    return closedDoors;
+}

@@ -28,6 +28,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"cat-walking": {
+			"file": "textures/CatWalking.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"enemy-placeholder": {
 			"file": "textures/EnemyPlaceholder.png",
 			"minfilter": "nearest",
@@ -44,6 +51,13 @@
 		},
 		"possessed-enemy-placeholder": {
 			"file": "textures/PossessedEnemyPlaceholder.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"possessed-enemy": {
+			"file": "textures/PossessedEnemy.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

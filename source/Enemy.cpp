@@ -53,7 +53,7 @@ bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolE
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	_frame = 0;
-	//_sceneNode->setScale(0.05, 0.05);
+	_sceneNode->setScale(0.05, 0.05);
 	return true;
 }
 
@@ -95,9 +95,22 @@ void Enemy::move(float direction) {
 		_sceneNode->setPositionX(original + getVelocity().x);
 		if (direction == 1) {
 			_movingRight = true;
+			_sceneNode->flipHorizontal(false);
 		}
 		else if (direction == -1) {
 			_movingRight = false;
+			_sceneNode->flipHorizontal(true);
+		}
+		if (direction != 0)
+		{
+			if (_frameCounter > 0) {
+				_frameCounter--;
+			}
+			else {
+				_frameCounter = 7;
+				_frame++;
+				_frame = _frame % 5;
+			}
 		}
 	}
 	if (_isActive || isPossessed()) {

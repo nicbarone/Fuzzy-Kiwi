@@ -181,6 +181,8 @@ public:
     or enter a staircase door*/
     void checkStaircaseDoors();
 
+    /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
+    vector<Vec2> closedDoors();
     
 };
 
