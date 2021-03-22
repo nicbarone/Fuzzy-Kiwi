@@ -258,7 +258,7 @@ void GameplayMode::update(float timestep) {
     if (_enemyController->getPossessed() != nullptr) {
         //CULog("%d", _enemyController->getPossessed()->facingRight());
     }
-    if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), vector<Vec2> {})) {
+    if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
         _player->getSceneNode()->setAngle(3.14159265358979f);
         if (_enemyController->getPossessed() != nullptr) {
 
@@ -496,7 +496,7 @@ vector<Vec2> GameplayMode::closedDoors() {
     for (auto it = begin(_doors); it != end(_doors); ++it) {
         auto door = it->get();
         if (door->getSceneNode()->isVisible()) {
-            closedDoors.push_back(Vec2(door->getPos()));
+            closedDoors.push_back(Vec2(door->getPos().x, door->getLevel()));
         }
     }
     return closedDoors;
