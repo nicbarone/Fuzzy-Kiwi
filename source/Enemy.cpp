@@ -60,6 +60,9 @@ bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolE
 void Enemy::move(float direction) {
 	float original = Entity::getPos();
 	if (_isActive) {
+		if (_patrolStart == _patrolEnd) {
+			return;
+		}
 		if (_frameCounter > 0) {
 			_frameCounter--;
 		}
