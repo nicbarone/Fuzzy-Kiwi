@@ -240,6 +240,7 @@ void GameplayMode::update(float timestep) {
     checkStaircaseDoors();
     checkDoors();
     collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
+    collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
 
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
@@ -255,7 +256,7 @@ void GameplayMode::update(float timestep) {
     _enemyController->findClosest(_player->getPos(), _player->getLevel());
 
     if (_enemyController->getPossessed() != nullptr) {
-        CULog("%d", _enemyController->getPossessed()->facingRight());
+        //CULog("%d", _enemyController->getPossessed()->facingRight());
     }
     if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), vector<Vec2> {})) {
         _player->getSceneNode()->setAngle(3.14159265358979f);
@@ -369,7 +370,7 @@ void GameplayMode::buildScene() {
     _leftWall = Floor::alloc(Vec2(-20, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
     _rightWall = Floor::alloc(Vec2(1100, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
 
-    _cagedAnimal = Door::alloc(Vec2(820, 360), 0, Vec2(0.3, 0.3), 0, cugl::Color4::WHITE, 1, 1, cagedAnimal);
+    _cagedAnimal = Door::alloc(Vec2(820, 360), 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, 1, 1, cagedAnimal);
 
 
 
@@ -488,7 +489,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _player->setLevel(_player->get_possessEnemy()->getLevel());
                 break;
             }*/
-            CULog("scale x %f", _inputManager.getRootSceneNode()->getScaleX());
+            //CULog("scale x %f", _inputManager.getRootSceneNode()->getScaleX());
             if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
