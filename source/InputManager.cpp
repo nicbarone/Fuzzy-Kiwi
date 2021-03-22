@@ -19,7 +19,7 @@ using namespace cugl;
 #define ZOOM_SENSITIVITY    0.1f
 /** This tells how fast the camera is to moving */
 #define CAMERA_MAX_SPEED    15.0f
-#define CAM_CENTER_OFFSET_Y -100.0f
+#define CAM_CENTER_OFFSET_Y 0.0f
 
 /**
  * Creates a new input controller with the default settings
@@ -376,11 +376,11 @@ void InputManager::readInput() {
     }
     if (Input::get<Mouse>()->buttonPressed().hasLeft()) {
         _tap_pos = Input::get<Mouse>()->pointerPosition();
-        CULog("orignal cat pos is %f, %f", _catOriginalPos.x, _catOriginalPos.y);
-        //CULog("current cam pos is %f, %f", touch2Screen(_rootSceneNode->getPosition()).x, touch2Screen(_rootSceneNode->getPosition()).y);
-        CULog("sbound is %f, %f", _sbounds.size.width, _sbounds.size.height);
-        CULog("cat pos %f, %f", _player->getPos().x, _player->getPos().y);
-        CULog("Clicked at %f, %f", touch2Screen(_tap_pos).x, touch2Screen(_tap_pos).y);
+        //CULog("orignal cat pos is %f, %f", _catOriginalPos.x, _catOriginalPos.y);
+        ////CULog("current cam pos is %f, %f", touch2Screen(_rootSceneNode->getPosition()).x, touch2Screen(_rootSceneNode->getPosition()).y);
+        //CULog("sbound is %f, %f", _sbounds.size.width, _sbounds.size.height);
+        //CULog("cat pos %f, %f", _player->getPos().x, _player->getPos().y);
+        //CULog("Clicked at %f, %f", touch2Screen(_tap_pos).x, touch2Screen(_tap_pos).y);
     }
     else {
         _tap_pos = Vec2::ZERO;

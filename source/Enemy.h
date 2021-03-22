@@ -61,6 +61,10 @@ public:
 	void move(float direction);
 
 	/** changes possessed state of the enemy*/
+	bool getPossessed() {
+		return _isPossessed;
+	}
+	/** changes possessed state of the enemy*/
 	void setPossessed();
 
 	/** sets the _patrolStart and _patrolEnd of the enemy*/

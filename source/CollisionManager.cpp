@@ -10,7 +10,7 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
-#define DOOR_WIDTH 140
+#define DOOR_WIDTH 130
 
 void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
@@ -19,6 +19,9 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	
 	for (shared_ptr<Enemy> enemy : enemies) {
 		for (shared_ptr<Door> door : doors) {
+			/*if (door->getLevel() == 2&&!enemy->getPossessed()) {
+				CULog("%d", door->getBlockedEnemy() == nullptr);
+			}*/
 			if (door->getSceneNode()->isVisible() &&
 				door->getPos().x - enemy->getPos().x <= DOOR_WIDTH / 2 &&
 				door->getPos().x - enemy->getPos().x >= 0 &&
@@ -27,7 +30,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 					enemy->setOldPatrol(enemy->getPatrol());
 					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
 					door->setBlockedEnemy(enemy);
-					
+					CULog(" f2f4f24f24gf4frfwefwefcshdfbsdfbsdbfjsdhbfsdhfsdsdbjsdhbhsdbfdjfdfwefefewfwefwefwefwefwefwefewfwefwe");
 				}
 				
 			}
@@ -39,7 +42,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 					enemy->setOldPatrol(enemy->getPatrol());
 					enemy->setPatrol(door->getPos().x + DOOR_WIDTH / 2, enemy->getPatrol().y);
 					door->setBlockedEnemy(enemy);
-					CULog("blocked enemys old patrol: %f", door->getBlockedEnemy()->getOldPatrol().y);
+					
 				}
 			}
 
