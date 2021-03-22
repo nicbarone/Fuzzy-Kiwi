@@ -16,6 +16,31 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
 	const std::vector<shared_ptr<Door>>& doors)
 {
+	std::shared_ptr<Entity> currentPlayer;
+	if (possessedEnemy != nullptr) {
+		currentPlayer = possessedEnemy;
+	}
+	else {
+		currentPlayer = player;
+	}
+	Vec2 pos = currentPlayer->getPos();
+	for (shared_ptr<Door> door : doors) {
+		if (door->getSceneNode()->isVisible() &&
+			door->getPos().x - currentPlayer->getPos().x - 20 <= DOOR_WIDTH / 2 &&
+			door->getPos().x - currentPlayer->getPos().x >= 0 &&
+			door->getLevel() == currentPlayer->getLevel()) {
+			pos = Vec2(door->getPos().x - 20 - DOOR_WIDTH / 2, currentPlayer->getPos().y);
+			currentPlayer->setPos(pos);
+		}
+		else if (door->getSceneNode()->isVisible() &&
+			currentPlayer->getPos().x - door->getPos().x - 20 <= DOOR_WIDTH / 2 &&
+			currentPlayer->getPos().x - door->getPos().x > 0 &&
+			door->getLevel() == currentPlayer->getLevel()) {
+			pos = Vec2(door->getPos().x + 20 + DOOR_WIDTH / 2, currentPlayer->getPos().y);
+			currentPlayer->setPos(pos);
+		}
+	}
+
 	
 	for (shared_ptr<Enemy> enemy : enemies) {
 		for (shared_ptr<Door> door : doors) {
@@ -50,31 +75,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 
 	}
 
-	std::shared_ptr<Entity> currentPlayer;
-	if (possessedEnemy != nullptr) {
-		currentPlayer = possessedEnemy;
-	}
-	else {
-		currentPlayer = player;
-	}
-		Vec2 pos = currentPlayer->getPos();
-			for (shared_ptr<Door> door : doors) {
-				if (door->getSceneNode()->isVisible() &&
-					door->getPos().x - currentPlayer->getPos().x <= DOOR_WIDTH/2 &&
-					door->getPos().x - currentPlayer->getPos().x >= 0 &&
-					door->getLevel() == currentPlayer->getLevel()) {
-					pos = Vec2(door->getPos().x - DOOR_WIDTH/2, currentPlayer->getPos().y);
-					currentPlayer->setPos(pos);
-				}
-				else if (door->getSceneNode()->isVisible() &&
-					currentPlayer->getPos().x - door->getPos().x <= DOOR_WIDTH/2 &&
-					currentPlayer->getPos().x - door->getPos().x > 0 &&
-					door->getLevel() == currentPlayer->getLevel()) {
-					pos = Vec2(door->getPos().x + DOOR_WIDTH/2, currentPlayer->getPos().y);
-					currentPlayer->setPos(pos);
-				}
-			}
-
+	
 }
 
 /**

@@ -4,7 +4,7 @@ using namespace cugl;
 /** temp def for enemy movement, will be more variable later*/
 #define SPEED 5
 #define PATROL_START 50
-#define PATROL_END 500
+#define PATROL_END 300
 
 Enemy::Enemy() :
 

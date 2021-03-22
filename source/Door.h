@@ -9,6 +9,7 @@ using namespace cugl;
 class Door : public ConstructionElement {
 private:
 	std::shared_ptr<Enemy> _blockedEnemy;
+	int _frame;
 
 public:
 
@@ -34,6 +35,11 @@ public:
 		return _blockedEnemy;
 	}
 	void setVisibility(bool visibility);
+
+	void setDoorFrame(shared_ptr<scene2::AnimationNode> node, int frame) {
+		node->setFrame(frame);
+
+	}
 
 
 };
