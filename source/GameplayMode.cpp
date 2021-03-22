@@ -247,7 +247,7 @@ void GameplayMode::update(float timestep) {
     // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
     if (_player->getPossess()) {
         _player->setPos(_player->get_possessEnemy()->getPos());
-        _player->setLevel(_player->get_possessEnemy()->getLevel());
+
     }
     else{
         _player->move(_inputManager.getForward());
@@ -477,6 +477,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                _player->setLevel(_player->get_possessEnemy()->getLevel());
                 break;
             }
 
