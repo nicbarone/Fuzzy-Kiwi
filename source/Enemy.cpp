@@ -85,7 +85,7 @@ void Enemy::move(float direction) {
 		}
 		
 	}
-	else if (_isPossessed) {
+	else if (_isPossessed && _sceneNode->isVisible()) {
 		manualMove(direction, ENEMY_SPEED);
 		_sceneNode->setPositionX(original + getVelocity().x);
 		if (direction == 1) {

@@ -248,11 +248,12 @@ void GameplayMode::update(float timestep) {
     if (_player->getPossess()) {
         _player->setPos(_player->get_possessEnemy()->getPos());
     }
-    else {
+    else{
         _player->move(_inputManager.getForward());
 
     }
     // Enemy movement
+
     _enemyController->moveEnemies(_inputManager.getForward());
     _enemyController->findClosest(_player->getPos(), _player->getLevel());
     
