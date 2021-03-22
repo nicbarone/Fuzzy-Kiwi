@@ -1,7 +1,7 @@
 #include "InputManager.h"
 
 using namespace cugl;
-#define LISTENER_KEY      1
+#define LISTENER_KEY      3
 #define ACCEL_KEY      2
 /** How close we need to be for a multi touch */
 #define NEAR_TOUCH      100
@@ -18,7 +18,7 @@ using namespace cugl;
 /** This tells how sensitive the camera is to zooming */
 #define ZOOM_SENSITIVITY    0.1f
 /** This tells how fast the camera is to moving */
-#define CAMERA_MAX_SPEED    15.0f
+#define CAMERA_MAX_SPEED    23.0f
 #define CAM_CENTER_OFFSET_Y -100.0f
 
 /**
@@ -111,13 +111,24 @@ bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::sc
     clearTouchInstance(_mtouch);
 #ifdef CU_MOBILE
     // Touch Screen
+    CULog("Initialize Touch!");
     Touchscreen* touch = Input::get<Touchscreen>();
-    touch->addBeginListener(LISTENER_KEY, [=](const TouchEvent& event, bool focus) {
+    if (touch->addBeginListener(LISTENER_KEY, [=](const TouchEvent& event, bool focus) {
         this->touchBeganCB(event, focus);
-        });
-    touch->addEndListener(LISTENER_KEY, [=](const TouchEvent& event, bool focus) {
+        })) {
+        CULog("touch began CB add successful");
+    }
+    else {
+        CULog("touch began CB add failure");
+    }
+    if (touch->addEndListener(LISTENER_KEY, [=](const TouchEvent& event, bool focus) {
         this->touchEndedCB(event, focus);
-        });
+})) {
+        CULog("touch end CB add successful");
+    }
+    else {
+        CULog("touch end CB add failure");
+    }
     touch->addMotionListener(LISTENER_KEY, [=](const TouchEvent& event, const Vec2& previous, bool focus) {
         this->touchesMovedCB(event, previous, focus);
         });
@@ -158,7 +169,7 @@ Vec2 InputManager::screen2World(const cugl::Vec2 pos) const {
     float sx = (pos.x - _sbounds.origin.x) / _sbounds.size.width;
     float sy = 1 - (pos.y - _sbounds.origin.y) / _sbounds.size.height;
     Vec2 result;
-    result.x = (sx + _tbounds.origin.x) * _tbounds.size.width;
+    result.x = (sx + _tbounds.origin.x) * _tbounds.size.width * _rootSceneNode->getScaleX();
     result.y = (sy + _tbounds.origin.y) * _tbounds.size.height;
     return result;
 }
@@ -186,10 +197,10 @@ void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
     if (std::abs(diff.x) > JSTICK_XDIFF_MIN) {
         _leftJoystick = true;
         if (diff.x > 0) {
-            _keyForward = 1;
+            _keyForward = -1;
         }
         else {
-            _keyForward = -1;
+            _keyForward = 1;
         }
     }
     else {
@@ -220,7 +231,7 @@ void InputManager::processRightJoystick(const cugl::Vec2 pos) {
 
     if (diff.length() > JSTICK_DIFF_MIN) {
         _rightJoystick = true;
-        _camMoveDirection = diff;
+        _camMoveDirection = Vec2(diff.x,-diff.y);
     }
     else {
         _keyForward = 0;
@@ -343,7 +354,7 @@ void InputManager::readInput() {
 #ifdef CU_MOBILE
     _forward = _keyForward;
     // if stouch is not null, then it is a tap
-    if (!_stouch.empty()) {
+    if (!_stouch.touchids.empty()) {
         _tap_pos = _stouch.position;
     }
     else {
@@ -380,7 +391,8 @@ void InputManager::readInput() {
         //CULog("current cam pos is %f, %f", touch2Screen(_rootSceneNode->getPosition()).x, touch2Screen(_rootSceneNode->getPosition()).y);
         CULog("sbound is %f, %f", _sbounds.size.width, _sbounds.size.height);
         CULog("cat pos %f, %f", _player->getPos().x, _player->getPos().y);
-        CULog("Clicked at %f, %f", touch2Screen(_tap_pos).x, touch2Screen(_tap_pos).y);
+        CULog("Clicked at %f, %f", _tap_pos.x, _tap_pos.y);
+        CULog("player world pos %f, %f", _rootSceneNode->nodeToWorldCoords(_player->getPos()).x, _rootSceneNode->nodeToWorldCoords(_player->getPos()).y);
     }
     else {
         _tap_pos = Vec2::ZERO;
@@ -413,6 +425,8 @@ void InputManager::readInput() {
     else {
         // Otherwise center on the cat
         _camMoveDirection = Vec2::ZERO;
-        _rootSceneNode->setPosition(-screen2World(_player->getPos()).x + _tbounds.size.width, screen2World(_player->getPos()).y +CAM_CENTER_OFFSET_Y);
+        //CULog("player world pos %f, %f",_rootSceneNode->nodeToWorldCoords(_player->getPos()).x, _rootSceneNode->nodeToWorldCoords(_player->getPos()).y);
+        //CULog("Xval %f", -screen2World(_player->getPos()).x + _tbounds.size.width);
+        //_rootSceneNode->setPosition(-screen2World(_player->getPos()).x + _tbounds.size.width, screen2World(_player->getPos()).y +CAM_CENTER_OFFSET_Y);
     }
 }

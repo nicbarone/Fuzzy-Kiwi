@@ -94,6 +94,7 @@ void GameplayMode::onStartup() {
     // Activate mouse or touch screen input as appropriate
     // We have to do this BEFORE the scene, because the scene has a button
 #if defined (CU_TOUCH_SCREEN)
+    CULog("activating touch screen");
     Input::activate<Touchscreen>();
 #else
     Input::activate<Mouse>();
@@ -107,16 +108,16 @@ void GameplayMode::onStartup() {
     
     // Report the safe area
     Rect bounds = Display::get()->getSafeBounds();
-    CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
-                            bounds.size.toString().c_str());
+   // CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
+    //                        bounds.size.toString().c_str());
 
     bounds = getSafeBounds();
-    CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
-                            bounds.size.toString().c_str());
+    //CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
+    //                        bounds.size.toString().c_str());
 
     bounds = getDisplayBounds();
-    CULog("Full Area %sx%s",bounds.origin.toString().c_str(),
-                            bounds.size.toString().c_str());
+    //CULog("Full Area %sx%s",bounds.origin.toString().c_str(),
+    //                        bounds.size.toString().c_str());
 
 }
 
@@ -413,10 +414,10 @@ void GameplayMode::checkDoors() {
     for (shared_ptr<Door> door : _doors) {
         bool doorVisibility = door->getSceneNode()->isVisible();
         if (_enemyController->getPossessed() != nullptr) {
-            if (abs(_enemyController->getPossessed()->getPos().x - door->getPos().x) < 110.0f &&
-                abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - door->getPos().y) < 80.0f &&
+            if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
-                abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - door->getPos().x) < 60.0f) {
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 door->setVisibility(!doorVisibility);
             }
         }
@@ -427,7 +428,6 @@ void GameplayMode::checkDoors() {
 
 void GameplayMode::checkStaircaseDoors() {
   
-
     bool visibility;
 
     if (_enemyController->getPossessed() != nullptr) {
@@ -436,7 +436,7 @@ void GameplayMode::checkStaircaseDoors() {
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible(); 
         for (shared_ptr<Floor> staircaseDoor : _staircaseDoors) {
             /*CULog("%f", staircaseDoor->getPos().y);*/
-            if (visibility && abs(_enemyController->getPossessed()->getPos().x - staircaseDoor->getPos().x) < 110.0f &&
+            /*if (visibility && abs(_enemyController->getPossessed()->getPos().x - staircaseDoor->getPos().x) < 110.0f &&
                 abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - staircaseDoor->getPos().y) < 80.0f &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
                 abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - staircaseDoor->getPos().x) < 60.0f) {
@@ -452,8 +452,25 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->changeFloor();
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
                 break;
+            }*/
+            CULog("scale x %f", _inputManager.getRootSceneNode()->getScaleX());
+            if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+                break;
             }
 
+            else if (!visibility &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+                _enemyController->getPossessed()->setPos(staircaseDoor->getPos());
+                _enemyController->getPossessed()->changeFloor();
+                _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                break;
+            }
         }
     }
     }

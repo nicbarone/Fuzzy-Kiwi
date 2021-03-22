@@ -68,9 +68,6 @@ public:
 
 	}
 
-	std::shared_ptr<Texture> getTexture() {
-		
-	}
 
 	/** sets the color of the entity*/
 	void setColor(Color4 color) {
