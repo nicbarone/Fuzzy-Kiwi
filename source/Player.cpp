@@ -9,7 +9,7 @@ Player::Player() :
 	_isPossessing(false),
 	_isHidden(false),
 	_frame(0),
-	_frameCounter(7)
+	_frameCounter(12)
 {
 
 	_sceneNode = nullptr;

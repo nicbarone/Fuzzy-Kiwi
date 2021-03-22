@@ -381,9 +381,9 @@ void InputManager::readInput() {
         CULog("orignal cat pos is %f, %f", _catOriginalPos.x, _catOriginalPos.y);
         //CULog("current cam pos is %f, %f", touch2Screen(_rootSceneNode->getPosition()).x, touch2Screen(_rootSceneNode->getPosition()).y);
         CULog("sbound is %f, %f", _sbounds.size.width, _sbounds.size.height);
-        CULog("cat pos %f, %f", _player->getPos().x, _player->getPos().y);
+        //CULog("cat pos %f, %f", _player->getPos().x, _player->getPos().y);
         CULog("Clicked at %f, %f", _tap_pos.x, _tap_pos.y);
-        CULog("player world pos %f, %f", _rootSceneNode->nodeToWorldCoords(_player->getPos()).x, _rootSceneNode->nodeToWorldCoords(_player->getPos()).y);
+        //CULog("player world pos %f, %f", _rootSceneNode->nodeToWorldCoords(_player->getPos()).x, _rootSceneNode->nodeToWorldCoords(_player->getPos()).y);
     }
     else {
         _tap_pos = Vec2::ZERO;

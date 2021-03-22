@@ -488,8 +488,7 @@ void GameplayMode::checkStaircaseDoors() {
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
-                _enemyController->getPossessed()->setPos(staircaseDoor->getPos());
-                _enemyController->getPossessed()->changeFloor();
+                _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
                 break;
             }
