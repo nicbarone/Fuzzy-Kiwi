@@ -3,7 +3,7 @@
 #define __DOOR_H__
 #include "ConstructionElement.h"
 #include "Enemy.h"
-#include "cugl/cugl.h"
+#include <cugl/cugl.h>
 using namespace cugl;
 
 class Door : public ConstructionElement {
