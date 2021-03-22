@@ -51,7 +51,6 @@ public:
 	}
 
 	/** returns true if the input point is currently being seen by this enemy and false otherwise*/
-	bool detectedPlayer(float x, int level);
-
+	bool detectedPlayer(float x, int level, vector<Vec2> vision_blockers);
 };
 #endif

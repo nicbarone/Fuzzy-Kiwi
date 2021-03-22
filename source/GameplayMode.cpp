@@ -249,13 +249,25 @@ void GameplayMode::update(float timestep) {
     // Enemy movement
     _enemyController->moveEnemies(_inputManager.getForward());
     _enemyController->findClosest(_player->getPos(), _player->getLevel());
-
-    if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel())) {
+    
+    if (_enemyController->getPossessed() != nullptr) {
+        CULog("%d", _enemyController->getPossessed()->facingRight());
+    }
+    if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), vector<Vec2> {})) {
         _player->getSceneNode()->setAngle(3.14159265358979f);
+        if (_enemyController->getPossessed() != nullptr) {
+          
+            _enemyController->getPossessed()->getSceneNode()->setAngle(3.14159265358979f);
+        }
+
     }
     else {
         _player->getSceneNode()->setAngle(0);
+        if (_enemyController->getPossessed() != nullptr) {
+            _enemyController->getPossessed()->getSceneNode()->setAngle(0);
+        }
     }
+
 }
 
 bool GameplayMode::attemptPossess() {
@@ -332,7 +344,7 @@ void GameplayMode::buildScene() {
 
     _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Floor, floor);
 
-    _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, staircaseDoor);
+    _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 1, cugl::Color4::WHITE, level2Door, staircaseDoor);
 
     _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 1, cugl::Color4::WHITE, door);
 
@@ -342,7 +354,7 @@ void GameplayMode::buildScene() {
 
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
-    std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy-placeholder");
+    std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
     _enemyController->addEnemy(50, 1, 0, enemyTexture, altTexture);
     _enemyController->addEnemy(50, 0,0, enemyTexture, altTexture);

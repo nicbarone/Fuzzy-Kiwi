@@ -31,7 +31,8 @@ private:
 	bool _isPossessed;
 	/** whether the enemy is patrolling*/
 	bool _isActive;
-
+	int _frame;
+	int _frameCounter;
 
 
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
@@ -65,6 +66,9 @@ public:
 
 	/** changes possessed state of the enemy*/
 	void setPossessed();
+
+	/** changes possessed state of the enemy*/
+	bool isPossessed() { return _isPossessed; }
 
 	/** sets the _patrolStart and _patrolEnd of the enemy*/
 	void setPatrol(float x1, float x2) {

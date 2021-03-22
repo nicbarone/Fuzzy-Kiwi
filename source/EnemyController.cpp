@@ -47,16 +47,29 @@ void EnemyController::moveEnemies(float direction) {
 	}
 }
 
-bool EnemyController::detectedPlayer(float x, int level) {
+bool EnemyController::detectedPlayer(float x, int level, vector<Vec2> vision_blockers) {
 	for (auto it = begin(_enemies); it != end(_enemies); ++it) {
 		auto enemy = it->get();
-		if (level == enemy->getLevel()) {
-			if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > x && enemy->getPos() < x)
-				|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < x) && enemy->getPos() > x) {
-				return true;
+		if (_possessedEnemy == nullptr) { //if player is not possessing
+		//if on the same floor, is active and not possessed
+			if (level == enemy->getLevel() && enemy->isActive() && !enemy->isPossessed()) {
+				if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > x && enemy->getPos() < x)
+					|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < x) && enemy->getPos() > x) {
+					return true;
+				}
+			}
+		}
+		else { //if player possessing, compare with possessed and also checks possessed facing
+			//if on the same floor, is active and not possessed
+			if (_possessedEnemy->getLevel() == enemy->getLevel() && enemy->isActive() && !enemy->isPossessed()) {
+				if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > _possessedEnemy->getPos()
+					&& enemy->getPos() < _possessedEnemy->getPos() && _possessedEnemy->facingRight())
+					|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < _possessedEnemy->getPos())
+					&& enemy->getPos() > _possessedEnemy->getPos() && !_possessedEnemy->facingRight()) {
+					return true;
+				}
 			}
 		}
 	}
-	
 	return false;
 }
