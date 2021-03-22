@@ -359,8 +359,8 @@ void GameplayMode::buildScene() {
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
 
-    _level1Door = Door::alloc(Vec2(590, 140), 4.71239, Vec2(3, 1), 0, cugl::Color4::WHITE, door);
-    _level2Door = Door::alloc(Vec2(390, 410), 4.71239, Vec2(3, 1), 1, cugl::Color4::WHITE, door);
+    _level1Door = Door::alloc(Vec2(590, 140), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, door);
+    _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, door);
     
     _doors = { _level1Door, _level2Door };
 
@@ -436,16 +436,16 @@ void GameplayMode::buildScene() {
 
 void GameplayMode::checkDoors() {
 
-    bool doorVisibility = _level1Door->getSceneNode()->isVisible();
-    if (_enemyController->getPossessed() != nullptr) {
-        if (abs(_enemyController->getPossessed()->getPos() - _level1Door->getPos().x) < 110.0f &&
-            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - _level1Door->getPos().y) < 80.0f &&
-            _enemyController->getPossessed()->getLevel() == _level1Door->getLevel() &&
-            abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - _level1Door->getPos().x) < 60.0f) {
-            _level1Door->getSceneNode()->setVisible(!doorVisibility);
-
+    for (shared_ptr<Door> door : _doors) {
+        bool doorVisibility = door->getSceneNode()->isVisible();
+        if (_enemyController->getPossessed() != nullptr) {
+            if (abs(_enemyController->getPossessed()->getPos() - door->getPos().x) < 110.0f &&
+                abs(_inputManager.touch2Screen(_inputManager.getTapPos()).y - door->getPos().y) < 80.0f &&
+                _enemyController->getPossessed()->getLevel() == door->getLevel() &&
+                abs(_inputManager.touch2Screen(_inputManager.getTapPos()).x - door->getPos().x) < 60.0f) {
+                door->setVisibility(!doorVisibility);
+            }
         }
-    
     }
   
 }

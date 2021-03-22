@@ -23,21 +23,19 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	else {
 		currentPlayer = player;
 	}
-	Vec2 pos = currentPlayer->getPos();
+	Vec2 pos;
 	for (shared_ptr<Door> door : doors) {
 		if (door->getSceneNode()->isVisible() &&
-			door->getPos().x - currentPlayer->getPos().x - 20 <= DOOR_WIDTH / 2 &&
-			door->getPos().x - currentPlayer->getPos().x >= 0 &&
+			door->getPos().x - currentPlayer->getPos() - 20 <= DOOR_WIDTH / 2 &&
+			door->getPos().x - currentPlayer->getPos() >= 0 &&
 			door->getLevel() == currentPlayer->getLevel()) {
-			pos = Vec2(door->getPos().x - 20 - DOOR_WIDTH / 2, currentPlayer->getPos().y);
-			currentPlayer->setPos(pos);
+			currentPlayer->setPos(door->getPos().x - 20 - DOOR_WIDTH / 2);
 		}
 		else if (door->getSceneNode()->isVisible() &&
-			currentPlayer->getPos().x - door->getPos().x - 20 <= DOOR_WIDTH / 2 &&
-			currentPlayer->getPos().x - door->getPos().x > 0 &&
+			currentPlayer->getPos() - door->getPos().x - 20 <= DOOR_WIDTH / 2 &&
+			currentPlayer->getPos() - door->getPos().x > 0 &&
 			door->getLevel() == currentPlayer->getLevel()) {
-			pos = Vec2(door->getPos().x + 20 + DOOR_WIDTH / 2, currentPlayer->getPos().y);
-			currentPlayer->setPos(pos);
+			currentPlayer->setPos(door->getPos().x + 20 + DOOR_WIDTH / 2);
 		}
 	}
 
