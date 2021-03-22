@@ -7,45 +7,48 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D0DD6D3626083FB4009A377F /* UIElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D1E26083FB2009A377F /* UIElement.cpp */; };
-		D0DD6D3726083FB4009A377F /* UIElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D1E26083FB2009A377F /* UIElement.cpp */; };
-		D0DD6D3826083FB4009A377F /* UIElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D1E26083FB2009A377F /* UIElement.cpp */; };
-		D0DD6D3926083FB4009A377F /* InputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D1F26083FB2009A377F /* InputManager.cpp */; };
-		D0DD6D3A26083FB4009A377F /* InputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D1F26083FB2009A377F /* InputManager.cpp */; };
-		D0DD6D3B26083FB4009A377F /* InputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D1F26083FB2009A377F /* InputManager.cpp */; };
-		D0DD6D3C26083FB4009A377F /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2026083FB2009A377F /* EnemyController.cpp */; };
-		D0DD6D3D26083FB4009A377F /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2026083FB2009A377F /* EnemyController.cpp */; };
-		D0DD6D3E26083FB4009A377F /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2026083FB2009A377F /* EnemyController.cpp */; };
-		D0DD6D3F26083FB4009A377F /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2126083FB2009A377F /* Entity.cpp */; };
-		D0DD6D4026083FB4009A377F /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2126083FB2009A377F /* Entity.cpp */; };
-		D0DD6D4126083FB4009A377F /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2126083FB2009A377F /* Entity.cpp */; };
-		D0DD6D4226083FB4009A377F /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2226083FB2009A377F /* Player.cpp */; };
-		D0DD6D4326083FB4009A377F /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2226083FB2009A377F /* Player.cpp */; };
-		D0DD6D4426083FB4009A377F /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2226083FB2009A377F /* Player.cpp */; };
-		D0DD6D4526083FB4009A377F /* CollisionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2326083FB2009A377F /* CollisionManager.cpp */; };
-		D0DD6D4626083FB4009A377F /* CollisionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2326083FB2009A377F /* CollisionManager.cpp */; };
-		D0DD6D4726083FB4009A377F /* CollisionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2326083FB2009A377F /* CollisionManager.cpp */; };
-		D0DD6D4826083FB4009A377F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2626083FB3009A377F /* main.cpp */; };
-		D0DD6D4926083FB4009A377F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2626083FB3009A377F /* main.cpp */; };
-		D0DD6D4A26083FB4009A377F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2626083FB3009A377F /* main.cpp */; };
-		D0DD6D4B26083FB4009A377F /* ConstructionElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2826083FB3009A377F /* ConstructionElement.cpp */; };
-		D0DD6D4C26083FB4009A377F /* ConstructionElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2826083FB3009A377F /* ConstructionElement.cpp */; };
-		D0DD6D4D26083FB4009A377F /* ConstructionElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2826083FB3009A377F /* ConstructionElement.cpp */; };
-		D0DD6D4E26083FB4009A377F /* Enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2A26083FB3009A377F /* Enemy.cpp */; };
-		D0DD6D4F26083FB4009A377F /* Enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2A26083FB3009A377F /* Enemy.cpp */; };
-		D0DD6D5026083FB4009A377F /* Enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2A26083FB3009A377F /* Enemy.cpp */; };
-		D0DD6D5126083FB4009A377F /* Floor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2B26083FB3009A377F /* Floor.cpp */; };
-		D0DD6D5226083FB4009A377F /* Floor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2B26083FB3009A377F /* Floor.cpp */; };
-		D0DD6D5326083FB4009A377F /* Floor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2B26083FB3009A377F /* Floor.cpp */; };
-		D0DD6D5426083FB4009A377F /* GameplayMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2F26083FB3009A377F /* GameplayMode.cpp */; };
-		D0DD6D5526083FB4009A377F /* GameplayMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2F26083FB3009A377F /* GameplayMode.cpp */; };
-		D0DD6D5626083FB4009A377F /* GameplayMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D2F26083FB3009A377F /* GameplayMode.cpp */; };
-		D0DD6D5726083FB4009A377F /* Door.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D3426083FB4009A377F /* Door.cpp */; };
-		D0DD6D5826083FB4009A377F /* Door.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D3426083FB4009A377F /* Door.cpp */; };
-		D0DD6D5926083FB4009A377F /* Door.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D3426083FB4009A377F /* Door.cpp */; };
-		D0DD6D5A26083FB4009A377F /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D3526083FB4009A377F /* Interactable.cpp */; };
-		D0DD6D5B26083FB4009A377F /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D3526083FB4009A377F /* Interactable.cpp */; };
-		D0DD6D5C26083FB4009A377F /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D3526083FB4009A377F /* Interactable.cpp */; };
+		D0DD6DB12608651C009A377F /* GameplayMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9D2608651A009A377F /* GameplayMode.cpp */; };
+		D0DD6DB22608651C009A377F /* GameplayMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9D2608651A009A377F /* GameplayMode.cpp */; };
+		D0DD6DB32608651C009A377F /* GameplayMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9D2608651A009A377F /* GameplayMode.cpp */; };
+		D0DD6DB42608651C009A377F /* UIElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9E2608651A009A377F /* UIElement.cpp */; };
+		D0DD6DB52608651C009A377F /* UIElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9E2608651A009A377F /* UIElement.cpp */; };
+		D0DD6DB62608651C009A377F /* UIElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9E2608651A009A377F /* UIElement.cpp */; };
+		D0DD6DB72608651C009A377F /* InputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9F2608651A009A377F /* InputManager.cpp */; };
+		D0DD6DB82608651C009A377F /* InputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9F2608651A009A377F /* InputManager.cpp */; };
+		D0DD6DB92608651C009A377F /* InputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6D9F2608651A009A377F /* InputManager.cpp */; };
+		D0DD6DBA2608651C009A377F /* Floor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA32608651A009A377F /* Floor.cpp */; };
+		D0DD6DBB2608651C009A377F /* Floor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA32608651A009A377F /* Floor.cpp */; };
+		D0DD6DBC2608651C009A377F /* Floor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA32608651A009A377F /* Floor.cpp */; };
+		D0DD6DBD2608651C009A377F /* Enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA52608651A009A377F /* Enemy.cpp */; };
+		D0DD6DBE2608651C009A377F /* Enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA52608651A009A377F /* Enemy.cpp */; };
+		D0DD6DBF2608651C009A377F /* Enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA52608651A009A377F /* Enemy.cpp */; };
+		D0DD6DC02608651C009A377F /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA62608651B009A377F /* Player.cpp */; };
+		D0DD6DC12608651C009A377F /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA62608651B009A377F /* Player.cpp */; };
+		D0DD6DC22608651C009A377F /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA62608651B009A377F /* Player.cpp */; };
+		D0DD6DC32608651C009A377F /* CollisionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA92608651B009A377F /* CollisionManager.cpp */; };
+		D0DD6DC42608651C009A377F /* CollisionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA92608651B009A377F /* CollisionManager.cpp */; };
+		D0DD6DC52608651C009A377F /* CollisionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DA92608651B009A377F /* CollisionManager.cpp */; };
+		D0DD6DC62608651C009A377F /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAA2608651B009A377F /* Entity.cpp */; };
+		D0DD6DC72608651C009A377F /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAA2608651B009A377F /* Entity.cpp */; };
+		D0DD6DC82608651C009A377F /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAA2608651B009A377F /* Entity.cpp */; };
+		D0DD6DC92608651C009A377F /* Constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAB2608651B009A377F /* Constants.cpp */; };
+		D0DD6DCA2608651C009A377F /* Constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAB2608651B009A377F /* Constants.cpp */; };
+		D0DD6DCB2608651C009A377F /* Constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAB2608651B009A377F /* Constants.cpp */; };
+		D0DD6DCC2608651C009A377F /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAC2608651B009A377F /* EnemyController.cpp */; };
+		D0DD6DCD2608651C009A377F /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAC2608651B009A377F /* EnemyController.cpp */; };
+		D0DD6DCE2608651C009A377F /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAC2608651B009A377F /* EnemyController.cpp */; };
+		D0DD6DCF2608651C009A377F /* Door.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAD2608651B009A377F /* Door.cpp */; };
+		D0DD6DD02608651C009A377F /* Door.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAD2608651B009A377F /* Door.cpp */; };
+		D0DD6DD12608651C009A377F /* Door.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAD2608651B009A377F /* Door.cpp */; };
+		D0DD6DD22608651C009A377F /* ConstructionElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAE2608651B009A377F /* ConstructionElement.cpp */; };
+		D0DD6DD32608651C009A377F /* ConstructionElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAE2608651B009A377F /* ConstructionElement.cpp */; };
+		D0DD6DD42608651C009A377F /* ConstructionElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAE2608651B009A377F /* ConstructionElement.cpp */; };
+		D0DD6DD52608651C009A377F /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAF2608651B009A377F /* Interactable.cpp */; };
+		D0DD6DD62608651C009A377F /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAF2608651B009A377F /* Interactable.cpp */; };
+		D0DD6DD72608651C009A377F /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DAF2608651B009A377F /* Interactable.cpp */; };
+		D0DD6DD82608651C009A377F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DB02608651B009A377F /* main.cpp */; };
+		D0DD6DD92608651C009A377F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DB02608651B009A377F /* main.cpp */; };
+		D0DD6DDA2608651C009A377F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DD6DB02608651B009A377F /* main.cpp */; };
 		EB07CFB621EFF3F8000CB3A3 /* DeviceMargins.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */; };
 		EB22BDE025D0E00A002ACE41 /* libcugl-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB22BDC825D0DE75002ACE41 /* libcugl-mac.a */; };
 		EB22BDFC25D0E0E2002ACE41 /* libcugl-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB22BDCA25D0DE75002ACE41 /* libcugl-ios.a */; };
@@ -135,31 +138,33 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D0DD6D1D26083FB2009A377F /* GameplayMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameplayMode.h; sourceTree = "<group>"; };
-		D0DD6D1E26083FB2009A377F /* UIElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIElement.cpp; sourceTree = "<group>"; };
-		D0DD6D1F26083FB2009A377F /* InputManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputManager.cpp; sourceTree = "<group>"; };
-		D0DD6D2026083FB2009A377F /* EnemyController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EnemyController.cpp; sourceTree = "<group>"; };
-		D0DD6D2126083FB2009A377F /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
-		D0DD6D2226083FB2009A377F /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
-		D0DD6D2326083FB2009A377F /* CollisionManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CollisionManager.cpp; sourceTree = "<group>"; };
-		D0DD6D2426083FB3009A377F /* Enemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enemy.h; sourceTree = "<group>"; };
-		D0DD6D2526083FB3009A377F /* InputManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputManager.h; sourceTree = "<group>"; };
-		D0DD6D2626083FB3009A377F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		D0DD6D2726083FB3009A377F /* Floor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Floor.h; sourceTree = "<group>"; };
-		D0DD6D2826083FB3009A377F /* ConstructionElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConstructionElement.cpp; sourceTree = "<group>"; };
-		D0DD6D2926083FB3009A377F /* UIElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIElement.h; sourceTree = "<group>"; };
-		D0DD6D2A26083FB3009A377F /* Enemy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Enemy.cpp; sourceTree = "<group>"; };
-		D0DD6D2B26083FB3009A377F /* Floor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Floor.cpp; sourceTree = "<group>"; };
-		D0DD6D2C26083FB3009A377F /* EnemyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnemyController.h; sourceTree = "<group>"; };
-		D0DD6D2D26083FB3009A377F /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
-		D0DD6D2E26083FB3009A377F /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
-		D0DD6D2F26083FB3009A377F /* GameplayMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameplayMode.cpp; sourceTree = "<group>"; };
-		D0DD6D3026083FB4009A377F /* CollisionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollisionManager.h; sourceTree = "<group>"; };
-		D0DD6D3126083FB4009A377F /* Interactable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Interactable.h; sourceTree = "<group>"; };
-		D0DD6D3226083FB4009A377F /* ConstructionElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstructionElement.h; sourceTree = "<group>"; };
-		D0DD6D3326083FB4009A377F /* Door.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Door.h; sourceTree = "<group>"; };
-		D0DD6D3426083FB4009A377F /* Door.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Door.cpp; sourceTree = "<group>"; };
-		D0DD6D3526083FB4009A377F /* Interactable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Interactable.cpp; sourceTree = "<group>"; };
+		D0DD6D9626086519009A377F /* UIElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIElement.h; sourceTree = "<group>"; };
+		D0DD6D9726086519009A377F /* InputManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputManager.h; sourceTree = "<group>"; };
+		D0DD6D9826086519009A377F /* Door.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Door.h; sourceTree = "<group>"; };
+		D0DD6D9926086519009A377F /* CollisionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollisionManager.h; sourceTree = "<group>"; };
+		D0DD6D9A2608651A009A377F /* ConstructionElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstructionElement.h; sourceTree = "<group>"; };
+		D0DD6D9B2608651A009A377F /* GameplayMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameplayMode.h; sourceTree = "<group>"; };
+		D0DD6D9C2608651A009A377F /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		D0DD6D9D2608651A009A377F /* GameplayMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameplayMode.cpp; sourceTree = "<group>"; };
+		D0DD6D9E2608651A009A377F /* UIElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIElement.cpp; sourceTree = "<group>"; };
+		D0DD6D9F2608651A009A377F /* InputManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputManager.cpp; sourceTree = "<group>"; };
+		D0DD6DA02608651A009A377F /* Floor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Floor.h; sourceTree = "<group>"; };
+		D0DD6DA12608651A009A377F /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		D0DD6DA22608651A009A377F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		D0DD6DA32608651A009A377F /* Floor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Floor.cpp; sourceTree = "<group>"; };
+		D0DD6DA42608651A009A377F /* Enemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enemy.h; sourceTree = "<group>"; };
+		D0DD6DA52608651A009A377F /* Enemy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Enemy.cpp; sourceTree = "<group>"; };
+		D0DD6DA62608651B009A377F /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
+		D0DD6DA72608651B009A377F /* EnemyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnemyController.h; sourceTree = "<group>"; };
+		D0DD6DA82608651B009A377F /* Interactable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Interactable.h; sourceTree = "<group>"; };
+		D0DD6DA92608651B009A377F /* CollisionManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CollisionManager.cpp; sourceTree = "<group>"; };
+		D0DD6DAA2608651B009A377F /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
+		D0DD6DAB2608651B009A377F /* Constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Constants.cpp; sourceTree = "<group>"; };
+		D0DD6DAC2608651B009A377F /* EnemyController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EnemyController.cpp; sourceTree = "<group>"; };
+		D0DD6DAD2608651B009A377F /* Door.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Door.cpp; sourceTree = "<group>"; };
+		D0DD6DAE2608651B009A377F /* ConstructionElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConstructionElement.cpp; sourceTree = "<group>"; };
+		D0DD6DAF2608651B009A377F /* Interactable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Interactable.cpp; sourceTree = "<group>"; };
+		D0DD6DB02608651B009A377F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DeviceMargins.plist; sourceTree = "<group>"; };
 		EB22BF5E25D0E8BC002ACE41 /* HelloWorld (Sim).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HelloWorld (Sim).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2BE9BA1D7498D2002FE78B /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = textures; sourceTree = "<group>"; };
@@ -387,31 +392,33 @@
 		EBBF18B11D749176008E2001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				D0DD6D2326083FB2009A377F /* CollisionManager.cpp */,
-				D0DD6D3026083FB4009A377F /* CollisionManager.h */,
-				D0DD6D2826083FB3009A377F /* ConstructionElement.cpp */,
-				D0DD6D3226083FB4009A377F /* ConstructionElement.h */,
-				D0DD6D3426083FB4009A377F /* Door.cpp */,
-				D0DD6D3326083FB4009A377F /* Door.h */,
-				D0DD6D2A26083FB3009A377F /* Enemy.cpp */,
-				D0DD6D2426083FB3009A377F /* Enemy.h */,
-				D0DD6D2026083FB2009A377F /* EnemyController.cpp */,
-				D0DD6D2C26083FB3009A377F /* EnemyController.h */,
-				D0DD6D2126083FB2009A377F /* Entity.cpp */,
-				D0DD6D2E26083FB3009A377F /* Entity.h */,
-				D0DD6D2B26083FB3009A377F /* Floor.cpp */,
-				D0DD6D2726083FB3009A377F /* Floor.h */,
-				D0DD6D2F26083FB3009A377F /* GameplayMode.cpp */,
-				D0DD6D1D26083FB2009A377F /* GameplayMode.h */,
-				D0DD6D1F26083FB2009A377F /* InputManager.cpp */,
-				D0DD6D2526083FB3009A377F /* InputManager.h */,
-				D0DD6D3526083FB4009A377F /* Interactable.cpp */,
-				D0DD6D3126083FB4009A377F /* Interactable.h */,
-				D0DD6D2626083FB3009A377F /* main.cpp */,
-				D0DD6D2226083FB2009A377F /* Player.cpp */,
-				D0DD6D2D26083FB3009A377F /* Player.h */,
-				D0DD6D1E26083FB2009A377F /* UIElement.cpp */,
-				D0DD6D2926083FB3009A377F /* UIElement.h */,
+				D0DD6DA92608651B009A377F /* CollisionManager.cpp */,
+				D0DD6D9926086519009A377F /* CollisionManager.h */,
+				D0DD6DAB2608651B009A377F /* Constants.cpp */,
+				D0DD6DA22608651A009A377F /* Constants.h */,
+				D0DD6DAE2608651B009A377F /* ConstructionElement.cpp */,
+				D0DD6D9A2608651A009A377F /* ConstructionElement.h */,
+				D0DD6DAD2608651B009A377F /* Door.cpp */,
+				D0DD6D9826086519009A377F /* Door.h */,
+				D0DD6DA52608651A009A377F /* Enemy.cpp */,
+				D0DD6DA42608651A009A377F /* Enemy.h */,
+				D0DD6DAC2608651B009A377F /* EnemyController.cpp */,
+				D0DD6DA72608651B009A377F /* EnemyController.h */,
+				D0DD6DAA2608651B009A377F /* Entity.cpp */,
+				D0DD6D9C2608651A009A377F /* Entity.h */,
+				D0DD6DA32608651A009A377F /* Floor.cpp */,
+				D0DD6DA02608651A009A377F /* Floor.h */,
+				D0DD6D9D2608651A009A377F /* GameplayMode.cpp */,
+				D0DD6D9B2608651A009A377F /* GameplayMode.h */,
+				D0DD6D9F2608651A009A377F /* InputManager.cpp */,
+				D0DD6D9726086519009A377F /* InputManager.h */,
+				D0DD6DAF2608651B009A377F /* Interactable.cpp */,
+				D0DD6DA82608651B009A377F /* Interactable.h */,
+				D0DD6DB02608651B009A377F /* main.cpp */,
+				D0DD6DA62608651B009A377F /* Player.cpp */,
+				D0DD6DA12608651A009A377F /* Player.h */,
+				D0DD6D9E2608651A009A377F /* UIElement.cpp */,
+				D0DD6D9626086519009A377F /* UIElement.h */,
 			);
 			name = Source;
 			path = ../source;
@@ -588,19 +595,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0DD6D3826083FB4009A377F /* UIElement.cpp in Sources */,
-				D0DD6D5026083FB4009A377F /* Enemy.cpp in Sources */,
-				D0DD6D4426083FB4009A377F /* Player.cpp in Sources */,
-				D0DD6D3E26083FB4009A377F /* EnemyController.cpp in Sources */,
-				D0DD6D5326083FB4009A377F /* Floor.cpp in Sources */,
-				D0DD6D4D26083FB4009A377F /* ConstructionElement.cpp in Sources */,
-				D0DD6D4126083FB4009A377F /* Entity.cpp in Sources */,
-				D0DD6D4726083FB4009A377F /* CollisionManager.cpp in Sources */,
-				D0DD6D4A26083FB4009A377F /* main.cpp in Sources */,
-				D0DD6D5626083FB4009A377F /* GameplayMode.cpp in Sources */,
-				D0DD6D5926083FB4009A377F /* Door.cpp in Sources */,
-				D0DD6D3B26083FB4009A377F /* InputManager.cpp in Sources */,
-				D0DD6D5C26083FB4009A377F /* Interactable.cpp in Sources */,
+				D0DD6DC82608651C009A377F /* Entity.cpp in Sources */,
+				D0DD6DD42608651C009A377F /* ConstructionElement.cpp in Sources */,
+				D0DD6DCB2608651C009A377F /* Constants.cpp in Sources */,
+				D0DD6DBC2608651C009A377F /* Floor.cpp in Sources */,
+				D0DD6DDA2608651C009A377F /* main.cpp in Sources */,
+				D0DD6DB62608651C009A377F /* UIElement.cpp in Sources */,
+				D0DD6DD72608651C009A377F /* Interactable.cpp in Sources */,
+				D0DD6DD12608651C009A377F /* Door.cpp in Sources */,
+				D0DD6DC22608651C009A377F /* Player.cpp in Sources */,
+				D0DD6DBF2608651C009A377F /* Enemy.cpp in Sources */,
+				D0DD6DB32608651C009A377F /* GameplayMode.cpp in Sources */,
+				D0DD6DC52608651C009A377F /* CollisionManager.cpp in Sources */,
+				D0DD6DCE2608651C009A377F /* EnemyController.cpp in Sources */,
+				D0DD6DB92608651C009A377F /* InputManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,19 +616,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0DD6D3726083FB4009A377F /* UIElement.cpp in Sources */,
-				D0DD6D4F26083FB4009A377F /* Enemy.cpp in Sources */,
-				D0DD6D4326083FB4009A377F /* Player.cpp in Sources */,
-				D0DD6D3D26083FB4009A377F /* EnemyController.cpp in Sources */,
-				D0DD6D5226083FB4009A377F /* Floor.cpp in Sources */,
-				D0DD6D4C26083FB4009A377F /* ConstructionElement.cpp in Sources */,
-				D0DD6D4026083FB4009A377F /* Entity.cpp in Sources */,
-				D0DD6D4626083FB4009A377F /* CollisionManager.cpp in Sources */,
-				D0DD6D4926083FB4009A377F /* main.cpp in Sources */,
-				D0DD6D5526083FB4009A377F /* GameplayMode.cpp in Sources */,
-				D0DD6D5826083FB4009A377F /* Door.cpp in Sources */,
-				D0DD6D3A26083FB4009A377F /* InputManager.cpp in Sources */,
-				D0DD6D5B26083FB4009A377F /* Interactable.cpp in Sources */,
+				D0DD6DC72608651C009A377F /* Entity.cpp in Sources */,
+				D0DD6DD32608651C009A377F /* ConstructionElement.cpp in Sources */,
+				D0DD6DCA2608651C009A377F /* Constants.cpp in Sources */,
+				D0DD6DBB2608651C009A377F /* Floor.cpp in Sources */,
+				D0DD6DD92608651C009A377F /* main.cpp in Sources */,
+				D0DD6DB52608651C009A377F /* UIElement.cpp in Sources */,
+				D0DD6DD62608651C009A377F /* Interactable.cpp in Sources */,
+				D0DD6DD02608651C009A377F /* Door.cpp in Sources */,
+				D0DD6DC12608651C009A377F /* Player.cpp in Sources */,
+				D0DD6DBE2608651C009A377F /* Enemy.cpp in Sources */,
+				D0DD6DB22608651C009A377F /* GameplayMode.cpp in Sources */,
+				D0DD6DC42608651C009A377F /* CollisionManager.cpp in Sources */,
+				D0DD6DCD2608651C009A377F /* EnemyController.cpp in Sources */,
+				D0DD6DB82608651C009A377F /* InputManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,19 +637,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0DD6D3626083FB4009A377F /* UIElement.cpp in Sources */,
-				D0DD6D4E26083FB4009A377F /* Enemy.cpp in Sources */,
-				D0DD6D4226083FB4009A377F /* Player.cpp in Sources */,
-				D0DD6D3C26083FB4009A377F /* EnemyController.cpp in Sources */,
-				D0DD6D5126083FB4009A377F /* Floor.cpp in Sources */,
-				D0DD6D4B26083FB4009A377F /* ConstructionElement.cpp in Sources */,
-				D0DD6D3F26083FB4009A377F /* Entity.cpp in Sources */,
-				D0DD6D4526083FB4009A377F /* CollisionManager.cpp in Sources */,
-				D0DD6D4826083FB4009A377F /* main.cpp in Sources */,
-				D0DD6D5426083FB4009A377F /* GameplayMode.cpp in Sources */,
-				D0DD6D5726083FB4009A377F /* Door.cpp in Sources */,
-				D0DD6D3926083FB4009A377F /* InputManager.cpp in Sources */,
-				D0DD6D5A26083FB4009A377F /* Interactable.cpp in Sources */,
+				D0DD6DC62608651C009A377F /* Entity.cpp in Sources */,
+				D0DD6DD22608651C009A377F /* ConstructionElement.cpp in Sources */,
+				D0DD6DC92608651C009A377F /* Constants.cpp in Sources */,
+				D0DD6DBA2608651C009A377F /* Floor.cpp in Sources */,
+				D0DD6DD82608651C009A377F /* main.cpp in Sources */,
+				D0DD6DB42608651C009A377F /* UIElement.cpp in Sources */,
+				D0DD6DD52608651C009A377F /* Interactable.cpp in Sources */,
+				D0DD6DCF2608651C009A377F /* Door.cpp in Sources */,
+				D0DD6DC02608651C009A377F /* Player.cpp in Sources */,
+				D0DD6DBD2608651C009A377F /* Enemy.cpp in Sources */,
+				D0DD6DB12608651C009A377F /* GameplayMode.cpp in Sources */,
+				D0DD6DC32608651C009A377F /* CollisionManager.cpp in Sources */,
+				D0DD6DCC2608651C009A377F /* EnemyController.cpp in Sources */,
+				D0DD6DB72608651C009A377F /* InputManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
