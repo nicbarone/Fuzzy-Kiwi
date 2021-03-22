@@ -359,7 +359,7 @@ void GameplayMode::buildScene() {
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
 
-    _level1Door = Door::alloc(Vec2(590, 140), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1,11, door);
+    _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1,11, door);
 
 
     _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
@@ -376,12 +376,12 @@ void GameplayMode::buildScene() {
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
-    std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
-    _enemyController->addEnemy(950, 0, 650, 900, 0, enemyTexture, altTexture);
-    _enemyController->addEnemy(50, 0, 100, 100, 0, enemyTexture, altTexture);
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
-    _enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
-    _enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(950, 0, 650, 900, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(350, 0, 100, 100, 0, enemyTexture, altTexture);
+    //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
+    //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
+    //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
 
     // Create a button.  A button has an up image and a down image
     possessButton = _assets->get<Texture>("possess-button");
