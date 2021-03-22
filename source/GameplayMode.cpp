@@ -470,7 +470,7 @@ void GameplayMode::checkStaircaseDoors() {
 
 
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
-        for (shared_ptr<Floor> staircaseDoor : _staircaseDoors) {
+        for (shared_ptr<Door> staircaseDoor : _staircaseDoors) {
             if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
