@@ -19,13 +19,13 @@ public:
 
 	void dispose();
 
-	bool init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color,
+	bool init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, int rows, int columns,
 		std::shared_ptr<Texture> texture);
 
-	static std::shared_ptr<Door> alloc(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, 
+	static std::shared_ptr<Door> alloc(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, int rows, int columns,
 		std::shared_ptr<Texture> texture) {
 		std::shared_ptr<Door> result = std::make_shared<Door>();
-		return (result->init(pos, ang, scale, level, color, texture) ? result : nullptr);
+		return (result->init(pos, ang, scale, level, color,  rows,  columns, texture) ? result : nullptr);
 	}
 	
 	void setBlockedEnemy(shared_ptr<Enemy> blockedEnemy) {

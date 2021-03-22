@@ -69,25 +69,25 @@ vector<Vec2> level2Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0
  */
 void GameplayMode::onStartup() {
     Size size = getDisplaySize();
-    size *= GAME_WIDTH/size.width;
-    
+    size *= GAME_WIDTH / size.width;
+
     // Create a scene graph the same size as the window
     _scene = Scene2::alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(getSafeBounds().size);
-    
+
     // Create a sprite batch (and background color) to render the scene
     _batch = SpriteBatch::alloc();
-    setClearColor(Color4(229,229,229,255));
-    
+    setClearColor(Color4(229, 229, 229, 255));
+
     // Create an asset manager to load all assets
     _assets = AssetManager::alloc();
-    
+
     // You have to attach the individual loaders for each asset type
     _assets->attach<Texture>(TextureLoader::alloc()->getHook());
     _assets->attach<Font>(FontLoader::alloc()->getHook());
-    
+
     // This reads the given JSON file and uses it to load all other assets
     _assets->loadDirectory("json/assets.json");
 
@@ -100,23 +100,23 @@ void GameplayMode::onStartup() {
     Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
     Input::activate<Keyboard>();
 #endif
-    
+
     // Build the scene from these assets
     buildScene();
     Application::onStartup();
-    
+
     // Report the safe area
     Rect bounds = Display::get()->getSafeBounds();
-    CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
-                            bounds.size.toString().c_str());
+    CULog("Safe Area %sx%s", bounds.origin.toString().c_str(),
+        bounds.size.toString().c_str());
 
     bounds = getSafeBounds();
-    CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
-                            bounds.size.toString().c_str());
+    CULog("Safe Area %sx%s", bounds.origin.toString().c_str(),
+        bounds.size.toString().c_str());
 
     bounds = getDisplayBounds();
-    CULog("Full Area %sx%s",bounds.origin.toString().c_str(),
-                            bounds.size.toString().c_str());
+    CULog("Full Area %sx%s", bounds.origin.toString().c_str(),
+        bounds.size.toString().c_str());
 
 }
 
@@ -136,7 +136,7 @@ void GameplayMode::onShutdown() {
     _scene = nullptr;
     _batch = nullptr;
     _assets = nullptr;
-    
+
     // Deativate input
 #if defined CU_TOUCH_SCREEN
     Input::deactivate<Touchscreen>();
@@ -162,7 +162,7 @@ void GameplayMode::update(float timestep) {
     _scene->getCamera()->update();
     // Read input controller input
     _inputManager.readInput();
-  
+
     if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
         //very temporary modification to test whether it works, dont want to work with highlight right now
         _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
@@ -190,7 +190,7 @@ void GameplayMode::update(float timestep) {
     if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
         if (_enemyController->closestEnemy() == nullptr || !_player->canPossess()) {
             // turn the button to grey
-            _possessButton->getButton()->setColor(Color4f(1.0f, 1.0f, 1.0f,0.5f));
+            _possessButton->getButton()->setColor(Color4f(1.0f, 1.0f, 1.0f, 0.5f));
             _possessButton->setButtonState(ui::ButtonState::UNAVAILABLE);
         }
     }
@@ -228,28 +228,28 @@ void GameplayMode::update(float timestep) {
                 // Mark this button as clicked, proper handle will take place in update()
                 _possessButton->setClicked(true);
             }
-        });
+            });
         _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
         _possessButton->setPos(Vec2(size.width - (bpsize.width + rOffset) / 2, (bpsize.height + bOffset) / 2));
         _scene->addChild(_possessButton->getButton());
         _possessButton->getButton()->activate();
         _possessButton->setClicked(false);
     }
-    
+
 
     checkStaircaseDoors();
     checkDoors();
-    collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(),_player, _doors);
-    
+    collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
+
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
 
-    // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
+        // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
     if (_player->getPossess()) {
         _player->setPos(_player->get_possessEnemy()->getPos());
 
     }
-    else{
+    else {
         _player->move(_inputManager.getForward());
 
     }
@@ -257,14 +257,14 @@ void GameplayMode::update(float timestep) {
 
     _enemyController->moveEnemies(_inputManager.getForward());
     _enemyController->findClosest(_player->getPos(), _player->getLevel());
-    
+
     if (_enemyController->getPossessed() != nullptr) {
         CULog("%d", _enemyController->getPossessed()->facingRight());
     }
     if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), vector<Vec2> {})) {
         _player->getSceneNode()->setAngle(3.14159265358979f);
         if (_enemyController->getPossessed() != nullptr) {
-          
+
             _enemyController->getPossessed()->getSceneNode()->setAngle(3.14159265358979f);
         }
 
@@ -328,18 +328,18 @@ void GameplayMode::draw() {
  * have become standard in most game engines.
  */
 void GameplayMode::buildScene() {
-    Size  size  = getDisplaySize();
-    float scale = GAME_WIDTH/size.width;
+    Size  size = getDisplaySize();
+    float scale = GAME_WIDTH / size.width;
     size *= scale;
-    
 
-    
+
+
     // Placeholder cat
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
 
     // Create the player
 
-    _player = Player::alloc(150,0,0,cat);
+    _player = Player::alloc(150, 0, 0, cat);
 
 
     //floor texture creation
@@ -348,41 +348,48 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
-    _level1Floor = Floor::alloc(Vec2(550, 30), 0,Vec2(1,1), 1, cugl::Color4::WHITE, level1Floor, floor);
+    //caged animal
+    std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
+    _level1Floor = Floor::alloc(Vec2(550, 30), 0, Vec2(1, 1), 0, cugl::Color4::WHITE, level1Floor, floor);
 
-    _level1StairDoor = Floor::alloc(Vec2(750, 130), 4.71239, Vec2(1,1), 0, cugl::Color4::WHITE, level1Door, staircaseDoor);
+    _level1StairDoor = Floor::alloc(Vec2(950, 130), 4.71239, Vec2(1, 1), 0, cugl::Color4::WHITE, level1Door, staircaseDoor);
 
-    
 
-    _level2Floor = Floor::alloc(Vec2(540, 300), 0, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Floor, floor);
+
+    _level2Floor = Floor::alloc(Vec2(550, 300), 0, Vec2(1, 1), 1, cugl::Color4::WHITE, level1Floor, floor);
 
 
     _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 1, cugl::Color4::WHITE, level2Door, staircaseDoor);
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
 
-    _level1Door = Door::alloc(Vec2(590, 140), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, door);
-    _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, door);
-    
-    _doors = { _level1Door, _level2Door };
+    _level1Door = Door::alloc(Vec2(590, 140), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1,11, door);
 
 
-   
+    _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
+
+    _doors = { _level1Door };
+
+    _leftWall = Floor::alloc(Vec2(-20, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
+    _rightWall = Floor::alloc(Vec2(1100, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
+
+    _cagedAnimal = Door::alloc(Vec2(820, 360), 0, Vec2(0.3, 0.3), 0, cugl::Color4::WHITE, 1, 1, cagedAnimal);
+
 
 
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
-    _enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
-    _enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(950, 0, 650, 900, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(50, 0, 100, 100, 0, enemyTexture, altTexture);
 
     // Create a button.  A button has an up image and a down image
     possessButton = _assets->get<Texture>("possess-button");
     unpossessButton = _assets->get<Texture>("unpossess-button");
     Size pbsize = possessButton->getSize();
     // set up the ui element of possess button
-    _possessButton = ui::ButtonElement::alloc(0,0,0,0,ui::ButtonState::POSSESS);
+    _possessButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::POSSESS);
     _possessButton->setTexture(possessButton);
     // Create a callback function for the button
     _possessButton->getButton()->setName("possess");
@@ -393,27 +400,30 @@ void GameplayMode::buildScene() {
             // Mark this button as clicked, proper handle will take place in update()
             _possessButton->setClicked(true);
         }
-    });
+        });
     // Find the safe area, adapting to the iPhone X
     Rect safe = getSafeBounds();
     safe.origin *= scale;
-    safe.size   *= scale;
-    
+    safe.size *= scale;
+
     // Get the right and bottom offsets.
     float bOffset = safe.origin.y;
-    float rOffset = (size.width)-(safe.origin.x+safe.size.width);
+    float rOffset = (size.width) - (safe.origin.x + safe.size.width);
 
     _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
     _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
 
     // Add the logo and button to the scene graph
     _scene->addChild(_rootScene);
-    _rootScene->addChild(_level1Floor->getSceneNode()); 
+    _rootScene->addChild(_level1Floor->getSceneNode());
     _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2Floor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
     _rootScene->addChild(_level1Door->getSceneNode());
-    _rootScene->addChild(_level2Door->getSceneNode());
+    _rootScene->addChild(_leftWall->getSceneNode());
+    _rootScene->addChild(_rightWall->getSceneNode());
+    _rootScene->addChild(_cagedAnimal->getSceneNode());
+    //_rootScene->addChild(_level2Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
 
@@ -423,8 +433,8 @@ void GameplayMode::buildScene() {
         _rootScene->addChild(it->get()->getSceneNode());
     }
 
-    
-    
+
+
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();
 
@@ -432,7 +442,7 @@ void GameplayMode::buildScene() {
 
     // Initialize input manager
     _inputManager = InputManager();
-    _inputManager.init(_player, _rootScene,_scene->getBounds());
+    _inputManager.init(_player, _rootScene, _scene->getBounds());
 }
 
 
@@ -449,18 +459,18 @@ void GameplayMode::checkDoors() {
             }
         }
     }
-  
+
 }
 
 void GameplayMode::checkStaircaseDoors() {
-  
+
 
     bool visibility;
 
     if (_enemyController->getPossessed() != nullptr) {
-    
 
-        visibility = _enemyController->getPossessed()->getSceneNode()->isVisible(); 
+
+        visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
         for (shared_ptr<Floor> staircaseDoor : _staircaseDoors) {
             /*CULog("%f", staircaseDoor->getPos().y);*/
             if (visibility && abs(_enemyController->getPossessed()->getPos() - staircaseDoor->getPos().x) < 110.0f &&
@@ -483,4 +493,4 @@ void GameplayMode::checkStaircaseDoors() {
 
         }
     }
-    }
+}

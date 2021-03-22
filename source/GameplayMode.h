@@ -70,6 +70,12 @@ protected:
     std::shared_ptr<Door> _level1Door;
     /** A reference to the level 2 door*/
     std::shared_ptr<Door> _level2Door;
+    /** A reference to the left wall*/
+    std::shared_ptr<Floor> _leftWall;
+    /** A reference to the right wall*/
+    std::shared_ptr<Floor> _rightWall;
+    /** A reference to the cagedAnimal*/
+    std::shared_ptr<Door> _cagedAnimal;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
     InputManager _inputManager;
