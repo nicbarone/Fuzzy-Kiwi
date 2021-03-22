@@ -348,14 +348,14 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
     _level1Floor = Floor::alloc(Vec2(550, 30), 0, Vec2(1, 1), 0, cugl::Color4::WHITE, level1Floor, floor);
 
-    _level1StairDoor = Floor::alloc(Vec2(950, 130), 4.71239, Vec2(1, 1), 0, cugl::Color4::WHITE, level1Door, staircaseDoor);
+    _level1StairDoor = Door::alloc(Vec2(950, 120), 0, Vec2(0.14, 0.14), 0, cugl::Color4::WHITE, 1, 1, staircaseDoor);
 
 
 
     _level2Floor = Floor::alloc(Vec2(550, 300), 0, Vec2(1, 1), 1, cugl::Color4::WHITE, level1Floor, floor);
 
 
-    _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 1, cugl::Color4::WHITE, level2Door, staircaseDoor);
+    _level2StairDoor = Door::alloc(Vec2(550, 390), 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE,1,1, staircaseDoor);
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
 

@@ -75,6 +75,22 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	
 }
 
+void checkForCagedAnimalCollision(const std::shared_ptr<Player>& player,
+	const std::shared_ptr<Door>& cagedAnimal) {
+	if (cagedAnimal->getPos().x - player->getPos() <= DOOR_WIDTH / 2 &&
+		cagedAnimal->getPos().x - player->getPos() >= 0 &&
+		cagedAnimal->getLevel() == player->getLevel()) {
+
+
+	}
+	else if (cagedAnimal->getSceneNode()->isVisible() &&
+		player->getPos() - cagedAnimal->getPos().x <= DOOR_WIDTH / 2 &&
+		player->getPos() - cagedAnimal->getPos().x >= 0 &&
+		cagedAnimal->getLevel() == player->getLevel()) {
+	}
+}
+
+
 /**
  * Nudge the player to ensure it does not do out of view.
  *

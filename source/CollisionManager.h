@@ -25,6 +25,8 @@ namespace collisions {
 		const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
 		const std::vector<shared_ptr<Door>>& doors);
 
+	void checkForCagedAnimalCollision(const std::shared_ptr<Player>& player,
+		const std::shared_ptr<Door>& cagedAnimal);
 	/**
 	 * Nudge the player to ensure it does not do out of view.
 	 *

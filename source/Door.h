@@ -36,10 +36,10 @@ public:
 	}
 	void setVisibility(bool visibility);
 
-	void setDoorFrame(shared_ptr<scene2::AnimationNode> node, int frame) {
-		//node->setFrame(frame);
+	/*void setDoorFrame(shared_ptr<scene2::AnimationNode> node, int frame) {
+		node->setFrame(frame);
 
-	}
+	}*/
 
 
 };
