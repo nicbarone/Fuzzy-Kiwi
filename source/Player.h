@@ -22,6 +22,9 @@ private:
 	std::shared_ptr<Texture> _texture;
 	std::shared_ptr<Enemy> _possessingEnemy;
 
+	int _frame;
+	int _frameCounter;
+
 public:
 
 	Player();

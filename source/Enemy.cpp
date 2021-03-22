@@ -95,9 +95,22 @@ void Enemy::move(float direction) {
 		_sceneNode->setPositionX(original + getVelocity().x);
 		if (direction == 1) {
 			_movingRight = true;
+			_sceneNode->flipHorizontal(false);
 		}
 		else if (direction == -1) {
 			_movingRight = false;
+			_sceneNode->flipHorizontal(true);
+		}
+		if (direction != 0)
+		{
+			if (_frameCounter > 0) {
+				_frameCounter--;
+			}
+			else {
+				_frameCounter = 7;
+				_frame++;
+				_frame = _frame % 5;
+			}
 		}
 	}
 	if (_isActive || isPossessed()) {
