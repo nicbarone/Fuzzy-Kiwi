@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
-#include <cugl/cugl.h>
+#include "cugl/cugl.h"
 #include "Entity.h"
 #include "Enemy.h"
 using namespace cugl;

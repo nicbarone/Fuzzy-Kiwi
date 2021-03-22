@@ -121,7 +121,7 @@ public:
      * very last line.  This ensures that the state will transition to FOREGROUND,
      * causing the application to run.
      */
-    virtual void onStartup() override;
+    void onStartup() override;
 
     /**
      * The method called when the application is ready to quit.
@@ -134,7 +134,7 @@ public:
      * very last line.  This ensures that the state will transition to NONE,
      * causing the application to be deleted.
      */
-    virtual void onShutdown() override;
+    void onShutdown() override;
     
     /**
      * The method called to update the application data.
@@ -147,7 +147,7 @@ public:
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    virtual void update(float timestep) override;
+    void update(float timestep) override;
     
     /** Used to check if there exists current possessable enemy in range */
     bool enemyInPossessRange();
@@ -171,7 +171,7 @@ public:
      * When overriding this method, you do not need to call the parent method
      * at all. The default implmentation does nothing.
      */
-    virtual void draw() override;
+    void draw() override;
 
     /*Function called every update to check if the player is trying to close or 
     open a door*/

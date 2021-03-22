@@ -1,8 +1,8 @@
 #pragma once
 #ifndef __ENEMYCONTROLLER_H__
 #define __ENEMYCONTROLLER_H__
-#include <cugl/cugl.h>
-#include <Enemy.h>
+#include "cugl/cugl.h"
+#include "Enemy.h"
 using namespace cugl;
 class EnemyController {
 private:

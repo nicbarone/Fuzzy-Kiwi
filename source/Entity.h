@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
-#include <cugl/cugl.h>
+#include "cugl/cugl.h"
 using namespace cugl;
 class Entity {
 

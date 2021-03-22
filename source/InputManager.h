@@ -1,6 +1,6 @@
 #ifndef __INPUT_MANAGER_H__
 #define __INPUT_MANAGER_H__
-#include <cugl/cugl.h>
+#include "cugl/cugl.h"
 #include "Player.h"
 #include "UIElement.h"
 /** The portion of the screen used for the left zone */

@@ -29,11 +29,11 @@
 //
 // Include the class header, which includes all of the CUGL classes
 #include "GameplayMode.h"
-#include <cugl/base/CUBase.h>
+#include "cugl/base/CUBase.h"
 
 // Add support for simple random number generation
-#include <cstdlib>
-#include <ctime>
+#include "cstdlib"
+#include "ctime"
 
 // This keeps us from having to write cugl:: all the time
 using namespace cugl;
@@ -333,7 +333,7 @@ void GameplayMode::buildScene() {
     _level2StairDoor = Floor::alloc(Vec2(550, 400), 4.71239, Vec2(1, 1), 2, cugl::Color4::WHITE, level2Door, staircaseDoor);
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
-    _level1Door = Door::alloc(Vec2(590,90), 0, Vec2(0.6, 0.6), 1, cugl::Color4::WHITE, door);
+    _level1Door = Door::alloc(Vec2(490,90), 0, Vec2(0.6, 0.6), 1, cugl::Color4::WHITE, door);
     _level2Door = Door::alloc(Vec2(390, 370), 0, Vec2(0.6, 0.6), 2, cugl::Color4::WHITE, door);
     
     _doors = { _level1Door, _level2Door };

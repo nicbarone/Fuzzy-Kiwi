@@ -2,7 +2,7 @@
 #pragma once
 #ifndef __ENEMY_H__
 #define __ENEMY_H__
-#include <cugl/cugl.h>
+#include "cugl/cugl.h"
 #include "Entity.h"
 using namespace cugl;
 class Enemy : public Entity {
