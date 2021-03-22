@@ -16,6 +16,17 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
 	const std::vector<shared_ptr<Door>>& doors)
 {
+
+    // Calculate the normal of the (possible) point of collision
+    float distance = player->getPos() - entity->getPos();
+    float impactDistance = player->getSize().x;
+
+    // If this normal is too small, there was a collision
+    if (distance < impactDistance) {
+        // "Roll back" time so that the ships are barely touching (e.g. point of impact).
+        Vec2 temp = Vec2(0, distance > 0 ? 1 : -1) * ((impactDistance - distance) / 2);
+        player->setPos(player->getPos() + temp.x);
+
 	
 	for (shared_ptr<Enemy> enemy : enemies) {
 		for (shared_ptr<Door> door : doors) {
@@ -75,6 +86,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				}
 			}
 
+
 }
 
 /**
@@ -88,33 +100,35 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
  */
 void collisions::checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds)
 {
-	//Vec2 vel = player->getVelocity();
-	Vec2 pos = player->getPos();
 
-	//Ensure player doesn't go out of view. Stop by walls
-	if (pos.x <= bounds.origin.x) {
-		//vel.x = 0;
-		pos.x = bounds.origin.x;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
-	else if (pos.x >= bounds.size.width + bounds.origin.x) {
-		//vel.x = 0;
-		pos.x = bounds.size.width + bounds.origin.x - 1.0f;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
+    //Vec2 vel = player->getVelocity();
+    float pos = player->getPos();
 
-	if (pos.y <= bounds.origin.y) {
-		//vel.y = 0;
-		pos.y = bounds.origin.y;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
-	else if (pos.y >= bounds.size.height + bounds.origin.y) {
-		//vel.y = 0;
-		pos.y = bounds.size.height + bounds.origin.y - 1.0f;
-		//player->setVelocity(vel);
-		player->setPos(pos);
-	}
+    //Ensure player doesn't go out of view. Stop by walls
+    if (pos <= bounds.origin.x) {
+        //vel.x = 0;
+        pos = bounds.origin.x;
+        //player->setVelocity(vel);
+        player->setPos(pos);
+    }
+    else if (pos >= bounds.size.width + bounds.origin.x) {
+        //vel.x = 0;
+        pos = bounds.size.width + bounds.origin.x - 1.0f;
+        //player->setVelocity(vel);
+        player->setPos(pos);
+    }
+
+    //if (pos.y <= bounds.origin.y) {
+    //    //vel.y = 0;
+    //    pos.y = bounds.origin.y;
+    //    //player->setVelocity(vel);
+    //    player->setPos(pos);
+    //}
+    //else if (pos.y >= bounds.size.height + bounds.origin.y) {
+    //    //vel.y = 0;
+    //    pos.y = bounds.size.height + bounds.origin.y - 1.0f;
+    //    //player->setVelocity(vel);
+    //    player->setPos(pos);
+    //}
+
 }

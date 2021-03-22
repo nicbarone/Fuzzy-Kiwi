@@ -3,11 +3,15 @@
 #define __ENTITY_H__
 #include <cugl/cugl.h>
 using namespace cugl;
+
+extern const float FLOOR_HEIGHT;
+extern const float FLOOR_OFFSET;
+
 class Entity {
 
 private:
 
-	Vec2 _pos;
+	float _pos;
 	Vec2 _size;
 	float _angle;
 	Color4 _color;
@@ -22,13 +26,14 @@ public:
 
 	void dispose();
 
-	/** sets the position of the entity*/
-	void setPos(Vec2 pos) {
+	/** sets the x position of the entity*/
+	void setPos(float pos) {
 		_pos = pos;
 	}
 
-	/** returns a Vec2 representing the position of the entity*/
-	Vec2 getPos() {
+
+	/** returns a float representing the x position of the entity*/
+	float getPos() {
 		return _pos;
 	}
 

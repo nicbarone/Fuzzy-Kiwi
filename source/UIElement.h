@@ -20,6 +20,7 @@ namespace ui {
 	};
 	class ButtonElement : public Entity {
 	private:
+		float _pos_y;
 		bool _clicked;
 		ButtonState _buttonState;
 		std::shared_ptr<cugl::scene2::Button> _button;
@@ -34,6 +35,7 @@ namespace ui {
 		}
 		bool init(float x, float y, float width, float height, ButtonState buttonState);
 		void setPos(Vec2 pos);
+		float getY() { return _pos_y; }
 		void setClicked(bool click) {
 			_clicked = click;
 		}
