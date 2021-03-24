@@ -87,7 +87,7 @@ void collisions::checkForCagedAnimalCollision(const std::shared_ptr<Player>& pla
 		player->getPos() - cagedAnimal->getPos().x <= DOOR_WIDTH / 2 &&
 		player->getPos() - cagedAnimal->getPos().x >= 0 &&
 		cagedAnimal->getLevel() == player->getLevel()) {
-		CULog("2");
+		CULog("You win");
 	}
 }
 
