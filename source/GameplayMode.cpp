@@ -107,8 +107,8 @@ void GameplayMode::onStartup() {
 
     // Report the safe area
     Rect bounds = Display::get()->getSafeBounds();
-   // CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
-    //                        bounds.size.toString().c_str());
+    // CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
+     //                        bounds.size.toString().c_str());
 
     bounds = getSafeBounds();
     //CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
@@ -244,7 +244,7 @@ void GameplayMode::update(float timestep) {
 
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
-    // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
+        // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
     if (_player->getPossess()) {
         _player->setPos(_player->get_possessEnemy()->getPos());
     }
@@ -332,8 +332,8 @@ void GameplayMode::buildScene() {
 
 
     // Placeholder cat
-    //std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
-    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
+    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
+    //std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-placeholder");
     // Create the player
 
     _player = Player::alloc(150, 0, 0, cat);
@@ -356,11 +356,11 @@ void GameplayMode::buildScene() {
     _level2Floor = Floor::alloc(Vec2(550, 300), 0, Vec2(1, 1), 1, cugl::Color4::WHITE, level1Floor, floor);
 
 
-    _level2StairDoor = Door::alloc(Vec2(550, 390), 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE,1,1, staircaseDoor);
+    _level2StairDoor = Door::alloc(Vec2(550, 390), 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE, 1, 1, staircaseDoor);
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
 
-    _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1,11, door);
+    _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1, 11, door);
 
 
     _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
@@ -376,8 +376,8 @@ void GameplayMode::buildScene() {
 
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
-    std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy-placeholder");
-    std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy-placeholder");
+    std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
+    std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     _enemyController->addEnemy(950, 0, 650, 900, 0, enemyTexture, altTexture);
     _enemyController->addEnemy(350, 0, 100, 100, 0, enemyTexture, altTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
@@ -463,7 +463,7 @@ void GameplayMode::checkDoors() {
 }
 
 void GameplayMode::checkStaircaseDoors() {
-  
+
     bool visibility;
 
     if (_enemyController->getPossessed() != nullptr) {

@@ -19,7 +19,7 @@ private:
 	float _patrolStart;
 	/** the x position of the end enemy's patrol path*/
 	float _patrolEnd;
-	/**the old patrol coordinates that have been adjusted due to 
+	/**the old patrol coordinates that have been adjusted due to
 	a door*/
 	Vec2 _oldPatrol;
 	/** ray cast distance of the enemy*/
@@ -51,7 +51,7 @@ public:
 
 	void dispose();
 
-	bool init(float x, int level, float ang, float patrolStart, float patrolEnd,  std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
+	bool init(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
 
 	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
@@ -82,7 +82,7 @@ public:
 		_patrolStart = x1;
 		_patrolEnd = x2;
 	}
-	/** sets the _patrolStart and _patrolEnd of the old patrol of the enemy that 
+	/** sets the _patrolStart and _patrolEnd of the old patrol of the enemy that
 	is changed due to hitting a door*/
 	void setOldPatrol(Vec2 patrol) {
 		_oldPatrol = patrol;
@@ -93,7 +93,7 @@ public:
 		return _oldPatrol;
 	}
 
-	bool isActive() {return _isActive; }
+	bool isActive() { return _isActive; }
 
 	/** returns a Vec2 containing _patrolStart and _patrolEnd of the enemy*/
 	// Vec2 without a y might be bad practice? can change if needed

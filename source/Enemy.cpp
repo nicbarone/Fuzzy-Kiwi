@@ -53,7 +53,7 @@ bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolE
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	_frame = 0;
-	//_sceneNode->setScale(0.05, 0.05);
+	_sceneNode->setScale(0.05, 0.05);
 	return true;
 }
 
