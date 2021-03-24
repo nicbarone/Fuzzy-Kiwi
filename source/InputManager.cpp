@@ -418,6 +418,6 @@ void InputManager::readInput() {
         _camMoveDirection = Vec2::ZERO;
         //CULog("player world pos %f, %f",_rootSceneNode->nodeToWorldCoords(_player->getPos()).x, _rootSceneNode->nodeToWorldCoords(_player->getPos()).y);
         //CULog("Xval %f", -screen2World(_player->getPos()).x + _tbounds.size.width);
-        _rootSceneNode->setPosition(_rootSceneNode->nodeToParentCoords(_player->getSceneNode()->getPosition()));
+        //_rootSceneNode->setPosition(_rootSceneNode->nodeToParentCoords(_player->getSceneNode()->getPosition()));
     }
 }
