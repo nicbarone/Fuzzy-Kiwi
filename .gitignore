@@ -25,10 +25,6 @@
 *.la
 *.a
 
-# Executables
-*.exe
-*.out
-*.app
 
 *.VC.opendb
 *.VC.db
