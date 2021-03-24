@@ -3,4 +3,5 @@
 *.VC.opendb
 *.VC.db
 *.sdf
+*CUGL.lib
 .vs
