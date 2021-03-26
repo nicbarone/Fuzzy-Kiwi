@@ -30,6 +30,7 @@
 // Include the class header, which includes all of the CUGL classes
 #include "GameplayMode.h"
 #include "cugl/base/CUBase.h"
+#include <cugl/scene2/ui/CULabel.h>
 
 // Add support for simple random number generation
 #include "cstdlib"
@@ -362,7 +363,7 @@ void GameplayMode::buildScene() {
 
 
     _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1, 11, door);
-    std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(4);
+    std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(0);
 
     _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
 
@@ -373,6 +374,8 @@ void GameplayMode::buildScene() {
 
     _cagedAnimal = Door::alloc(Vec2(820, 360), 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, 1, 1, cagedAnimal);
 
+
+    _numberOfPosessions = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("textfield_result"));
 
 
     // Enemy creation

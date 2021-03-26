@@ -1,2 +1,2 @@
 ﻿  GameplayMode.cpp
-  LabCat.vcxproj -> D:\Nicolas\CS 4152\Fuzzy-Kiwi\build-win10\x64\Debug\LabCat.exe
+D:\Nicolas\CS 4152\Fuzzy-Kiwi\source\GameplayMode.cpp(378,64): error C2661: 'cugl::scene2::Label::initWithText': no overloaded function takes 1 arguments

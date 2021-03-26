@@ -36,6 +36,7 @@
 #include "EnemyController.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
+
 /**
  * Class for a simple Hello World style application
  *
@@ -76,6 +77,8 @@ protected:
     std::shared_ptr<Floor> _rightWall;
     /** A reference to the cagedAnimal*/
     std::shared_ptr<Door> _cagedAnimal;
+    /** The parent scene node for the number of Posssessions*/
+    std::shared_ptr<cugl::scene2::Label>_numberOfPosessions;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
     InputManager _inputManager;
