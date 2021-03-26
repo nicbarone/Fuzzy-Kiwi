@@ -19,14 +19,7 @@ void Entity::dispose() {
 
 void Entity::manualMove(float direction, float speed) 
 	{
-		if (0 < _pos) {
-			setVelocity(Vec2(direction * speed, 0));
-			setPos(getPos() + getVelocity().x);
-			
-		}
-		else {
-			setPos(0.0001);
+		setVelocity(Vec2(direction * speed, 0));
+		setPos(getPos() + getVelocity().x);
 
-
-		}
 	}

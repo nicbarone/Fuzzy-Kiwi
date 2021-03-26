@@ -11,6 +11,9 @@ using namespace cugl;
 *  @param entity    Entity in candidate collision
 */
 #define DOOR_WIDTH 130
+#define DOOR_OFFSET 20
+#define LEFT_LEVEL_BOUND 44
+#define RIGHT_LEVEL_BOUND 1040
 
 void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
@@ -26,16 +29,16 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 	Vec2 pos;
 	for (shared_ptr<Door> door : doors) {
 		if (door->getSceneNode()->isVisible() &&
-			door->getPos().x - currentPlayer->getPos() - 20 <= DOOR_WIDTH / 2 &&
+			door->getPos().x - currentPlayer->getPos() - DOOR_OFFSET <= DOOR_WIDTH / 2 &&
 			door->getPos().x - currentPlayer->getPos() >= 0 &&
 			door->getLevel() == currentPlayer->getLevel()) {
-			currentPlayer->setPos(door->getPos().x - 20 - DOOR_WIDTH / 2);
+			currentPlayer->setPos(door->getPos().x - DOOR_OFFSET - DOOR_WIDTH / 2);
 		}
 		else if (door->getSceneNode()->isVisible() &&
-			currentPlayer->getPos() - door->getPos().x - 20 <= DOOR_WIDTH / 2 &&
+			currentPlayer->getPos() - door->getPos().x - DOOR_OFFSET <= DOOR_WIDTH / 2 &&
 			currentPlayer->getPos() - door->getPos().x > 0 &&
 			door->getLevel() == currentPlayer->getLevel()) {
-			currentPlayer->setPos(door->getPos().x + 20 + DOOR_WIDTH / 2);
+			currentPlayer->setPos(door->getPos().x + DOOR_OFFSET + DOOR_WIDTH / 2);
 		}
 	}
 
@@ -101,37 +104,21 @@ void collisions::checkForCagedAnimalCollision(const std::shared_ptr<Player>& pla
  * @param player      They player which may have collided
  * @param bounds    The rectangular bounds of the playing field
  */
-void collisions::checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds)
+void collisions::checkInBounds(const std::shared_ptr<Enemy>& possessedEnemy, const std::shared_ptr<Player>& player)
 {
+	std::shared_ptr<Entity> currentPlayer;
+	if (possessedEnemy != nullptr) {
+		currentPlayer = possessedEnemy;
+	}
+	else {
+		currentPlayer = player;
+	}
+	Vec2 pos;
 
-    //Vec2 vel = player->getVelocity();
-    float pos = player->getPos();
-
-    //Ensure player doesn't go out of view. Stop by walls
-    if (pos <= bounds.origin.x) {
-        //vel.x = 0;
-        pos = bounds.origin.x;
-        //player->setVelocity(vel);
-        player->setPos(pos);
-    }
-    else if (pos >= bounds.size.width + bounds.origin.x) {
-        //vel.x = 0;
-        pos = bounds.size.width + bounds.origin.x - 1.0f;
-        //player->setVelocity(vel);
-        player->setPos(pos);
-    }
-
-    //if (pos.y <= bounds.origin.y) {
-    //    //vel.y = 0;
-    //    pos.y = bounds.origin.y;
-    //    //player->setVelocity(vel);
-    //    player->setPos(pos);
-    //}
-    //else if (pos.y >= bounds.size.height + bounds.origin.y) {
-    //    //vel.y = 0;
-    //    pos.y = bounds.size.height + bounds.origin.y - 1.0f;
-    //    //player->setVelocity(vel);
-    //    player->setPos(pos);
-    //}
-
+	if (currentPlayer->getPos() <= LEFT_LEVEL_BOUND) {
+		currentPlayer->setPos(LEFT_LEVEL_BOUND);
+	}
+	if (currentPlayer->getPos() >= RIGHT_LEVEL_BOUND) {
+		currentPlayer->setPos(RIGHT_LEVEL_BOUND);
+	}
 }

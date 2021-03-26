@@ -241,6 +241,7 @@ void GameplayMode::update(float timestep) {
     checkDoors();
     collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
     collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+    collisions::checkInBounds(_enemyController->getPossessed(),_player);
 
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/

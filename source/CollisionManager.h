@@ -35,7 +35,7 @@ namespace collisions {
 	 * @param player      They player which may have collided
 	 * @param bounds    The rectangular bounds of the playing field
 	 */
-	void checkInBounds(const std::shared_ptr<Player>& player, const cugl::Rect bounds);
+	void checkInBounds(const std::shared_ptr<Enemy>& possessedEnemy, const std::shared_ptr<Player>& player);
 }
 
 #endif /* __COLLISION_MANAGER_H__ */

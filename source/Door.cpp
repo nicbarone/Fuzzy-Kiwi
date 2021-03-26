@@ -11,6 +11,7 @@ void Door::dispose() {
 bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
 {
 	ConstructionElement::setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
+	//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
 	ConstructionElement::setTexture(texture);
 	ConstructionElement::setPos(pos);
 	ConstructionElement::setAngle(ang);
