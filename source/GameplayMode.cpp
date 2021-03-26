@@ -362,7 +362,7 @@ void GameplayMode::buildScene() {
 
 
     _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1, 11, door);
-    //std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(4);
+    std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(4);
 
     _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
 
@@ -379,8 +379,8 @@ void GameplayMode::buildScene() {
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
-    _enemyController->addEnemy(950, 1, 650, 900, 0, enemyTexture, altTexture);
-    _enemyController->addEnemy(350, 0, 100, 100, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(950, 1, 0, 200, 200, enemyTexture, altTexture);
+    _enemyController->addEnemy(350, 0, 0, 650, 900, enemyTexture, altTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
@@ -424,7 +424,7 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_leftWall->getSceneNode());
     _rootScene->addChild(_rightWall->getSceneNode());
     _rootScene->addChild(_cagedAnimal->getSceneNode());
-    //_rootScene->addChild(_level2Door->getSceneNode());
+    _rootScene->addChild(_level2Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
 

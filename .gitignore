@@ -49,3 +49,9 @@ x64
 *.lastbuildstate
 *.tlog
 *.log
+*.tlog
+*.obj
+*.log
+*.exe
+*.ilk
+*.pdb
