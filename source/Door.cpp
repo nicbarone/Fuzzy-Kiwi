@@ -34,11 +34,17 @@ void Door::setDoor(bool open) {
 	_isOpen = open;
 
 	if (open) {
-		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(9);
+		for (int i = 0; i <10; i++) {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
+			//cugl::Application::schedule()
+
+		}
 	}
 	else
 	{
-		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
+		for (int i = 9; i > -1; i--) {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
+		}
 	}
 	//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frame);
 	if (_blockedEnemy != nullptr) {
@@ -49,6 +55,7 @@ void Door::setDoor(bool open) {
 		_blockedEnemy = nullptr;
 		//setBlockedEnemy(nullptr);
 		CULog("%d", _blockedEnemy == nullptr);
+
 	}
 	
 }

@@ -424,7 +424,7 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_leftWall->getSceneNode());
     _rootScene->addChild(_rightWall->getSceneNode());
     _rootScene->addChild(_cagedAnimal->getSceneNode());
-    //_rootScene->addChild(_level2Door->getSceneNode());
+    _rootScene->addChild(_level2Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
 
