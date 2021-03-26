@@ -41,3 +41,9 @@ Debug
 x86
 x64
 *.obj
+*.tlog
+*.exe
+*.ilk
+*.pdb
+*.log
+*.lastbuildstate

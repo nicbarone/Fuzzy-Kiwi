@@ -1,16 +1,2 @@
-﻿  CollisionManager.cpp
-  Constants.cpp
-  Door.cpp
-  Enemy.cpp
-  EnemyController.cpp
-  Entity.cpp
-  ConstructionElement.cpp
-  Floor.cpp
-  GameplayMode.cpp
-  InputManager.cpp
-  Interactable.cpp
-  main.cpp
-  Player.cpp
-  UIElement.cpp
-  Generating Code...
+﻿  LINK : C:\Users\Flyin\Documents\GitHub\Fuzzy-Kiwi\build-win10\x64\Debug\LabCat.exe not found or not built by the last incremental link; performing full link
   LabCat.vcxproj -> C:\Users\Flyin\Documents\GitHub\Fuzzy-Kiwi\build-win10\x64\Debug\LabCat.exe
