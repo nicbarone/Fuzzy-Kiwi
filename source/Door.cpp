@@ -36,7 +36,8 @@ void Door::setDoor(bool open) {
 	if (open) {
 		for (int i = 0; i <10; i++) {
 			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
-			//cugl::Application::schedule()
+			
+
 
 		}
 	}

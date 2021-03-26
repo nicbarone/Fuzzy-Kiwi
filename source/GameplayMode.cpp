@@ -366,7 +366,7 @@ void GameplayMode::buildScene() {
 
     _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
 
-    _doors = { _level1Door };
+    _doors = { _level1Door, _level2Door };
 
     _leftWall = Floor::alloc(Vec2(-20, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
     _rightWall = Floor::alloc(Vec2(1100, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
