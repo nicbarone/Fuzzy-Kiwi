@@ -2,3 +2,7 @@
 *.VC.db
 *.sdf
 .vs
+/Release
+/Debug
+/x86
+/x64

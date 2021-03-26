@@ -15,6 +15,7 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
+*.dll
 
 # Fortran module files
 *.mod
@@ -35,3 +36,7 @@
 *.VC.db
 *.sdf
 .vs
+Release
+Debug
+x86
+x64
