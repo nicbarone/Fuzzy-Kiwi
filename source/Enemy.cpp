@@ -22,6 +22,7 @@ Enemy::Enemy() :
 	_sceneNode = nullptr;
 	_texture = nullptr;
 	_altTexture = nullptr;
+	_patrolNode = nullptr;
 }
 
 
@@ -36,6 +37,7 @@ void Enemy::dispose() {
 	_texture = nullptr;
 	_sceneNode = nullptr;
 	_altTexture = nullptr;
+	_patrolNode = nullptr;
 	_frame = 0;
 	_frameCounter = 0;
 	Entity::dispose();
@@ -52,6 +54,10 @@ bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolE
 	_isActive = true;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
+	_patrolNode = scene2::WireNode::alloc(Rect(0, 0, patrolEnd - patrolStart, 2));
+	_patrolNode->setPosition(Vec2((patrolStart+patrolEnd)/2, level * FLOOR_HEIGHT + FLOOR_OFFSET+65));
+	_patrolNode->setColor(Color4::RED);
+
 	_frame = 0;
 	_sceneNode->setScale(0.05, 0.05);
 	return true;

@@ -24,14 +24,24 @@ std::shared_ptr<Enemy> EnemyController::closestEnemy() {
 	return _closestEnemy;
 }
 
-void EnemyController::findClosest(float pos, int level) {
+void EnemyController::findClosest(float pos, int level, vector<Vec2> vision_blockers) {
 	float dist = POSSESS_RANGE;
 	int index = -1;
+	bool blocked = false;
 	for (int i = 0; i < _enemies.size(); i++) {
-		//eventually the y condition should be checking levels, not the actual y
 		if (_enemies[i]->getLevel() == level && abs(_enemies[i]->getPos() - pos) < dist && _enemies[i]->isActive()) {
-			dist = abs(_enemies[i]->getPos() - pos);
-			index = i;
+			for (auto it = begin(vision_blockers); it != end(vision_blockers); it++) {
+				auto pair = it;
+				if (pair->y == level && (pair->x > pos && pair->x < _enemies[i]->getPos())
+					|| (pair->x < pos && pair->x > _enemies[i]->getPos())) {
+					blocked = true;
+				}
+			}
+			if (!blocked) {
+				dist = abs(_enemies[i]->getPos() - pos);
+				index = i;
+			}
+			blocked = false;
 		}
 	}
 	// enemies out of range will be reset

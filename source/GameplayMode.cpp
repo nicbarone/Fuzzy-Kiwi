@@ -254,7 +254,7 @@ void GameplayMode::update(float timestep) {
     }
     // Enemy movement
     _enemyController->moveEnemies(_inputManager.getForward());
-    _enemyController->findClosest(_player->getPos(), _player->getLevel());
+    _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
 
     if (_enemyController->getPossessed() != nullptr) {
         //CULog("%d", _enemyController->getPossessed()->facingRight());
@@ -279,6 +279,7 @@ void GameplayMode::update(float timestep) {
 bool GameplayMode::attemptPossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
     if (enemy != nullptr) {
+        vector<Vec2> doors = closedDoors();
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
         _player->set_possessEnemy(enemy);
@@ -362,7 +363,6 @@ void GameplayMode::buildScene() {
 
 
     _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1, 11, door);
-    std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(4);
 
     _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
 
@@ -379,8 +379,9 @@ void GameplayMode::buildScene() {
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
-    _enemyController->addEnemy(950, 1, 0, 200, 200, enemyTexture, altTexture);
-    _enemyController->addEnemy(350, 0, 0, 650, 900, enemyTexture, altTexture);
+    _enemyController->addEnemy(200, 0, 0, 200, 200, enemyTexture, altTexture);
+    _enemyController->addEnemy(650, 0, 0, 300, 900, enemyTexture, altTexture);
+    _enemyController->addEnemy(650, 1, 0, 650, 900, enemyTexture, altTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
@@ -432,6 +433,7 @@ void GameplayMode::buildScene() {
 
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
+        _rootScene->addChild(it->get()->getPatrolNode());
     }
 
 
@@ -496,9 +498,11 @@ vector<Vec2> GameplayMode::closedDoors() {
     vector<Vec2> closedDoors;
     for (auto it = begin(_doors); it != end(_doors); ++it) {
         auto door = it->get();
-        if (door->getIsOpen()) {
+        if (!door->getIsOpen()) {
             closedDoors.push_back(Vec2(door->getPos().x, door->getLevel()));
         }
     }
     return closedDoors;
 }
+
+
