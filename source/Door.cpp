@@ -1,7 +1,9 @@
 #include "Door.h"
 using namespace cugl;
 
-Door::Door() {}
+Door::Door() {
+	_blockedEnemy = nullptr;
+}
 
 void Door::dispose() {
 	ConstructionElement::dispose();
@@ -10,20 +12,20 @@ void Door::dispose() {
 
 bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
 {
-	ConstructionElement::setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
+	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
-	ConstructionElement::setTexture(texture);
-	ConstructionElement::setPos(pos);
-	ConstructionElement::setAngle(ang);
-	ConstructionElement::setScale(scale);
-	ConstructionElement::setLevel(level);
-	ConstructionElement::setColor(color);
+	setTexture(texture);
+	setPos(pos);
+	setAngle(ang);
+	setScale(scale);
+	setLevel(level);
+	setColor(color);
 	_blockedEnemy = nullptr;
 	return true;
 }
 
 void Door::setVisibility(bool visibility) {
-	ConstructionElement::getSceneNode()->setVisible(visibility);
+	getSceneNode()->setVisible(visibility);
 	if (_blockedEnemy != nullptr) {
 		//CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
 		Vec2 temp = Vec2(_blockedEnemy->getPatrol().x, _blockedEnemy->getPatrol().y);
