@@ -1,7 +1,10 @@
 #include "Door.h"
 using namespace cugl;
 
-Door::Door() {
+Door::Door() :
+	_frame(0),
+	_frameCounter(9) 
+{
 	_blockedEnemy = nullptr;
 }
 
@@ -20,12 +23,14 @@ bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, int ro
 	setScale(scale);
 	setLevel(level);
 	setColor(color);
+	_frame = 0;
 	_blockedEnemy = nullptr;
 	return true;
 }
 
 void Door::setVisibility(bool visibility) {
-	getSceneNode()->setVisible(visibility);
+	if (visibility)
+	std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frame);
 	if (_blockedEnemy != nullptr) {
 		//CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
 		Vec2 temp = Vec2(_blockedEnemy->getPatrol().x, _blockedEnemy->getPatrol().y);

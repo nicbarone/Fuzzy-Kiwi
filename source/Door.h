@@ -10,7 +10,7 @@ class Door : public ConstructionElement {
 private:
 	std::shared_ptr<Enemy> _blockedEnemy;
 	int _frame;
-
+	int _frameCounter;
 public:
 
 	Door();
