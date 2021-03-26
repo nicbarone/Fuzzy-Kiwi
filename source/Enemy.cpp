@@ -114,7 +114,7 @@ void Enemy::move(float direction) {
 		}
 	}
 	if (_isActive || isPossessed()) {
-		//_sceneNode->setFrame(_frame);
+		_sceneNode->setFrame(_frame);
 	}
 }
 
