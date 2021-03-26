@@ -412,7 +412,7 @@ void GameplayMode::buildScene() {
     float rOffset = (size.width) - (safe.origin.x + safe.size.width);
 
     _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
-    _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2, (pbsize.height + bOffset) / 2));
+    _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2 - 20, (pbsize.height + bOffset) / 2 + 60));
 
     // Add the logo and button to the scene graph
     _scene->addChild(_rootScene);
