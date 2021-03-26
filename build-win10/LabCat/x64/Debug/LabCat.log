@@ -1,2 +1,16 @@
-﻿  GameplayMode.cpp
-  LabCat.vcxproj -> D:\Nicolas\CS 4152\Fuzzy-Kiwi\build-win10\x64\Debug\LabCat.exe
+﻿  CollisionManager.cpp
+  Constants.cpp
+  Door.cpp
+  Enemy.cpp
+  EnemyController.cpp
+  Entity.cpp
+  ConstructionElement.cpp
+  Floor.cpp
+  GameplayMode.cpp
+  InputManager.cpp
+  Interactable.cpp
+  main.cpp
+  Player.cpp
+  UIElement.cpp
+  Generating Code...
+  LabCat.vcxproj -> C:\Users\Flyin\Documents\GitHub\Fuzzy-Kiwi\build-win10\x64\Debug\LabCat.exe
