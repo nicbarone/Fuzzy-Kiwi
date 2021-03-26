@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
   b2WheelJoint.cpp
   b2WeldJoint.cpp
@@ -50,3 +51,6 @@
   b2BroadPhase.cpp
   Generating Code...
   Box2D.vcxproj -> C:\Users\Flyin\Documents\GitHub\Fuzzy-Kiwi\build-win10\x64\Debug\Box2D.lib
+=======
+﻿  Box2D.vcxproj -> D:\Nicolas\CS 4152\Fuzzy-Kiwi\build-win10\x64\Debug\Box2D.lib
+>>>>>>> 5acae580c653dfaebaba3ed69f51b4fd84b01300

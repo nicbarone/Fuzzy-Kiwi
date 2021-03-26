@@ -379,7 +379,7 @@ void GameplayMode::buildScene() {
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
-    _enemyController->addEnemy(950, 0, 650, 900, 0, enemyTexture, altTexture);
+    _enemyController->addEnemy(950, 1, 650, 900, 0, enemyTexture, altTexture);
     _enemyController->addEnemy(350, 0, 100, 100, 0, enemyTexture, altTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
