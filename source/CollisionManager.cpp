@@ -48,7 +48,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 			/*if (door->getLevel() == 2&&!enemy->getPossessed()) {
 				CULog("%d", door->getBlockedEnemy() == nullptr);
 			}*/
-			if (door->getIsOpen() &&
+			if (!door->getIsOpen() &&
 				door->getPos().x - enemy->getPos() <= DOOR_WIDTH / 2 &&
 				door->getPos().x - enemy->getPos() >= 0 &&
 				door->getLevel() == enemy->getLevel()) {
@@ -59,7 +59,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				}
 				
 			}
-			else if (door->getIsOpen() &&
+			else if (!door->getIsOpen() &&
 				enemy->getPos() - door->getPos().x <= DOOR_WIDTH / 2 &&
 				enemy->getPos() - door->getPos().x >= 0 &&
 				door->getLevel() == enemy->getLevel()) {
