@@ -265,7 +265,7 @@ void GameplayMode::update(float timestep) {
 
             _enemyController->getPossessed()->getSceneNode()->setAngle(3.14159265358979f);
         }
-
+        
     }
     else {
         _player->getSceneNode()->setAngle(0);
