@@ -11,6 +11,7 @@ private:
 	std::shared_ptr<Enemy> _blockedEnemy;
 	int _frame;
 	int _frameCounter;
+	bool _isOpen;
 public:
 
 	Door();
@@ -34,7 +35,16 @@ public:
 	shared_ptr<Enemy> getBlockedEnemy() {
 		return _blockedEnemy;
 	}
-	void setVisibility(bool visibility);
+
+	void setIsOpen(bool open) {
+		_isOpen = open;
+	}
+
+	bool getIsOpen() {
+		return _isOpen;
+	}
+
+	void setDoor(bool open);
 
 	/*void setDoorFrame(shared_ptr<scene2::AnimationNode> node, int frame) {
 		node->setFrame(frame);

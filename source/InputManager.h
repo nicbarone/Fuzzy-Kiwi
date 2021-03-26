@@ -13,7 +13,7 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
-    Vec2 _catOriginalPos;
+    Vec2 _camOriginalPos;
     bool _camMovement;
     Vec2 _camMoveDirection;
     /** Position of single tap on screen, updated upon leaving, if not exist then Vec2::ZERO */

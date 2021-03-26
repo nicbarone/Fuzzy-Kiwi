@@ -1,10 +1,2 @@
-﻿  CollisionManager.cpp
-  Door.cpp
-  Enemy.cpp
-  EnemyController.cpp
-  GameplayMode.cpp
-  InputManager.cpp
-  Player.cpp
-  main.cpp
-  Generating Code...
+﻿  GameplayMode.cpp
   LabCat.vcxproj -> D:\Nicolas\CS 4152\Fuzzy-Kiwi\build-win10\x64\Debug\LabCat.exe

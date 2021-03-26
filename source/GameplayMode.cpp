@@ -362,7 +362,7 @@ void GameplayMode::buildScene() {
 
 
     _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1, 11, door);
-
+    //std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(4);
 
     _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
 
@@ -450,13 +450,13 @@ void GameplayMode::buildScene() {
 void GameplayMode::checkDoors() {
 
     for (shared_ptr<Door> door : _doors) {
-        bool doorVisibility = door->getSceneNode()->isVisible();
+        bool doorState = door->getIsOpen();
         if (_enemyController->getPossessed() != nullptr) {
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
-                door->setVisibility(!doorVisibility);
+                door->setDoor(!doorState);
             }
         }
     }
@@ -496,7 +496,7 @@ vector<Vec2> GameplayMode::closedDoors() {
     vector<Vec2> closedDoors;
     for (auto it = begin(_doors); it != end(_doors); ++it) {
         auto door = it->get();
-        if (door->getSceneNode()->isVisible()) {
+        if (door->getIsOpen()) {
             closedDoors.push_back(Vec2(door->getPos().x, door->getLevel()));
         }
     }
