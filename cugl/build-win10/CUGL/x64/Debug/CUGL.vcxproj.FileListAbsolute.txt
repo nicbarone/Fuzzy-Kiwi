@@ -1,2 +1,0 @@
-D:\Nicolas\CS 4152\Fuzzy-Kiwi\build-win10\x64\Debug\CUGL.pdb
-D:\Nicolas\CS 4152\Fuzzy-Kiwi\cugl\build-win10\CUGL\x64\Debug\CUGL.pdb
