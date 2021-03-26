@@ -103,7 +103,7 @@ bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::sc
     _rootSceneNode = rootNode;
     _camMovement = false;
     _camMoveDirection = Vec2::ZERO;
-    _catOriginalPos = Vec2(_player->getPos(),_player->getPosY());
+    _camOriginalPos = _rootSceneNode->getWorldPosition();
     createZones();
     clearTouchInstance(_stouch);
     clearTouchInstance(_ltouch);
@@ -378,7 +378,7 @@ void InputManager::readInput() {
     }
     if (Input::get<Mouse>()->buttonPressed().hasLeft()) {
         _tap_pos = Input::get<Mouse>()->pointerPosition();
-        CULog("orignal cat pos is %f, %f", _catOriginalPos.x, _catOriginalPos.y);
+        CULog("orignal cam pos is %f, %f", _camOriginalPos.x, _camOriginalPos.y);
         //CULog("current cam pos is %f, %f", touch2Screen(_rootSceneNode->getPosition()).x, touch2Screen(_rootSceneNode->getPosition()).y);
         CULog("sbound is %f, %f", _sbounds.size.width, _sbounds.size.height);
         //CULog("cat pos %f, %f", _player->getPos().x, _player->getPos().y);
@@ -391,7 +391,11 @@ void InputManager::readInput() {
     // Handle Zoom in/out
     int zoomFactor = Input::get<Mouse>()->wheelDirection().y;
     float newScale = min(max(_rootSceneNode->getScale().x + zoomFactor * ZOOM_SENSITIVITY,0.3f), 1.0f);
+    Vec2 oldDist = _rootSceneNode->getWorldPosition() - _camOriginalPos;
+    float oldScale = _rootSceneNode->getScaleX();
     _rootSceneNode->setScale(Vec2(newScale,newScale));
+    // Handle center of zooming
+    _rootSceneNode->setPosition(_rootSceneNode->getWorldPosition() + oldDist * (newScale / oldScale - 1));
     // Mimic phone tap on right screen with mouse right click
     if (Input::get<Mouse>()->buttonDown().hasRight()) {
         if (!_rightJoystick) {
