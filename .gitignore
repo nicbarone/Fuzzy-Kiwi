@@ -40,3 +40,6 @@ Release
 Debug
 x86
 x64
+*.pdb
+*.idb
+*.lib
