@@ -102,11 +102,11 @@ void Enemy::move(float direction) {
 		_sceneNode->setPositionX(original + getVelocity().x);
 		if (direction == 1) {
 			_movingRight = true;
-			_sceneNode->setScale(-0.05, 0.05);
+			_sceneNode->setScale(0.05, 0.05);
 		}
 		else if (direction == -1) {
 			_movingRight = false;
-			_sceneNode->setScale(0.05, 0.05);
+			_sceneNode->setScale(-0.05, 0.05);
 		}
 		if (direction != 0)
 		{
