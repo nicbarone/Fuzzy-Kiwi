@@ -77,10 +77,10 @@ public:
 	bool getPossessed() {
 		return _isPossessed;
 	}
-	/** changes possessed state of the enemy*/
+	/** changes the possessed state of the enemy*/
 	void setPossessed();
 
-	/** changes possessed state of the enemy*/
+	/** returns the possessed state of the enemy*/
 	bool isPossessed() { return _isPossessed; }
 
 	/** sets the _patrolStart and _patrolEnd of the enemy and updates the _patrolNode*/

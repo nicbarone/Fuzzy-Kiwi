@@ -17,7 +17,7 @@ Enemy::Enemy() :
 	_isPossessed(false),
 	_isActive(false),
 	_frame(0),
-	_frameCounter(15)
+	_frameCounter(0)
 {
 	_sceneNode = nullptr;
 	_texture = nullptr;
@@ -52,6 +52,7 @@ bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolE
 	_texture = enemy;
 	_altTexture = alt;
 	_isActive = true;
+	_frameCounter = 7;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	_patrolNode = scene2::WireNode::alloc(Rect(0, 0, patrolEnd - patrolStart, 2));
@@ -80,19 +81,19 @@ void Enemy::move(float direction) {
 		
 		if (_movingRight) {
 			Entity::setVelocity(Vec2(_speed,0));
-			_sceneNode->flipHorizontal(false);
 		}
 		else {
 			Entity::setVelocity(Vec2(-_speed, 0));
-			_sceneNode->flipHorizontal(true);
 		}
 		Entity::setPos(original + Entity::getVelocity().x);
 		_sceneNode->setPositionX(original + Entity::getVelocity().x);
 		if (Entity::getPos() >= _patrolEnd) {
 			_movingRight = false;
+			_sceneNode->setScale(-0.05, 0.05);
 		}
 		else if (Entity::getPos() <= _patrolStart) {
 			_movingRight = true;
+			_sceneNode->setScale(0.05, 0.05);
 		}
 		
 	}
@@ -101,11 +102,11 @@ void Enemy::move(float direction) {
 		_sceneNode->setPositionX(original + getVelocity().x);
 		if (direction == 1) {
 			_movingRight = true;
-			_sceneNode->flipHorizontal(false);
+			_sceneNode->setScale(-0.05, 0.05);
 		}
 		else if (direction == -1) {
 			_movingRight = false;
-			_sceneNode->flipHorizontal(true);
+			_sceneNode->setScale(0.05, 0.05);
 		}
 		if (direction != 0)
 		{
@@ -119,7 +120,7 @@ void Enemy::move(float direction) {
 			}
 		}
 	}
-	if (_isActive || isPossessed()) {
+	if ((_isActive || _isPossessed) && _frameCounter == 7) {
 		_sceneNode->setFrame(_frame);
 	}
 }
