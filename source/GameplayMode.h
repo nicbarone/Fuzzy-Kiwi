@@ -81,6 +81,13 @@ protected:
     InputManager _inputManager;
     /** The button to possess and release*/
     std::shared_ptr<ui::ButtonElement> _possessButton;
+    /** The panel to win level*/
+    std::shared_ptr<ui::PanelElement> _winPanel;
+    /** The panel to lose level*/
+    std::shared_ptr<ui::PanelElement> _losePanel;
+    // Create panels
+    std::shared_ptr<Texture> winPanel;
+    std::shared_ptr<Texture> losePanel;
     // Create a button.  A button has an up image and a down image
     std::shared_ptr<Texture> possessButton;
     std::shared_ptr<Texture> unpossessButton;

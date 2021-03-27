@@ -56,7 +56,57 @@ namespace ui {
 
 #pragma panel
 	class PanelElement : public Entity {
+	private:
+		std::shared_ptr<scene2::AnimationNode> _sceneNode;
+		std::shared_ptr<Texture> _texture;
+		std::vector<std::shared_ptr<ButtonElement>> _childButtons;
+		std::vector<std::shared_ptr<PanelElement>> _childPanels;
+		bool _visible;
+		int _frame;
+		int _frameCounter;
 
+	public:
+		PanelElement();
+
+		~PanelElement() { dispose(); }
+
+		void dispose();
+
+		bool init(float x, float y, float ang, const std::shared_ptr<Texture> panelTexture);
+
+		static std::shared_ptr<PanelElement> alloc(float x, int y, float ang, const std::shared_ptr<Texture> panelTexture) {
+			std::shared_ptr<PanelElement> result = std::make_shared<PanelElement>();
+			return (result->init(x, y, ang, panelTexture) ? result : nullptr);
+		}
+		/** returns the AnimationNode associated with the panel*/
+		std::shared_ptr<scene2::AnimationNode> getSceneNode() {
+			return _sceneNode;
+		}
+
+		bool createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture);
+
+		bool createChildPanel(float x, int y, float ang, const std::shared_ptr<Texture> panelTexture);
+
+		std::vector<std::shared_ptr<ButtonElement>> getChildButtons() {
+			return _childButtons;
+		}
+
+		std::vector<std::shared_ptr<PanelElement>> getChildPanels() {
+			return _childPanels;
+		}
+		void setPos(Vec2 pos);
+		void setVisible(bool visibility) {
+			_visible = visibility;
+			if (_visible) {
+				_sceneNode->setColor(Color4f::WHITE);
+			}
+			else {
+				_sceneNode->setColor(Color4f::CLEAR);
+			}
+		}
+		bool getVisible() {
+			return _visible;
+		}
 	};
 
 #pragma text

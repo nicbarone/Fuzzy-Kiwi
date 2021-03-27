@@ -32,6 +32,7 @@ InputManager::InputManager() {
     _unPossessButton = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
+    _valid_tap = false;
 }
 
 InputManager::~InputManager()
@@ -41,6 +42,7 @@ InputManager::~InputManager()
     _unPossessButton = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
+    _valid_tap = false;
 }
 
 /**
@@ -104,6 +106,7 @@ bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::sc
     _camMovement = false;
     _camMoveDirection = Vec2::ZERO;
     _camOriginalPos = _rootSceneNode->getWorldPosition();
+    _valid_tap = false;
     createZones();
     clearTouchInstance(_stouch);
     clearTouchInstance(_ltouch);
@@ -245,6 +248,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
         _stouch.position = event.position;
         _stouch.timestamp.mark();
         _stouch.touchids.insert(event.touch);
+        _stouch.isSingleTap[event.touch] = true;
     }
     switch (zone) {
     case Zone::LEFT:
@@ -261,6 +265,18 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
         }
         break;
     case Zone::RIGHT:
+        // Check if other touches existed before this one
+        if (_prev2Pivots[0].empty()) {
+            // If no pivots, then add this one as the first pivot
+            _prev2Pivots[0][event.touch] = Vec2(event.position.x, event.position.y);
+        }
+        else if (_prev2Pivots[1].empty()) {
+            // If not empty, check if this one is close enough in terms of time, if so, add in as second pivot
+            //CULog("elapsed %i milli seconds", event.timestamp.ellapsedMillis(_rtouch.timestamp, event.timestamp));
+            //if (event.timestamp.ellapsedMicros(_rtouch.timestamp, event.timestamp) < 1000) {
+                _prev2Pivots[1][event.touch] = Vec2(event.position.x, event.position.y);
+            //}
+        } // Otherwise all pivots are taken, no other pivots should be inserted
         // Only process if no touch in zone
         if (_rtouch.touchids.empty()) {
             // Right is the floating joystick
@@ -290,9 +306,21 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
  * @param focus	Whether the listener currently has focus
  */
 void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
+    // If the touch ended is one of the pivots, remove it
+    if (_prev2Pivots[0].count(event.touch) != 0) {
+        _prev2Pivots[0].clear();
+    }
+    else if (_prev2Pivots[1].count(event.touch) != 0) {
+        _prev2Pivots[1].clear();
+    }
     // Reset all keys that might have been set
     Vec2 pos = event.position;
     if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
+        if (_stouch.isSingleTap[event.touch]) {
+            _tap_pos = _stouch.position;
+            _valid_tap = true;
+        }
+        _stouch.isSingleTap.erase(event.touch);
         _stouch.touchids.clear();
     }
     Zone zone = getZone(pos);
@@ -320,14 +348,39 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
 void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
     Vec2 pos = event.position;
     if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
-        if ((pos-_rtouch.position).length()>TAP_THRESHOLD) 
-            _stouch.touchids.clear();
+        if ((pos - _rtouch.position).length() > TAP_THRESHOLD) {
+            _stouch.isSingleTap[event.touch] = false;
+        }
     }
     // Only check for swipes in the main zone if there is more than one finger.
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
         processLeftJoystick(pos);
     }
-    if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+    // If both pivots are present, measure the change in their distance and zoom
+    if (!_prev2Pivots[0].empty() && !_prev2Pivots[1].empty()) {
+        // Previous distance
+        float prevDist = (_prev2Pivots[0].begin()->second).distance(_prev2Pivots[1].begin()->second);
+        // If one of the pivots is the current event
+        if (_prev2Pivots[0].count(event.touch) != 0) {
+            _prev2Pivots[0][event.touch] = Vec2(event.position.x, event.position.y);
+        }
+        else if (_prev2Pivots[1].count(event.touch) != 0) {
+            _prev2Pivots[1][event.touch] = Vec2(event.position.x, event.position.y);
+        }
+        float curDist = (_prev2Pivots[0].begin()->second).distance(_prev2Pivots[1].begin()->second);
+        if (abs(prevDist - curDist) > 1.0f) {
+            // If passed the threshold of 0.1, then this counts as a dimension change
+            float zoomFactor = (curDist - prevDist) / 100.0f;
+            //CULog("Zoom factor %f, CurDist %f, prevDist %f", zoomFactor, curDist, prevDist);
+            float newScale = min(max(_rootSceneNode->getScale().x + zoomFactor * ZOOM_SENSITIVITY, 0.3f), 1.0f);
+            Vec2 oldDist = _rootSceneNode->getWorldPosition() - _camOriginalPos;
+            float oldScale = _rootSceneNode->getScaleX();
+            _rootSceneNode->setScale(Vec2(newScale, newScale));
+            // Handle center of zooming
+            _rootSceneNode->setPosition(_rootSceneNode->getWorldPosition() - oldDist * (newScale / oldScale - 1));
+        }
+        _camMoveDirection = Vec2::ZERO;
+    } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         processRightJoystick(pos);
     }
 }
@@ -344,9 +397,9 @@ void InputManager::readInput() {
     // TODO: mobile controls disabled right now
 #ifdef CU_MOBILE
     _forward = _keyForward;
-    // if stouch is not null, then it is a tap
-    if (!_stouch.touchids.empty()) {
+    if (_valid_tap) {
         _tap_pos = _stouch.position;
+        _valid_tap = false;
     }
     else {
         _tap_pos = Vec2::ZERO;

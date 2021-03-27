@@ -6,7 +6,7 @@
 /** The portion of the screen used for the left zone */
 #define LEFT_ZONE       0.35f
 /** The portion of the screen used for the right zone */
-#define RIGHT_ZONE      0.35f
+#define RIGHT_ZONE      0.65f
 class InputManager {
 private:
 
@@ -16,8 +16,11 @@ private:
     Vec2 _camOriginalPos;
     bool _camMovement;
     Vec2 _camMoveDirection;
+    /** The position of two zooming fingers, 0 being the one starting on the left, 1 being the one starting on the right */
+    std::unordered_map<Uint64, Vec2> _prev2Pivots[2];
     /** Position of single tap on screen, updated upon leaving, if not exist then Vec2::ZERO */
     Vec2 _tap_pos;
+    bool _valid_tap;
     Vec2 _mouse_rightJoystick_startPos;
     /** If pressed possess button then true, otherwise false */
     std::shared_ptr<Player> _player;
@@ -59,6 +62,8 @@ public:
         cugl::Timestamp timestamp;
         /** The touch id(s) for future reference */
         std::unordered_set<Uint64> touchids;
+        /** Whether this touch is a valid single tap */
+        std::unordered_map<Uint64, bool> isSingleTap;
     };
 
     /**

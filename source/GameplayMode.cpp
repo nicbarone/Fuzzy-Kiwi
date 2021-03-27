@@ -240,7 +240,11 @@ void GameplayMode::update(float timestep) {
     checkStaircaseDoors();
     checkDoors();
     collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
-    collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+    int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+    if (cageCollision != 0) {
+        // shows win Panel
+        _winPanel->setVisible(true);
+    }
     collisions::checkInBounds(_enemyController->getPossessed(),_player);
 
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
@@ -379,8 +383,8 @@ void GameplayMode::buildScene() {
     _enemyController = make_shared<EnemyController>();
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
-    _enemyController->addEnemy(950, 1, 0, 200, 200, enemyTexture, altTexture);
-    _enemyController->addEnemy(350, 0, 0, 650, 900, enemyTexture, altTexture);
+    _enemyController->addEnemy(400, 0, 0, 400, 400, enemyTexture, altTexture);
+    _enemyController->addEnemy(650, 0, 0, 650, 900, enemyTexture, altTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
@@ -439,7 +443,21 @@ void GameplayMode::buildScene() {
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();
 
-
+    // Create Win-Lose Panels
+    winPanel = _assets->get<Texture>("levelCompleteBG");
+    _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
+    _winPanel->getSceneNode()->setScale(0.75f);
+    _winPanel->setVisible(false);
+    _winPanel->createChildPanel(0, 160, 0, _assets->get<Texture>("winIcon"));
+    _winPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    _winPanel->createChildPanel(0, -45, 0, _assets->get<Texture>("winTitle"));
+    _winPanel->getChildPanels()[1]->getSceneNode()->setScale(1.2f);
+    _winPanel->createChildPanel(135, 10, 0, _assets->get<Texture>("deadOrAlive"));
+    _winPanel->getChildPanels()[2]->getSceneNode()->setScale(1.2f);
+    _winPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"));
+    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
+    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"));
+    _scene->addChild(_winPanel->getSceneNode());
 
     // Initialize input manager
     _inputManager = InputManager();
