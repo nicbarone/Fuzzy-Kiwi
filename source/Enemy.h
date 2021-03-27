@@ -41,6 +41,7 @@ private:
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
 	std::shared_ptr<Texture> _altTexture;
+	std::shared_ptr<scene2::WireNode> _patrolNode;
 
 
 public:
@@ -64,6 +65,11 @@ public:
 		return _sceneNode;
 	}
 
+	/** returns the WireNode associated with the patrol path*/
+	std::shared_ptr<scene2::WireNode> getPatrolNode() {
+		return _patrolNode;
+	}
+
 	/** changes the x position of the enemy based on its patrol path and current position*/
 	void move(float direction);
 
@@ -71,16 +77,18 @@ public:
 	bool getPossessed() {
 		return _isPossessed;
 	}
-	/** changes possessed state of the enemy*/
+	/** changes the possessed state of the enemy*/
 	void setPossessed();
 
-	/** changes possessed state of the enemy*/
+	/** returns the possessed state of the enemy*/
 	bool isPossessed() { return _isPossessed; }
 
-	/** sets the _patrolStart and _patrolEnd of the enemy*/
+	/** sets the _patrolStart and _patrolEnd of the enemy and updates the _patrolNode*/
 	void setPatrol(float x1, float x2) {
 		_patrolStart = x1;
 		_patrolEnd = x2;
+		_patrolNode->setPolygon(Rect(0, 0, x1 - x2, 2));
+		_patrolNode->setPositionX((x1 + x2) / 2);
 	}
 	/** sets the _patrolStart and _patrolEnd of the old patrol of the enemy that
 	is changed due to hitting a door*/
