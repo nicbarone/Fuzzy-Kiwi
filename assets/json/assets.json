@@ -105,6 +105,12 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		}
+	},
+	"fondts": {
+		"felt": {
+			"file": "fonts/MarkerFelt.ttf",
+			"size": 48
+		}
 	}
 	}
 }

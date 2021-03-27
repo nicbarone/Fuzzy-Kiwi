@@ -414,6 +414,10 @@ void GameplayMode::buildScene() {
 
     _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
     _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2 - 20, (pbsize.height + bOffset) / 2 + 60));
+    
+    // Text labels
+    std::shared_ptr<Font> font = _assets->get<Font>("felt");
+    _tutorialText = scene2::Label::alloc("test", font);
 
     // Add the logo and button to the scene graph
     _scene->addChild(_rootScene);
@@ -428,6 +432,7 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_level2Door->getSceneNode());
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
+    _rootScene->addChild(_tutorialText);
 
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
