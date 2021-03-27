@@ -87,6 +87,7 @@ protected:
     // Create a button.  A button has an up image and a down image
     std::shared_ptr<Texture> possessButton;
     std::shared_ptr<Texture> unpossessButton;
+    std::shared_ptr<scene2::Label> _tutorialText;
     /** A countdown used to move the logo */
     int  _countdown;
     
@@ -192,7 +193,7 @@ public:
 
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
-    
+
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

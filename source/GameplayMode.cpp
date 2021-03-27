@@ -255,7 +255,7 @@ void GameplayMode::update(float timestep) {
     }
     // Enemy movement
     _enemyController->moveEnemies(_inputManager.getForward());
-    _enemyController->findClosest(_player->getPos(), _player->getLevel());
+    _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
 
     if (_enemyController->getPossessed() != nullptr) {
         //CULog("%d", _enemyController->getPossessed()->facingRight());
@@ -280,6 +280,7 @@ void GameplayMode::update(float timestep) {
 bool GameplayMode::attemptPossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
     if (enemy != nullptr) {
+        vector<Vec2> doors = closedDoors();
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
         _player->set_possessEnemy(enemy);
@@ -384,7 +385,8 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     _enemyController->addEnemy(200, 0, 0, 200, 200, enemyTexture, altTexture);
-    _enemyController->addEnemy(650, 0, 0, 400, 900, enemyTexture, altTexture);
+    _enemyController->addEnemy(650, 0, 0, 300, 900, enemyTexture, altTexture);
+    _enemyController->addEnemy(650, 1, 0, 650, 900, enemyTexture, altTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
@@ -417,6 +419,10 @@ void GameplayMode::buildScene() {
 
     _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
     _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2 - 20, (pbsize.height + bOffset) / 2 + 60));
+    
+    // Text labels
+    std::shared_ptr<Font> font = _assets->get<Font>("felt");
+    _tutorialText = scene2::Label::alloc("test", font);
 
     // Add the logo and button to the scene graph
     _scene->addChild(_rootScene);
@@ -432,11 +438,13 @@ void GameplayMode::buildScene() {
     /*_rootScene->addChild(_numberOfPosessions->);*/
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
+    _rootScene->addChild(_tutorialText);
 
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
+        _rootScene->addChild(it->get()->getPatrolNode());
     }
 
 
@@ -501,9 +509,11 @@ vector<Vec2> GameplayMode::closedDoors() {
     vector<Vec2> closedDoors;
     for (auto it = begin(_doors); it != end(_doors); ++it) {
         auto door = it->get();
-        if (door->getIsOpen()) {
+        if (!door->getIsOpen()) {
             closedDoors.push_back(Vec2(door->getPos().x, door->getLevel()));
         }
     }
     return closedDoors;
 }
+
+
