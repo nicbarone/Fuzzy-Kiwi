@@ -48,10 +48,10 @@ void Player::move(float direction) {
 	manualMove(direction, PLAYER_SPEED);
 	_sceneNode->setPositionX(original + getVelocity().x);
 	if (direction == 1) {
-		_sceneNode->flipHorizontal(false);
+		_sceneNode->setScale(-0.15, 0.15);
 	}
 	else if (direction == -1) {
-		_sceneNode->flipHorizontal(true);
+		_sceneNode->setScale(0.15, 0.15);
 	}
 	if (direction != 0)
 	{

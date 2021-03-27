@@ -33,7 +33,7 @@ public:
 	}
 
 	/** updates the controller's reference _closestEnemy*/
-	void findClosest(float pos, int level);
+	void findClosest(float pos, int level, vector<Vec2> vision_blockers);
 
 	/** returns the closest enemy*/
 	std::shared_ptr<Enemy> closestEnemy();
