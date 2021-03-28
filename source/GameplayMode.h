@@ -77,8 +77,6 @@ protected:
     std::shared_ptr<Floor> _rightWall;
     /** A reference to the cagedAnimal*/
     std::shared_ptr<Door> _cagedAnimal;
-    /** The parent scene node for the number of Posssessions*/
-    std::shared_ptr<cugl::scene2::Label>_numberOfPosessions;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
     InputManager _inputManager;
@@ -87,6 +85,9 @@ protected:
     // Create a button.  A button has an up image and a down image
     std::shared_ptr<Texture> possessButton;
     std::shared_ptr<Texture> unpossessButton;
+    /** The parent scene node for the number of posssessions label*/
+    std::shared_ptr<cugl::scene2::Label>_numberOfPosessions;
+    int _numberOfPosessionsLeft;
     std::shared_ptr<scene2::Label> _tutorialText;
     /** A countdown used to move the logo */
     int  _countdown;
@@ -194,6 +195,12 @@ public:
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
 
+    int getNumberOfPossessionsLeft() {
+        return _numberOfPosessionsLeft;
+    }
+    void setNumberOfPossessionsLeft(int numPossessions) {
+        _numberOfPosessionsLeft = numPossessions;
+    }
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

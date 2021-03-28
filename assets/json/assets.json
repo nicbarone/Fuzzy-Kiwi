@@ -106,11 +106,11 @@
 			"wrapT": "clamp"
 		}
 	},
-	"fondts": {
+	"fonts": {
 		"felt": {
 			"file": "fonts/MarkerFelt.ttf",
 			"size": 48
 		}
 	}
 	}
-}
+
