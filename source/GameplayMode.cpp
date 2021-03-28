@@ -30,6 +30,7 @@
 // Include the class header, which includes all of the CUGL classes
 #include "GameplayMode.h"
 #include "cugl/base/CUBase.h"
+#include <cugl/scene2/ui/CULabel.h>
 
 // Add support for simple random number generation
 #include "cstdlib"
@@ -246,6 +247,8 @@ void GameplayMode::update(float timestep) {
         _winPanel->setVisible(true);
     }
     collisions::checkInBounds(_enemyController->getPossessed(),_player);
+    string numPossessions = to_string(_player->get_nPossess());
+    _numberOfPosessions->setText("Number of possessions left : "+ numPossessions);
 
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
@@ -366,6 +369,7 @@ void GameplayMode::buildScene() {
 
 
     _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1, 11, door);
+    std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(0);
 
     _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
 
@@ -375,6 +379,10 @@ void GameplayMode::buildScene() {
     _rightWall = Floor::alloc(Vec2(1100, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
 
     _cagedAnimal = Door::alloc(Vec2(820, 360), 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, 1, 1, cagedAnimal);
+    
+
+    //std::shared_ptr<Font> labelFont = _assets->get<Font>("labelFont");
+    //_numberOfPosessions = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("textfield_result"));
 
 
 
@@ -422,6 +430,10 @@ void GameplayMode::buildScene() {
     // Text labels
     std::shared_ptr<Font> font = _assets->get<Font>("felt");
     _tutorialText = scene2::Label::alloc("test", font);
+    string numPossessions = to_string(_player->get_nPossess());
+    _numberOfPosessions = scene2::Label::alloc("Number of possessions left: "+ numPossessions, font);
+    _numberOfPosessions->setScale(Vec2(0.5, 0.5));
+    _numberOfPosessions->setPosition(Vec2(20, 540));
 
     // Add the logo and button to the scene graph
     _scene->addChild(_rootScene);
@@ -434,10 +446,11 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_rightWall->getSceneNode());
     _rootScene->addChild(_cagedAnimal->getSceneNode());
     _rootScene->addChild(_level2Door->getSceneNode());
+    /*_rootScene->addChild(_numberOfPosessions->);*/
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_tutorialText);
-
+    _scene->addChild(_numberOfPosessions);
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
     for (auto it = begin(enemies); it != end(enemies); ++it) {

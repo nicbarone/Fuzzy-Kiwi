@@ -51,9 +51,14 @@ public:
 	void set_nPossess(int count) {
 		_nPossessions = count;
 	}
+	/**gets possessions remaining*/
+	int get_nPossess() {
+		return _nPossessions;
+	}
 
 	/** sets possess enemy */
 	void set_possessEnemy(std::shared_ptr<Enemy> enemy) {
+		_nPossessions--;
 		_possessingEnemy = enemy;
 	}
 

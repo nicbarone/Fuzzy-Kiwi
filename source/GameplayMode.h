@@ -36,6 +36,7 @@
 #include "EnemyController.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
+
 /**
  * Class for a simple Hello World style application
  *
@@ -201,6 +202,12 @@ public:
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
 
+    int getNumberOfPossessionsLeft() {
+        return _numberOfPosessionsLeft;
+    }
+    void setNumberOfPossessionsLeft(int numPossessions) {
+        _numberOfPosessionsLeft = numPossessions;
+    }
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */
