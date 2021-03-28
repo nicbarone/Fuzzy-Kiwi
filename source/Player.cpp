@@ -39,7 +39,7 @@ bool Player::init(float x, int level, float ang, std::shared_ptr<Texture> cat)
 	_texture = cat;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 8);
 	_sceneNode->setScale(0.15, 0.15);
-	_sceneNode->setPosition(Vec2(x, level*FLOOR_HEIGHT+FLOOR_OFFSET));
+	_sceneNode->setPosition(Vec2(x, level*FLOOR_HEIGHT+FLOOR_OFFSET-55));
 	return true;
 }
 
@@ -69,5 +69,5 @@ void Player::move(float direction) {
 
 void Player::setLevel(int level) {
 	Entity::setLevel(level);
-	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET-55);
 }
