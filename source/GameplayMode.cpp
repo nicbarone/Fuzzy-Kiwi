@@ -248,7 +248,7 @@ void GameplayMode::update(float timestep) {
     }
     collisions::checkInBounds(_enemyController->getPossessed(),_player);
     string numPossessions = to_string(_player->get_nPossess());
-    _numberOfPosessions->setText("Number of possessions left : "+ numPossessions);
+    _numberOfPossessions->setText("Number of possessions left : "+ numPossessions);
 
     /**possess code works a bit better when movement is processed last (scene node position is updated here)
         else you get one frame of wrong position*/
