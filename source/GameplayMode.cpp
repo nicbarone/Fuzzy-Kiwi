@@ -165,7 +165,7 @@ void GameplayMode::update(float timestep) {
 
     if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
         //very temporary modification to test whether it works, dont want to work with highlight right now
-        _enemyController->closestEnemy()->getSceneNode()->setAngle(3.14159265358979f);
+        _enemyController->closestEnemy()->setGlow(true);
     }
     if (_inputManager.getTapPos().x != 0) {
         /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
@@ -266,7 +266,6 @@ void GameplayMode::update(float timestep) {
     if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
         _player->getSceneNode()->setAngle(3.14159265358979f);
         if (_enemyController->getPossessed() != nullptr) {
-
             _enemyController->getPossessed()->getSceneNode()->setAngle(3.14159265358979f);
         }
         
@@ -289,7 +288,7 @@ bool GameplayMode::attemptPossess() {
         _player->set_possessEnemy(enemy);
         _enemyController->updatePossessed(enemy);
         enemy->setPossessed();
-        enemy->getSceneNode()->setAngle(0);
+        enemy->setGlow(false);
         return true;
     }
     return false;
@@ -381,11 +380,12 @@ void GameplayMode::buildScene() {
 
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
-    std::shared_ptr<Texture> enemyTexture = _assets->get<Texture>("enemy");
+    enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
-    _enemyController->addEnemy(200, 0, 0, 200, 200, enemyTexture, altTexture);
-    _enemyController->addEnemy(650, 0, 0, 300, 900, enemyTexture, altTexture);
-    _enemyController->addEnemy(650, 1, 0, 650, 900, enemyTexture, altTexture);
+    enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
+    _enemyController->addEnemy(200, 0, 0, 200, 200, enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(650, 0, 0, 300, 900, enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(650, 1, 0, 650, 900, enemyTexture, altTexture, enemyHighlightTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);

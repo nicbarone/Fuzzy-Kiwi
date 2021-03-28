@@ -16,8 +16,8 @@ void EnemyController::dispose() {
 	_possessedEnemy = nullptr;
 }
 
-void EnemyController::addEnemy(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
-	_enemies.push_back(Enemy::alloc(x, level, ang, patrolStart, patrolEnd, enemy, alt));
+void EnemyController::addEnemy(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
+	_enemies.push_back(Enemy::alloc(x, level, ang, patrolStart, patrolEnd, enemy, alt, glow));
 }
 
 std::shared_ptr<Enemy> EnemyController::closestEnemy() {
@@ -46,7 +46,7 @@ void EnemyController::findClosest(float pos, int level, vector<Vec2> vision_bloc
 	}
 	// enemies out of range will be reset
 	if (index == -1 && _closestEnemy != nullptr) {
-		_closestEnemy->getSceneNode()->setAngle(0);
+		_closestEnemy->setGlow(false);
 	}
 	_closestEnemy = index == -1 ? nullptr : _enemies[index];
 }

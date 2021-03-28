@@ -22,6 +22,7 @@ Enemy::Enemy() :
 	_sceneNode = nullptr;
 	_texture = nullptr;
 	_altTexture = nullptr;
+	_glowTexture = nullptr;
 	_patrolNode = nullptr;
 }
 
@@ -37,13 +38,14 @@ void Enemy::dispose() {
 	_texture = nullptr;
 	_sceneNode = nullptr;
 	_altTexture = nullptr;
+	_glowTexture = nullptr;
 	_patrolNode = nullptr;
 	_frame = 0;
 	_frameCounter = 0;
 	Entity::dispose();
 }
 
-bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolEnd,  std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
+bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolEnd,  std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
 	Entity::setLevel(level);
@@ -51,6 +53,7 @@ bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolE
 	_patrolEnd = patrolEnd;
 	_texture = enemy;
 	_altTexture = alt;
+	_glowTexture = glow;
 	_isActive = true;
 	_frameCounter = 7;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);

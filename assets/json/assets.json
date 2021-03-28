@@ -49,6 +49,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"enemy-glow": {
+			"file": "textures/EnemyGlow.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"possessed-enemy-placeholder": {
 			"file": "textures/PossessedEnemyPlaceholder.png",
 			"minfilter": "nearest",

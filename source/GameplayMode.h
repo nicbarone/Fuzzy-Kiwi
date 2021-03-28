@@ -91,6 +91,9 @@ protected:
     // Create a button.  A button has an up image and a down image
     std::shared_ptr<Texture> possessButton;
     std::shared_ptr<Texture> unpossessButton;
+
+    std::shared_ptr<Texture> enemyHighlightTexture;
+    std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
     /** A countdown used to move the logo */
     int  _countdown;

@@ -41,6 +41,7 @@ private:
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
 	std::shared_ptr<Texture> _altTexture;
+	std::shared_ptr<Texture> _glowTexture;
 	std::shared_ptr<scene2::WireNode> _patrolNode;
 
 
@@ -52,11 +53,11 @@ public:
 
 	void dispose();
 
-	bool init(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt);
+	bool init(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow);
 
-	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt) {
+	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
-		return (result->init(x, level, ang, patrolStart, patrolEnd, enemy, alt) ? result : nullptr);
+		return (result->init(x, level, ang, patrolStart, patrolEnd, enemy, alt, glow) ? result : nullptr);
 	}
 
 
@@ -122,6 +123,10 @@ public:
 	/** setter for level, overloaded for this class to also change scene node position, deprecates changeFloor()*/
 	void setLevel(int level);
 
+	/** setter mainly used to highlight enemies, also updates the scenenode's texture*/
+	void setGlow(bool flag) {
+		_sceneNode->setTexture(flag ? _glowTexture : _texture);
+	}
 };
 
 #endif
