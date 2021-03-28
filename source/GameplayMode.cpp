@@ -193,6 +193,7 @@ void GameplayMode::update(float timestep) {
             // turn the button to grey
             _possessButton->getButton()->setColor(Color4f(1.0f, 1.0f, 1.0f, 0.5f));
             _possessButton->setButtonState(ui::ButtonState::UNAVAILABLE);
+            
         }
     }
     else if (_possessButton->getButtonState() == ui::ButtonState::UNAVAILABLE) {
@@ -214,6 +215,8 @@ void GameplayMode::update(float timestep) {
             if (attemptPossess()) {
                 _possessButton->setTexture(unpossessButton);
                 _possessButton->setButtonState(ui::ButtonState::UNPOSSESS);
+                _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
+                _tutorialText->setPosition(Vec2(100, 200));
             }
         }
         else {
@@ -359,15 +362,15 @@ void GameplayMode::buildScene() {
     _level2Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 1, cugl::Color4::WHITE, 1, 1, floor);
     _level1StairDoor = Door::alloc(Vec2(950, 120), 0, Vec2(0.14, 0.14), 0, cugl::Color4::WHITE, 1, 1, staircaseDoor);
     _level2StairDoor = Door::alloc(Vec2(550, 390), 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE, 1, 1, staircaseDoor);
-    _staircaseDoors = { _level1StairDoor , _level2StairDoor };
+    _staircaseDoors = { _level1StairDoor, _level2StairDoor };
 
 
     _level1Door = Door::alloc(Vec2(590, 110), 0, Vec2(0.5, 0.5), 0, cugl::Color4::WHITE, 1, 11, door);
     std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(0);
 
-    _level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
+    //_level2Door = Door::alloc(Vec2(390, 410), 0, Vec2(0.5, 0.5), 1, cugl::Color4::WHITE, 1, 11, door);
 
-    _doors = { _level1Door, _level2Door };
+    _doors = { _level1Door};
 
    /* _leftWall = Floor::alloc(Vec2(-20, 275), 1.5708, Vec2(0.01, 0.03), 0, cugl::Color4::WHITE, 1,1, floor);
     _rightWall = Floor::alloc(Vec2(1100, 275), 1.5708, Vec2(0.01, 0.03), 0, cugl::Color4::WHITE, 1, 1, floor);*/
@@ -385,9 +388,8 @@ void GameplayMode::buildScene() {
     enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
-    _enemyController->addEnemy(200, 0, 0, 200, 200, enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(400, 0, 0, 200, 200, enemyTexture, altTexture, enemyHighlightTexture);
     _enemyController->addEnemy(650, 0, 0, 300, 900, enemyTexture, altTexture, enemyHighlightTexture);
-    _enemyController->addEnemy(650, 1, 0, 650, 900, enemyTexture, altTexture, enemyHighlightTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
@@ -423,7 +425,9 @@ void GameplayMode::buildScene() {
     
     // Text labels
     std::shared_ptr<Font> font = _assets->get<Font>("felt");
-    _tutorialText = scene2::Label::alloc("test", font);
+    _tutorialText = scene2::Label::alloc("Possess enemies to get past them, don't get spotted!", font);
+    _tutorialText->setScale(Vec2(0.5, 0.5));
+    _tutorialText->setPosition(Vec2(60, 200));
     string numPossessions = to_string(_player->get_nPossess());
     _numberOfPossessions = scene2::Label::alloc("Number of possessions left: "+ numPossessions, font);
     _numberOfPossessions->setScale(Vec2(0.5, 0.5));
@@ -439,7 +443,7 @@ void GameplayMode::buildScene() {
    /* _rootScene->addChild(_leftWall->getSceneNode());
     _rootScene->addChild(_rightWall->getSceneNode());*/
     _rootScene->addChild(_cagedAnimal->getSceneNode());
-    _rootScene->addChild(_level2Door->getSceneNode());
+    //_rootScene->addChild(_level2Door->getSceneNode());
     /*_rootScene->addChild(_numberOfPosessions->);*/
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
@@ -489,6 +493,8 @@ void GameplayMode::checkDoors() {
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 door->setDoor(!doorState);
+                _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
+                _tutorialText->setPosition(Vec2(100, 200));
             }
         }
     }
@@ -518,6 +524,8 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
+                _tutorialText->setPosition(Vec2(200, 510));
                 break;
             }
         }
