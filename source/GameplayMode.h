@@ -99,6 +99,8 @@ protected:
     std::shared_ptr<scene2::Label> _numberOfPossessions;
     /** A countdown used to move the logo */
     int  _countdown;
+    /** whether or not the player has control*/
+    bool _hasControl;
     
     /** 
      * Internal helper to build the scene graph.
@@ -154,6 +156,9 @@ public:
      * causing the application to be deleted.
      */
     void onShutdown() override;
+
+    /** used to reset the level*/
+    void reset();
     
     /**
      * The method called to update the application data.

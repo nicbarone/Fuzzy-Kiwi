@@ -408,19 +408,24 @@ void InputManager::readInput() {
 #else
     // Figure out, based on which player we are, which keys
     // control our actions (depends on player).
-    KeyCode left, right, camLeft, camRight, camUp, camDown;
+    KeyCode left, right, camLeft, camRight, camUp, camDown, reset;
     left = KeyCode::A;
     right = KeyCode::D;
     camLeft = KeyCode::ARROW_LEFT;
     camRight = KeyCode::ARROW_RIGHT;
     camUp = KeyCode::ARROW_UP;
     camDown = KeyCode::ARROW_DOWN;
+    reset = KeyCode::R;
 
     // Convert keyboard state into game commands
     _forward = 0;
+    _reset = false;
 
     // Movement left/right
     Keyboard* keys = Input::get<Keyboard>();
+    if (keys->keyDown(reset)) {
+        _reset = true;
+    }
     if (keys->keyDown(right) && !keys->keyDown(left)) {
         //CULog("Going right");
         _forward = 1;

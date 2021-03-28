@@ -147,6 +147,19 @@ void GameplayMode::onShutdown() {
     Application::onShutdown();
 }
 
+void GameplayMode::reset() {
+    _scene = nullptr;
+    Size size = getDisplaySize();
+    size *= GAME_WIDTH / size.width;
+
+    // Create a scene graph the same size as the window
+    _scene = Scene2::alloc(size.width, size.height);
+    _rootScene = scene2::SceneNode::alloc();
+    _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
+    _rootScene->setContentSize(getSafeBounds().size);
+    buildScene();
+}
+
 /**
  * The method called to update the application data.
  *
@@ -163,126 +176,136 @@ void GameplayMode::update(float timestep) {
     _scene->getCamera()->update();
     // Read input controller input
     _inputManager.readInput();
-
-    if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
-        //very temporary modification to test whether it works, dont want to work with highlight right now
-        _enemyController->closestEnemy()->setGlow(true);
-    }
-    if (_inputManager.getTapPos().x != 0) {
-        /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
-        CULog("x: %f, y: %f", _level1StairDoor->getPos().x, _level1StairDoor->getPos().y);*/
-        //CULog("x: %f", abs(_player->getPos().x - _level1StairDoor->getPos().x));
-        //CULog("Is possessing: %d", _player->getPossess());
-        //CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
-
-    }    //546 546
-
-    Size  size = getDisplaySize();
-    float scale = GAME_WIDTH / size.width;
-    size *= scale;
-    Rect safe = getSafeBounds();
-    safe.origin *= scale;
-    safe.size *= scale;
-    Size bpsize = possessButton->getSize();
-    // Get the right and bottom offsets.
-    float bOffset = safe.origin.y;
-    float rOffset = (size.width) - (safe.origin.x + safe.size.width);
-    // Check if we need to set the possess button to grey, or turn the button to colored
-    if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
-        if (_enemyController->closestEnemy() == nullptr || !_player->canPossess()) {
-            // turn the button to grey
-            _possessButton->getButton()->setColor(Color4f(1.0f, 1.0f, 1.0f, 0.5f));
-            _possessButton->setButtonState(ui::ButtonState::UNAVAILABLE);
-            
-        }
-    }
-    else if (_possessButton->getButtonState() == ui::ButtonState::UNAVAILABLE) {
+    if (_hasControl) {
         if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
-            // turn the button to colored
-            _possessButton->getButton()->setColor(Color4f::WHITE);
-            _possessButton->setButtonState(ui::ButtonState::POSSESS);
+            //very temporary modification to test whether it works, dont want to work with highlight right now
+            _enemyController->closestEnemy()->setGlow(true);
         }
-    }
-    // Any clicks on Unavailable buttons should be ignored
-    if (_possessButton->getButtonState() == ui::ButtonState::UNAVAILABLE) {
-        _possessButton->setClicked(false);
-    }
-    // Check if possess button is clicked
-    if (_possessButton->getClicked()) {
-        _possessButton->getButton()->deactivate();
-        _scene->removeChild(_possessButton->getButton());
+        if (_inputManager.getTapPos().x != 0) {
+            /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
+            CULog("x: %f, y: %f", _level1StairDoor->getPos().x, _level1StairDoor->getPos().y);*/
+            //CULog("x: %f", abs(_player->getPos().x - _level1StairDoor->getPos().x));
+            //CULog("Is possessing: %d", _player->getPossess());
+            //CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
+
+        }    //546 546
+
+        Size  size = getDisplaySize();
+        float scale = GAME_WIDTH / size.width;
+        size *= scale;
+        Rect safe = getSafeBounds();
+        safe.origin *= scale;
+        safe.size *= scale;
+        Size bpsize = possessButton->getSize();
+        // Get the right and bottom offsets.
+        float bOffset = safe.origin.y;
+        float rOffset = (size.width) - (safe.origin.x + safe.size.width);
+        // Check if we need to set the possess button to grey, or turn the button to colored
         if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
-            if (attemptPossess()) {
-                _possessButton->setTexture(unpossessButton);
-                _possessButton->setButtonState(ui::ButtonState::UNPOSSESS);
-                _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
-                _tutorialText->setPosition(Vec2(100, 200));
+            if (_enemyController->closestEnemy() == nullptr || !_player->canPossess()) {
+                // turn the button to grey
+                _possessButton->getButton()->setColor(Color4f(1.0f, 1.0f, 1.0f, 0.5f));
+                _possessButton->setButtonState(ui::ButtonState::UNAVAILABLE);
+
             }
+        }
+        else if (_possessButton->getButtonState() == ui::ButtonState::UNAVAILABLE) {
+            if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
+                // turn the button to colored
+                _possessButton->getButton()->setColor(Color4f::WHITE);
+                _possessButton->setButtonState(ui::ButtonState::POSSESS);
+            }
+        }
+        // Any clicks on Unavailable buttons should be ignored
+        if (_possessButton->getButtonState() == ui::ButtonState::UNAVAILABLE) {
+            _possessButton->setClicked(false);
+        }
+        // Check if possess button is clicked
+        if (_possessButton->getClicked()) {
+            _possessButton->getButton()->deactivate();
+            _scene->removeChild(_possessButton->getButton());
+            if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
+                if (attemptPossess()) {
+                    _possessButton->setTexture(unpossessButton);
+                    _possessButton->setButtonState(ui::ButtonState::UNPOSSESS);
+                    _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
+                    _tutorialText->setPosition(Vec2(100, 200));
+                }
+            }
+            else {
+                unpossess();
+                _possessButton->setTexture(possessButton);
+                _possessButton->setButtonState(ui::ButtonState::POSSESS);
+            }
+            _possessButton->getButton()->setName("possess");
+            _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _possessButton->setClicked(true);
+                }
+                });
+            _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
+            _possessButton->setPos(Vec2(size.width - (bpsize.width + rOffset) / 2, (bpsize.height + bOffset) / 2));
+            _scene->addChild(_possessButton->getButton());
+            _possessButton->getButton()->activate();
+            _possessButton->setClicked(false);
+        }
+
+
+        checkStaircaseDoors();
+        checkDoors();
+        collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
+        int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+        if (cageCollision != 0) {
+            // shows win Panel
+            _winPanel->setVisible(true);
+        }
+        collisions::checkInBounds(_enemyController->getPossessed(), _player);
+        string numPossessions = to_string(_player->get_nPossess());
+        _numberOfPossessions->setText("Number of possessions left: " + numPossessions);
+
+        /**possess code works a bit better when movement is processed last (scene node position is updated here)
+            else you get one frame of wrong position*/
+            // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
+        if (_player->getPossess()) {
+            _player->setPos(_player->get_possessEnemy()->getPos());
         }
         else {
-            unpossess();
-            _possessButton->setTexture(possessButton);
-            _possessButton->setButtonState(ui::ButtonState::POSSESS);
+            _player->move(_inputManager.getForward());
         }
-        _possessButton->getButton()->setName("possess");
-        _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _possessButton->setClicked(true);
+        // Enemy movement
+        _enemyController->moveEnemies(_inputManager.getForward());
+        _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
+
+        if (_enemyController->getPossessed() != nullptr) {
+            //CULog("%d", _enemyController->getPossessed()->facingRight());
+        }
+        if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
+            _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
+            _tutorialText->setPosition(Vec2(100, 200));
+            _hasControl = false;
+        }
+        else {
+            _player->getSceneNode()->setAngle(0);
+            if (_enemyController->getPossessed() != nullptr) {
+                _enemyController->getPossessed()->getSceneNode()->setAngle(0);
             }
-            });
-        _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
-        _possessButton->setPos(Vec2(size.width - (bpsize.width + rOffset) / 2, (bpsize.height + bOffset) / 2));
-        _scene->addChild(_possessButton->getButton());
-        _possessButton->getButton()->activate();
-        _possessButton->setClicked(false);
-    }
-
-
-    checkStaircaseDoors();
-    checkDoors();
-    collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
-    int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
-    if (cageCollision != 0) {
-        // shows win Panel
-        _winPanel->setVisible(true);
-    }
-    collisions::checkInBounds(_enemyController->getPossessed(),_player);
-    string numPossessions = to_string(_player->get_nPossess());
-    _numberOfPossessions->setText("Number of possessions left : "+ numPossessions);
-
-    /**possess code works a bit better when movement is processed last (scene node position is updated here)
-        else you get one frame of wrong position*/
-        // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
-    if (_player->getPossess()) {
-        _player->setPos(_player->get_possessEnemy()->getPos());
-    }
-    else {
-        _player->move(_inputManager.getForward());
-    }
-    // Enemy movement
-    _enemyController->moveEnemies(_inputManager.getForward());
-    _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
-
-    if (_enemyController->getPossessed() != nullptr) {
-        //CULog("%d", _enemyController->getPossessed()->facingRight());
-    }
-    if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
-        _player->getSceneNode()->setAngle(3.14159265358979f);
-        if (_enemyController->getPossessed() != nullptr) {
-            _enemyController->getPossessed()->getSceneNode()->setAngle(3.14159265358979f);
         }
-        
-    }
-    else {
-        _player->getSceneNode()->setAngle(0);
-        if (_enemyController->getPossessed() != nullptr) {
-            _enemyController->getPossessed()->getSceneNode()->setAngle(0);
+
+
+        //tutorial text trigger
+        if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
+            _tutorialText->setText("Oh no! You are stuck! Press the R key to retry");
+            _tutorialText->setPosition(Vec2(100, 200));
         }
     }
 
+    //resetting
+    if (_inputManager.didReset()) {
+        reset();
+    }
 }
 
 bool GameplayMode::attemptPossess() {
@@ -340,7 +363,7 @@ void GameplayMode::buildScene() {
     float scale = GAME_WIDTH / size.width;
     size *= scale;
 
-
+    _hasControl = true;
 
     // Placeholder cat
     //std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");

@@ -13,6 +13,7 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
+    bool _reset;
     Vec2 _camOriginalPos;
     bool _camMovement;
     Vec2 _camMoveDirection;
@@ -200,6 +201,13 @@ public:
      */
     float getForward() {
         return _forward;
+    }
+
+    /**
+    * Getter for the reset variable
+    */
+    float didReset() {
+        return _reset;
     }
 
     /**
