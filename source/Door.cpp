@@ -15,11 +15,11 @@ void Door::dispose() {
 	_isOpen = false;
 }
 
-bool Door::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
+bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
-	setPos(pos);
+	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	setAngle(ang);
 	setScale(scale);
 	setLevel(level);

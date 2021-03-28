@@ -4,6 +4,7 @@
 #include "ConstructionElement.h"
 #include "Enemy.h"
 #include <cugl/cugl.h>
+#include "Constants.h"
 using namespace cugl;
 
 class Door : public ConstructionElement {
@@ -20,13 +21,13 @@ public:
 
 	void dispose();
 
-	bool init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, int rows, int columns,
+	bool init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns,
 		std::shared_ptr<Texture> texture);
 
-	static std::shared_ptr<Door> alloc(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, int rows, int columns,
+	static std::shared_ptr<Door> alloc(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns,
 		std::shared_ptr<Texture> texture) {
 		std::shared_ptr<Door> result = std::make_shared<Door>();
-		return (result->init(pos, ang, scale, level, color,  rows,  columns, texture) ? result : nullptr);
+		return (result->init(x, ang, scale, level, color,  rows,  columns, texture) ? result : nullptr);
 	}
 	
 	void setBlockedEnemy(shared_ptr<Enemy> blockedEnemy) {
