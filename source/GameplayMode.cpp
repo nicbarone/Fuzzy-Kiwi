@@ -384,8 +384,8 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
     //caged animal
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
-    _level1Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 0, cugl::Color4::WHITE, 1,1, floor);
-    _level2Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 1, cugl::Color4::WHITE, 1, 1, floor);
+    _level1Floor = Floor::alloc(550, 0, Vec2(0.205, 0.205), 0, cugl::Color4::WHITE, 1,1, floor);
+    _level2Floor = Floor::alloc(550, 0, Vec2(0.205, 0.205), 1, cugl::Color4::WHITE, 1, 1, floor);
     _level1StairDoor = Door::alloc(950, 0, Vec2(0.14, 0.14), 0, cugl::Color4::WHITE, 1, 1, staircaseDoor);
     _level2StairDoor = Door::alloc(550, 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE, 1, 1, staircaseDoor);
     _staircaseDoors = { _level1StairDoor, _level2StairDoor };
@@ -399,7 +399,7 @@ void GameplayMode::buildScene() {
     enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
-    _enemyController->addEnemy(400, 0, 0, 200, 200, enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(400, 0, 0, 400, 400, enemyTexture, altTexture, enemyHighlightTexture);
     _enemyController->addEnemy(650, 0, 0, 300, 900, enemyTexture, altTexture, enemyHighlightTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
