@@ -431,9 +431,9 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Font> font = _assets->get<Font>("felt");
     _tutorialText = scene2::Label::alloc("test", font);
     string numPossessions = to_string(_player->get_nPossess());
-    _numberOfPosessions = scene2::Label::alloc("Number of possessions left: "+ numPossessions, font);
-    _numberOfPosessions->setScale(Vec2(0.5, 0.5));
-    _numberOfPosessions->setPosition(Vec2(20, 540));
+    _numberOfPossessions = scene2::Label::alloc("Number of possessions left: "+ numPossessions, font);
+    _numberOfPossessions->setScale(Vec2(0.5, 0.5));
+    _numberOfPossessions->setPosition(Vec2(20, 540));
 
     // Add the logo and button to the scene graph
     _scene->addChild(_rootScene);
@@ -450,7 +450,7 @@ void GameplayMode::buildScene() {
     _scene->addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_tutorialText);
-    _scene->addChild(_numberOfPosessions);
+    _scene->addChild(_numberOfPossessions);
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
     for (auto it = begin(enemies); it != end(enemies); ++it) {

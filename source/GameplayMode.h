@@ -96,6 +96,7 @@ protected:
     std::shared_ptr<Texture> enemyHighlightTexture;
     std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
+    std::shared_ptr<scene2::Label> _numberOfPossessions;
     /** A countdown used to move the logo */
     int  _countdown;
     
@@ -202,12 +203,6 @@ public:
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
 
-    int getNumberOfPossessionsLeft() {
-        return _numberOfPosessionsLeft;
-    }
-    void setNumberOfPossessionsLeft(int numPossessions) {
-        _numberOfPosessionsLeft = numPossessions;
-    }
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */
