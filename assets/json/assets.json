@@ -167,6 +167,13 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"levelFloors": {
+			"file": "textures/levelFloors.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
 	},
 	"fonts": {

@@ -348,22 +348,16 @@ void GameplayMode::buildScene() {
 
 
     //floor texture creation
-    std::shared_ptr<Texture> floor = _assets->get<Texture>("floor");
+    std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloors");
     //Staircase door texture creation
     std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
     //caged animal
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
-    _level1Floor = Floor::alloc(Vec2(550, 30), 0, Vec2(1, 1), 0, cugl::Color4::WHITE, level1Floor, floor);
-
+    _level1Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 0, cugl::Color4::WHITE, 1,1, floor);
+    _level2Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 1, cugl::Color4::WHITE, 1, 1, floor);
     _level1StairDoor = Door::alloc(Vec2(950, 120), 0, Vec2(0.14, 0.14), 0, cugl::Color4::WHITE, 1, 1, staircaseDoor);
-
-
-
-    _level2Floor = Floor::alloc(Vec2(550, 300), 0, Vec2(1, 1), 1, cugl::Color4::WHITE, level1Floor, floor);
-
-
     _level2StairDoor = Door::alloc(Vec2(550, 390), 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE, 1, 1, staircaseDoor);
     _staircaseDoors = { _level1StairDoor , _level2StairDoor };
 
@@ -375,8 +369,8 @@ void GameplayMode::buildScene() {
 
     _doors = { _level1Door, _level2Door };
 
-    _leftWall = Floor::alloc(Vec2(-20, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
-    _rightWall = Floor::alloc(Vec2(1100, 275), 1.5708, Vec2(0.5, 0.8), 0, cugl::Color4::WHITE, level1Floor, floor);
+   /* _leftWall = Floor::alloc(Vec2(-20, 275), 1.5708, Vec2(0.01, 0.03), 0, cugl::Color4::WHITE, 1,1, floor);
+    _rightWall = Floor::alloc(Vec2(1100, 275), 1.5708, Vec2(0.01, 0.03), 0, cugl::Color4::WHITE, 1, 1, floor);*/
 
     _cagedAnimal = Door::alloc(Vec2(820, 360), 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, 1, 1, cagedAnimal);
     
@@ -442,8 +436,8 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_level2Floor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
     _rootScene->addChild(_level1Door->getSceneNode());
-    _rootScene->addChild(_leftWall->getSceneNode());
-    _rootScene->addChild(_rightWall->getSceneNode());
+   /* _rootScene->addChild(_leftWall->getSceneNode());
+    _rootScene->addChild(_rightWall->getSceneNode());*/
     _rootScene->addChild(_cagedAnimal->getSceneNode());
     _rootScene->addChild(_level2Door->getSceneNode());
     /*_rootScene->addChild(_numberOfPosessions->);*/

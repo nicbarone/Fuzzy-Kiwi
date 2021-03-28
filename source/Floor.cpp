@@ -7,14 +7,14 @@ void Floor::dispose() {
 	ConstructionElement::dispose();
 }
 
-bool Floor::init(Vec2 pos, float ang, Vec2 scale, int level, Color4 color, std::vector<Vec2> vertices, std::shared_ptr<Texture> texture)
+bool Floor::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
 {
-	ConstructionElement::setSceneNode(scene2::PolygonNode::allocWithTexture(texture, vertices));
-	ConstructionElement::setTexture(texture);
-	ConstructionElement::setPos(pos);
-	ConstructionElement::setAngle(ang);
-	ConstructionElement::setScale(scale);
-	ConstructionElement::setLevel(level);
-	ConstructionElement::setColor(color);
+	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
+	setTexture(texture);
+	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET+30));
+	setAngle(ang);
+	setScale(scale);
+	setLevel(level);
+	setColor(color);
 	return true;
 }
