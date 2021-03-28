@@ -283,9 +283,12 @@ void GameplayMode::update(float timestep) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
         }
         if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
-            _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
-            _tutorialText->setPosition(Vec2(100, 220));
-            _hasControl = false;
+            if (_player->getSceneNode()->isVisible() || 
+                (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
+                _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
+                _tutorialText->setPosition(Vec2(100, 220));
+                _hasControl = false;
+            }
         }
         else {
             _player->getSceneNode()->setAngle(0);
