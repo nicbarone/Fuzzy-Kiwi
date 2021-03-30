@@ -44,20 +44,6 @@ using namespace cugl;
 // This is adjusted by screen aspect ratio to get the height
 #define GAME_WIDTH 1024
 
-
-
-vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
-
-vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
-
-vector<Vec2> level2Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
-
-vector<Vec2> level2Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
-
-
-
-
-
 /**
  * The method called after OpenGL is initialized, but before running the application.
  *
@@ -360,8 +346,8 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
     _level1Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 0, cugl::Color4::WHITE, 1,1, floor);
     _level2Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 1, cugl::Color4::WHITE, 1, 1, floor);
-    _level1StairDoor = Door::alloc(950, 0, Vec2(0.14, 0.14), 0, cugl::Color4::WHITE, 1, 1, staircaseDoor);
-    _level2StairDoor = Door::alloc(550, 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE, 1, 1, staircaseDoor);
+    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(0.14, 0.14), 0, cugl::Color4::WHITE, 1, 1, staircaseDoor);
+    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE, 1, 1, staircaseDoor);
     _staircaseDoors = { _level1StairDoor, _level2StairDoor };
     _level1Door = Door::alloc(590, 0, Vec2(0.48, 0.48), 0, cugl::Color4::WHITE, 1, 11, door);
     std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(0);
@@ -493,7 +479,7 @@ void GameplayMode::checkStaircaseDoors() {
 
 
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
-        for (shared_ptr<Door> staircaseDoor : _staircaseDoors) {
+        for (shared_ptr<StaircaseDoor> staircaseDoor : _staircaseDoors) {
             if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&

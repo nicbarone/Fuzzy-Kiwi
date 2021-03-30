@@ -1,21 +1,19 @@
-#include "Door.h"
+#include "StaircaseDoor.h"
 using namespace cugl;
 
-Door::Door() :
+StaircaseDoor::StaircaseDoor() :
 	_frame(0),
 	_frameCounter(9)
 {
-	_blockedEnemy = nullptr;
 	_isOpen = false;
 }
 
-void Door::dispose() {
+void StaircaseDoor::dispose() {
 	ConstructionElement::dispose();
-	_blockedEnemy = nullptr;
 	_isOpen = false;
 }
 
-bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
+bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
@@ -25,16 +23,15 @@ bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows,
 	setLevel(level);
 	setColor(color);
 	_frame = 0;
-	_blockedEnemy = nullptr;
 	_isOpen = false;
 	return true;
 }
 
-void Door::setDoor(bool open) {
+void StaircaseDoor::setDoor(bool open) {
 	_isOpen = open;
 
 	if (open) {
-		
+
 		for (int i = 0; i < 10; i++) {
 			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
 		}
@@ -46,21 +43,10 @@ void Door::setDoor(bool open) {
 			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
 		}
 	}
-	//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frame);
-	if (_blockedEnemy != nullptr) {
-		//CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
-		Vec2 temp = Vec2(_blockedEnemy->getPatrol().x, _blockedEnemy->getPatrol().y);
-		_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
-		_blockedEnemy->setOldPatrol(temp);
-		_blockedEnemy = nullptr;
-		//setBlockedEnemy(nullptr);
-		CULog("%d", _blockedEnemy == nullptr);
 
-	}
-	
 }
 
-void  Door::doorOpenAnimation() {
+void  StaircaseDoor::doorOpenAnimation() {
 	int i = 0;
 	std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
 }

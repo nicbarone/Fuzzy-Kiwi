@@ -47,14 +47,13 @@ public:
 
 	void setDoor(bool open);
 
-	void delay(int time);
 
 	/*void setDoorFrame(shared_ptr<scene2::AnimationNode> node, int frame) {
 		node->setFrame(frame);
 
 	}*/
 
-
+	void doorOpenAnimation();
 };
 
 #endif/* __DOOR_H__ */
