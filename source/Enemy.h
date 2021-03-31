@@ -36,6 +36,8 @@ private:
 	bool _isActive;
 	int _frame;
 	int _frameCounter;
+	/*list of keys the enemies has. Keys can open specific doors.*/
+	std::vector<int> _keys;
 
 
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
@@ -53,11 +55,11 @@ public:
 
 	void dispose();
 
-	bool init(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow);
+	bool init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow);
 
-	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
+	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
-		return (result->init(x, level, ang, patrolStart, patrolEnd, enemy, alt, glow) ? result : nullptr);
+		return (result->init(x, level, ang, keys, patrolStart, patrolEnd, enemy, alt, glow) ? result : nullptr);
 	}
 
 
@@ -126,6 +128,14 @@ public:
 	/** setter mainly used to highlight enemies, also updates the scenenode's texture*/
 	void setGlow(bool flag) {
 		_sceneNode->setTexture(flag ? _glowTexture : _texture);
+	}
+
+	void setKeys(std::vector<int> keys) {
+		_keys = keys;
+	}
+
+	std::vector<int> getKeys() {
+		return _keys;
 	}
 };
 

@@ -5,7 +5,7 @@ using namespace cugl;
 
 Player::Player() :
 
-	_nPossessions(1),
+	_nPossessions(2),
 	_isPossessing(false),
 	_isHidden(false),
 	_frame(0),

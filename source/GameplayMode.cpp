@@ -44,20 +44,6 @@ using namespace cugl;
 // This is adjusted by screen aspect ratio to get the height
 #define GAME_WIDTH 1024
 
-
-
-vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
-
-vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
-
-vector<Vec2> level2Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
-
-vector<Vec2> level2Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
-
-
-
-
-
 /**
  * The method called after OpenGL is initialized, but before running the application.
  *
@@ -384,23 +370,21 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
     //caged animal
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
-    _level1Floor = Floor::alloc(550, 0, Vec2(0.205, 0.205), 0, cugl::Color4::WHITE, 1,1, floor);
-    _level2Floor = Floor::alloc(550, 0, Vec2(0.205, 0.205), 1, cugl::Color4::WHITE, 1, 1, floor);
-    _level1StairDoor = Door::alloc(950, 0, Vec2(0.14, 0.14), 0, cugl::Color4::WHITE, 1, 1, staircaseDoor);
-    _level2StairDoor = Door::alloc(550, 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE, 1, 1, staircaseDoor);
+    _level1Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 0, cugl::Color4::WHITE, 1,1, floor);
+    _level2Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 1, cugl::Color4::WHITE, 1, 1, floor);
+    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(0.55, 0.55), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
+    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(0.55, 0.55), 1, cugl::Color4::WHITE, 1, 8, staircaseDoor);
     _staircaseDoors = { _level1StairDoor, _level2StairDoor };
-    _level1Door = Door::alloc(590, 0, Vec2(0.48, 0.48), 0, cugl::Color4::WHITE, 1, 11, door);
-    std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(0);
+    _level1Door = Door::alloc(590, 0, Vec2(0.65, 0.65), 0,cugl::Color4::WHITE, { 1 }, 1, 11, door);
     _doors = { _level1Door};
-    _cagedAnimal = Door::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, 1, 1, cagedAnimal);
-    _cagedAnimal->getSceneNode()->setPositionY(350);
+    _cagedAnimal = Door::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, { 1 }, 1, 1, cagedAnimal);
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
     enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
-    _enemyController->addEnemy(400, 0, 0, 400, 400, enemyTexture, altTexture, enemyHighlightTexture);
-    _enemyController->addEnemy(650, 0, 0, 300, 900, enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(400, 0,  0, { 1 }, 200, 200, enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(650, 0, 0, { 2 }, 300, 900,  enemyTexture, altTexture, enemyHighlightTexture);
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
@@ -499,10 +483,23 @@ void GameplayMode::checkDoors() {
     for (shared_ptr<Door> door : _doors) {
         bool doorState = door->getIsOpen();
         if (_enemyController->getPossessed() != nullptr) {
+            std::vector<int> intersect;
+            std::vector<int> v1 = _enemyController->getPossessed()->getKeys();
+            std::vector<int> v2 = door->getKeys();
+            std::sort(v1.begin(), v1.end());
+            std::sort(v2.begin(), v2.end());
+
+            std::vector<int> key_intersection;
+
+            std::set_intersection(v1.begin(), v1.end(),
+                v2.begin(), v2.end(),
+                std::back_inserter(key_intersection));
+            //set_intersection(_enemyController->getPossessed()->getKeys().begin(), _enemyController->getPossessed()->getKeys().end(), door->getKeys().begin(), door->getKeys().end(), std::inserter(intersect, intersect.begin()));
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()&&
+                !key_intersection.empty()) {
                 door->setDoor(!doorState);
                 _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
                 _tutorialText->setPosition(Vec2(100, 220));
@@ -517,15 +514,16 @@ void GameplayMode::checkStaircaseDoors() {
     bool visibility;
 
     if (_enemyController->getPossessed() != nullptr) {
-
-
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
-        for (shared_ptr<Door> staircaseDoor : _staircaseDoors) {
+        for (shared_ptr<StaircaseDoor> staircaseDoor : _staircaseDoors) {
+            bool StaircasedoorState = staircaseDoor->getIsOpen();
             if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+                staircaseDoor->setDoor(!staircaseDoor);
+                //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }
 
@@ -535,6 +533,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
                 _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                 _tutorialText->setPosition(Vec2(200, 490));
                 break;

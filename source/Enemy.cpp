@@ -19,6 +19,7 @@ Enemy::Enemy() :
 	_frame(0),
 	_frameCounter(0)
 {
+	_keys = { 0 };
 	_sceneNode = nullptr;
 	_texture = nullptr;
 	_altTexture = nullptr;
@@ -41,14 +42,16 @@ void Enemy::dispose() {
 	_glowTexture = nullptr;
 	_patrolNode = nullptr;
 	_frame = 0;
+	_keys = { 0 };
 	_frameCounter = 0;
 	Entity::dispose();
 }
 
-bool Enemy::init(float x, int level, float ang, float patrolStart, float patrolEnd,  std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
+bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd,  std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
 	Entity::setLevel(level);
+	_keys = keys;
 	_patrolStart = patrolStart;
 	_patrolEnd = patrolEnd;
 	_texture = enemy;

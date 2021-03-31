@@ -200,6 +200,7 @@
     <ClInclude Include="..\..\source\InputManager.h" />
     <ClInclude Include="..\..\source\Interactable.h" />
     <ClInclude Include="..\..\source\Player.h" />
+    <ClInclude Include="..\..\source\StaircaseDoor.h" />
     <ClInclude Include="..\..\source\UIElement.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -217,6 +218,7 @@
     <ClCompile Include="..\..\source\Interactable.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\Player.cpp" />
+    <ClCompile Include="..\..\source\StaircaseDoor.cpp" />
     <ClCompile Include="..\..\source\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
