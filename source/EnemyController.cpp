@@ -16,8 +16,8 @@ void EnemyController::dispose() {
 	_possessedEnemy = nullptr;
 }
 
-void EnemyController::addEnemy(float x, int level, float ang, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
-	_enemies.push_back(Enemy::alloc(x, level, ang, patrolStart, patrolEnd, enemy, alt, glow));
+void EnemyController::addEnemy(float x, int level, float ang, vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
+	_enemies.push_back(Enemy::alloc(x, level, ang, keys, patrolStart, patrolEnd, enemy, alt, glow));
 }
 
 std::shared_ptr<Enemy> EnemyController::closestEnemy() {
