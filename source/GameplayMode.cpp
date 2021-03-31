@@ -457,11 +457,23 @@ void GameplayMode::checkDoors() {
     for (shared_ptr<Door> door : _doors) {
         bool doorState = door->getIsOpen();
         if (_enemyController->getPossessed() != nullptr) {
+            std::vector<int> intersect;
+            std::vector<int> v1 = _enemyController->getPossessed()->getKeys();
+            std::vector<int> v2 = door->getKeys();
+            std::sort(v1.begin(), v1.end());
+            std::sort(v2.begin(), v2.end());
+
+            std::vector<int> key_intersection;
+
+            std::set_intersection(v1.begin(), v1.end(),
+                v2.begin(), v2.end(),
+                std::back_inserter(key_intersection));
+            //set_intersection(_enemyController->getPossessed()->getKeys().begin(), _enemyController->getPossessed()->getKeys().end(), door->getKeys().begin(), door->getKeys().end(), std::inserter(intersect, intersect.begin()));
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
                 abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()&&
-                _enemyController->getPossessed()->getKeys()[0] == door->getKeys()[0]) {
+                !key_intersection.empty()) {
                 door->setDoor(!doorState);
                 _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
                 _tutorialText->setPosition(Vec2(100, 200));
