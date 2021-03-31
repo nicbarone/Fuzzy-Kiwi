@@ -377,7 +377,7 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
             float oldScale = _rootSceneNode->getScaleX();
             _rootSceneNode->setScale(Vec2(newScale, newScale));
             // Handle center of zooming
-            _rootSceneNode->setPosition(_rootSceneNode->getWorldPosition() - oldDist * (newScale / oldScale - 1));
+            _rootSceneNode->setPosition(_rootSceneNode->getWorldPosition() + oldDist * (newScale / oldScale - 1));
         }
         _camMoveDirection = Vec2::ZERO;
     }

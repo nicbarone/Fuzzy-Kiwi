@@ -55,6 +55,7 @@ using namespace cugl;
  * causing the application to run.
  */
 void GameplayMode::onStartup() {
+    _reset = false;
     Size size = getDisplaySize();
     size *= GAME_WIDTH / size.width;
 
@@ -62,7 +63,7 @@ void GameplayMode::onStartup() {
     _scene = Scene2::alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
-    _rootScene->setContentSize(getSafeBounds().size);
+    _rootScene->setContentSize(size);
 
     // Create a sprite batch (and background color) to render the scene
     _batch = SpriteBatch::alloc();
@@ -119,6 +120,7 @@ void GameplayMode::onStartup() {
  * causing the application to be deleted.
  */
 void GameplayMode::onShutdown() {
+    _reset = false;
     // Delete all smart pointers
     _scene = nullptr;
     _batch = nullptr;
@@ -134,6 +136,12 @@ void GameplayMode::onShutdown() {
 }
 
 void GameplayMode::reset() {
+    _reset = false;
+    _winPanel->getChildButtons()[0]->getButton()->deactivate();
+    _winPanel->getChildButtons()[1]->getButton()->deactivate();
+    _winPanel->getChildButtons()[2]->getButton()->deactivate();
+    _losePanel->getChildButtons()[0]->getButton()->deactivate();
+    _losePanel->getChildButtons()[1]->getButton()->deactivate();
     _scene = nullptr;
     Size size = getDisplaySize();
     size *= GAME_WIDTH / size.width;
@@ -142,7 +150,7 @@ void GameplayMode::reset() {
     _scene = Scene2::alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
-    _rootScene->setContentSize(getSafeBounds().size);
+    _rootScene->setContentSize(size);
     buildScene();
 }
 
@@ -158,6 +166,9 @@ void GameplayMode::reset() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void GameplayMode::update(float timestep) {
+    if (_reset) {
+        reset();
+    }
     // update camera
     _scene->getCamera()->update();
     // Read input controller input
@@ -247,6 +258,9 @@ void GameplayMode::update(float timestep) {
         if (cageCollision != 0) {
             // shows win Panel
             _winPanel->setVisible(true);
+            _winPanel->getChildButtons()[0]->getButton()->activate();
+            _winPanel->getChildButtons()[1]->getButton()->activate();
+            _winPanel->getChildButtons()[2]->getButton()->activate();
         }
         collisions::checkInBounds(_enemyController->getPossessed(), _player);
         string numPossessions = to_string(_player->get_nPossess());
@@ -271,6 +285,9 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
             if (_player->getSceneNode()->isVisible() || 
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
+                _losePanel->setVisible(true);
+                _losePanel->getChildButtons()[0]->getButton()->activate();
+                _losePanel->getChildButtons()[1]->getButton()->activate();
                 _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
                 _tutorialText->setPosition(Vec2(100, 220));
                 _hasControl = false;
@@ -456,7 +473,7 @@ void GameplayMode::buildScene() {
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();
 
-    // Create Win-Lose Panels
+    // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
     _winPanel->getSceneNode()->setScale(0.75f);
@@ -468,9 +485,69 @@ void GameplayMode::buildScene() {
     _winPanel->createChildPanel(135, 10, 0, _assets->get<Texture>("deadOrAlive"));
     _winPanel->getChildPanels()[2]->getSceneNode()->setScale(1.2f);
     _winPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"));
+    _winPanel->getChildButtons()[0]->getButton()->setName("nextLevel");
+    _winPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            CULog("Next Level loading under construction");
+        }
+        });
     _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
+    _winPanel->getChildButtons()[1]->getButton()->setName("retry");
+    _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+        });
     _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"));
+    _winPanel->getChildButtons()[2]->getButton()->setName("menu");
+    _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            CULog("return to loading mode under construction");
+        }
+        });
     _scene->addChild(_winPanel->getSceneNode());
+
+    // Create Lose Panel
+    losePanel = _assets->get<Texture>("levelCompleteBG");
+    _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
+    _losePanel->getSceneNode()->setScale(0.75f);
+    _losePanel->setVisible(false);
+    _losePanel->createChildPanel(0, 160, 0, _assets->get<Texture>("loseIcon"));
+    _losePanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    _losePanel->createChildPanel(0, -45, 0, _assets->get<Texture>("loseTitle"));
+    _losePanel->getChildPanels()[1]->getSceneNode()->setScale(1.2f);
+    _losePanel->createChildPanel(0, 100, 0, _assets->get<Texture>("wasted"));
+    _losePanel->getChildPanels()[2]->getSceneNode()->setScale(0.5f);
+    _losePanel->createChildButton(0, -170, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
+    _losePanel->getChildButtons()[0]->getButton()->setName("retry");
+    _losePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+        });
+    _losePanel->createChildButton(0, -230, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"));
+    _losePanel->getChildButtons()[1]->getButton()->setName("menu");
+    _losePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            CULog("return to loading mode under construction");
+        }
+        });
+    _scene->addChild(_losePanel->getSceneNode());
 
     // Initialize input manager
     _inputManager = InputManager();
