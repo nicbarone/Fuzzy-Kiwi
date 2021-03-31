@@ -41,6 +41,10 @@ void App::onStartup() {
     // Queue up the other assets
     _assets->loadDirectory("json/assets.json");
 
+    //Input manager
+    _inputManager = InputManager();
+    _inputManager.init(nullptr, scene2::SceneNode::alloc(), getSafeBounds());
+
     AudioEngine::start();
     Application::onStartup(); // YOU MUST END with call to parent
 }
@@ -116,12 +120,23 @@ void App::onResume() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void App::update(float timestep) {
+    _inputManager.readInput();
     if (!_loaded && counter > 0) {
         _loading.update(0.01f);
         counter--;
+        if (_inputManager.didReset()) {
+            CULog("si");
+            _inEditor = true;
+            _levelEditor.init(_assets);
+            _loaded = true;
+        }
     }
-    else if (!_loaded){
+    else if (_inEditor) {
+        _levelEditor.update(timestep);
+    }
+    else if (!_loaded && !_inEditor){
         _loading.dispose(); // Disables the input listeners in this mode
+        _levelEditor.dispose();
         _gameplay.init(_assets);
         _loaded = true;
         
@@ -143,6 +158,9 @@ void App::update(float timestep) {
 void App::draw() {
     if (!_loaded) {
         _loading.render(_batch);
+    }
+    else if (_inEditor) {
+        _levelEditor.render(_batch);
     }
     else {
         _gameplay.render(_batch);

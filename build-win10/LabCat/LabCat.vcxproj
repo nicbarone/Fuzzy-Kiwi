@@ -200,6 +200,7 @@
     <ClInclude Include="..\..\source\HelloApp.h" />
     <ClInclude Include="..\..\source\InputManager.h" />
     <ClInclude Include="..\..\source\Interactable.h" />
+    <ClInclude Include="..\..\source\LevelEditor.h" />
     <ClInclude Include="..\..\source\LoadingMode.h" />
     <ClInclude Include="..\..\source\Player.h" />
     <ClInclude Include="..\..\source\UIElement.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="..\..\source\GameplayMode.cpp" />
     <ClCompile Include="..\..\source\InputManager.cpp" />
     <ClCompile Include="..\..\source\Interactable.cpp" />
+    <ClCompile Include="..\..\source\LevelEditor.cpp" />
     <ClCompile Include="..\..\source\LoadingMode.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\Player.cpp" />

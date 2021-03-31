@@ -13,7 +13,7 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
-    bool _reset;
+    bool _reset = false;
     Vec2 _camOriginalPos;
     bool _camMovement;
     Vec2 _camMoveDirection;

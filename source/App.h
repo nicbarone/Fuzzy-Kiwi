@@ -4,6 +4,7 @@
 #include <cugl/cugl.h>
 #include "GameplayMode.h"
 #include "LoadingMode.h"
+#include "LevelEditor.h"
 /**
  * This class represents the application root for the game.
  */
@@ -21,11 +22,15 @@ protected:
     LoadingMode _loading;
     /** The controller for the menu screen */
     //MenuMode _menu;
-
+    /** The controller for the level editor*/
+    LevelEditor _levelEditor;
+    InputManager _inputManager;
     /** Whether or not we have finished loading all assets */
     bool _loaded;
     /** for testing purposes, loading screen will show for 2 seconds*/
     int counter = 200;
+    /** flag for level editor*/
+    bool _inEditor = false;
 
 public:
     /**
