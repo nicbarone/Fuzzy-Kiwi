@@ -14,7 +14,7 @@ void StaircaseDoor::dispose() {
 	_isOpen = false;
 }
 
-bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
+bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns, std::shared_ptr<Texture> texture)
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
@@ -23,6 +23,7 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	setScale(scale);
 	setLevel(level);
 	setColor(color);
+	_keys = keys;
 	_frame = 0;
 	_isOpen = false;
 	return true;
