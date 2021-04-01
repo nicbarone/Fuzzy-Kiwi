@@ -187,6 +187,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\source\CatDen.h" />
     <ClInclude Include="..\..\source\CollisionManager.h" />
     <ClInclude Include="..\..\source\Constants.h" />
     <ClInclude Include="..\..\source\Door.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\CatDen.cpp" />
     <ClCompile Include="..\..\source\CollisionManager.cpp" />
     <ClCompile Include="..\..\source\Constants.cpp" />
     <ClCompile Include="..\..\source\Door.cpp" />

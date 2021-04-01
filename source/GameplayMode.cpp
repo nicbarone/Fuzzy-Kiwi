@@ -251,33 +251,31 @@ void GameplayMode::update(float timestep) {
         }
 
 
-        checkStaircaseDoors();
-        checkDoors();
-        collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
-        int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
-        if (cageCollision != 0) {
-            // shows win Panel
-            _winPanel->setVisible(true);
-            _winPanel->getChildButtons()[0]->getButton()->activate();
-            _winPanel->getChildButtons()[1]->getButton()->activate();
-            _winPanel->getChildButtons()[2]->getButton()->activate();
-        }
-        collisions::checkInBounds(_enemyController->getPossessed(), _player);
-        string numPossessions = to_string(_player->get_nPossess());
-        _numberOfPossessions->setText("Number of possessions left: " + numPossessions);
+    checkStaircaseDoors();
+    checkDoors();
+    checkCatDens();
+    collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
+    int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+    if (cageCollision != 0) {
+        // shows win Panel
+        _winPanel->setVisible(true);
+    }
+    collisions::checkInBounds(_enemyController->getPossessed(),_player);
+    string numPossessions = to_string(_player->get_nPossess());
+    _numberOfPossessions->setText("Number of possessions left : "+ numPossessions);
 
-        /**possess code works a bit better when movement is processed last (scene node position is updated here)
-            else you get one frame of wrong position*/
-            // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
-        if (_player->getPossess()) {
-            _player->setPos(_player->get_possessEnemy()->getPos());
-        }
-        else {
-            _player->move(_inputManager.getForward());
-        }
-        // Enemy movement
-        _enemyController->moveEnemies(_inputManager.getForward());
-        _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
+    /**possess code works a bit better when movement is processed last (scene node position is updated here)
+        else you get one frame of wrong position*/
+        // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
+    if (_player->getPossess()) {
+        _player->setPos(_player->get_possessEnemy()->getPos());
+    }
+    else {
+        _player->move(_inputManager.getForward());
+    }
+    // Enemy movement
+    _enemyController->moveEnemies(_inputManager.getForward());
+    _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
 
         if (_enemyController->getPossessed() != nullptr) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
@@ -392,6 +390,9 @@ void GameplayMode::buildScene() {
     _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(0.55, 0.55), 0, cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor);
     _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(0.55, 0.55), 1, cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor);
     _staircaseDoors = { _level1StairDoor, _level2StairDoor };
+    _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.25, 0.25), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
+    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.25, 0.25), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
+    _catDens = { _level1CatDenLeft,_level1CatDenRight};
     _level1Door = Door::alloc(590, 0, Vec2(0.65, 0.65), 0,cugl::Color4::WHITE, { 1 }, 1, 11, door);
     _doors = { _level1Door};
     _cagedAnimal = Door::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, { 1 }, 1, 1, cagedAnimal);
@@ -451,9 +452,9 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2Floor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
+    _rootScene->addChild(_level1CatDenLeft->getSceneNode());
+    _rootScene->addChild(_level1CatDenRight->getSceneNode());
     _rootScene->addChild(_level1Door->getSceneNode());
-   /* _rootScene->addChild(_leftWall->getSceneNode());
-    _rootScene->addChild(_rightWall->getSceneNode());*/
     _rootScene->addChild(_cagedAnimal->getSceneNode());
     //_rootScene->addChild(_level2Door->getSceneNode());
     /*_rootScene->addChild(_numberOfPosessions->);*/
@@ -629,6 +630,40 @@ void GameplayMode::checkStaircaseDoors() {
         }
     }
 }
+
+void GameplayMode::checkCatDens() {
+
+    bool visibility;
+
+    if (_enemyController->getPossessed() == nullptr) {
+        visibility = _player->getSceneNode()->isVisible();
+        for (shared_ptr<CatDen> catDen : _catDens) {
+            bool StaircasedoorState = catDen->getIsOpen();
+            if (visibility && abs(_player->getSceneNode()->getWorldPosition().x - catDen->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                _player->getLevel() == catDen->getLevel() &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                _player->getSceneNode()->setVisible(!visibility);
+                catDen->setDoor(!catDen);
+                //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
+                break;
+            }
+
+            else if (!visibility &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                _player->getSceneNode()->setVisible(!visibility);
+                _player->setPos(catDen->getPos().x);
+                _player->setLevel(catDen->getLevel());
+                catDen->setDoor(!catDen->getIsOpen());
+                _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
+                _tutorialText->setPosition(Vec2(200, 510));
+                break;
+            }
+        }
+    }
+}
+
 
 vector<Vec2> GameplayMode::closedDoors() {
     vector<Vec2> closedDoors;

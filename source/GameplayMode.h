@@ -34,6 +34,7 @@
 #include "Floor.h"
 #include "Door.h"
 #include "StaircaseDoor.h"
+#include "CatDen.h"
 #include "EnemyController.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
@@ -69,6 +70,13 @@ protected:
     std::shared_ptr<StaircaseDoor> _level2StairDoor;
     /** A reference to the list of all staircase doors in the level*/
     std::vector<shared_ptr<StaircaseDoor>> _staircaseDoors;
+    /** A reference to the level 1 cat den on the left hand side*/
+    std::shared_ptr<CatDen> _level1CatDenLeft;
+    /** A reference to the level 1 cat den on the right hand side*/
+    std::shared_ptr<CatDen> _level1CatDenRight;
+    /** A reference to the list of all cat dens in the level*/
+    std::vector<shared_ptr<CatDen>> _catDens;
+   
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;
     /** A reference to the level 2 door*/
@@ -206,6 +214,10 @@ public:
     /*Function called every update to check if the player is trying to exit
     or enter a staircase door*/
     void checkStaircaseDoors();
+
+    /*Function called every update to check if the player is trying to exit
+    or enter a cat den*/
+    void checkCatDens();
 
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
