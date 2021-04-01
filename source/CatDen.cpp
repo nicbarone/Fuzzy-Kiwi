@@ -1,23 +1,23 @@
-#include "StaircaseDoor.h"
+#include "CatDen.h"
 using namespace cugl;
 
-StaircaseDoor::StaircaseDoor() :
+CatDen::CatDen() :
 	_frame(0),
 	_frameCounter(9)
 {
 	_isOpen = false;
 }
 
-void StaircaseDoor::dispose() {
+void CatDen::dispose() {
 	ConstructionElement::dispose();
 	_isOpen = false;
 }
 
-bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
+bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
-	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET+ STAIRCASE_DOOR_OFFSET));
+	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET+ CAT_DEN_OFFSET));
 	setAngle(ang);
 	setScale(scale);
 	setLevel(level);
@@ -27,7 +27,7 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	return true;
 }
 
-void StaircaseDoor::setDoor(bool open) {
+void CatDen::setDoor(bool open) {
 	_isOpen = open;
 	CULog("staircase door state %d", _isOpen);
 
@@ -47,7 +47,7 @@ void StaircaseDoor::setDoor(bool open) {
 
 }
 
-void  StaircaseDoor::doorOpenAnimation() {
+void  CatDen::doorOpenAnimation() {
 	int i = 0;
 	std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
 }
