@@ -136,10 +136,18 @@ void App::update(float timestep) {
     }
     else if (!_loaded && !_inEditor){
         _loading.dispose(); // Disables the input listeners in this mode
-        _levelEditor.dispose();
-        _gameplay.init(_assets);
+        _menu.init(_assets);
         _loaded = true;
+        _inMenu = true;
         
+    }
+    else if (_inMenu){
+        _menu.update(timestep);
+        if (_inputManager.didReset()) {
+            CULog("si");
+            _gameplay = _menu.getGameScene();
+            _inMenu = false;
+        }
     }
     else {
         _gameplay.update(timestep);
@@ -161,6 +169,9 @@ void App::draw() {
     }
     else if (_inEditor) {
         _levelEditor.render(_batch);
+    }
+    else if (_inMenu) {
+        _menu.render(_batch);
     }
     else {
         _gameplay.render(_batch);

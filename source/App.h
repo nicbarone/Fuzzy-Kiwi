@@ -5,6 +5,7 @@
 #include "GameplayMode.h"
 #include "LoadingMode.h"
 #include "LevelEditor.h"
+#include "MenuMode.h"
 /**
  * This class represents the application root for the game.
  */
@@ -21,7 +22,7 @@ protected:
     /** The controller for the loading screen */
     LoadingMode _loading;
     /** The controller for the menu screen */
-    //MenuMode _menu;
+    MenuMode _menu;
     /** The controller for the level editor*/
     LevelEditor _levelEditor;
     InputManager _inputManager;
@@ -29,8 +30,10 @@ protected:
     bool _loaded;
     /** for testing purposes, loading screen will show for 2 seconds*/
     int counter = 200;
-    /** flag for level editor*/
-    bool _inEditor = false;
+    /** flags for level editor*/
+    bool _inEditor;
+    bool _inMenu;
+    bool _inGameplay;
 
 public:
     /**
@@ -42,7 +45,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    App() : cugl::Application(), _loaded(false) {}
+    App() : cugl::Application(), _loaded(false), _inEditor(false), _inMenu(false), _inGameplay(false) {}
 
     /**
      * Disposes of this application, releasing all resources.

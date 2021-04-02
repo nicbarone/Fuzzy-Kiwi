@@ -202,6 +202,7 @@
     <ClInclude Include="..\..\source\Interactable.h" />
     <ClInclude Include="..\..\source\LevelEditor.h" />
     <ClInclude Include="..\..\source\LoadingMode.h" />
+    <ClInclude Include="..\..\source\MenuMode.h" />
     <ClInclude Include="..\..\source\Player.h" />
     <ClInclude Include="..\..\source\UIElement.h" />
     <ClInclude Include="resource.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="..\..\source\LevelEditor.cpp" />
     <ClCompile Include="..\..\source\LoadingMode.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
+    <ClCompile Include="..\..\source\MenuMode.cpp" />
     <ClCompile Include="..\..\source\Player.cpp" />
     <ClCompile Include="..\..\source\UIElement.cpp" />
   </ItemGroup>
