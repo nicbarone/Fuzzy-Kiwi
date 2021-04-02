@@ -44,20 +44,6 @@ using namespace cugl;
 // This is adjusted by screen aspect ratio to get the height
 #define GAME_WIDTH 1024
 
-
-
-vector<Vec2> level1Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
-
-vector<Vec2> level1Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
-
-vector<Vec2> level2Floor = { Vec2(1100.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 60.0f), Vec2(1100.0f, 60.0f) };
-
-vector<Vec2> level2Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0f), Vec2(150.0f, 62.0f) };
-
-
-
-
-
 /**
  * The method called after OpenGL is initialized, but before running the application.
  *
@@ -68,8 +54,10 @@ vector<Vec2> level2Door = { Vec2(150.0f, 0.0f),Vec2(0.0f, 0.0f), Vec2(0.0f, 62.0
  * very last line.  This ensures that the state will transition to FOREGROUND,
  * causing the application to run.
  */
+
 bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     Size size = Application::get()->getDisplaySize();
+
     size *= GAME_WIDTH / size.width;
     if (assets == nullptr) {
         return false;
@@ -81,7 +69,9 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     //_scene = Scene2::alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
+
     _rootScene->setContentSize(Application::get()->getSafeBounds().size);
+
 
 
 
@@ -120,10 +110,10 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
 }
 
 
-
 void GameplayMode::reset() {
     //_scene = nullptr;
     Size size = Application::get()->getDisplaySize();
+
     size *= GAME_WIDTH / size.width;
     removeAllChildren();
 
@@ -132,6 +122,7 @@ void GameplayMode::reset() {
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(Application::get()->getSafeBounds().size);
+
     buildScene();
 }
 
@@ -147,6 +138,9 @@ void GameplayMode::reset() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void GameplayMode::update(float timestep) {
+    if (_reset) {
+        reset();
+    }
     // update camera
     //getCamera()->update();
     // Read input controller input
@@ -236,6 +230,9 @@ void GameplayMode::update(float timestep) {
         if (cageCollision != 0) {
             // shows win Panel
             _winPanel->setVisible(true);
+            _winPanel->getChildButtons()[0]->getButton()->activate();
+            _winPanel->getChildButtons()[1]->getButton()->activate();
+            _winPanel->getChildButtons()[2]->getButton()->activate();
         }
         collisions::checkInBounds(_enemyController->getPossessed(), _player);
         string numPossessions = to_string(_player->get_nPossess());
@@ -260,6 +257,9 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
             if (_player->getSceneNode()->isVisible() || 
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
+                _losePanel->setVisible(true);
+                _losePanel->getChildButtons()[0]->getButton()->activate();
+                _losePanel->getChildButtons()[1]->getButton()->activate();
                 _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
                 _tutorialText->setPosition(Vec2(100, 220));
                 _hasControl = false;
@@ -361,21 +361,21 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
     _level1Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 0, cugl::Color4::WHITE, 1,1, floor);
     _level2Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 1, cugl::Color4::WHITE, 1, 1, floor);
-    _level1StairDoor = Door::alloc(950, 0, Vec2(0.14, 0.14), 0, cugl::Color4::WHITE, 1, 1, staircaseDoor);
-    _level2StairDoor = Door::alloc(550, 0, Vec2(0.14, 0.14), 1, cugl::Color4::WHITE, 1, 1, staircaseDoor);
+    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(0.55, 0.55), 0, cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor);
+    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(0.55, 0.55), 1, cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor);
     _staircaseDoors = { _level1StairDoor, _level2StairDoor };
-    _level1Door = Door::alloc(590, 0, Vec2(0.48, 0.48), 0, cugl::Color4::WHITE, 1, 11, door);
-    std::dynamic_pointer_cast<scene2::AnimationNode>(_level1Door->getSceneNode())->setFrame(0);
+    _level1Door = Door::alloc(590, 0, Vec2(0.65, 0.65), 0,cugl::Color4::WHITE, { 1 }, 1, 11, door);
     _doors = { _level1Door};
-    _cagedAnimal = Door::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, 1, 1, cagedAnimal);
-    _cagedAnimal->getSceneNode()->setPositionY(350);
+    _cagedAnimal = Door::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, { 1 }, 1, 1, cagedAnimal);
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
     enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
-    _enemyController->addEnemy(400, 0, 0, 400, 400, enemyTexture, altTexture, enemyHighlightTexture);
-    _enemyController->addEnemy(650, 0, 0, 300, 900, enemyTexture, altTexture, enemyHighlightTexture);
+
+    _enemyController->addEnemy(400, 0,  0, { 1 }, 200, 200, enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(650, 0, 0, { 2 }, 300, 900,  enemyTexture, altTexture, enemyHighlightTexture);
+
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
@@ -447,7 +447,7 @@ void GameplayMode::buildScene() {
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();
 
-    // Create Win-Lose Panels
+    // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
     _winPanel->getSceneNode()->setScale(0.75f);
@@ -459,9 +459,71 @@ void GameplayMode::buildScene() {
     _winPanel->createChildPanel(135, 10, 0, _assets->get<Texture>("deadOrAlive"));
     _winPanel->getChildPanels()[2]->getSceneNode()->setScale(1.2f);
     _winPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"));
+    _winPanel->getChildButtons()[0]->getButton()->setName("nextLevel");
+    _winPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            CULog("Next Level loading under construction");
+        }
+        });
     _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
+    _winPanel->getChildButtons()[1]->getButton()->setName("retry");
+    _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+        });
     _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"));
-    addChild(_winPanel->getSceneNode());
+
+    _winPanel->getChildButtons()[2]->getButton()->setName("menu");
+    _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            CULog("return to loading mode under construction");
+        }
+        });
+    _scene->addChild(_winPanel->getSceneNode());
+
+
+    // Create Lose Panel
+    losePanel = _assets->get<Texture>("levelCompleteBG");
+    _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
+    _losePanel->getSceneNode()->setScale(0.75f);
+    _losePanel->setVisible(false);
+    _losePanel->createChildPanel(0, 160, 0, _assets->get<Texture>("loseIcon"));
+    _losePanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    _losePanel->createChildPanel(0, -45, 0, _assets->get<Texture>("loseTitle"));
+    _losePanel->getChildPanels()[1]->getSceneNode()->setScale(1.2f);
+    _losePanel->createChildPanel(0, 100, 0, _assets->get<Texture>("wasted"));
+    _losePanel->getChildPanels()[2]->getSceneNode()->setScale(0.5f);
+    _losePanel->createChildButton(0, -170, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
+    _losePanel->getChildButtons()[0]->getButton()->setName("retry");
+    _losePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+        });
+    _losePanel->createChildButton(0, -230, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"));
+    _losePanel->getChildButtons()[1]->getButton()->setName("menu");
+    _losePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            CULog("return to loading mode under construction");
+        }
+        });
+    _scene->addChild(_losePanel->getSceneNode());
 
     // Initialize input manager
     _inputManager = InputManager();
@@ -474,13 +536,27 @@ void GameplayMode::checkDoors() {
     for (shared_ptr<Door> door : _doors) {
         bool doorState = door->getIsOpen();
         if (_enemyController->getPossessed() != nullptr) {
+            //set_intersection(_enemyController->getPossessed()->getKeys().begin(), _enemyController->getPossessed()->getKeys().end(), door->getKeys().begin(), door->getKeys().end(), std::inserter(intersect, intersect.begin()));
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager.getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
-                abs(screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
-                door->setDoor(!doorState);
-                _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
-                _tutorialText->setPosition(Vec2(100, 220));
+
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                std::vector<int> intersect;
+                std::vector<int> v1 = _enemyController->getPossessed()->getKeys();
+                std::vector<int> v2 = door->getKeys();
+                /*std::sort(v1.begin(), v1.end());
+                std::sort(v2.begin(), v2.end());*/
+                std::vector<int> key_intersection;
+                std::set_intersection(v1.begin(), v1.end(),
+                    v2.begin(), v2.end(),
+                    std::back_inserter(key_intersection));
+                if (!key_intersection.empty()) {
+                    door->setDoor(!doorState);
+                    _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
+                    _tutorialText->setPosition(Vec2(100, 220));
+                }
+
             }
         }
     }
@@ -492,15 +568,30 @@ void GameplayMode::checkStaircaseDoors() {
     bool visibility;
 
     if (_enemyController->getPossessed() != nullptr) {
-
-
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
-        for (shared_ptr<Door> staircaseDoor : _staircaseDoors) {
+        for (shared_ptr<StaircaseDoor> staircaseDoor : _staircaseDoors) {
+            std::vector<int> intersect;
+            std::vector<int> v1 = _enemyController->getPossessed()->getKeys();
+            std::vector<int> v2 = staircaseDoor->getKeys();
+            /*std::sort(v1.begin(), v1.end());
+            std::sort(v2.begin(), v2.end());*/
+
+            std::vector<int> key_intersection;
+
+            std::set_intersection(v1.begin(), v1.end(),
+                v2.begin(), v2.end(),
+                std::back_inserter(key_intersection));
+            bool StaircasedoorState = staircaseDoor->getIsOpen();
             if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
-                abs(screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+
+                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()&&
+                !key_intersection.empty()) {
+
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
+                staircaseDoor->setDoor(!staircaseDoor);
+                //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }
 
@@ -510,6 +601,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
                 _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                 _tutorialText->setPosition(Vec2(200, 490));
                 break;

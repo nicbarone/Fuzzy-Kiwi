@@ -33,6 +33,7 @@
 #include "Player.h"
 #include "Floor.h"
 #include "Door.h"
+#include "StaircaseDoor.h"
 #include "EnemyController.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
@@ -40,6 +41,7 @@
 
 class GameplayMode : public cugl::Scene2 {
 protected:
+    bool _reset;
     /** The parent scene node for a level*/
     std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
     /** The loaders to (synchronously) load in assets */
@@ -55,13 +57,13 @@ protected:
     /** A reference to the level 1 floor*/
     std::shared_ptr<Floor> _level1Floor;
     /** A reference to the level 1 staircase door*/
-    std::shared_ptr<Door> _level1StairDoor;
+    std::shared_ptr<StaircaseDoor> _level1StairDoor;
     /** A reference to the level 2 floor*/
     std::shared_ptr<Floor> _level2Floor;
     /** A reference to the level 2 staircase door*/
-    std::shared_ptr<Door> _level2StairDoor;
+    std::shared_ptr<StaircaseDoor> _level2StairDoor;
     /** A reference to the list of all staircase doors in the level*/
-    std::vector<shared_ptr<Door>> _staircaseDoors;
+    std::vector<shared_ptr<StaircaseDoor>> _staircaseDoors;
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;
     /** A reference to the level 2 door*/

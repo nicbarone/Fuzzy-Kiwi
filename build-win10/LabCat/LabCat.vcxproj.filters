@@ -60,6 +60,7 @@
     <ClInclude Include="..\..\source\Constants.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+
     <ClInclude Include="..\..\source\App.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -70,6 +71,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\MenuMode.h">
+
+    <ClInclude Include="..\..\source\StaircaseDoor.h">
+
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,6 +120,7 @@
     <ClCompile Include="..\..\source\Constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
     <ClCompile Include="..\..\source\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -126,6 +131,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\MenuMode.cpp">
+
+    <ClCompile Include="..\..\source\StaircaseDoor.cpp">
+
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

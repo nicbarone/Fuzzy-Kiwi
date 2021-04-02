@@ -25,8 +25,6 @@ private:
     Vec2 _mouse_rightJoystick_startPos;
     /** If pressed possess button then true, otherwise false */
     std::shared_ptr<Player> _player;
-    std::shared_ptr<ui::ButtonElement> _possessButton;
-    std::shared_ptr<ui::ButtonElement> _unPossessButton;
     std::shared_ptr<cugl::scene2::SceneNode> _rootSceneNode;
     //std::vector<std::shared_ptr<Enemy>> _enemies;
     //std::vector<std::shared_ptr<Interactables>> _interactable_objects;
