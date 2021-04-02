@@ -620,9 +620,9 @@ void GameplayMode::checkCatDens() {
         for (shared_ptr<CatDen> catDen : _catDens) {
             bool StaircasedoorState = catDen->getIsOpen();
             if (visibility && abs(_player->getSceneNode()->getWorldPosition().x - catDen->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager.getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _player->getLevel() == catDen->getLevel() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                abs(screenToWorldCoords(_inputManager.getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 _player->getSceneNode()->setVisible(!visibility);
                 catDen->setDoor(!catDen);
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
@@ -630,8 +630,8 @@ void GameplayMode::checkCatDens() {
             }
 
             else if (!visibility &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                abs(screenToWorldCoords(_inputManager.getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager.getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setPos(catDen->getPos().x);
                 _player->setLevel(catDen->getLevel());
