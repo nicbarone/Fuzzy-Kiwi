@@ -39,13 +39,8 @@
 #include "InputManager.h"
 #include "CollisionManager.h"
 
-/**
- * Class for a simple Hello World style application
- *
- * The application simply moves the CUGL logo across the screen.  It also
- * provides a button to quit the application.
- */
-class GameplayMode : public cugl::Application {
+
+class GameplayMode : public cugl::Scene2 {
 protected:
     bool _reset;
     /** The parent scene node for a level*/
@@ -107,8 +102,6 @@ protected:
     std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
     std::shared_ptr<scene2::Label> _numberOfPossessions;
-    /** A countdown used to move the logo */
-    int  _countdown;
     /** whether or not the player has control*/
     bool _hasControl;
     
@@ -131,7 +124,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    GameplayMode() : Application(), _countdown(-1) {}
+    GameplayMode() : cugl::Scene2(), _hasControl(false) {}
     
     /**
      * Disposes of this application, releasing all resources.
@@ -142,30 +135,19 @@ public:
      */
     ~GameplayMode() { }
     
-    /**
-     * The method called after OpenGL is initialized, but before running the application.
+        /**
+     * Initializes the controller contents, and starts the game
      *
-     * This is the method in which all user-defined program intialization should
-     * take place.  You should not create a new init() method.
+     * The constructor does not allocate any objects or memory.  This allows
+     * us to have a non-pointer reference to this controller, reducing our
+     * memory allocation.  Instead, allocation happens in this method.
      *
-     * When overriding this method, you should call the parent method as the
-     * very last line.  This ensures that the state will transition to FOREGROUND,
-     * causing the application to run.
+     * @param assets    The (loaded) assets for this game mode
+     *
+     * @return true if the controller is initialized properly, false otherwise.
      */
-    void onStartup() override;
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets);
 
-    /**
-     * The method called when the application is ready to quit.
-     *
-     * This is the method to dispose of all resources allocated by this
-     * application.  As a rule of thumb, everything created in onStartup()
-     * should be deleted here.
-     *
-     * When overriding this method, you should call the parent method as the
-     * very last line.  This ensures that the state will transition to NONE,
-     * causing the application to be deleted.
-     */
-    void onShutdown() override;
 
     /** used to reset the level*/
     void reset();
@@ -205,7 +187,7 @@ public:
      * When overriding this method, you do not need to call the parent method
      * at all. The default implmentation does nothing.
      */
-    void draw() override;
+    void draw();
 
     /*Function called every update to check if the player is trying to close or 
     open a door*/

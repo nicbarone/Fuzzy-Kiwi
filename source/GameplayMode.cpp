@@ -54,30 +54,31 @@ using namespace cugl;
  * very last line.  This ensures that the state will transition to FOREGROUND,
  * causing the application to run.
  */
-void GameplayMode::onStartup() {
-    _reset = false;
-    Size size = getDisplaySize();
-    size *= GAME_WIDTH / size.width;
 
+bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
+    Size size = Application::get()->getDisplaySize();
+
+    size *= GAME_WIDTH / size.width;
+    if (assets == nullptr) {
+        return false;
+    }
+    else if (!Scene2::init(size)) {
+        return false;
+    }
     // Create a scene graph the same size as the window
-    _scene = Scene2::alloc(size.width, size.height);
+    //_scene = Scene2::alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
-    _rootScene->setContentSize(size);
 
-    // Create a sprite batch (and background color) to render the scene
-    _batch = SpriteBatch::alloc();
-    setClearColor(Color4(229, 229, 229, 255));
+    _rootScene->setContentSize(Application::get()->getSafeBounds().size);
+    _reset = false;
 
+
+
+    
     // Create an asset manager to load all assets
-    _assets = AssetManager::alloc();
+    _assets = assets;
 
-    // You have to attach the individual loaders for each asset type
-    _assets->attach<Texture>(TextureLoader::alloc()->getHook());
-    _assets->attach<Font>(FontLoader::alloc()->getHook());
-
-    // This reads the given JSON file and uses it to load all other assets
-    _assets->loadDirectory("json/assets.json");
 
     // Activate mouse or touch screen input as appropriate
     // We have to do this BEFORE the scene, because the scene has a button
@@ -91,66 +92,37 @@ void GameplayMode::onStartup() {
 
     // Build the scene from these assets
     buildScene();
-    Application::onStartup();
+
 
     // Report the safe area
     Rect bounds = Display::get()->getSafeBounds();
     // CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
      //                        bounds.size.toString().c_str());
 
-    bounds = getSafeBounds();
+    bounds = Application::get()->getSafeBounds();
     //CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
     //                        bounds.size.toString().c_str());
 
-    bounds = getDisplayBounds();
+    bounds = Application::get()->getDisplayBounds();
     //CULog("Full Area %sx%s",bounds.origin.toString().c_str(),
     //                        bounds.size.toString().c_str());
-
+    return true;
 }
 
-/**
- * The method called when the application is ready to quit.
- *
- * This is the method to dispose of all resources allocated by this
- * application.  As a rule of thumb, everything created in onStartup()
- * should be deleted here.
- *
- * When overriding this method, you should call the parent method as the
- * very last line.  This ensures that the state will transition to NONE,
- * causing the application to be deleted.
- */
-void GameplayMode::onShutdown() {
-    _reset = false;
-    // Delete all smart pointers
-    _scene = nullptr;
-    _batch = nullptr;
-    _assets = nullptr;
-
-    // Deativate input
-#if defined CU_TOUCH_SCREEN
-    Input::deactivate<Touchscreen>();
-#else
-    Input::deactivate<Mouse>();
-#endif
-    Application::onShutdown();
-}
 
 void GameplayMode::reset() {
-    _reset = false;
-    _winPanel->getChildButtons()[0]->getButton()->deactivate();
-    _winPanel->getChildButtons()[1]->getButton()->deactivate();
-    _winPanel->getChildButtons()[2]->getButton()->deactivate();
-    _losePanel->getChildButtons()[0]->getButton()->deactivate();
-    _losePanel->getChildButtons()[1]->getButton()->deactivate();
-    _scene = nullptr;
-    Size size = getDisplaySize();
+    //_scene = nullptr;
+    Size size = Application::get()->getDisplaySize();
+
     size *= GAME_WIDTH / size.width;
+    removeAllChildren();
 
     // Create a scene graph the same size as the window
-    _scene = Scene2::alloc(size.width, size.height);
+    alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
-    _rootScene->setContentSize(size);
+    _rootScene->setContentSize(Application::get()->getSafeBounds().size);
+    _reset = false;
     buildScene();
 }
 
@@ -170,7 +142,7 @@ void GameplayMode::update(float timestep) {
         reset();
     }
     // update camera
-    _scene->getCamera()->update();
+    //getCamera()->update();
     // Read input controller input
     _inputManager.readInput();
     if (_hasControl) {
@@ -187,10 +159,10 @@ void GameplayMode::update(float timestep) {
 
         }    //546 546
 
-        Size  size = getDisplaySize();
+        Size  size = Application::get()->getDisplaySize();
         float scale = GAME_WIDTH / size.width;
         size *= scale;
-        Rect safe = getSafeBounds();
+        Rect safe = Application::get()->getSafeBounds();
         safe.origin *= scale;
         safe.size *= scale;
         Size bpsize = possessButton->getSize();
@@ -220,7 +192,7 @@ void GameplayMode::update(float timestep) {
         // Check if possess button is clicked
         if (_possessButton->getClicked()) {
             _possessButton->getButton()->deactivate();
-            _scene->removeChild(_possessButton->getButton());
+            removeChild(_possessButton->getButton());
             if (_possessButton->getButtonState() == ui::ButtonState::POSSESS) {
                 if (attemptPossess()) {
                     _possessButton->setTexture(unpossessButton);
@@ -245,7 +217,7 @@ void GameplayMode::update(float timestep) {
                 });
             _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
             _possessButton->setPos(Vec2(size.width - (bpsize.width + rOffset) / 2, (bpsize.height + bOffset) / 2));
-            _scene->addChild(_possessButton->getButton());
+            addChild(_possessButton->getButton());
             _possessButton->getButton()->activate();
             _possessButton->setClicked(false);
         }
@@ -320,8 +292,8 @@ bool GameplayMode::attemptPossess() {
         _player->setPossess(true);
         _player->set_possessEnemy(enemy);
         _enemyController->updatePossessed(enemy);
-        enemy->setPossessed();
         enemy->setGlow(false);
+        enemy->setPossessed();
         return true;
     }
     return false;
@@ -352,7 +324,7 @@ void GameplayMode::unpossess() {
  */
 void GameplayMode::draw() {
     // This takes care of begin/end
-    _scene->render(_batch);
+    render(_batch);
 }
 
 /**
@@ -363,7 +335,7 @@ void GameplayMode::draw() {
  * have become standard in most game engines.
  */
 void GameplayMode::buildScene() {
-    Size  size = getDisplaySize();
+    Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
     size *= scale;
 
@@ -401,8 +373,10 @@ void GameplayMode::buildScene() {
     enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
+
     _enemyController->addEnemy(400, 0,  0, { 1 }, 200, 200, enemyTexture, altTexture, enemyHighlightTexture);
     _enemyController->addEnemy(650, 0, 0, { 2 }, 300, 900,  enemyTexture, altTexture, enemyHighlightTexture);
+
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
@@ -425,7 +399,7 @@ void GameplayMode::buildScene() {
         }
         });
     // Find the safe area, adapting to the iPhone X
-    Rect safe = getSafeBounds();
+    Rect safe = Application::get()->getSafeBounds();
     safe.origin *= scale;
     safe.size *= scale;
 
@@ -447,7 +421,7 @@ void GameplayMode::buildScene() {
     _numberOfPossessions->setPosition(Vec2(20, 540));
 
     // Add the logo and button to the scene graph
-    _scene->addChild(_rootScene);
+    addChild(_rootScene);
     _rootScene->addChild(_level1Floor->getSceneNode());
     _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2Floor->getSceneNode());
@@ -458,10 +432,10 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_cagedAnimal->getSceneNode());
     //_rootScene->addChild(_level2Door->getSceneNode());
     /*_rootScene->addChild(_numberOfPosessions->);*/
-    _scene->addChild(_possessButton->getButton());
+    addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_tutorialText);
-    _scene->addChild(_numberOfPossessions);
+    addChild(_numberOfPossessions);
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
     for (auto it = begin(enemies); it != end(enemies); ++it) {
@@ -506,6 +480,7 @@ void GameplayMode::buildScene() {
         }
         });
     _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"));
+
     _winPanel->getChildButtons()[2]->getButton()->setName("menu");
     _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -515,7 +490,8 @@ void GameplayMode::buildScene() {
             CULog("return to loading mode under construction");
         }
         });
-    _scene->addChild(_winPanel->getSceneNode());
+    addChild(_winPanel->getSceneNode());
+
 
     // Create Lose Panel
     losePanel = _assets->get<Texture>("levelCompleteBG");
@@ -548,11 +524,11 @@ void GameplayMode::buildScene() {
             CULog("return to loading mode under construction");
         }
         });
-    _scene->addChild(_losePanel->getSceneNode());
+    addChild(_losePanel->getSceneNode());
 
     // Initialize input manager
     _inputManager = InputManager();
-    _inputManager.init(_player, _rootScene, _scene->getBounds());
+    _inputManager.init(_player, _rootScene, getBounds());
 }
 
 
@@ -563,9 +539,10 @@ void GameplayMode::checkDoors() {
         if (_enemyController->getPossessed() != nullptr) {
             //set_intersection(_enemyController->getPossessed()->getKeys().begin(), _enemyController->getPossessed()->getKeys().end(), door->getKeys().begin(), door->getKeys().end(), std::inserter(intersect, intersect.begin()));
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager.getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+
+                abs(screenToWorldCoords(_inputManager.getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 std::vector<int> intersect;
                 std::vector<int> v1 = _enemyController->getPossessed()->getKeys();
                 std::vector<int> v2 = door->getKeys();
@@ -580,6 +557,7 @@ void GameplayMode::checkDoors() {
                     _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
                     _tutorialText->setPosition(Vec2(100, 220));
                 }
+
             }
         }
     }
@@ -606,10 +584,12 @@ void GameplayMode::checkStaircaseDoors() {
                 std::back_inserter(key_intersection));
             bool StaircasedoorState = staircaseDoor->getIsOpen();
             if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager.getRootSceneNode()->getScaleX() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()&&
+
+                abs(screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()&&
                 !key_intersection.empty()) {
+
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 staircaseDoor->setDoor(!staircaseDoor);
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
@@ -617,8 +597,8 @@ void GameplayMode::checkStaircaseDoors() {
             }
 
             else if (!visibility &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
-                abs(_scene->screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
+                abs(screenToWorldCoords(_inputManager.getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager.getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager.getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());

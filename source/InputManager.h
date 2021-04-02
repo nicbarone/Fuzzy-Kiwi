@@ -13,7 +13,7 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
-    bool _reset;
+    bool _reset = false;
     Vec2 _camOriginalPos;
     bool _camMovement;
     Vec2 _camMoveDirection;
@@ -25,8 +25,6 @@ private:
     Vec2 _mouse_rightJoystick_startPos;
     /** If pressed possess button then true, otherwise false */
     std::shared_ptr<Player> _player;
-    std::shared_ptr<ui::ButtonElement> _possessButton;
-    std::shared_ptr<ui::ButtonElement> _unPossessButton;
     std::shared_ptr<cugl::scene2::SceneNode> _rootSceneNode;
     //std::vector<std::shared_ptr<Enemy>> _enemies;
     //std::vector<std::shared_ptr<Interactables>> _interactable_objects;

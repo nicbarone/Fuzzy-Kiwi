@@ -28,8 +28,6 @@ using namespace cugl;
  */
 InputManager::InputManager() {
     _player = nullptr;
-    _possessButton = nullptr;
-    _unPossessButton = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
     _valid_tap = false;
@@ -38,8 +36,6 @@ InputManager::InputManager() {
 InputManager::~InputManager()
 {
     _player = nullptr;
-    _possessButton = nullptr;
-    _unPossessButton = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
     _valid_tap = false;
