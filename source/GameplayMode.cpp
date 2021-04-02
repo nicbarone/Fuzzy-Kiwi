@@ -393,7 +393,7 @@ void GameplayMode::buildScene() {
     _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.25, 0.25), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
     _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.25, 0.25), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
     _catDens = { _level1CatDenLeft,_level1CatDenRight};
-    _level1Door = Door::alloc(590, 0, Vec2(0.65, 0.65), 0,cugl::Color4::WHITE, { 1 }, 1, 11, door);
+    _level1Door = Door::alloc(590,0, Vec2(-0.65, 0.65), 0,cugl::Color4::WHITE, { 1 }, 1, 11, door);
     _doors = { _level1Door};
     _cagedAnimal = Door::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, { 1 }, 1, 1, cagedAnimal);
     // Enemy creation
