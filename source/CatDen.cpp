@@ -30,13 +30,11 @@ bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int row
 void CatDen::setDoor(bool open) {
 	_isOpen = open;
 	CULog("staircase door state %d", _isOpen);
-
 	if (open) {
 
 		for (int i = 0; i < 7; i++) {
 			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
 		}
-		/*cugl::Application::schedule(Door::doorOpenAnimation, 3);*/
 	}
 	else
 	{

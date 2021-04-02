@@ -38,12 +38,20 @@ bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vect
 void Door::setDoor(bool open) {
 	_isOpen = open;
 
+	std::function<bool()> test = [=](){
+		for (int i = 0; i < 10; i++) {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
+		}
+		return false;
+	};
+
+
 	if (open) {
 		
 		for (int i = 0; i < 10; i++) {
 			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(i);
 		}
-		/*cugl::Application::schedule(Door::doorOpenAnimation, 3);*/
+		cugl::Application::schedule(test, 3);
 	}
 	else
 	{
