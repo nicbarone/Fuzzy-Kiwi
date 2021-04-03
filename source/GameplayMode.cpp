@@ -70,7 +70,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
 
-    _rootScene->setContentSize(Application::get()->getSafeBounds().size);
+    _rootScene->setContentSize(size);
     _reset = false;
 
 
@@ -113,7 +113,11 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
 void GameplayMode::reset() {
     //_scene = nullptr;
     Size size = Application::get()->getDisplaySize();
-
+    //_winPanel->getChildButtons()[0]->getButton()->deactivate();
+    //_winPanel->getChildButtons()[1]->getButton()->deactivate();
+    //_winPanel->getChildButtons()[2]->getButton()->deactivate();
+    //_losePanel->getChildButtons()[0]->getButton()->deactivate();
+    //_losePanel->getChildButtons()[1]->getButton()->deactivate();
     size *= GAME_WIDTH / size.width;
     removeAllChildren();
 
@@ -121,7 +125,7 @@ void GameplayMode::reset() {
     alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
-    _rootScene->setContentSize(Application::get()->getSafeBounds().size);
+    _rootScene->setContentSize(size);
     _reset = false;
     buildScene();
 }
@@ -231,6 +235,9 @@ void GameplayMode::update(float timestep) {
     if (cageCollision != 0) {
         // shows win Panel
         _winPanel->setVisible(true);
+        _winPanel->getChildButtons()[0]->getButton()->activate();
+        _winPanel->getChildButtons()[1]->getButton()->activate();
+        _winPanel->getChildButtons()[2]->getButton()->activate();
     }
     collisions::checkInBounds(_enemyController->getPossessed(),_player);
     string numPossessions = to_string(_player->get_nPossess());
