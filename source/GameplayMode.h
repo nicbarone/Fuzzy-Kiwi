@@ -43,6 +43,7 @@
 class GameplayMode : public cugl::Scene2 {
 protected:
     bool _reset;
+    bool _backToMenu;
     /** The parent scene node for a level*/
     std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
     /** The loaders to (synchronously) load in assets */
@@ -124,7 +125,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    GameplayMode() : cugl::Scene2(), _hasControl(false) {}
+    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false) {}
     
     /**
      * Disposes of this application, releasing all resources.
@@ -204,6 +205,13 @@ public:
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
 
+    bool getBackToMenu() {
+        return _backToMenu;
+    }
+
+    void setBackToMenu(bool backToMenu) {
+        _backToMenu = backToMenu;
+    }
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

@@ -71,7 +71,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
 
     _rootScene->setContentSize(size);
     _reset = false;
-
+    _backToMenu = false;
 
 
     
@@ -493,7 +493,7 @@ void GameplayMode::buildScene() {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
-            CULog("return to loading mode under construction");
+            _backToMenu = true;
         }
         });
     addChild(_winPanel->getSceneNode());
@@ -527,7 +527,7 @@ void GameplayMode::buildScene() {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
-            CULog("return to loading mode under construction");
+            _backToMenu = true;
         }
         });
     addChild(_losePanel->getSceneNode());

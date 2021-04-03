@@ -99,7 +99,8 @@ public:
      */
     void buildScene();
 
-    void deactiveButtons();
+    void deactivateButtons();
+    void activateButtons();
 };
 
 #endif /* __MENU_MODE_H__ */

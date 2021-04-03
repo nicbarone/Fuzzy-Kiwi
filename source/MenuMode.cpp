@@ -96,9 +96,13 @@ void MenuMode::buildScene() {
     addChild(_menuPanel->getSceneNode());
 }
 
-void MenuMode::deactiveButtons() {
+void MenuMode::deactivateButtons() {
     _menuPanel->getChildButtons()[0]->getButton()->deactivate();
     _menuPanel->getChildButtons()[1]->getButton()->deactivate();
 }
 
+void MenuMode::activateButtons() {
+    _menuPanel->getChildButtons()[0]->getButton()->activate();
+    _menuPanel->getChildButtons()[1]->getButton()->activate();
+}
 
