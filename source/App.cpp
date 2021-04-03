@@ -148,6 +148,7 @@ void App::update(float timestep) {
             _menu.deactiveButtons();
             CULog("si");
             _gameplay = _menu.getGameScene();
+            _gameplay.reset();
             _inMenu = false;
         }
     }

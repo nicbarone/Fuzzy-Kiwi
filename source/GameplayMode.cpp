@@ -112,11 +112,11 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
 void GameplayMode::reset() {
     //_scene = nullptr;
     Size size = Application::get()->getDisplaySize();
-    //_winPanel->getChildButtons()[0]->getButton()->deactivate();
-    //_winPanel->getChildButtons()[1]->getButton()->deactivate();
-    //_winPanel->getChildButtons()[2]->getButton()->deactivate();
-    //_losePanel->getChildButtons()[0]->getButton()->deactivate();
-    //_losePanel->getChildButtons()[1]->getButton()->deactivate();
+    _winPanel->getChildButtons()[0]->getButton()->deactivate();
+    _winPanel->getChildButtons()[1]->getButton()->deactivate();
+    _winPanel->getChildButtons()[2]->getButton()->deactivate();
+    _losePanel->getChildButtons()[0]->getButton()->deactivate();
+    _losePanel->getChildButtons()[1]->getButton()->deactivate();
     size *= GAME_WIDTH / size.width;
     removeAllChildren();
 
