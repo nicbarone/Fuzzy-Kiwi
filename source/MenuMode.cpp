@@ -16,6 +16,7 @@ using namespace cugl;
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
+    _playPressed = false;
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     // Lock the scene to a reasonable resolution
@@ -34,7 +35,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
 
 
     _assets = assets;
-
+    buildScene();
     return true;
 }
 
@@ -59,6 +60,45 @@ GameplayMode MenuMode::getGameScene() {
         return _gameplay;
     }
 
+}
+
+void MenuMode::buildScene() {
+    Size  size = Application::get()->getDisplaySize();
+    float scale = GAME_WIDTH / size.width;
+    size *= scale;
+
+    menuPanel = _assets->get<Texture>("menuBackground");
+    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, menuPanel);
+    _menuPanel->createChildPanel(420, 180, 0, _assets->get<Texture>("teamIcon"));
+    _menuPanel->getChildPanels()[0]->getSceneNode()->setScale(0.2f);
+    _menuPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("playButton"));
+    _menuPanel->getChildButtons()[0]->getButton()->setName("playButton");
+    _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _playPressed = true;
+        }
+    });
+    _menuPanel->getChildButtons()[0]->getButton()->activate();
+    _menuPanel->createChildButton(-450, 220, 25, 25, ui::ButtonState::AVAILABLE, _assets->get<Texture>("settingsButton"));
+    _menuPanel->getChildButtons()[1]->getButton()->setName("settingsButton");
+    _menuPanel->getChildButtons()[1]->getButton()->setScale(0.8f);
+    _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            CULog("Clicking on settings button!");
+            // Mark this button as clicked, proper handle will take place in update()
+        }
+    });
+    _menuPanel->getChildButtons()[1]->getButton()->activate();
+    addChild(_menuPanel->getSceneNode());
+}
+
+void MenuMode::deactiveButtons() {
+    _menuPanel->getChildButtons()[0]->getButton()->deactivate();
+    _menuPanel->getChildButtons()[1]->getButton()->deactivate();
 }
 
 

@@ -41,8 +41,7 @@ using namespace cugl;
 
 // The number of frames before moving the logo to a new position
 #define TIME_STEP 60
-// This is adjusted by screen aspect ratio to get the height
-#define GAME_WIDTH 1024
+
 
 /**
  * The method called after OpenGL is initialized, but before running the application.

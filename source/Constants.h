@@ -10,4 +10,5 @@ extern const float ENEMY_SPEED;
 extern const float PLAYER_SPEED;
 extern const float STAIRCASE_DOOR_OFFSET;
 extern const float CAT_DEN_OFFSET;
+extern const float GAME_WIDTH;
 #endif

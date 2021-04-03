@@ -143,7 +143,9 @@ void App::update(float timestep) {
     }
     else if (_inMenu){
         _menu.update(timestep);
-        if (_inputManager.didReset()) {
+        if (_inputManager.didReset() || _menu.getPlayPressed()) {
+            _menu.setPlayPressed(false);
+            _menu.deactiveButtons();
             CULog("si");
             _gameplay = _menu.getGameScene();
             _inMenu = false;

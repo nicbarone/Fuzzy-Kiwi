@@ -8,7 +8,10 @@ class MenuMode : public cugl::Scene2 {
 protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     bool _levelSelected = false;
+    bool _playPressed = false;
     GameplayMode _gameplay;
+    std::shared_ptr<Texture> menuPanel;
+    std::shared_ptr<ui::PanelElement> _menuPanel;
 public:
     /**
      * Creates, but does not initialized a new application.
@@ -76,10 +79,27 @@ public:
         return _levelSelected;
     }
 
+    bool getPlayPressed() {
+        return _playPressed;
+    }
+
+    void setPlayPressed(bool pressed) {
+        _playPressed = pressed;
+    }
+
     /** returns a GameplayMode constructed from the chosen level's json*/
     GameplayMode getGameScene();
 
+    /**
+     * Internal helper to build the scene graph.
+     *
+     * Scene graphs are not required.  You could manage all scenes just like
+     * you do in 3152.  However, they greatly simplify scene management, and
+     * have become standard in most game engines.
+     */
+    void buildScene();
 
+    void deactiveButtons();
 };
 
 #endif /* __MENU_MODE_H__ */

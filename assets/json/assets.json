@@ -195,6 +195,34 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"teamIcon": {
+			"file": "textures/FuzzyKiwiIcon1.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"menuBackground": {
+			"file": "textures/MenuBackground.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"playButton": {
+			"file": "textures/Play.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"settingsButton": {
+			"file": "textures/Settings.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
 	},
 	"fonts": {
