@@ -2,6 +2,7 @@
 
 using namespace cugl;
 
+
 /** This is the ideal size of the logo */
 #define SCENE_SIZE  1024
 
@@ -36,6 +37,21 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets) {
         return false;
     }
 
+#if defined (CU_TOUCH_SCREEN)
+    Input::activate<Touchscreen>();
+#else
+    Input::activate<Mouse>();
+    Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::ALWAYS);
+    Input::activate<Keyboard>();
+    Input::activate<TextInput>();
+#endif
+
+
+   
+
+    for (int i = 0; i < 2; i++) {
+        floorHeights.push_back(FLOOR_OFFSET + FLOOR_HEIGHT * i);
+    }
 
     _assets = assets;
     _rootScene = scene2::SceneNode::alloc();
@@ -54,6 +70,38 @@ void LevelEditor::dispose() {
 }
 
 
+
+void LevelEditor::releaseButtons() {
+    resetButtons = true;
+    for (auto it = begin(buttons); it != end(buttons); ++it) {
+        it->get()->setDown(false);
+    }
+    if (pendingNode != nullptr) {
+        _rootScene->removeChild(pendingNode);
+    }
+    pendingPlacement = false;
+    resetButtons = false;
+}
+
+float closestNum(vector<float> arr, float num) {
+    float candidate;
+    float diff = INT_MAX;
+    for (auto it = begin(arr); it != end(arr); ++it) {
+        if (abs(*it-num) < diff) {
+            candidate = *it;
+            diff = abs(*it - num);
+        }
+    }
+    return candidate;
+}
+
+Vec2 LevelEditor::snapToRow(Vec2 pos) {
+    Size dimen = Application::get()->getDisplaySize();
+    pos.y = dimen.height - pos.y;
+    pos.y = closestNum(floorHeights, pos.y);
+    return pos;
+}
+
 #pragma mark -
 #pragma mark Progress Monitoring
 /**
@@ -64,15 +112,95 @@ void LevelEditor::dispose() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void LevelEditor::update(float progress) {
-
+    if (pendingNode != nullptr) {
+        if (!pendingPlacement && Input::get<Mouse>()->buttonReleased().hasLeft()) {
+            pendingPlacement = true;
+        }
+        pendingNode->setPosition(snapToRow(Input::get<Mouse>()->pointerPosition()));
+        if (pendingPlacement && Input::get<Mouse>()->buttonPressed().hasLeft()) {
+            pendingNode = nullptr;
+            pendingPlacement = false;
+            releaseButtons();
+        }
+    }
+    if (Input::get<Mouse>()->buttonPressed().hasRight()) {
+        releaseButtons();
+    }
 }
 
 void LevelEditor::buildScene() {
     addChild(_rootScene);
-    std::shared_ptr<Font> font = _assets->get<Font>("felt");
+    std::shared_ptr<Font> font = _assets->get<Font>("small-felt");
+
+    //Text Fields
+    _doorID = scene2::TextField::alloc("Door ID", font);
+    _doorID->setPosition(0,550);
+    _doorID->activate();
+    addChild(_doorID);
+
+    //Clear Button
     shared_ptr<scene2::Label> _clearText = scene2::Label::alloc("Clear All", font);
-    _clear = scene2::Button::alloc(_clearText);
+    shared_ptr<scene2::Label> _confirmText = scene2::Label::alloc("Are you sure?", font);
+    _clearText->setBackground(Color4::WHITE);
+    _confirmText->setBackground(Color4::WHITE);
+    _clear = scene2::Button::alloc(_clearText, _confirmText);
+    _clear->setToggle(true);
+    _clear->activate();
+    _clear->addListener([=](const std::string& name, bool down) {
+        if (!down && !resetButtons) {
+            _rootScene->removeAllChildren();
+        }
+    });
+    buttons.push_back(_clear);
     addChild(_clear);
-    CULog("yeah");
+
+    //Cat Button
+    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
+    shared_ptr<scene2::Label> _catText = scene2::Label::alloc("Cat", font);
+    _catText->setBackground(Color4::WHITE);
+    _cat = scene2::Button::alloc(_catText, Color4::GRAY);
+    _cat->setToggle(true);
+    _cat->activate();
+    _cat->setPosition(150, 0);
+    _cat->addListener([=](const std::string& name, bool down) {
+            if (down) {
+                pendingNode = scene2::AnimationNode::alloc(cat, 1, 8);
+                pendingNode->setScale(0.15, 0.15);
+                _rootScene->addChild(pendingNode);
+            }
+        });
+    buttons.push_back(_cat);
+    addChild(_cat);
+
+    //Save Button
+    shared_ptr<scene2::Label> _saveText = scene2::Label::alloc("Save", font);
+    _saveText->setBackground(Color4::WHITE);
+    _save = scene2::Button::alloc(_saveText, Color4::GRAY);
+    _save->activate();
+    _save->setPosition(800, 0);
+    shared_ptr<JsonWriter> writer = JsonWriter::alloc("levels/test.json");
+    _save->addListener([=](const std::string& name, bool down) {
+        if (down) {
+            writer->writeLine("test");
+        }
+        });
+    buttons.push_back(_save);
+    addChild(_save);
+
+    //Load Button
+    shared_ptr<scene2::Label> _loadText = scene2::Label::alloc("Load", font);
+    _loadText->setBackground(Color4::WHITE);
+    _load = scene2::Button::alloc(_loadText, Color4::GRAY);
+    _load->activate();
+    _load->setPosition(950, 0);
+    _load->addListener([=](const std::string& name, bool down) {
+        if (down) {
+            CULog("load!");
+        }
+        });
+    buttons.push_back(_load);
+    addChild(_load);
 }
+
+
 

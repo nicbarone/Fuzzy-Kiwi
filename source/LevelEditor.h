@@ -18,8 +18,12 @@
 #ifndef __LEVEL_EDITOR_H__
 #define __LEVEL_EDITOR_H__
 #include <cugl/cugl.h>
+#include "InputManager.h"
+#include "Constants.h"
 
 
+extern const float FLOOR_OFFSET;
+extern const float FLOOR_HEIGHT;
 /**
  * This class is a simple loading screen for asychronous asset loading.
  *
@@ -37,15 +41,29 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
     /** The loaders to (synchronously) load in assets */
     std::shared_ptr<cugl::AssetManager> _assets;
+    InputManager _inputManager;
 
+    vector< std::shared_ptr<cugl::scene2::Button>> buttons;
     /** function buttons*/
     std::shared_ptr<cugl::scene2::Button> _clear;
     std::shared_ptr<cugl::scene2::Button> _load;
     std::shared_ptr<cugl::scene2::Button> _save;
+    std::shared_ptr<cugl::scene2::Button> _cat;
+
+    /** text input fields*/
+    std::shared_ptr<cugl::scene2::TextField> _floors;
+    std::shared_ptr<cugl::scene2::TextField> _doorID;
+    std::shared_ptr<cugl::scene2::TextField> _keyID;
+
+    vector<float> floorHeights;
+
+
+    bool pendingPlacement = false;
+    bool resetButtons = false;
+    std::shared_ptr<cugl::scene2::PolygonNode> pendingNode;
 
 public:
-#pragma mark -
-#pragma mark Constructors
+
     /**
      * Creates a new loading mode with the default values.
      *
@@ -68,6 +86,11 @@ public:
     void dispose();
 
     /**
+        change all buttons to the up state and remove the pending node
+    */
+    void releaseButtons();
+
+    /**
      * Initializes the controller contents, making it ready for loading
      *
      * The constructor does not allocate any objects or memory.  This allows
@@ -80,9 +103,11 @@ public:
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets);
 
+    /**
+        helper function for snapping placement to rows
+    */
+    Vec2 snapToRow(Vec2 pos);
 
-#pragma mark -
-#pragma mark Progress Monitoring
     /**
      * The method called to update the game mode.
      *
