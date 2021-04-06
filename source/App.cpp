@@ -44,7 +44,6 @@ void App::onStartup() {
     //Input manager
     _inputManager = InputManager();
     _inputManager.init(nullptr, scene2::SceneNode::alloc(), getSafeBounds());
-
     AudioEngine::start();
     Application::onStartup(); // YOU MUST END with call to parent
 }
