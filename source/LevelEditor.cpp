@@ -46,9 +46,6 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets) {
     Input::activate<TextInput>();
 #endif
 
-
-   
-
     for (int i = 0; i < 2; i++) {
         floorHeights.push_back(FLOOR_OFFSET + FLOOR_HEIGHT * i);
     }
@@ -67,6 +64,7 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets) {
  */
 void LevelEditor::dispose() {
     _assets = nullptr;
+    _rootScene = nullptr;
 }
 
 
@@ -102,6 +100,40 @@ Vec2 LevelEditor::snapToRow(Vec2 pos) {
     return pos;
 }
 
+void LevelEditor::placeNode() {
+    if (pendingNode != nullptr) { //only true if the button clicked places nodes 
+        if (!pendingPlacement && Input::get<Mouse>()->buttonReleased().hasLeft()) { //the frame that a button is clicked
+            pendingPlacement = true;
+        }
+        pendingNode->setPosition(snapToRow(Input::get<Mouse>()->pointerPosition()));
+        if (pendingPlacement && Input::get<Mouse>()->buttonPressed().hasLeft()) { 
+            pendingNode = nullptr;
+            pendingPlacement = false;
+            releaseButtons();
+        }
+    }
+}
+
+shared_ptr<JsonValue> LevelEditor::toJson() {
+    shared_ptr<JsonValue> result = JsonValue::allocNull();
+    vector<std::shared_ptr<scene2::SceneNode>> children = _rootScene->getChildren();
+    for (auto it = begin(children); it != end(children); ++it) {
+        auto currentNode = it->get();
+        if (currentNode->getName() == "cat") {
+            result->append("player", "test");
+        }
+        else {
+            int returnID = MessageBox(
+                NULL,
+                "Find Tony if you can replicate this problem",
+                "Something went wrong",
+                MB_ICONWARNING | MB_OK | MB_DEFBUTTON1
+            );
+        }
+    }
+    return result;
+}
+
 #pragma mark -
 #pragma mark Progress Monitoring
 /**
@@ -112,17 +144,8 @@ Vec2 LevelEditor::snapToRow(Vec2 pos) {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void LevelEditor::update(float progress) {
-    if (pendingNode != nullptr) {
-        if (!pendingPlacement && Input::get<Mouse>()->buttonReleased().hasLeft()) {
-            pendingPlacement = true;
-        }
-        pendingNode->setPosition(snapToRow(Input::get<Mouse>()->pointerPosition()));
-        if (pendingPlacement && Input::get<Mouse>()->buttonPressed().hasLeft()) {
-            pendingNode = nullptr;
-            pendingPlacement = false;
-            releaseButtons();
-        }
-    }
+
+    placeNode();
     if (Input::get<Mouse>()->buttonPressed().hasRight()) {
         releaseButtons();
     }
@@ -137,6 +160,10 @@ void LevelEditor::buildScene() {
     _doorID->setPosition(0,550);
     _doorID->activate();
     addChild(_doorID);
+    _filePath = scene2::TextField::alloc("Enter File Name", font);
+    _filePath->setPosition(600, 550);
+    _filePath->activate();
+    addChild(_filePath);
 
     //Clear Button
     shared_ptr<scene2::Label> _clearText = scene2::Label::alloc("Clear All", font);
@@ -166,6 +193,7 @@ void LevelEditor::buildScene() {
             if (down) {
                 pendingNode = scene2::AnimationNode::alloc(cat, 1, 8);
                 pendingNode->setScale(0.15, 0.15);
+                pendingNode->setName("cat");
                 _rootScene->addChild(pendingNode);
             }
         });
@@ -178,10 +206,12 @@ void LevelEditor::buildScene() {
     _save = scene2::Button::alloc(_saveText, Color4::GRAY);
     _save->activate();
     _save->setPosition(800, 0);
-    shared_ptr<JsonWriter> writer = JsonWriter::alloc("levels/test.json");
     _save->addListener([=](const std::string& name, bool down) {
         if (down) {
+            shared_ptr<JsonWriter> writer = JsonWriter::alloc("levels/test.json");
             writer->writeLine("test");
+            //todo actually converting scenenodes into a json
+            writer->close();
         }
         });
     buttons.push_back(_save);
@@ -195,7 +225,23 @@ void LevelEditor::buildScene() {
     _load->setPosition(950, 0);
     _load->addListener([=](const std::string& name, bool down) {
         if (down) {
-            CULog("load!");
+            if (filetool::file_exists("levels\\tesst.json")) {
+                shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\test.json");
+                CULog(reader->readAll().c_str());
+                //todo actually reading the json and creating the scenenodes
+            }
+            else {
+                string messageStr = "File ";
+                messageStr.append(Application::get()->getAssetDirectory());
+                messageStr.append(_filePath->getText());
+                messageStr.append(" cannot be found");
+                int returnID = MessageBox(
+                    NULL,
+                    messageStr.c_str(),
+                    "File not found",
+                    MB_ICONWARNING | MB_OK | MB_DEFBUTTON1
+                );
+            }
         }
         });
     buttons.push_back(_load);

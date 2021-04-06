@@ -52,6 +52,7 @@ protected:
 
     /** text input fields*/
     std::shared_ptr<cugl::scene2::TextField> _floors;
+    std::shared_ptr<cugl::scene2::TextField> _filePath;
     std::shared_ptr<cugl::scene2::TextField> _doorID;
     std::shared_ptr<cugl::scene2::TextField> _keyID;
 
@@ -89,6 +90,16 @@ public:
         change all buttons to the up state and remove the pending node
     */
     void releaseButtons();
+
+    /**
+        node placement
+    */
+    void placeNode();
+
+    /**
+        convert all scene nodes in _rootScene to a level storage format json
+    */
+    shared_ptr<JsonValue> toJson();
 
     /**
      * Initializes the controller contents, making it ready for loading
