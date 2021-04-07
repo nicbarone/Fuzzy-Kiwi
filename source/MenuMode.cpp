@@ -63,7 +63,7 @@ GameplayMode MenuMode::getGameScene() {
 }
 
 void MenuMode::buildScene() {
-    AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"), true, 1.0f, true);
+    //AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"), true, 1.0f, true);
     //bool success = AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"));
     //AudioEngine::get()->setVolume("menuBGM",1.0f);
     //CULog("successful? %i", success?1:0);
