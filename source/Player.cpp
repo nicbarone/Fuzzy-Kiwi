@@ -69,5 +69,5 @@ void Player::move(float direction) {
 
 void Player::setLevel(int level) {
 	Entity::setLevel(level);
-	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET-55);
+	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET + PLAYER_OFFSET);
 }

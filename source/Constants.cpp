@@ -6,5 +6,6 @@ const float POSSESS_RANGE = 150;
 const float ENEMY_SPEED = 4;
 const float PLAYER_SPEED = 10;
 const float STAIRCASE_DOOR_OFFSET =  30;
+const float PLAYER_OFFSET = -55;
 const float CAT_DEN_OFFSET = -20;
 const float GAME_WIDTH = 1024;

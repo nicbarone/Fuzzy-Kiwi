@@ -249,6 +249,10 @@
 		"felt": {
 			"file": "fonts/MarkerFelt.ttf",
 			"size": 48
+		},
+		"small-felt": {
+			"file": "fonts/MarkerFelt.ttf",
+			"size": 24
 		}
 	}
 	}
