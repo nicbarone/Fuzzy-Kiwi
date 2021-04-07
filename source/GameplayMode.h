@@ -33,6 +33,9 @@
 #include "Player.h"
 #include "Floor.h"
 #include "Door.h"
+#include "Wall.h"
+#include "DoorFrame.h"
+#include "CagedAnimal.h"
 #include "StaircaseDoor.h"
 #include "CatDen.h"
 #include "EnemyController.h"
@@ -66,6 +69,10 @@ protected:
     std::shared_ptr<Floor> _level2Floor;
     /** A reference to the level 2 staircase door*/
     std::shared_ptr<StaircaseDoor> _level2StairDoor;
+    /** A reference to the level 1 floor*/
+    std::shared_ptr<Wall> _level1Wall;
+    /** A reference to the level 1 floor*/
+    std::shared_ptr<Wall> _level2Wall;
     /** A reference to the list of all staircase doors in the level*/
     std::vector<shared_ptr<StaircaseDoor>> _staircaseDoors;
     /** A reference to the level 1 cat den on the left hand side*/
@@ -77,6 +84,8 @@ protected:
    
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;
+    /** A reference to the level 1 door frame*/
+    std::shared_ptr<DoorFrame> _level1DoorFrame;
     /** A reference to the level 2 door*/
     std::shared_ptr<Door> _level2Door;
     /** A reference to the left wall*/
@@ -84,7 +93,7 @@ protected:
     /** A reference to the right wall*/
     std::shared_ptr<Floor> _rightWall;
     /** A reference to the cagedAnimal*/
-    std::shared_ptr<Door> _cagedAnimal;
+    std::shared_ptr<CagedAnimal> _cagedAnimal;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
     InputManager _inputManager;

@@ -6,6 +6,7 @@
 #include "LoadingMode.h"
 #include "LevelEditor.h"
 #include "MenuMode.h"
+#include "LevelSelectMode.h"
 /**
  * This class represents the application root for the game.
  */
@@ -23,6 +24,8 @@ protected:
     LoadingMode _loading;
     /** The controller for the menu screen */
     MenuMode _menu;
+    /** The controller for the level select */
+    LevelSelectMode _levelSelect;
     /** The controller for the level editor*/
     LevelEditor _levelEditor;
     InputManager _inputManager;
@@ -34,6 +37,7 @@ protected:
     bool _inEditor;
     bool _inMenu;
     bool _inGameplay;
+    bool _inLevelSelect;
 
 public:
     /**
@@ -45,7 +49,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    App() : cugl::Application(), _loaded(false), _inEditor(false), _inMenu(false), _inGameplay(false) {}
+    App() : cugl::Application(), _loaded(false), _inEditor(false), _inMenu(false), _inGameplay(false), _inLevelSelect(false) {}
 
     /**
      * Disposes of this application, releasing all resources.

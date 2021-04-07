@@ -188,10 +188,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\App.h" />
+    <ClInclude Include="..\..\source\CagedAnimal.h" />
     <ClInclude Include="..\..\source\CatDen.h" />
     <ClInclude Include="..\..\source\CollisionManager.h" />
     <ClInclude Include="..\..\source\Constants.h" />
     <ClInclude Include="..\..\source\Door.h" />
+    <ClInclude Include="..\..\source\DoorFrame.h" />
     <ClInclude Include="..\..\source\Enemy.h" />
     <ClInclude Include="..\..\source\EnemyController.h" />
     <ClInclude Include="..\..\source\Entity.h" />
@@ -202,19 +204,23 @@
     <ClInclude Include="..\..\source\InputManager.h" />
     <ClInclude Include="..\..\source\Interactable.h" />
     <ClInclude Include="..\..\source\LevelEditor.h" />
+    <ClInclude Include="..\..\source\LevelSelectMode.h" />
     <ClInclude Include="..\..\source\LoadingMode.h" />
     <ClInclude Include="..\..\source\MenuMode.h" />
     <ClInclude Include="..\..\source\Player.h" />
     <ClInclude Include="..\..\source\StaircaseDoor.h" />
     <ClInclude Include="..\..\source\UIElement.h" />
+    <ClInclude Include="..\..\source\Wall.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\App.cpp" />
+    <ClCompile Include="..\..\source\CagedAnimal.cpp" />
     <ClCompile Include="..\..\source\CatDen.cpp" />
     <ClCompile Include="..\..\source\CollisionManager.cpp" />
     <ClCompile Include="..\..\source\Constants.cpp" />
     <ClCompile Include="..\..\source\Door.cpp" />
+    <ClCompile Include="..\..\source\DoorFrame.cpp" />
     <ClCompile Include="..\..\source\Enemy.cpp" />
     <ClCompile Include="..\..\source\EnemyController.cpp" />
     <ClCompile Include="..\..\source\Entity.cpp" />
@@ -224,12 +230,14 @@
     <ClCompile Include="..\..\source\InputManager.cpp" />
     <ClCompile Include="..\..\source\Interactable.cpp" />
     <ClCompile Include="..\..\source\LevelEditor.cpp" />
+    <ClCompile Include="..\..\source\LevelSelectMode.cpp" />
     <ClCompile Include="..\..\source\LoadingMode.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\MenuMode.cpp" />
     <ClCompile Include="..\..\source\Player.cpp" />
     <ClCompile Include="..\..\source\StaircaseDoor.cpp" />
     <ClCompile Include="..\..\source\UIElement.cpp" />
+    <ClCompile Include="..\..\source\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico" />

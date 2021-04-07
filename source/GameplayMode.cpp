@@ -421,24 +421,34 @@ void GameplayMode::buildScene() {
 
 
     //floor texture creation
-    std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloors");
+    std::shared_ptr<Texture> wall = _assets->get<Texture>("levelWall");
+
+    std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloor");
     //Staircase door texture creation
     std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
+    
+    std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
+
     //caged animal
+    int s = 1.4;
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
-    _level1Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 0, cugl::Color4::WHITE, 1,1, floor);
-    _level2Floor = Floor::alloc(550, 0, Vec2(0.2, 0.2), 1, cugl::Color4::WHITE, 1, 1, floor);
-    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(0.55, 0.55), 0, cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor);
-    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(0.55, 0.55), 1, cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor);
-    _staircaseDoors = { _level1StairDoor, _level2StairDoor };
-    _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.25, 0.25), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
-    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.25, 0.25), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
+    _level1Wall = Wall::alloc(550, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1,1, wall);
+    _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
+    _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
+    _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
+    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(1.8, 1.8), 0, cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor);
+    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(1.8, 1.8), 1, cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor);
+    _staircaseDoors = { _level1StairDoor, _level2StairDoor};
+    _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
+    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, 1, 8, staircaseDoor);
     _catDens = { _level1CatDenLeft,_level1CatDenRight};
-    _level1Door = Door::alloc(590,0, Vec2(-0.65, 0.65), 0,cugl::Color4::WHITE, { 1 }, 1, 11, door);
+    _level1Door = Door::alloc(590,0, Vec2(1, 1), 0,cugl::Color4::WHITE, { 1 }, 1, 8, door);
+    _level1DoorFrame = DoorFrame::alloc(515, 0, Vec2(1.0, 1), 0, cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame);
+
     _doors = { _level1Door};
-    _cagedAnimal = Door::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, { 1 }, 1, 1, cagedAnimal);
+    _cagedAnimal = CagedAnimal::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, { 1 }, 1, 1, cagedAnimal);
     // Enemy creation
     _enemyController = make_shared<EnemyController>();
     enemyTexture = _assets->get<Texture>("enemy");
@@ -493,27 +503,32 @@ void GameplayMode::buildScene() {
 
     // Add the logo and button to the scene graph
     addChild(_rootScene);
-    _rootScene->addChild(_level1Floor->getSceneNode());
+    _rootScene->addChild(_level1Wall->getSceneNode());
     _rootScene->addChild(_level1StairDoor->getSceneNode());
-    _rootScene->addChild(_level2Floor->getSceneNode());
+    _rootScene->addChild(_level2Wall->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
     _rootScene->addChild(_level1CatDenLeft->getSceneNode());
     _rootScene->addChild(_level1CatDenRight->getSceneNode());
-    _rootScene->addChild(_level1Door->getSceneNode());
     _rootScene->addChild(_cagedAnimal->getSceneNode());
-    //_rootScene->addChild(_level2Door->getSceneNode());
-    /*_rootScene->addChild(_numberOfPosessions->);*/
-    addChild(_possessButton->getButton());
-    _rootScene->addChild(_player->getSceneNode());
-    _rootScene->addChild(_tutorialText);
-    addChild(_numberOfPossessions);
+    _rootScene->addChild(_level1Floor->getSceneNode());
+    _rootScene->addChild(_level1Door->getSceneNode());
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
         _rootScene->addChild(it->get()->getPatrolNode());
     }
+    _rootScene->addChild(_level1DoorFrame->getSceneNode());
 
+    _rootScene->addChild(_level2Floor->getSceneNode());
+
+    //_rootScene->addChild(_level2Door->getSceneNode());
+    /*_rootScene->addChild(_numberOfPosessions->);*/
+    addChild(_possessButton->getButton());
+    _rootScene->addChild(_player->getSceneNode());
+    _rootScene->addChild(_tutorialText);
+    addChild(_numberOfPossessions);
+   
 
 
     // We can only activate a button AFTER it is added to a scene
@@ -885,7 +900,8 @@ void GameplayMode::checkStaircaseDoors() {
                 !key_intersection.empty()) {
 
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
-                staircaseDoor->setDoor(!staircaseDoor);
+                staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
+                
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }
@@ -920,7 +936,7 @@ void GameplayMode::checkCatDens() {
                 _player->getLevel() == catDen->getLevel() &&
                 abs(screenToWorldCoords(_inputManager.getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager.getRootSceneNode()->getScaleX()) {
                 _player->getSceneNode()->setVisible(!visibility);
-                catDen->setDoor(!catDen);
+                catDen->setDoor(!catDen->getIsOpen());
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }

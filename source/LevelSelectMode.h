@@ -1,5 +1,5 @@
-#ifndef __MENU_MODE_H__
-#define __MENU_MODE_H__
+#ifndef __LEVEL_SELECT_MODE_H__
+#define __LEVEL_SELECT_MODE_H__
 #include <cugl/cugl.h>
 #include "GameplayMode.h"
 #include "InputManager.h"
@@ -8,9 +8,14 @@ class LevelSelectMode : public cugl::Scene2 {
 protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     bool _levelSelected = false;
-    bool _playPressed = false;
+    bool _locationSelected = false;
+    bool _backToLocationSelect = false;
+    bool _backButtonPressed = false;
+    int _locationIndex = -1;
+    std::string _levelID = "";
     GameplayMode _gameplay;
     std::shared_ptr<ui::PanelElement> _mapPanel;
+    std::shared_ptr<ui::PanelElement> _levelSelectPanel;
     std::shared_ptr<ui::ButtonElement> _settingsButton;
     std::shared_ptr<ui::ButtonElement> _backButton;
 public:
@@ -76,16 +81,44 @@ public:
      */
     void draw();
 
-    bool levelSelected() {
+    std::string getLevelSelectID() {
+        return _levelID;
+    }
+
+    void clearLevelSelectID() {
+        _levelID = "";
+    }
+
+    bool getLevelSelected() {
         return _levelSelected;
     }
 
-    bool getPlayPressed() {
-        return _playPressed;
+    void setLevelSelected(bool selected) {
+        _levelSelected = selected;
     }
 
-    void setPlayPressed(bool pressed) {
-        _playPressed = pressed;
+    bool getBackToLocationSelect() {
+        return _backToLocationSelect;
+    }
+
+    void setBackToLocationSelect(bool back) {
+        _backToLocationSelect = back;
+    }
+
+    bool getLocationSelected() {
+        return _locationSelected;
+    }
+
+    void setLocationSelected(bool pressed) {
+        _locationSelected = pressed;
+    }
+    
+    bool getBackPressed() {
+        return _backButtonPressed;
+    }
+
+    void setBackPressed(bool pressed) {
+        _backButtonPressed = pressed;
     }
 
     /** returns a GameplayMode constructed from the chosen level's json*/
@@ -102,6 +135,9 @@ public:
 
     void deactivateButtons();
     void activateButtons();
+
+    void activateLevelSelectButtons();
+    void deactivateLevelSelectButtons();
 };
 
-#endif /* __MENU_MODE_H__ */
+#endif /* __LEVEL_SELECT_MODE_H__ */
