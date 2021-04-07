@@ -58,7 +58,8 @@ void MenuMode::update(float progress) {
 GameplayMode MenuMode::getGameScene(std::string id) {
     if (id == "0_0") {
         if (_gameplay.init(_assets, 0, 0)) {
-            return _gameplay;
+            _gameplay.clearJson();
+          return _gameplay;
         }
     }
     else if (id == "0_1") {
