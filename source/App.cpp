@@ -123,7 +123,7 @@ void App::update(float timestep) {
     if (!_loaded && counter > 0) {
         _loading.update(0.01f);
         counter--;
-        if (true){//_inputManager.didReset()) {
+        if (_inputManager.didReset()) {
             CULog("si");
             _inEditor = true;
             _levelEditor.init(_assets);
