@@ -630,11 +630,15 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
 
     //floor texture creation
-    std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloors");
+    std::shared_ptr<Texture> wall = _assets->get<Texture>("levelWall");
+
+    std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloor");
     //Staircase door texture creation
     std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
+
+    std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
     //caged animal
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
     // Enemy creation
@@ -653,7 +657,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     if (playerJSON != nullptr) {
         string numPossessions = to_string(playerJSON->getInt("num_possessions"));
         _player = Player::alloc(playerJSON->getFloat("x_pos"), playerJSON->getInt("level"), 0, cat);
-        _rootScene->addChild(_player->getSceneNode());
+
     }
     if (enemiesJSON != nullptr) {
         for (int i = 0; i < enemiesJSON->size(); i++) {
@@ -672,7 +676,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     if (staircaseDoorJSON != nullptr) {
         for (int i = 0; i < staircaseDoorJSON->size(); i++) {
             objectTemp = staircaseDoorJSON->get(i);
-            _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.55,0.55), objectTemp->getInt("level"),
+            _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1.8,1.8), objectTemp->getInt("level"),
                 cugl::Color4::WHITE, {1}, 1, 8, staircaseDoor));
         }
     }
@@ -686,20 +690,25 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                     key.push_back(stoi(keyArray->get(j)->toString()));
                 }
             }
-            _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(-0.65, 0.65), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, {1}, 1, 11, door));
+            _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
+                cugl::Color4::WHITE, {1}, 1, 8, door));
+            _level1DoorFrame = DoorFrame::alloc(objectTemp->getFloat("x_pos")-75, 0, Vec2(1.0, 1), 1, cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame);
         }
     }
     if (decorationsJSON != nullptr) {
         for (int i = 0; i < decorationsJSON->size(); i++) {
             objectTemp = decorationsJSON->get(i);
-            _cagedAnimal = Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"),
+            _cagedAnimal = CagedAnimal::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"),
                 cugl::Color4::WHITE, { }, 1, 1, cagedAnimal);
-            _rootScene->addChild(_cagedAnimal->getSceneNode());
+            
         }
     }
 
-
+    int s = 1.4;
+    _level1Wall = Wall::alloc(550, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, wall);
+    _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
+    _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
+    _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
 
     // Create a button.  A button has an up image and a down image
     possessButton = _assets->get<Texture>("possess-button");
@@ -734,27 +743,40 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
-    for (auto it = begin(enemies); it != end(enemies); ++it) {
+    _rootScene->addChild(_level1Wall->getSceneNode());
+    _rootScene->addChild(_level2Wall->getSceneNode());
+    _rootScene->addChild(_level1Floor->getSceneNode());
+    _rootScene->addChild(_level2Floor->getSceneNode());
+
+
+    for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
-        _rootScene->addChild(it->get()->getPatrolNode());
     }
     for (auto it = begin(_doors); it != end(_doors); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
     }
-    for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {
+    for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
+        _rootScene->addChild(it->get()->getPatrolNode());
     }
-    addChild(_possessButton->getButton());
-    addChild(_rootScene);
+    _rootScene->addChild(_player->getSceneNode());
+    _rootScene->addChild(_cagedAnimal->getSceneNode());
+    _rootScene->addChild(_level1DoorFrame->getSceneNode());
+
+
+
+
     std::shared_ptr<Font> font = _assets->get<Font>("felt");
     string numPossessions = to_string(_player->get_nPossess());
     _numberOfPossessions = scene2::Label::alloc("Number of possessions left: " + numPossessions, font);
     _numberOfPossessions->setScale(Vec2(0.5, 0.5));
     _numberOfPossessions->setPosition(Vec2(20, 540));
 
+    addChild(_rootScene);
+    addChild(_possessButton->getButton());
+
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();
-
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
