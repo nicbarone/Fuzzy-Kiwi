@@ -54,7 +54,9 @@ using namespace cugl;
  * causing the application to run.
  */
 
-bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
+bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level) {
+    _locationIndex = location;
+    _levelIndex = level;
     Size size = Application::get()->getDisplaySize();
 
     size *= GAME_WIDTH / size.width;
@@ -72,8 +74,6 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _rootScene->setContentSize(size);
     _reset = false;
     _backToMenu = false;
-
-
     
     // Create an asset manager to load all assets
     _assets = assets;
@@ -108,7 +108,9 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     return true;
 }
 
-bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<JsonValue> json) {
+bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue> json) {
+    _locationIndex = location;
+    _levelIndex = level;
     Size size = Application::get()->getDisplaySize();
     _json = json;
     size *= GAME_WIDTH / size.width;
@@ -552,7 +554,7 @@ void GameplayMode::buildScene() {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
-            CULog("Next Level loading under construction");
+            _nextLevel = true;
         }
         });
     _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
@@ -991,6 +993,18 @@ vector<Vec2> GameplayMode::closedDoors() {
         }
     }
     return closedDoors;
+}
+
+std::string GameplayMode::getNextLevelID() {
+    if (_levelIndex >= MAX_LEVEL_NUM_PER_LOC) {
+        // TODO: If greater than the maximum level number, then return a string to tell return to menu (or next scene? undecided)
+        CULog("Location Cleared ! Return to Menu");
+        return "Location Cleared";
+    }
+    else {
+        // Otherwise return the next level by adding 1 to the levelIndex at the same location
+        return to_string(_locationIndex) + "_" + to_string(_levelIndex + 1);
+    }
 }
 
 

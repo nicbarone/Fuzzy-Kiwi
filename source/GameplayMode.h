@@ -47,6 +47,9 @@ class GameplayMode : public cugl::Scene2 {
 protected:
     bool _reset;
     bool _backToMenu;
+    bool _nextLevel;
+    int _locationIndex;
+    int _levelIndex;
 
     std::shared_ptr<cugl::JsonValue> _json;
     /** The parent scene node for a level*/
@@ -137,7 +140,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false) {}
+    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false) {}
     
     /**
      * Disposes of this application, releasing all resources.
@@ -156,11 +159,13 @@ public:
      * memory allocation.  Instead, allocation happens in this method.
      *
      * @param assets    The (loaded) assets for this game mode
-     *
+     * @param location    The location the level is selected
+     * @param level    The number the selected level is within the current location
+     * 
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets);
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<JsonValue>);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue>);
 
 
     /** used to reset the level*/
@@ -225,6 +230,16 @@ public:
     void setBackToMenu(bool backToMenu) {
         _backToMenu = backToMenu;
     }
+
+    bool getNextLevel() {
+        return _nextLevel;
+    }
+
+    void setNextlevel(bool next) {
+        _nextLevel = next;
+    }
+
+    std::string getNextLevelID();
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

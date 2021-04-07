@@ -189,6 +189,11 @@ void App::update(float timestep) {
             _menu.activateButtons();
             _inMenu = true;
         }
+        else if (_gameplay.getNextLevel()) {
+            _gameplay.setNextlevel(false);
+            _gameplay = _menu.getGameScene(_gameplay.getNextLevelID());
+            _gameplay.reset();
+        }
     }
 }
 

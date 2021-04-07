@@ -121,9 +121,6 @@ public:
         _backButtonPressed = pressed;
     }
 
-    /** returns a GameplayMode constructed from the chosen level's json*/
-    GameplayMode getGameScene();
-
     /**
      * Internal helper to build the scene graph.
      *

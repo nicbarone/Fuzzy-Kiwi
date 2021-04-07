@@ -9,3 +9,4 @@ const float STAIRCASE_DOOR_OFFSET =  44;
 const float PLAYER_OFFSET = -55;
 const float CAT_DEN_OFFSET = -20;
 const float GAME_WIDTH = 1024;
+const int MAX_LEVEL_NUM_PER_LOC = 2;
