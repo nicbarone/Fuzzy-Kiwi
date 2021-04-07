@@ -172,6 +172,13 @@ shared_ptr<JsonValue> LevelEditor::toJson() {
             tempObject->appendChild("keyInt", tempArray);
             doorArray->appendChild(tempObject);
         }
+        else if (currentNode->getName().substr(0, 3) == "dec") {
+            tempObject->appendChild("x_pos", JsonValue::alloc(currentNode->getPositionX()));
+            tempObject->appendChild("level", JsonValue::alloc((currentNode->getPositionY() - FLOOR_OFFSET) / FLOOR_HEIGHT));
+            tempObject->appendChild("objective", JsonValue::alloc((long)stoi(currentNode->getName().substr(3))));
+            tempObject->appendChild("texture", JsonValue::alloc("caged-animal"));
+            decorationsArray->appendChild(tempObject);
+        }
         else {
             int returnID = MessageBox(
                 NULL,
@@ -195,6 +202,7 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
     shared_ptr<JsonValue> player = json->get("player");
     shared_ptr<JsonValue> staircaseDoor = json->get("staircase-door");
     shared_ptr<JsonValue> door = json->get("door");
+    shared_ptr<JsonValue> decorations = json->get("decorations");
     shared_ptr<JsonValue> objectTemp;
     shared_ptr<scene2::SceneNode> temp;
     //create cat
@@ -202,7 +210,7 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
         temp = scene2::AnimationNode::alloc(catTexture, 1, 8);
         temp->setPosition(player->getFloat("x_pos"), player->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + PLAYER_OFFSET);
         temp->setScale(0.15, 0.15);
-        _rootScene->addChildWithName(temp, "cat" + player->getInt("num_possessions"));
+        _rootScene->addChildWithName(temp, "cat" + to_string(player->getInt("num_possessions")));
     }
 
     //create staircase doors and dens
@@ -213,17 +221,17 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
                 temp = scene2::AnimationNode::alloc(catDenTexture, 1, 8);
                 temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + CAT_DEN_OFFSET);
                 temp->setScale(0.25, 0.25);
-                _rootScene->addChildWithName(temp, "den" + objectTemp->getInt("connection"));
+                _rootScene->addChildWithName(temp, "den" + to_string(objectTemp->getInt("connection")));
             }
             else { //staircase door
                 temp = scene2::AnimationNode::alloc(staircaseDoorTexture, 1, 8);
                 temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + STAIRCASE_DOOR_OFFSET);
                 temp->setScale(0.55, 0.55);
-                _rootScene->addChildWithName(temp, "sta" + objectTemp->getInt("connection"));
+                _rootScene->addChildWithName(temp, "sta" + to_string(objectTemp->getInt("connection")));
             }
         }
     }
-
+    //create doors
     if (door != nullptr) {
         for (int i = 0; i < door->size(); i++) {
             objectTemp = door->get(i);
@@ -239,6 +247,16 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
         }
     }
 
+    //create decorations
+    if (decorations != nullptr) {
+        for (int i = 0; i < decorations->size(); i++) {
+            objectTemp = decorations->get(i);
+            temp = scene2::AnimationNode::alloc(cageTexture, 1, 1);
+            temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
+            temp->setScale(0.3, 0.3);
+            _rootScene->addChildWithName(temp, "dec" + to_string(objectTemp->getInt("objective")));
+        }
+    }
 }
 
 #pragma mark -
@@ -312,6 +330,16 @@ void LevelEditor::buildScene() {
     _keyField->activate();
     addChild(_keyLabel);
     addChild(_keyField);
+
+    //objective
+    _objectiveLabel = scene2::Label::alloc("Objective:", font);
+    _objectiveField = scene2::TextField::alloc(Size(30, 30), font);
+    _objectiveLabel->setPosition(480, 550);
+    _objectiveField->setPosition(570, 550);
+    _objectiveField->setBackground(Color4::WHITE);
+    _objectiveField->activate();
+    addChild(_objectiveLabel);
+    addChild(_objectiveField);
 
     //Clear Button
     shared_ptr<scene2::Label> _clearText = scene2::Label::alloc("Clear All", font);
@@ -404,6 +432,25 @@ void LevelEditor::buildScene() {
         });
     buttons.push_back(_door);
     addChild(_door);
+
+    //Objective Button
+    cageTexture = _assets->get<Texture>("cagedAnimal");
+    shared_ptr<scene2::Label> _objectiveText = scene2::Label::alloc("Objective", font);
+    _objectiveText->setBackground(Color4::WHITE);
+    _objective = scene2::Button::alloc(_objectiveText, Color4::GRAY);
+    _objective->setToggle(true);
+    _objective->activate();
+    _objective->setPosition(500, 0);
+    _objective->addListener([=](const std::string& name, bool down) {
+        if (down) {
+            pendingNode = scene2::AnimationNode::alloc(cageTexture, 1, 1);
+            pendingNode->setScale(0.3, 0.3);
+            pendingNode->setName("dec" + (_objectiveField->getText() != "" ? _objectiveField->getText() : "0"));
+            _rootScene->addChild(pendingNode);
+        }
+        });
+    buttons.push_back(_objective);
+    addChild(_objective);
 
     //Save Button
     shared_ptr<scene2::Label> _saveText = scene2::Label::alloc("Save", font);

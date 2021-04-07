@@ -48,6 +48,7 @@ protected:
     std::shared_ptr<Texture> staircaseDoorTexture;
     std::shared_ptr<Texture> catDenTexture;
     std::shared_ptr<Texture> doorTexture;
+    std::shared_ptr<Texture> cageTexture;
 
     vector< std::shared_ptr<cugl::scene2::Button>> buttons;
     /** function buttons*/
@@ -58,6 +59,7 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _staircaseDoor;
     std::shared_ptr<cugl::scene2::Button> _catDen;
     std::shared_ptr<cugl::scene2::Button> _door;
+    std::shared_ptr<cugl::scene2::Button> _objective;
 
     /** text input fields*/
     std::shared_ptr<cugl::scene2::Label> _floorsLabel;
@@ -70,6 +72,8 @@ protected:
     std::shared_ptr<cugl::scene2::TextField> _doorIDField;
     std::shared_ptr<cugl::scene2::Label> _keyLabel;
     std::shared_ptr<cugl::scene2::TextField> _keyField;
+    std::shared_ptr<cugl::scene2::Label> _objectiveLabel;
+    std::shared_ptr<cugl::scene2::TextField> _objectiveField;
 
     vector<float> floorHeights;
 
