@@ -114,6 +114,7 @@ protected:
      * have become standard in most game engines.
      */
     void buildScene();
+    void buildScene(std::shared_ptr<JsonValue>);
     
 public:
     /**
@@ -148,6 +149,7 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<JsonValue>);
 
 
     /** used to reset the level*/

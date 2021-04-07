@@ -108,6 +108,60 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     return true;
 }
 
+bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<JsonValue> json) {
+    Size size = Application::get()->getDisplaySize();
+
+    size *= GAME_WIDTH / size.width;
+    if (assets == nullptr) {
+        return false;
+    }
+    else if (!Scene2::init(size)) {
+        return false;
+    }
+    // Create a scene graph the same size as the window
+    //_scene = Scene2::alloc(size.width, size.height);
+    _rootScene = scene2::SceneNode::alloc();
+    _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
+
+    _rootScene->setContentSize(size);
+    _reset = false;
+    _backToMenu = false;
+
+
+
+    // Create an asset manager to load all assets
+    _assets = assets;
+
+
+    // Activate mouse or touch screen input as appropriate
+    // We have to do this BEFORE the scene, because the scene has a button
+#if defined (CU_TOUCH_SCREEN)
+    Input::activate<Touchscreen>();
+#else
+    Input::activate<Mouse>();
+    Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
+    Input::activate<Keyboard>();
+#endif
+
+    // Build the scene from these assets
+    buildScene(json);
+
+
+    // Report the safe area
+    Rect bounds = Display::get()->getSafeBounds();
+    // CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
+     //                        bounds.size.toString().c_str());
+
+    bounds = Application::get()->getSafeBounds();
+    //CULog("Safe Area %sx%s",bounds.origin.toString().c_str(),
+    //                        bounds.size.toString().c_str());
+
+    bounds = Application::get()->getDisplayBounds();
+    //CULog("Full Area %sx%s",bounds.origin.toString().c_str(),
+    //                        bounds.size.toString().c_str());
+    return true;
+}
+
 
 void GameplayMode::reset() {
     //_scene = nullptr;
@@ -447,6 +501,210 @@ void GameplayMode::buildScene() {
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
         _rootScene->addChild(it->get()->getPatrolNode());
+    }
+
+
+
+    // We can only activate a button AFTER it is added to a scene
+    _possessButton->getButton()->activate();
+
+    // Create Win Panel
+    winPanel = _assets->get<Texture>("levelCompleteBG");
+    _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
+    _winPanel->getSceneNode()->setScale(0.75f);
+    _winPanel->setVisible(false);
+    _winPanel->createChildPanel(0, 160, 0, _assets->get<Texture>("winIcon"));
+    _winPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    _winPanel->createChildPanel(0, -45, 0, _assets->get<Texture>("winTitle"));
+    _winPanel->getChildPanels()[1]->getSceneNode()->setScale(1.2f);
+    _winPanel->createChildPanel(135, 10, 0, _assets->get<Texture>("deadOrAlive"));
+    _winPanel->getChildPanels()[2]->getSceneNode()->setScale(1.2f);
+    _winPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"));
+    _winPanel->getChildButtons()[0]->getButton()->setName("nextLevel");
+    _winPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            CULog("Next Level loading under construction");
+        }
+        });
+    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
+    _winPanel->getChildButtons()[1]->getButton()->setName("retry");
+    _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+        });
+    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"));
+
+    _winPanel->getChildButtons()[2]->getButton()->setName("menu");
+    _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _backToMenu = true;
+        }
+        });
+    addChild(_winPanel->getSceneNode());
+
+
+    // Create Lose Panel
+    losePanel = _assets->get<Texture>("levelCompleteBG");
+    _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
+    _losePanel->getSceneNode()->setScale(0.75f);
+    _losePanel->setVisible(false);
+    _losePanel->createChildPanel(0, 160, 0, _assets->get<Texture>("loseIcon"));
+    _losePanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    _losePanel->createChildPanel(0, -45, 0, _assets->get<Texture>("loseTitle"));
+    _losePanel->getChildPanels()[1]->getSceneNode()->setScale(1.2f);
+    _losePanel->createChildPanel(0, 100, 0, _assets->get<Texture>("wasted"));
+    _losePanel->getChildPanels()[2]->getSceneNode()->setScale(0.5f);
+    _losePanel->createChildButton(0, -170, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
+    _losePanel->getChildButtons()[0]->getButton()->setName("retry");
+    _losePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+        });
+    _losePanel->createChildButton(0, -230, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"));
+    _losePanel->getChildButtons()[1]->getButton()->setName("menu");
+    _losePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _backToMenu = true;
+        }
+        });
+    addChild(_losePanel->getSceneNode());
+
+    // Initialize input manager
+    _inputManager = InputManager();
+    _inputManager.init(_player, _rootScene, getBounds());
+}
+
+void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
+    Size  size = Application::get()->getDisplaySize();
+    float scale = GAME_WIDTH / size.width;
+    size *= scale;
+
+    _hasControl = true;
+
+    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
+
+    //floor texture creation
+    std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloors");
+    //Staircase door texture creation
+    std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
+    //Door texture creation
+    std::shared_ptr<Texture> door = _assets->get<Texture>("door");
+    //caged animal
+    std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
+    // Enemy creation
+    _enemyController = make_shared<EnemyController>();
+    enemyTexture = _assets->get<Texture>("enemy");
+    std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
+    enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
+
+    //JSON PROCESSING
+    shared_ptr<JsonValue> playerJSON = json->get("player");
+    shared_ptr<JsonValue> enemiesJSON = json->get("enemy");
+    shared_ptr<JsonValue> staircaseDoorJSON = json->get("staircase-door");
+    shared_ptr<JsonValue> doorJSON = json->get("door");
+    shared_ptr<JsonValue> decorationsJSON = json->get("decorations");
+    shared_ptr<JsonValue> objectTemp;
+    if (playerJSON != nullptr) {
+        _player = Player::alloc(playerJSON->getFloat("x_pos"), playerJSON->getInt("level"), 0, cat);
+        _rootScene->addChild(_player->getSceneNode());
+    }
+    if (enemiesJSON != nullptr) {
+        for (int i = 0; i < enemiesJSON->size(); i++) {
+            objectTemp = enemiesJSON->get(i);
+            shared_ptr<JsonValue> keyArray = objectTemp->get("keys");
+            vector<int> key = {};
+            for (int j = 0; j < keyArray->size(); j++) {
+                key.push_back(stoi(keyArray->get(j)->toString()));
+            }
+            _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 
+                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), enemyTexture, altTexture, enemyHighlightTexture);
+        }
+    }
+    if (staircaseDoorJSON != nullptr) {
+        for (int i = 0; i < staircaseDoorJSON->size(); i++) {
+            objectTemp = staircaseDoorJSON->get(i);
+            _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.55,0.55), objectTemp->getInt("level"),
+                cugl::Color4::WHITE, { }, 1, 8, staircaseDoor));
+        }
+    }
+    if (doorJSON != nullptr) {
+        for (int i = 0; i < doorJSON->size(); i++) {
+            objectTemp = doorJSON->get(i);
+            shared_ptr<JsonValue> keyArray = objectTemp->get("keys");
+            vector<int> key = {};
+            for (int j = 0; j < keyArray->size(); j++) {
+                key.push_back(stoi(keyArray->get(j)->toString()));
+            }
+            _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(-0.65, 0.65), objectTemp->getInt("level"),
+                cugl::Color4::WHITE, { }, 1, 11, door));
+        }
+    }
+    if (decorationsJSON != nullptr) {
+        for (int i = 0; i < decorationsJSON->size(); i++) {
+            objectTemp = decorationsJSON->get(i);
+            _rootScene->addChild(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"),
+                cugl::Color4::WHITE, { }, 1, 1, door)->getSceneNode());
+        }
+    }
+
+
+
+    // Create a button.  A button has an up image and a down image
+    possessButton = _assets->get<Texture>("possess-button");
+    unpossessButton = _assets->get<Texture>("unpossess-button");
+    Size pbsize = possessButton->getSize();
+    // set up the ui element of possess button
+    _possessButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::POSSESS);
+    _possessButton->setTexture(possessButton);
+    // Create a callback function for the button
+    _possessButton->getButton()->setName("possess");
+    _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _possessButton->setClicked(true);
+        }
+        });
+
+    Rect safe = Application::get()->getSafeBounds();
+    safe.origin *= scale;
+    safe.size *= scale;
+
+
+    float bOffset = safe.origin.y;
+    float rOffset = (size.width) - (safe.origin.x + safe.size.width);
+
+    _possessButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
+    _possessButton->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2 - 20, (pbsize.height + bOffset) / 2 + 60));
+
+
+    vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
+
+    for (auto it = begin(enemies); it != end(enemies); ++it) {
+        _rootScene->addChild(it->get()->getSceneNode());
+        _rootScene->addChild(it->get()->getPatrolNode());
+    }
+    for (auto it = begin(_doors); it != end(_doors); ++it) {
+        _rootScene->addChild(it->get()->getSceneNode());
+    }
+    for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {
+        _rootScene->addChild(it->get()->getSceneNode());
     }
 
 
