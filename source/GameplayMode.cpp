@@ -504,9 +504,8 @@ void GameplayMode::buildScene() {
     // Add the logo and button to the scene graph
     addChild(_rootScene);
     _rootScene->addChild(_level1Wall->getSceneNode());
-    _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2Wall->getSceneNode());
-    _rootScene->addChild(_level2StairDoor->getSceneNode());
+
     _rootScene->addChild(_level1CatDenLeft->getSceneNode());
     _rootScene->addChild(_level1CatDenRight->getSceneNode());
     _rootScene->addChild(_cagedAnimal->getSceneNode());
@@ -514,13 +513,14 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_level1Door->getSceneNode());
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
+    _rootScene->addChild(_level2Floor->getSceneNode());
+    _rootScene->addChild(_level1StairDoor->getSceneNode());
+    _rootScene->addChild(_level2StairDoor->getSceneNode());
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
         _rootScene->addChild(it->get()->getPatrolNode());
     }
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
-
-    _rootScene->addChild(_level2Floor->getSceneNode());
 
     //_rootScene->addChild(_level2Door->getSceneNode());
     /*_rootScene->addChild(_numberOfPosessions->);*/
