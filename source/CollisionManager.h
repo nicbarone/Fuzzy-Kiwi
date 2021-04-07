@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Player.h"
 #include "Door.h"
+#include "CagedAnimal.h"
 #include "Enemy.h"
 
 /**
@@ -26,7 +27,7 @@ namespace collisions {
 		const std::vector<shared_ptr<Door>>& doors);
 
 	int checkForCagedAnimalCollision(const std::shared_ptr<Player>& player,
-		const std::shared_ptr<Door>& cagedAnimal);
+		const std::shared_ptr<CagedAnimal>& cagedAnimal);
 	/**
 	 * Nudge the player to ensure it does not do out of view.
 	 *

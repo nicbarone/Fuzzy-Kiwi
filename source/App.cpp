@@ -122,8 +122,8 @@ void App::update(float timestep) {
     _inputManager.readInput();
     if (!_loaded && counter > 0) {
         _loading.update(0.01f);
-        counter--;
-        if (false){//_inputManager.didReset()) {
+        counter=0;
+        if (_inputManager.didReset()) {
             CULog("si");
             _inEditor = true;
             _levelEditor.init(_assets);

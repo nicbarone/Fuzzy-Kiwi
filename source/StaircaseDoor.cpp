@@ -30,6 +30,7 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 
 void StaircaseDoor::setDoor(bool open) {
 	_isOpen = open;
+	//CULog("staircase %d", open);
 	std::function<bool()> frame0 = [&]() {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
 		return false;
@@ -74,16 +75,18 @@ void StaircaseDoor::setDoor(bool open) {
 		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 4);
 		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 5);
 		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 6);
+		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 7);
 	}
 	else
 	{
 		int timeDiff = 25;
-		cugl::Application::get()->schedule(frame5, 50 + timeDiff);
-		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 2);
-		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 3);
-		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 4);
-		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 5);
-		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 6);
+		cugl::Application::get()->schedule(frame6, 50 + timeDiff);
+		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 2);
+		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 3);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 5);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 6);
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 7);
 	}
 
 }

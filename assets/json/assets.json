@@ -168,8 +168,15 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"levelFloors": {
-			"file": "textures/levelFloors.png",
+		"levelWall": {
+			"file": "textures/levelWall.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"levelFloor": {
+			"file": "textures/LevelFloor.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -261,6 +268,13 @@
 		},
 		"level2": {
 			"file": "textures/Level2.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"doorFrame": {
+			"file": "textures/DoorFrame.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

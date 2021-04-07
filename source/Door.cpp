@@ -1,10 +1,10 @@
 #include "Door.h"
 using namespace cugl;
 
-#define DOOR_OFFSET 10
+#define DOOR_OFFSET 69
 Door::Door() :
 	_frame(0),
-	_frameCounter(9)
+	_frameCounter(8)
 {
 	_keys = { 0 }; 
 	_blockedEnemy = nullptr;
@@ -23,7 +23,7 @@ bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vect
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
-	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET- DOOR_OFFSET));
+	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + DOOR_OFFSET));
 	setAngle(ang);
 	setScale(scale);
 	setLevel(level);
@@ -75,26 +75,24 @@ void Door::setDoor(bool open) {
 	};
 	if (open) {
 		int timeDiff = 25;
-		cugl::Application::get()->schedule(frame1, 50+timeDiff);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff);
 		cugl::Application::get()->schedule(frame2, 50 + timeDiff*2);
 		cugl::Application::get()->schedule(frame3, 50 + timeDiff*3);
 		cugl::Application::get()->schedule(frame4, 50 + timeDiff*4);
 		cugl::Application::get()->schedule(frame5, 50 + timeDiff*5);
 		cugl::Application::get()->schedule(frame6, 50 + timeDiff*6);
 		cugl::Application::get()->schedule(frame7, 50 + timeDiff*7);
-		cugl::Application::get()->schedule(frame8, 50 + timeDiff*8);
 	}
 	else
 	{
 		int timeDiff = 25;
-		cugl::Application::get()->schedule(frame8, 50 + timeDiff);
-		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 2);
-		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 3);
-		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 4);
-		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 5);
-		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 6);
-		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 7);
-		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 8);
+		cugl::Application::get()->schedule(frame6, 50 + timeDiff);
+		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 2);
+		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 3);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 5);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 6);
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 7);
 	}
 	//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frame);
 	if (_blockedEnemy != nullptr) {
