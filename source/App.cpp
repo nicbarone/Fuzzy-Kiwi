@@ -123,7 +123,7 @@ void App::update(float timestep) {
     if (!_loaded && counter > 0) {
         _loading.update(0.01f);
         counter--;
-        if (true){//_inputManager.didReset()) {
+        if (false){//_inputManager.didReset()) {
             CULog("si");
             _inEditor = true;
             _levelEditor.init(_assets);
@@ -140,15 +140,41 @@ void App::update(float timestep) {
         _inMenu = true;
         
     }
-    else if (_inMenu){
-        _menu.update(timestep);
-        if (_inputManager.didReset() || _menu.getPlayPressed()) {
-            _menu.setPlayPressed(false);
-            _menu.deactivateButtons();
-            CULog("si");
+    else if (_inLevelSelect) {
+        _levelSelect.update(timestep);
+        if (_levelSelect.getBackPressed()) {
+            _levelSelect.setBackPressed(false);
+            _levelSelect.deactivateButtons();
+            _menu.activateButtons();
+            _inLevelSelect = false;
+            _inMenu = true;
+        }
+        else if (_levelSelect.getLocationSelected()) {
+            _levelSelect.setLocationSelected(false);
+            _levelSelect.activateLevelSelectButtons();
+        }
+        else if (_levelSelect.getLevelSelected()) {
+            // Load the level
+            std::string level = _levelSelect.getLevelSelectID();
+            _levelSelect.setLevelSelected(false);
+            _levelSelect.deactivateLevelSelectButtons();
+            _levelSelect.clearLevelSelectID();
+            // For now, will change to the real level
+            _inLevelSelect = false;
+            _inGameplay = true;
             _gameplay = _menu.getGameScene();
             _gameplay.reset();
+        }
+    }
+    else if (_inMenu){
+        _menu.update(timestep);
+        if (_menu.getPlayPressed()) {
+            _menu.setPlayPressed(false);
+            _menu.deactivateButtons();
+            _levelSelect.init(_assets);
+            CULog("si");
             _inMenu = false;
+            _inLevelSelect = true;
         }
     }
     else {
@@ -179,6 +205,9 @@ void App::draw() {
     }
     else if (_inMenu) {
         _menu.render(_batch);
+    }
+    else if (_inLevelSelect) {
+        _levelSelect.render(_batch);
     }
     else {
         _gameplay.render(_batch);

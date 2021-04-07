@@ -237,6 +237,27 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"backButton": {
+			"file": "textures/BackButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"levelSelectBG": {
+			"file": "textures/LevelSelectBackground.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level1": {
+			"file": "textures/Level1.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
 	},
 	"sounds": {
