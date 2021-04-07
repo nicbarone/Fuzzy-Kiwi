@@ -798,7 +798,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
-            CULog("Next Level loading under construction");
+            _nextLevel = true;
         }
         });
     _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"));
@@ -996,7 +996,7 @@ vector<Vec2> GameplayMode::closedDoors() {
 }
 
 std::string GameplayMode::getNextLevelID() {
-    if (_levelIndex >= MAX_LEVEL_NUM_PER_LOC) {
+    if (_levelIndex + 1 >= MAX_LEVEL_NUM_PER_LOC) {
         // TODO: If greater than the maximum level number, then return a string to tell return to menu (or next scene? undecided)
         CULog("Location Cleared ! Return to Menu");
         return "Location Cleared";

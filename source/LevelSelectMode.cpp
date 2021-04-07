@@ -97,7 +97,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(300, -200, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("backButton"));
+    _levelSelectPanel->createChildButton(412, -228, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("backButton"));
     _levelSelectPanel->getChildButtons()[2]->getButton()->setScale(0.3f);
     _levelSelectPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released

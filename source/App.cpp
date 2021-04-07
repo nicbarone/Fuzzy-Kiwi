@@ -162,7 +162,7 @@ void App::update(float timestep) {
         else if (_levelSelect.getLevelSelected()) {
             // Load the level
             std::string level = _levelSelect.getLevelSelectID();
-            _gameplay = _menu.getGameScene(_levelSelect.getLevelSelectID());
+            _gameplay = _menu.getGameScene(level);
             _gameplay.reset();
             _inLevelSelect = false;
             _inGameplay = true;
@@ -191,8 +191,17 @@ void App::update(float timestep) {
         }
         else if (_gameplay.getNextLevel()) {
             _gameplay.setNextlevel(false);
-            _gameplay = _menu.getGameScene(_gameplay.getNextLevelID());
-            _gameplay.reset();
+            std::string level = _gameplay.getNextLevelID();
+            if (level == "Location Cleared") {
+                _levelSelect.activateButtons();
+                _levelSelect.deactivateLevelSelectButtons();
+                _inLevelSelect = true;
+                _inGameplay = false;
+            }
+            else {
+                _gameplay = _menu.getGameScene(_gameplay.getNextLevelID());
+                _gameplay.reset();
+            }
         }
     }
 }
