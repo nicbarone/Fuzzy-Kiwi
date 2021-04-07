@@ -152,18 +152,23 @@ void App::update(float timestep) {
         else if (_levelSelect.getLocationSelected()) {
             _levelSelect.setLocationSelected(false);
             _levelSelect.activateLevelSelectButtons();
+            _levelSelect.deactivateButtons();
+        }
+        else if (_levelSelect.getBackToLocationSelect()) {
+            _levelSelect.setBackToLocationSelect(false);
+            _levelSelect.activateButtons();
+            _levelSelect.deactivateLevelSelectButtons();
         }
         else if (_levelSelect.getLevelSelected()) {
             // Load the level
             std::string level = _levelSelect.getLevelSelectID();
-            _levelSelect.setLevelSelected(false);
-            _levelSelect.deactivateLevelSelectButtons();
-            _levelSelect.clearLevelSelectID();
-            // For now, will change to the real level
+            _gameplay = _menu.getGameScene(_levelSelect.getLevelSelectID());
+            _gameplay.reset();
             _inLevelSelect = false;
             _inGameplay = true;
-            _gameplay = _menu.getGameScene();
-            _gameplay.reset();
+            _levelSelect.clearLevelSelectID();
+            _levelSelect.setLevelSelected(false);
+            _levelSelect.deactivateLevelSelectButtons();
         }
     }
     else if (_inMenu){

@@ -16,6 +16,7 @@ using namespace cugl;
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool LevelSelectMode::init(const std::shared_ptr<AssetManager>& assets) {
+    _backToLocationSelect = false;
     _locationIndex = -1;
     _levelID = "";
     _backButtonPressed = false;
@@ -80,7 +81,7 @@ void LevelSelectMode::buildScene() {
         }
     });
     _levelSelectPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelSelectBG"));
-    _levelSelectPanel->createChildButton(0, 0, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1"));
+    _levelSelectPanel->createChildButton(-100, 0, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1"));
     _levelSelectPanel->getChildButtons()[0]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -89,6 +90,27 @@ void LevelSelectMode::buildScene() {
             // Mark this button as clicked, proper handle will take place in update()
             _levelID = to_string(_locationIndex) + "_0";
             _levelSelected = true;
+        }
+    });
+    _levelSelectPanel->createChildButton(100, 0, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level2"));
+    _levelSelectPanel->getChildButtons()[1]->getButton()->setScale(1.0f);
+    _levelSelectPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _levelID = to_string(_locationIndex) + "_1";
+            _levelSelected = true;
+        }
+        });
+    _levelSelectPanel->createChildButton(300, -200, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("backButton"));
+    _levelSelectPanel->getChildButtons()[2]->getButton()->setScale(0.3f);
+    _levelSelectPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _backToLocationSelect = true;
         }
     });
     _levelSelectPanel->setVisible(false);
@@ -124,20 +146,30 @@ void LevelSelectMode::deactivateButtons() {
     _mapPanel->getChildButtons()[0]->getButton()->deactivate();
     _settingsButton->getButton()->deactivate();
     _backButton->getButton()->deactivate();
+    _mapPanel->getChildButtons()[0]->getButton()->setVisible(false);
+    _settingsButton->getButton()->setVisible(false);
+    _backButton->getButton()->setVisible(false);
 }
 
 void LevelSelectMode::activateButtons() {
     _mapPanel->getChildButtons()[0]->getButton()->activate();
     _settingsButton->getButton()->activate();
     _backButton->getButton()->activate();
+    _mapPanel->getChildButtons()[0]->getButton()->setVisible(true);
+    _settingsButton->getButton()->setVisible(true);
+    _backButton->getButton()->setVisible(true);
 }
 
 void LevelSelectMode::deactivateLevelSelectButtons() {
     _levelSelectPanel->setVisible(false);
     _levelSelectPanel->getChildButtons()[0]->getButton()->deactivate();
+    _levelSelectPanel->getChildButtons()[1]->getButton()->deactivate();
+    _levelSelectPanel->getChildButtons()[2]->getButton()->deactivate();
 }
 
 void LevelSelectMode::activateLevelSelectButtons() {
     _levelSelectPanel->setVisible(true);
     _levelSelectPanel->getChildButtons()[0]->getButton()->activate();
+    _levelSelectPanel->getChildButtons()[1]->getButton()->activate();
+    _levelSelectPanel->getChildButtons()[2]->getButton()->activate();
 }

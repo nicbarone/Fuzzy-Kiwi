@@ -9,6 +9,7 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     bool _levelSelected = false;
     bool _locationSelected = false;
+    bool _backToLocationSelect = false;
     bool _backButtonPressed = false;
     int _locationIndex = -1;
     std::string _levelID = "";
@@ -94,6 +95,14 @@ public:
 
     void setLevelSelected(bool selected) {
         _levelSelected = selected;
+    }
+
+    bool getBackToLocationSelect() {
+        return _backToLocationSelect;
+    }
+
+    void setBackToLocationSelect(bool back) {
+        _backToLocationSelect = back;
     }
 
     bool getLocationSelected() {

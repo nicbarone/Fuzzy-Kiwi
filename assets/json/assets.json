@@ -258,6 +258,13 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"level2": {
+			"file": "textures/Level2.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
 	},
 	"sounds": {

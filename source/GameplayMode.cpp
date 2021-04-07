@@ -630,8 +630,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             objectTemp = enemiesJSON->get(i);
             shared_ptr<JsonValue> keyArray = objectTemp->get("keys");
             vector<int> key = {};
-            for (int j = 0; j < keyArray->size(); j++) {
-                key.push_back(stoi(keyArray->get(j)->toString()));
+            if (!keyArray->isNull()) {
+                for (int j = 0; j < keyArray->size(); j++) {
+                    key.push_back(stoi(keyArray->get(j)->toString()));
+                }
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 
                 key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), enemyTexture, altTexture, enemyHighlightTexture);
@@ -649,8 +651,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             objectTemp = doorJSON->get(i);
             shared_ptr<JsonValue> keyArray = objectTemp->get("keys");
             vector<int> key = {};
-            for (int j = 0; j < keyArray->size(); j++) {
-                key.push_back(stoi(keyArray->get(j)->toString()));
+            if (!keyArray->isNull()) {
+                for (int j = 0; j < keyArray->size(); j++) {
+                    key.push_back(stoi(keyArray->get(j)->toString()));
+                }
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(-0.65, 0.65), objectTemp->getInt("level"),
                 cugl::Color4::WHITE, { }, 1, 11, door));
