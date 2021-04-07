@@ -110,7 +110,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
 
 bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<JsonValue> json) {
     Size size = Application::get()->getDisplaySize();
-
+    _json = json;
     size *= GAME_WIDTH / size.width;
     if (assets == nullptr) {
         return false;
@@ -173,14 +173,19 @@ void GameplayMode::reset() {
     _losePanel->getChildButtons()[1]->getButton()->deactivate();
     size *= GAME_WIDTH / size.width;
     removeAllChildren();
-
+    
     // Create a scene graph the same size as the window
     alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(size);
     _reset = false;
-    buildScene();
+    if (_json != nullptr) {
+        buildScene(_json);
+    }
+    else {
+        buildScene();
+    }
 }
 
 /**
@@ -254,8 +259,10 @@ void GameplayMode::update(float timestep) {
                 if (attemptPossess()) {
                     _possessButton->setTexture(unpossessButton);
                     _possessButton->setButtonState(ui::ButtonState::UNPOSSESS);
-                    _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
-                    _tutorialText->setPosition(Vec2(100, 220));
+                    if (_json == nullptr) {
+                        _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
+                        _tutorialText->setPosition(Vec2(100, 220));
+                    }
                 }
             }
             else {
@@ -318,8 +325,10 @@ void GameplayMode::update(float timestep) {
                 _losePanel->setVisible(true);
                 _losePanel->getChildButtons()[0]->getButton()->activate();
                 _losePanel->getChildButtons()[1]->getButton()->activate();
-                _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
-                _tutorialText->setPosition(Vec2(100, 220));
+                if (_json == nullptr) {
+                    _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
+                    _tutorialText->setPosition(Vec2(100, 220));
+                }
                 _hasControl = false;
             }
         }
@@ -333,8 +342,10 @@ void GameplayMode::update(float timestep) {
 
         //tutorial text trigger
         if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
-            _tutorialText->setText("Oh no! You are stuck! Press the R key to retry");
-            _tutorialText->setPosition(Vec2(100, 220));
+            if (_json == nullptr) {
+                _tutorialText->setText("Oh no! You are stuck! Press the R key to retry");
+                _tutorialText->setPosition(Vec2(100, 220));
+            }
         }
     }
 
@@ -597,6 +608,9 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     size *= scale;
 
     _hasControl = true;
+    _doors.clear();
+    _staircaseDoors.clear();
+
 
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
 
@@ -622,6 +636,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     shared_ptr<JsonValue> decorationsJSON = json->get("decorations");
     shared_ptr<JsonValue> objectTemp;
     if (playerJSON != nullptr) {
+        string numPossessions = to_string(playerJSON->getInt("num_possessions"));
         _player = Player::alloc(playerJSON->getFloat("x_pos"), playerJSON->getInt("level"), 0, cat);
         _rootScene->addChild(_player->getSceneNode());
     }
@@ -630,8 +645,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             objectTemp = enemiesJSON->get(i);
             shared_ptr<JsonValue> keyArray = objectTemp->get("keys");
             vector<int> key = {};
-            for (int j = 0; j < keyArray->size(); j++) {
-                key.push_back(stoi(keyArray->get(j)->toString()));
+            if (!keyArray->isNull()) {
+                for (int j = 0; j < keyArray->size(); j++) {
+                    key.push_back(stoi(keyArray->get(j)->toString()));
+                }
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 
                 key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), enemyTexture, altTexture, enemyHighlightTexture);
@@ -641,26 +658,29 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         for (int i = 0; i < staircaseDoorJSON->size(); i++) {
             objectTemp = staircaseDoorJSON->get(i);
             _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.55,0.55), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, { }, 1, 8, staircaseDoor));
+                cugl::Color4::WHITE, {1}, 1, 8, staircaseDoor));
         }
     }
     if (doorJSON != nullptr) {
         for (int i = 0; i < doorJSON->size(); i++) {
             objectTemp = doorJSON->get(i);
-            shared_ptr<JsonValue> keyArray = objectTemp->get("keys");
+            shared_ptr<JsonValue> keyArray = objectTemp->get("keyInt");
             vector<int> key = {};
-            for (int j = 0; j < keyArray->size(); j++) {
-                key.push_back(stoi(keyArray->get(j)->toString()));
+            if (!keyArray->isNull()) {
+                for (int j = 0; j < keyArray->size(); j++) {
+                    key.push_back(stoi(keyArray->get(j)->toString()));
+                }
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(-0.65, 0.65), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, { }, 1, 11, door));
+                cugl::Color4::WHITE, {1}, 1, 11, door));
         }
     }
     if (decorationsJSON != nullptr) {
         for (int i = 0; i < decorationsJSON->size(); i++) {
             objectTemp = decorationsJSON->get(i);
-            _rootScene->addChild(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, { }, 1, 1, door)->getSceneNode());
+            _cagedAnimal = Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"),
+                cugl::Color4::WHITE, { }, 1, 1, cagedAnimal);
+            _rootScene->addChild(_cagedAnimal->getSceneNode());
         }
     }
 
@@ -670,6 +690,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     possessButton = _assets->get<Texture>("possess-button");
     unpossessButton = _assets->get<Texture>("unpossess-button");
     Size pbsize = possessButton->getSize();
+
     // set up the ui element of possess button
     _possessButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::POSSESS);
     _possessButton->setTexture(possessButton);
@@ -678,6 +699,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _possessButton->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
             _possessButton->setClicked(true);
         }
         });
@@ -706,8 +729,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
     }
-
-
+    addChild(_possessButton->getButton());
+    addChild(_rootScene);
+    std::shared_ptr<Font> font = _assets->get<Font>("felt");
+    string numPossessions = to_string(_player->get_nPossess());
+    _numberOfPossessions = scene2::Label::alloc("Number of possessions left: " + numPossessions, font);
+    _numberOfPossessions->setScale(Vec2(0.5, 0.5));
+    _numberOfPossessions->setPosition(Vec2(20, 540));
 
     // We can only activate a button AFTER it is added to a scene
     _possessButton->getButton()->activate();
@@ -818,8 +846,10 @@ void GameplayMode::checkDoors() {
                     std::back_inserter(key_intersection));
                 if (!key_intersection.empty()) {
                     door->setDoor(!doorState);
-                    _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
-                    _tutorialText->setPosition(Vec2(100, 220));
+                    if (_json == nullptr) {
+                        _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
+                        _tutorialText->setPosition(Vec2(100, 220));
+                    }
                 }
 
             }
@@ -867,8 +897,10 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
-                _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
-                _tutorialText->setPosition(Vec2(200, 490));
+                if (_json == nullptr) {
+                    _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
+                    _tutorialText->setPosition(Vec2(200, 490));
+                }
                 break;
             }
         }
@@ -900,8 +932,10 @@ void GameplayMode::checkCatDens() {
                 _player->setPos(catDen->getPos().x);
                 _player->setLevel(catDen->getLevel());
                 catDen->setDoor(!catDen->getIsOpen());
-                _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
-                _tutorialText->setPosition(Vec2(200, 510));
+                if (_json == nullptr) {
+                    _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
+                    _tutorialText->setPosition(Vec2(200, 510));
+                }
                 break;
             }
         }

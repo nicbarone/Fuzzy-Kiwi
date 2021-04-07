@@ -44,6 +44,8 @@ class GameplayMode : public cugl::Scene2 {
 protected:
     bool _reset;
     bool _backToMenu;
+
+    std::shared_ptr<cugl::JsonValue> _json;
     /** The parent scene node for a level*/
     std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
     /** The loaders to (synchronously) load in assets */

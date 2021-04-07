@@ -4,7 +4,9 @@
 		"level":	0,
 		"num_possessions":	1
 	},
-	"enemy":	[],
+	"enemy":	[{"x_pos": 200, "level": 0, "patrol_start": 200, "patrol_end": 200, "keys": [1]},
+				{"x_pos": 500, "level": 0, "patrol_start": 500, "patrol_end": 800, "keys": [1]},
+				{"x_pos": 350, "level": 1, "patrol_start": 350, "patrol_end": 350, "keys": [1]}],
 	"decorations":	[{
 			"x_pos":	282,
 			"level":	1,
