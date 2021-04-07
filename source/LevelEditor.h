@@ -43,18 +43,33 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     InputManager _inputManager;
 
+    /** textures*/
+    std::shared_ptr<Texture> catTexture;
+    std::shared_ptr<Texture> staircaseDoorTexture;
+    std::shared_ptr<Texture> catDenTexture;
+    std::shared_ptr<Texture> doorTexture;
+
     vector< std::shared_ptr<cugl::scene2::Button>> buttons;
     /** function buttons*/
     std::shared_ptr<cugl::scene2::Button> _clear;
     std::shared_ptr<cugl::scene2::Button> _load;
     std::shared_ptr<cugl::scene2::Button> _save;
     std::shared_ptr<cugl::scene2::Button> _cat;
+    std::shared_ptr<cugl::scene2::Button> _staircaseDoor;
+    std::shared_ptr<cugl::scene2::Button> _catDen;
+    std::shared_ptr<cugl::scene2::Button> _door;
 
     /** text input fields*/
-    std::shared_ptr<cugl::scene2::TextField> _floors;
-    std::shared_ptr<cugl::scene2::TextField> _filePath;
-    std::shared_ptr<cugl::scene2::TextField> _doorID;
-    std::shared_ptr<cugl::scene2::TextField> _keyID;
+    std::shared_ptr<cugl::scene2::Label> _floorsLabel;
+    std::shared_ptr<cugl::scene2::TextField> _floorsField;
+    std::shared_ptr<cugl::scene2::Label> _filePathLabel;
+    std::shared_ptr<cugl::scene2::TextField> _filePathField;
+    std::shared_ptr<cugl::scene2::Label> _numPossessionLabel;
+    std::shared_ptr<cugl::scene2::TextField> _numPossessionField;
+    std::shared_ptr<cugl::scene2::Label> _doorIDLabel;
+    std::shared_ptr<cugl::scene2::TextField> _doorIDField;
+    std::shared_ptr<cugl::scene2::Label> _keyLabel;
+    std::shared_ptr<cugl::scene2::TextField> _keyField;
 
     vector<float> floorHeights;
 
@@ -102,6 +117,11 @@ public:
     shared_ptr<JsonValue> toJson();
 
     /**
+        creates nodes and add them to _rootScene based on the given json
+    */
+    void fromJson(shared_ptr<JsonValue> json);
+
+    /**
      * Initializes the controller contents, making it ready for loading
      *
      * The constructor does not allocate any objects or memory.  This allows
@@ -117,7 +137,11 @@ public:
     /**
         helper function for snapping placement to rows
     */
-    Vec2 snapToRow(Vec2 pos);
+    float addOffset(float pos, string type);
+    /**
+        helper function for snapping placement to rows and adding the correct offset
+    */
+    Vec2 snapToRow(Vec2 pos, string type);
 
     /**
      * The method called to update the game mode.

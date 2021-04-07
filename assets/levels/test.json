@@ -1,1 +1,32 @@
-test
+{
+	"player":	{
+		"x_pos":	214,
+		"level":	1,
+		"num_possessions":	1
+	},
+	"enemy":	[],
+	"decorations":	[],
+	"staircase-door":	[{
+			"x_pos":	584,
+			"level":	1,
+			"connection":	2,
+			"isDen":	false
+		}, {
+			"x_pos":	372,
+			"level":	0,
+			"connection":	2,
+			"isDen":	false
+		}, {
+			"x_pos":	383,
+			"level":	1,
+			"connection":	2,
+			"isDen":	true
+		}, {
+			"x_pos":	611,
+			"level":	0,
+			"connection":	2,
+			"isDen":	true
+		}],
+	"door":	[],
+	"floor":	2
+}
