@@ -10,7 +10,7 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
-#define DOOR_WIDTH 130
+#define DOOR_WIDTH 140
 #define DOOR_OFFSET 20
 #define LEFT_LEVEL_BOUND 44
 #define RIGHT_LEVEL_BOUND 1040
@@ -81,7 +81,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 }
 
 int collisions::checkForCagedAnimalCollision(const std::shared_ptr<Player>& player,
-	const std::shared_ptr<Door>& cagedAnimal) {
+	const std::shared_ptr<CagedAnimal>& cagedAnimal) {
 	if (cagedAnimal->getPos().x - player->getPos() <= DOOR_WIDTH / 2 &&
 		cagedAnimal->getPos().x - player->getPos() >= 0 &&
 		cagedAnimal->getLevel() == player->getLevel()) {

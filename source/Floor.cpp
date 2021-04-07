@@ -11,7 +11,7 @@ bool Floor::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
-	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET+30));
+	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET-97));
 	setAngle(ang);
 	setScale(scale);
 	setLevel(level);
