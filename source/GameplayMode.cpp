@@ -625,7 +625,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _hasControl = true;
     _doors.clear();
     _staircaseDoors.clear();
-
+    _catDens.clear();
 
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
 
@@ -773,6 +773,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _numberOfPossessions->setPosition(Vec2(20, 540));
 
     addChild(_rootScene);
+    addChild(_numberOfPossessions);
     addChild(_possessButton->getButton());
 
     // We can only activate a button AFTER it is added to a scene
