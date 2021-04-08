@@ -57,13 +57,14 @@ void MenuMode::update(float progress) {
 
 GameplayMode MenuMode::getGameScene(std::string id) {
     if (id == "0_0") {
-        if (_gameplay.init(_assets)) {
-            return _gameplay;
+        if (_gameplay.init(_assets, 0, 0)) {
+            _gameplay.clearJson();
+          return _gameplay;
         }
     }
     else if (id == "0_1") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level2.json");
-        _gameplay.init(_assets, reader->readJson());
+        _gameplay.init(_assets, 0, 1, reader->readJson());
         return _gameplay;
     }
     else {
