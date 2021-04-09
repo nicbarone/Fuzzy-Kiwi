@@ -86,7 +86,7 @@ void MenuMode::buildScene() {
     _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, menuPanel);
     _menuPanel->createChildPanel(420, 180, 0, _assets->get<Texture>("teamIcon"));
     _menuPanel->getChildPanels()[0]->getSceneNode()->setScale(0.2f);
-    _menuPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("playButton"));
+    _menuPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("playButton"), Color4f::WHITE);
     _menuPanel->getChildButtons()[0]->getButton()->setName("playButton");
     _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -97,7 +97,7 @@ void MenuMode::buildScene() {
         }
     });
     _menuPanel->getChildButtons()[0]->getButton()->activate();
-    _menuPanel->createChildButton(-450, 220, 25, 25, ui::ButtonState::AVAILABLE, _assets->get<Texture>("settingsButton"));
+    _menuPanel->createChildButton(-450, 220, 25, 25, ui::ButtonState::AVAILABLE, _assets->get<Texture>("settingsButton"), Color4f::WHITE);
     _menuPanel->getChildButtons()[1]->getButton()->setName("settingsButton");
     _menuPanel->getChildButtons()[1]->getButton()->setScale(0.8f);
     _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
