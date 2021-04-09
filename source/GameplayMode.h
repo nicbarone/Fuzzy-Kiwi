@@ -244,6 +244,8 @@ public:
     std::string getNextLevelID();
 
     void clearRootSceneNode();
+
+    void ChangeDrawOrder();
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

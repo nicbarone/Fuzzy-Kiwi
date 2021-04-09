@@ -301,6 +301,14 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		}
+		,
+		"catDen": {
+			"file": "textures/CatDen.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		}
 	},
 	"sounds": {
 		"menuBGM": {
