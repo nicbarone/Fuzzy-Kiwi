@@ -51,26 +51,27 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void MenuMode::update(float progress) {
-    CULog("You are now in Menu Mode. Enjoy your stay");
+    //CULog("You are now in Menu Mode. Enjoy your stay");
     
 }
 
-GameplayMode MenuMode::getGameScene(std::string id) {
+GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager) {
     if (id == "0_0") {
-        if (_gameplay.init(_assets, 0, 0)) {
+        if (_gameplay.init(_assets, 0, 0, inputManager)) {
             _gameplay.clearJson();
           return _gameplay;
         }
     }
     else if (id == "0_1") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level2.json");
-        _gameplay.init(_assets, 0, 1, reader->readJson());
+        _gameplay.init(_assets, 0, 1, reader->readJson(), inputManager);
         return _gameplay;
     }
     else {
         throw;
         return _gameplay;
     }
+    return _gameplay;
 }
 
 void MenuMode::buildScene() {

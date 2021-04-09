@@ -310,12 +310,6 @@
 			"wrapT": "clamp"
 		}
 	},
-	"sounds": {
-		"menuBGM": {
-			"type": "sample",
-			"file": "bgm/MenuBGM.ogg"
-		}
-	},
 	"fonts": {
 		"felt": {
 			"file": "fonts/MarkerFelt.ttf",

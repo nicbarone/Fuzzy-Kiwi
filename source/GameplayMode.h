@@ -99,7 +99,7 @@ protected:
     std::shared_ptr<CagedAnimal> _cagedAnimal;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
-    InputManager _inputManager;
+    std::shared_ptr<InputManager> _inputManager;
     /** The panel to win level*/
     std::shared_ptr<ui::PanelElement> _winPanel;
     /** The panel to lose level*/
@@ -162,8 +162,8 @@ public:
      * 
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level);
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue>);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<InputManager> inputManager);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager);
 
 
     /** used to reset the level*/

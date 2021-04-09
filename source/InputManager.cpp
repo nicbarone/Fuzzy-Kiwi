@@ -27,6 +27,8 @@ using namespace cugl;
  * To use this controller, you will need to initialize it first
  */
 InputManager::InputManager() {
+    _forward = 0;
+    _keyForward = 0;
     _player = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
@@ -35,6 +37,8 @@ InputManager::InputManager() {
 
 InputManager::~InputManager()
 {
+    _forward = 0;
+    _keyForward = 0;
     _player = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
@@ -95,6 +99,8 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
  * @return true if the player was initialized correctly
  */
 bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::SceneNode> rootNode, cugl::Rect bounds) {
+    _forward = 0;
+    _keyForward = 0;
     _player = player;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
@@ -237,7 +243,12 @@ void InputManager::processRightJoystick(const cugl::Vec2 pos) {
  * @param focus	Whether the listener currently has focus
  */
 void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
+    if (_player == nullptr) {
+        CULog("empty!!!!!!!");
+        return;
+    }
     Vec2 pos = event.position;
+    CULog("touch begin, pos starts: %f, %f", pos.x, pos.y);
     Zone zone = getZone(pos);
     // general touch (for tap on screen)
     if (_stouch.touchids.empty()) {
@@ -302,6 +313,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
  * @param focus	Whether the listener currently has focus
  */
 void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
+    if (_player == nullptr) return;
     // If the touch ended is one of the pivots, remove it
     if (_prev2Pivots[0].count(event.touch) != 0) {
         _prev2Pivots[0].clear();
@@ -314,6 +326,7 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
     if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
         if (_stouch.isSingleTap[event.touch]) {
             _tap_pos = _stouch.position;
+            CULog("tap pos %f, %f",_stouch.position.x, _stouch.position.y);
             _valid_tap = true;
         }
         _stouch.isSingleTap.erase(event.touch);
@@ -342,6 +355,7 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
  * @param focus	Whether the listener currently has focus
  */
 void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
+    if (_player == nullptr) return;
     Vec2 pos = event.position;
     if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
         if ((pos - _rtouch.position).length() > TAP_THRESHOLD) {
@@ -395,10 +409,12 @@ void InputManager::readInput() {
 #ifdef CU_MOBILE
     _forward = _keyForward;
     if (_valid_tap) {
-        _tap_pos = _stouch.position;
+        //_tap_pos = _stouch.position;
+        CULog("Valid Tap Pos: %f, %f", _tap_pos.x, _tap_pos.y);
         _valid_tap = false;
     }
     else {
+        CULog("Set back to zero");
         _tap_pos = Vec2::ZERO;
     }
 
