@@ -72,6 +72,10 @@ public:
 		_isPossessing = value;
 	}
 
+	void SetSceneNode(std::shared_ptr<scene2::AnimationNode> newNode) {
+		_sceneNode = newNode;
+	}
+
 	/** gets the possession state of the cat*/
 	bool getPossess() {
 		return _isPossessing;
@@ -93,6 +97,7 @@ public:
 	/** setter for level, overloaded for this class to also change scene node position, deprecates changeFloor()*/
 	void setLevel(int level);
 
+	void Player::PossessAnimation(bool open);
 
 };
 

@@ -71,3 +71,44 @@ void Player::setLevel(int level) {
 	Entity::setLevel(level);
 	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET + PLAYER_OFFSET);
 }
+
+
+void Player::PossessAnimation(bool possessing) {
+	std::function<bool()> frame0 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
+		return false;
+	};
+	std::function<bool()> frame1 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(1);
+		return false;
+	};
+	std::function<bool()> frame2 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(2);
+		return false;
+	};
+	std::function<bool()> frame3 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(3);
+		return false;
+	};
+	std::function<bool()> frame4 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(4);
+		return false;
+	};
+	if (possessing) {
+		int timeDiff = 25;
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 2);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 3);
+		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 4);
+	}
+	else
+	{
+		int timeDiff = 25;
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 5);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 6);
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 7);
+	}
+
+
+}

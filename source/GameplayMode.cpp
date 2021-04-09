@@ -351,6 +351,14 @@ bool GameplayMode::attemptPossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
     if (enemy != nullptr) {
         vector<Vec2> doors = closedDoors();
+       /*std::shared_ptr<Texture> cats = _assets->get<Texture>("catPossessing");
+        int oldXPos = _player->getPos();
+        _player->getSceneNode()->setTexture( cats);
+        _player->SetSceneNode(scene2::AnimationNode::alloc(cats,1,8));
+        _player->getSceneNode()->setPosition(Vec2(oldXPos,100));*/
+            
+        //_player->getSceneNode()->setFrame(0);
+        
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
         _player->set_possessEnemy(enemy);
@@ -417,7 +425,7 @@ void GameplayMode::buildScene() {
     //std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
     // Create the player
-
+    std::shared_ptr<Texture> catPossessing = _assets->get<Texture>("catPossessing");
     _player = Player::alloc(150, 0, 0, cat);
 
     //floor texture creation
@@ -498,6 +506,7 @@ void GameplayMode::buildScene() {
 
     _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
+    _rootScene->addChild(_level2Floor->getSceneNode());
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
         _rootScene->addChild(it->get()->getPatrolNode());
@@ -505,7 +514,6 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
 
     _rootScene->addChild(_player->getSceneNode());
-    _rootScene->addChild(_level2Floor->getSceneNode());
     //_rootScene->getChildren()[]
     //every time the level changes draw the player than draw the door frame 
 
@@ -958,7 +966,8 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
-                ChangeDrawOrder();
+                //ChangeDrawOrder();
+                //ChangeDrawOrder();
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
                 if (_json == nullptr) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
