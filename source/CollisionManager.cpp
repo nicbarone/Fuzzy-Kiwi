@@ -10,10 +10,10 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
-#define DOOR_WIDTH 130
+#define DOOR_WIDTH 167
 #define DOOR_OFFSET 20
-#define LEFT_LEVEL_BOUND 44
-#define RIGHT_LEVEL_BOUND 1040
+#define LEFT_LEVEL_BOUND -300
+#define RIGHT_LEVEL_BOUND 1440
 
 void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
@@ -51,7 +51,8 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 			if (!door->getIsOpen() &&
 				door->getPos().x - enemy->getPos() <= DOOR_WIDTH / 2 &&
 				door->getPos().x - enemy->getPos() >= 0 &&
-				door->getLevel() == enemy->getLevel()) {
+				door->getLevel() == enemy->getLevel() &&
+				enemy->isActive()) {
 				if (door->getBlockedEnemy() == nullptr) {
 					enemy->setOldPatrol(enemy->getPatrol());
 					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
@@ -62,7 +63,8 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 			else if (!door->getIsOpen() &&
 				enemy->getPos() - door->getPos().x <= DOOR_WIDTH / 2 &&
 				enemy->getPos() - door->getPos().x >= 0 &&
-				door->getLevel() == enemy->getLevel()) {
+				door->getLevel() == enemy->getLevel()&&
+				enemy->isActive()) {
 				if (door->getBlockedEnemy() == nullptr) {
 					enemy->setOldPatrol(enemy->getPatrol());
 					enemy->setPatrol(door->getPos().x + DOOR_WIDTH / 2, enemy->getPatrol().y);
@@ -79,7 +81,7 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 }
 
 int collisions::checkForCagedAnimalCollision(const std::shared_ptr<Player>& player,
-	const std::shared_ptr<Door>& cagedAnimal) {
+	const std::shared_ptr<CagedAnimal>& cagedAnimal) {
 	if (cagedAnimal->getPos().x - player->getPos() <= DOOR_WIDTH / 2 &&
 		cagedAnimal->getPos().x - player->getPos() >= 0 &&
 		cagedAnimal->getLevel() == player->getLevel()) {

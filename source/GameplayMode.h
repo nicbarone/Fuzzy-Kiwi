@@ -33,20 +33,25 @@
 #include "Player.h"
 #include "Floor.h"
 #include "Door.h"
+#include "Wall.h"
+#include "DoorFrame.h"
+#include "CagedAnimal.h"
 #include "StaircaseDoor.h"
 #include "CatDen.h"
 #include "EnemyController.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
 
-/**
- * Class for a simple Hello World style application
- *
- * The application simply moves the CUGL logo across the screen.  It also
- * provides a button to quit the application.
- */
-class GameplayMode : public cugl::Application {
+
+class GameplayMode : public cugl::Scene2 {
 protected:
+    bool _reset;
+    bool _backToMenu;
+    bool _nextLevel;
+    int _locationIndex;
+    int _levelIndex;
+
+    std::shared_ptr<cugl::JsonValue> _json;
     /** The parent scene node for a level*/
     std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
     /** The loaders to (synchronously) load in assets */
@@ -70,6 +75,10 @@ protected:
     std::shared_ptr<Floor> _level2Floor;
     /** A reference to the level 2 staircase door*/
     std::shared_ptr<StaircaseDoor> _level2StairDoor;
+    /** A reference to the level 1 floor*/
+    std::shared_ptr<Wall> _level1Wall;
+    /** A reference to the level 1 floor*/
+    std::shared_ptr<Wall> _level2Wall;
     /** A reference to the list of all staircase doors in the level*/
     std::vector<shared_ptr<StaircaseDoor>> _staircaseDoors;
     /** A reference to the level 1 cat den on the left hand side*/
@@ -81,6 +90,8 @@ protected:
    
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;
+    /** A reference to the level 1 door frame*/
+    std::shared_ptr<DoorFrame> _level1DoorFrame;
     /** A reference to the level 2 door*/
     std::shared_ptr<Door> _level2Door;
     /** A reference to the left wall*/
@@ -88,12 +99,10 @@ protected:
     /** A reference to the right wall*/
     std::shared_ptr<Floor> _rightWall;
     /** A reference to the cagedAnimal*/
-    std::shared_ptr<Door> _cagedAnimal;
+    std::shared_ptr<CagedAnimal> _cagedAnimal;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
     InputManager _inputManager;
-    /** The button to possess and release*/
-    std::shared_ptr<ui::ButtonElement> _possessButton;
     /** The panel to win level*/
     std::shared_ptr<ui::PanelElement> _winPanel;
     /** The panel to lose level*/
@@ -102,15 +111,15 @@ protected:
     std::shared_ptr<Texture> winPanel;
     std::shared_ptr<Texture> losePanel;
     // Create a button.  A button has an up image and a down image
+    std::shared_ptr<ui::PanelElement> _possessPanel;
     std::shared_ptr<Texture> possessButton;
     std::shared_ptr<Texture> unpossessButton;
 
     std::shared_ptr<Texture> enemyHighlightTexture;
     std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
-    std::shared_ptr<scene2::Label> _numberOfPossessions;
-    /** A countdown used to move the logo */
-    int  _countdown;
+    /** whether or not the player has control*/
+    bool _hasControl;
     
     /** 
      * Internal helper to build the scene graph.
@@ -120,6 +129,7 @@ protected:
      * have become standard in most game engines.
      */
     void buildScene();
+    void buildScene(std::shared_ptr<JsonValue>);
     
 public:
     /**
@@ -131,7 +141,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    GameplayMode() : Application(), _countdown(-1) {}
+    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false) {}
     
     /**
      * Disposes of this application, releasing all resources.
@@ -142,30 +152,25 @@ public:
      */
     ~GameplayMode() { }
     
-    /**
-     * The method called after OpenGL is initialized, but before running the application.
+        /**
+     * Initializes the controller contents, and starts the game
      *
-     * This is the method in which all user-defined program intialization should
-     * take place.  You should not create a new init() method.
+     * The constructor does not allocate any objects or memory.  This allows
+     * us to have a non-pointer reference to this controller, reducing our
+     * memory allocation.  Instead, allocation happens in this method.
      *
-     * When overriding this method, you should call the parent method as the
-     * very last line.  This ensures that the state will transition to FOREGROUND,
-     * causing the application to run.
+     * @param assets    The (loaded) assets for this game mode
+     * @param location    The location the level is selected
+     * @param level    The number the selected level is within the current location
+     * 
+     * @return true if the controller is initialized properly, false otherwise.
      */
-    void onStartup() override;
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue>);
 
-    /**
-     * The method called when the application is ready to quit.
-     *
-     * This is the method to dispose of all resources allocated by this
-     * application.  As a rule of thumb, everything created in onStartup()
-     * should be deleted here.
-     *
-     * When overriding this method, you should call the parent method as the
-     * very last line.  This ensures that the state will transition to NONE,
-     * causing the application to be deleted.
-     */
-    void onShutdown() override;
+
+    /** used to reset the level*/
+    void reset();
     
     /**
      * The method called to update the application data.
@@ -202,7 +207,7 @@ public:
      * When overriding this method, you do not need to call the parent method
      * at all. The default implmentation does nothing.
      */
-    void draw() override;
+    void draw();
 
     /*Function called every update to check if the player is trying to close or 
     open a door*/
@@ -219,6 +224,31 @@ public:
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
 
+    bool getBackToMenu() {
+        return _backToMenu;
+    }
+
+    void setBackToMenu(bool backToMenu) {
+        _backToMenu = backToMenu;
+    }
+
+    bool getNextLevel() {
+        return _nextLevel;
+    }
+
+    void setNextlevel(bool next) {
+        _nextLevel = next;
+    }
+
+    void clearJson() {
+        _json = nullptr;
+    }
+
+    std::string getNextLevelID();
+
+    void clearRootSceneNode();
+
+    void ChangeDrawOrder();
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

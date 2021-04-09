@@ -1,0 +1,14 @@
+{
+	"player":	{
+		"x_pos":	50,
+		"level":	0,
+		"num_possessions":	1
+	},
+	"enemy":	[{
+		
+	}],
+	"decorations":	[],
+	"staircase-door":	[],
+	"door":	[],
+	"floor":	2
+}

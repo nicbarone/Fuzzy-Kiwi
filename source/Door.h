@@ -13,7 +13,7 @@ private:
 	int _frame;
 	int _frameCounter;
 	bool _isOpen;
-	/*list of keys that unlock doors.*/
+	/*list of keys that the door.*/
 	std::vector<int> _keys;
 public:
 

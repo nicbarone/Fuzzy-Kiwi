@@ -28,8 +28,6 @@ using namespace cugl;
  */
 InputManager::InputManager() {
     _player = nullptr;
-    _possessButton = nullptr;
-    _unPossessButton = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
     _valid_tap = false;
@@ -38,8 +36,6 @@ InputManager::InputManager() {
 InputManager::~InputManager()
 {
     _player = nullptr;
-    _possessButton = nullptr;
-    _unPossessButton = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
     _valid_tap = false;
@@ -225,7 +221,7 @@ void InputManager::processRightJoystick(const cugl::Vec2 pos) {
 
     if (diff.length() > JSTICK_DIFF_MIN) {
         _rightJoystick = true;
-        _camMoveDirection = Vec2(diff.x,-diff.y);
+        _camMoveDirection = Vec2(diff.x, -diff.y);
     }
     else {
         _keyForward = 0;
@@ -274,7 +270,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
             // If not empty, check if this one is close enough in terms of time, if so, add in as second pivot
             //CULog("elapsed %i milli seconds", event.timestamp.ellapsedMillis(_rtouch.timestamp, event.timestamp));
             //if (event.timestamp.ellapsedMicros(_rtouch.timestamp, event.timestamp) < 1000) {
-                _prev2Pivots[1][event.touch] = Vec2(event.position.x, event.position.y);
+            _prev2Pivots[1][event.touch] = Vec2(event.position.x, event.position.y);
             //}
         } // Otherwise all pivots are taken, no other pivots should be inserted
         // Only process if no touch in zone
@@ -377,10 +373,11 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
             float oldScale = _rootSceneNode->getScaleX();
             _rootSceneNode->setScale(Vec2(newScale, newScale));
             // Handle center of zooming
-            _rootSceneNode->setPosition(_rootSceneNode->getWorldPosition() - oldDist * (newScale / oldScale - 1));
+            _rootSceneNode->setPosition(_rootSceneNode->getWorldPosition() + oldDist * (newScale / oldScale - 1));
         }
         _camMoveDirection = Vec2::ZERO;
-    } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+    }
+    else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         processRightJoystick(pos);
     }
 }
@@ -408,19 +405,24 @@ void InputManager::readInput() {
 #else
     // Figure out, based on which player we are, which keys
     // control our actions (depends on player).
-    KeyCode left, right, camLeft, camRight, camUp, camDown;
+    KeyCode left, right, camLeft, camRight, camUp, camDown, reset;
     left = KeyCode::A;
     right = KeyCode::D;
     camLeft = KeyCode::ARROW_LEFT;
     camRight = KeyCode::ARROW_RIGHT;
     camUp = KeyCode::ARROW_UP;
     camDown = KeyCode::ARROW_DOWN;
+    reset = KeyCode::R;
 
     // Convert keyboard state into game commands
     _forward = 0;
+    _reset = false;
 
     // Movement left/right
     Keyboard* keys = Input::get<Keyboard>();
+    if (keys->keyDown(reset)) {
+        _reset = true;
+    }
     if (keys->keyDown(right) && !keys->keyDown(left)) {
         //CULog("Going right");
         _forward = 1;
@@ -443,10 +445,10 @@ void InputManager::readInput() {
     }
     // Handle Zoom in/out
     int zoomFactor = Input::get<Mouse>()->wheelDirection().y;
-    float newScale = min(max(_rootSceneNode->getScale().x + zoomFactor * ZOOM_SENSITIVITY,0.3f), 1.0f);
+    float newScale = min(max(_rootSceneNode->getScale().x + zoomFactor * ZOOM_SENSITIVITY, 0.3f), 1.0f);
     Vec2 oldDist = _rootSceneNode->getWorldPosition() - _camOriginalPos;
     float oldScale = _rootSceneNode->getScaleX();
-    _rootSceneNode->setScale(Vec2(newScale,newScale));
+    _rootSceneNode->setScale(Vec2(newScale, newScale));
     // Handle center of zooming
     _rootSceneNode->setPosition(_rootSceneNode->getWorldPosition() + oldDist * (newScale / oldScale - 1));
     // Mimic phone tap on right screen with mouse right click
@@ -468,7 +470,7 @@ void InputManager::readInput() {
     if (_rightJoystick) {
         _camMoveDirection.normalize();
         _camMoveDirection *= CAMERA_MAX_SPEED;
-        _rootSceneNode->setPosition(_rootSceneNode->getPosition() + _camMoveDirection/5);
+        _rootSceneNode->setPosition(_rootSceneNode->getPosition() + _camMoveDirection / 5);
     }
     else {
         // Otherwise center on the cat

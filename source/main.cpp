@@ -28,7 +28,7 @@
 //  Version: 7/1/16
 
 // Include your application class
-#include "GameplayMode.h"
+#include "App.h"
 
 // This keeps us from having to write cugl:: all the time
 using namespace cugl;
@@ -48,7 +48,7 @@ using namespace cugl;
  */
 int main(int argc, char * argv[]) {
     // Change this to your application class
-    GameplayMode app;
+    App app;
     
     /// SET YOUR APPLICATION PROPERTIES
     
@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
     app.setName("Lab Cat");
     
     // The name of your studio (for organizing save files)
-    app.setOrganization("GDIAC");
+    app.setOrganization("FuzzyKiwi");
 
     // Set the window properties (Only applies to OS X/Windows Desktop)
     app.setSize(GAME_WIDTH, GAME_HEIGHT);
