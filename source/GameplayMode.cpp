@@ -229,37 +229,13 @@ void GameplayMode::update(float timestep) {
         Rect safe = Application::get()->getSafeBounds();
         safe.origin *= scale;
         safe.size *= scale;
-        Size bpsize = possessButton->getSize();
         // Get the right and bottom offsets.
         float bOffset = safe.origin.y;
         float rOffset = (size.width) - (safe.origin.x + safe.size.width);
 
-        if (_possessPanel->getChildButtons()[0]->getButtonState() == ui::ButtonState::AVAILABLE) {
+        if (_inputManager->getAndResetPossessPressed()) {
             if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
-                // if close enough to an enemy, light up the possess button
-                _possessPanel->getChildButtons()[0]->getButton()->setVisible(true);
-                _possessPanel->getChildButtons()[0]->getButton()->activate();
-                _possessPanel->getChildButtons()[0]->setButtonState(ui::ButtonState::POSSESS);
-            }
-        }
-        else if (_possessPanel->getChildButtons()[0]->getButtonState() == ui::ButtonState::POSSESS) {
-            // if no longer possessable then suppress the possess button
-            if (_enemyController->closestEnemy() == nullptr || !_player->canPossess()) {
-                // if close enough to an enemy, light up the possess button
-                _possessPanel->getChildButtons()[0]->getButton()->setVisible(false);
-                _possessPanel->getChildButtons()[0]->getButton()->deactivate();
-                _possessPanel->getChildButtons()[0]->setButtonState(ui::ButtonState::AVAILABLE);
-            }
-            // if clicked on the button then switch on the unpossess button while mute this button
-            else if (_possessPanel->getChildButtons()[0]->getClicked()) {
-                _possessPanel->getChildButtons()[0]->setClicked(false);
                 if (attemptPossess()) {
-                    _possessPanel->getChildButtons()[0]->getButton()->setVisible(false);
-                    _possessPanel->getChildButtons()[0]->getButton()->deactivate();
-                    _possessPanel->getChildButtons()[0]->setButtonState(ui::ButtonState::UNAVAILABLE);
-                    _possessPanel->getChildButtons()[1]->getButton()->setVisible(true);
-                    _possessPanel->getChildButtons()[1]->getButton()->activate();
-                    _possessPanel->getChildButtons()[1]->setButtonState(ui::ButtonState::UNPOSSESS);
                     if (_json == nullptr) {
                         _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
                         _tutorialText->setPosition(Vec2(100, 220));
@@ -267,18 +243,12 @@ void GameplayMode::update(float timestep) {
                 }
             }
         }
-
-        if (_possessPanel->getChildButtons()[1]->getButtonState() == ui::ButtonState::UNPOSSESS) {
-            // if clicked on unpossess, switch on the posses out of range button
-            if (_possessPanel->getChildButtons()[1]->getClicked()) {
+        else if (_inputManager->getAndResetUnpossessPressed()) {
+            if (_player->get_possessEnemy() != nullptr) {
                 unpossess();
-                _possessPanel->getChildButtons()[1]->setClicked(false);
-                _possessPanel->getChildButtons()[1]->getButton()->setVisible(false);
-                _possessPanel->getChildButtons()[1]->getButton()->deactivate();
-                _possessPanel->getChildButtons()[0]->setButtonState(ui::ButtonState::AVAILABLE);
             }
         }
-
+        
         checkStaircaseDoors();
         checkDoors();
         checkCatDens();
@@ -302,8 +272,6 @@ void GameplayMode::update(float timestep) {
         else {
             _player->move(_inputManager->getForward());
         }
-        // Update Possess number on possess button
-        _possessPanel->getChildTexts()[0]->setText(to_string(_player->get_nPossess()));
         // Enemy movement
         _enemyController->moveEnemies(_inputManager->getForward());
         _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
@@ -372,6 +340,7 @@ bool GameplayMode::attemptPossess() {
 
 void GameplayMode::unpossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
+    if (enemy == nullptr) return;
     _player->setPos((enemy->getPos()));
     _player->setLevel(enemy->getLevel());
     _player->getSceneNode()->setVisible(true);
@@ -472,11 +441,7 @@ void GameplayMode::buildScene() {
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
 
-    
    
-    possessButton = _assets->get<Texture>("possessButtonInRange");
-    unpossessButton = _assets->get<Texture>("unpossessButton");
-    Size pbsize = possessButton->getSize();
     // Find the safe area, adapting to the iPhone X
     Rect safe = Application::get()->getSafeBounds();
     safe.origin *= scale;
@@ -519,35 +484,6 @@ void GameplayMode::buildScene() {
 
 
     _rootScene->addChild(_tutorialText);
-    // Create a button.  A button has an up image and a down image
-    _possessPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("possessButtonOutRange"));
-    // First button is the possess button
-    _possessPanel->createChildButton(0, 0, 0, 0, ui::ButtonState::AVAILABLE, possessButton, Color4f::WHITE);
-    _possessPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _possessPanel->getChildButtons()[0]->setClicked(true);
-        }
-        });
-    _possessPanel->getChildButtons()[0]->getButton()->setVisible(false);
-    // Second button is the unpossess button
-    _possessPanel->createChildButton(0, 0, 0, 0, ui::ButtonState::UNAVAILABLE, unpossessButton, Color4f::WHITE);
-    _possessPanel->getChildButtons()[1]->getButton()->setVisible(false);
-    _possessPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _possessPanel->getChildButtons()[1]->setClicked(true);
-        }
-        });
-    _possessPanel->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2 - 20, (pbsize.height + bOffset) / 2 + 20));
-    _possessPanel->createChildText(0, 0, 0, 0, "-1", font);
-    _possessPanel->getChildTexts()[0]->setColor(Color4f::WHITE);
-    _possessPanel->getChildTexts()[0]->setScale(Vec2(0.8f,0.8f));
-    addChild(_possessPanel->getSceneNode());
 
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
@@ -721,10 +657,6 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
     _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
     _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
-    
-    possessButton = _assets->get<Texture>("possessButtonInRange");
-    unpossessButton = _assets->get<Texture>("unpossessButton");
-    Size pbsize = possessButton->getSize();
 
 
     Rect safe = Application::get()->getSafeBounds();
@@ -767,36 +699,6 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Font> font = _assets->get<Font>("felt");
 
     addChild(_rootScene);
-
-    // Create a button.  A button has an up image and a down image
-    _possessPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("possessButtonOutRange"));
-    // First button is the possess button
-    _possessPanel->createChildButton(0, 0, 0, 0, ui::ButtonState::AVAILABLE, possessButton, Color4f::WHITE);
-    _possessPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _possessPanel->getChildButtons()[0]->setClicked(true);
-        }
-        });
-    _possessPanel->getChildButtons()[0]->getButton()->setVisible(false);
-    // Second button is the unpossess button
-    _possessPanel->createChildButton(0, 0, 0, 0, ui::ButtonState::UNAVAILABLE, unpossessButton, Color4f::WHITE);
-    _possessPanel->getChildButtons()[1]->getButton()->setVisible(false);
-    _possessPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _possessPanel->getChildButtons()[1]->setClicked(true);
-        }
-        });
-    _possessPanel->setPos(Vec2(size.width - (pbsize.width + rOffset) / 2 - 20, (pbsize.height + bOffset) / 2 + 20));
-    _possessPanel->createChildText(0, 0, 0, 0, "-1", font);
-    _possessPanel->getChildTexts()[0]->setColor(Color4f::WHITE);
-    _possessPanel->getChildTexts()[0]->setScale(Vec2(0.8f, 0.8f));
-    addChild(_possessPanel->getSceneNode());
 
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
@@ -885,20 +787,6 @@ void GameplayMode::checkDoors() {
     for (shared_ptr<Door> door : _doors) {
         bool doorState = door->getIsOpen();
         if (_enemyController->getPossessed() != nullptr) {
-            //set_intersection(_enemyController->getPossessed()->getKeys().begin(), _enemyController->getPossessed()->getKeys().end(), door->getKeys().begin(), door->getKeys().end(), std::inserter(intersect, intersect.begin()));
-            if (!_inputManager->getTapPos().equals(Vec2::ZERO)) {
-                if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager->getRootSceneNode()->getScaleX())
-                    CULog("1 pass");
-                if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager->getRootSceneNode()->getScaleY())
-                    CULog("2 pass");
-                if (_enemyController->getPossessed()->getLevel() == door->getLevel())
-                    CULog("3 pass");
-                if (abs(screenToWorldCoords(_inputManager->getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX())
-                    CULog("4 pass");
-            }
-            else {
-                CULog("Input manager tap Pos is ZERO? %f, %f", _inputManager->getTapPos().x, _inputManager->getTapPos().y);
-            }
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&

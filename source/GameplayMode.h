@@ -107,10 +107,6 @@ protected:
     // Create panels
     std::shared_ptr<Texture> winPanel;
     std::shared_ptr<Texture> losePanel;
-    // Create a button.  A button has an up image and a down image
-    std::shared_ptr<ui::PanelElement> _possessPanel;
-    std::shared_ptr<Texture> possessButton;
-    std::shared_ptr<Texture> unpossessButton;
 
     std::shared_ptr<Texture> enemyHighlightTexture;
     std::shared_ptr<Texture> enemyTexture;
