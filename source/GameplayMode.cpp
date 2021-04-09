@@ -526,7 +526,6 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_level1Door->getSceneNode());
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
-    _rootScene->addChild(_level2Floor->getSceneNode());
     _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
     for (auto it = begin(enemies); it != end(enemies); ++it) {
@@ -539,6 +538,11 @@ void GameplayMode::buildScene() {
     /*_rootScene->addChild(_numberOfPosessions->);*/
     addChild(_possessButton->getButton());
     _rootScene->addChild(_player->getSceneNode());
+    _rootScene->addChild(_level2Floor->getSceneNode());
+    //_rootScene->getChildren()[]
+    //every time the level changes draw the player than draw the door frame 
+
+
     _rootScene->addChild(_tutorialText);
     addChild(_numberOfPossessions);
    
@@ -757,11 +761,14 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
 
+    _player->getSceneNode()->setName("Player");
+
     _rootScene->addChild(_level1Wall->getSceneNode());
     _rootScene->addChild(_level2Wall->getSceneNode());
+    _level1Floor->getSceneNode()->setName("Level1Floor");
+    _level2Floor->getSceneNode()->setName("Level2Floor");
     _rootScene->addChild(_level1Floor->getSceneNode());
     _rootScene->addChild(_level2Floor->getSceneNode());
-
 
     for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
@@ -773,8 +780,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         _rootScene->addChild(it->get()->getSceneNode());
         _rootScene->addChild(it->get()->getPatrolNode());
     }
-    _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_cagedAnimal->getSceneNode());
+    _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
 
 
@@ -949,6 +956,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                ChangeDrawOrder();
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
                 if (_json == nullptr) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
@@ -1014,6 +1022,19 @@ std::string GameplayMode::getNextLevelID() {
     else {
         // Otherwise return the next level by adding 1 to the levelIndex at the same location
         return to_string(_locationIndex) + "_" + to_string(_levelIndex + 1);
+    }
+}
+
+void GameplayMode::ChangeDrawOrder() {
+    int index = 0;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>>::iterator itr = std::find(_rootScene->getChildren().begin(), _rootScene->getChildren().end(),
+        _rootScene->getChildByName("Player"));
+    CULog("here", index);
+    if (itr != _rootScene->getChildren().cend()) {
+        index = std::distance(_rootScene->getChildren().begin(), itr);
+    }
+    if (index != 0) {
+        CULog("the index is %d", index);
     }
 }
 
