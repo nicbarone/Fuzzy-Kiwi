@@ -43,9 +43,12 @@ namespace ui {
 			return _clicked;
 		}
 		void setTexture(const std::shared_ptr<Texture> texture);
+		void setTexture(const std::shared_ptr<Texture> texture, Color4f down);
+
 		ButtonState getButtonState() {
 			return _buttonState;
 		}
+
 		void setButtonState(ButtonState buttonState) {
 			_buttonState = buttonState;
 		}
@@ -53,7 +56,42 @@ namespace ui {
 			return _button;
 		}
 	};
+#pragma text
+	class TextElement : public Entity {
+	private:
+		std::shared_ptr<scene2::Label> _text;
+	public:
+		TextElement();
+		~TextElement() { dispose(); }
 
+		void dispose();
+		static std::shared_ptr<TextElement> alloc(float x, float y, float width, float height, std::string message, std::shared_ptr<Font> font) {
+			std::shared_ptr<TextElement> result = std::make_shared<TextElement>();
+			return (result->init(x, y, width, height, message, font) ? result : nullptr);
+		}
+		bool init(float x, float y, float width, float height, std::string message, std::shared_ptr<Font> font);
+		void setPos(Vec2 pos) {
+			_text->setPosition(pos);
+		}
+		void setScale(Vec2 scale) {
+			_text->setScale(scale);
+		}
+		void setColor(Color4f color) {
+			_text->setColor(color);
+		}
+		Color4f getColor() {
+			return _text->getColor();
+		}
+		std::shared_ptr<scene2::Label> getLabel() {
+			return _text;
+		}
+		void setText(std::string text, bool resize = false) {
+			_text->setText(text, resize);
+		}
+		std::string getText() {
+			return _text->getText();
+		}
+	};
 #pragma panel
 	class PanelElement : public Entity {
 	private:
@@ -61,6 +99,7 @@ namespace ui {
 		std::shared_ptr<Texture> _texture;
 		std::vector<std::shared_ptr<ButtonElement>> _childButtons;
 		std::vector<std::shared_ptr<PanelElement>> _childPanels;
+		std::vector<std::shared_ptr<TextElement>> _childTexts;
 		bool _visible;
 		int _frame;
 		int _frameCounter;
@@ -85,7 +124,12 @@ namespace ui {
 
 		bool createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture);
 
+		bool createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture, Color4f down);
+
+
 		bool createChildPanel(float x, int y, float ang, const std::shared_ptr<Texture> panelTexture);
+		
+		bool createChildText(float x, float y, float width, float height, std::string message, const std::shared_ptr<Font> font);
 
 		std::vector<std::shared_ptr<ButtonElement>> getChildButtons() {
 			return _childButtons;
@@ -94,6 +138,11 @@ namespace ui {
 		std::vector<std::shared_ptr<PanelElement>> getChildPanels() {
 			return _childPanels;
 		}
+
+		std::vector<std::shared_ptr<ui::TextElement>> getChildTexts() {
+			return _childTexts;
+		}
+
 		void setPos(Vec2 pos);
 		void setVisible(bool visibility) {
 			_visible = visibility;
@@ -107,11 +156,6 @@ namespace ui {
 		bool getVisible() {
 			return _visible;
 		}
-	};
-
-#pragma text
-	class TextElement : public Entity {
-		std::string text;
 	};
 
 };

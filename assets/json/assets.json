@@ -280,6 +280,28 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"possessButtonInRange": {
+			"file": "textures/PossessButtonInRange.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"possessButtonOutRange": {
+			"file": "textures/PossessButtonOutRange.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"unpossessButton": {
+			"file": "textures/UnpossessButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		}
+		,
 		"catDen": {
 			"file": "textures/CatDen.png",
 			"minfilter": "nearest",
