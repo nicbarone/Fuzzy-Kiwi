@@ -239,7 +239,13 @@ public:
         _nextLevel = next;
     }
 
+    void clearJson() {
+        _json = nullptr;
+    }
+
     std::string getNextLevelID();
+
+    void clearRootSceneNode();
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

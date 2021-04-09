@@ -400,6 +400,13 @@ void GameplayMode::draw() {
     render(_batch);
 }
 
+void GameplayMode::clearRootSceneNode() {
+    Size size = Application::get()->getDisplaySize();
+    _rootScene = scene2::SceneNode::alloc();
+    _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
+    _rootScene->setContentSize(size);
+}
+
 /**
  * Internal helper to build the scene graph.
  *
@@ -408,6 +415,8 @@ void GameplayMode::draw() {
  * have become standard in most game engines.
  */
 void GameplayMode::buildScene() {
+    // First clear root scene
+    //clearRootSceneNode();
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
     size *= scale;
@@ -620,6 +629,7 @@ void GameplayMode::buildScene() {
 }
 
 void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
+    //clearRootSceneNode();
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
     size *= scale;
