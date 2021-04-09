@@ -100,8 +100,6 @@ protected:
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
     InputManager _inputManager;
-    /** The button to possess and release*/
-    std::shared_ptr<ui::ButtonElement> _possessButton;
     /** The panel to win level*/
     std::shared_ptr<ui::PanelElement> _winPanel;
     /** The panel to lose level*/
@@ -110,13 +108,13 @@ protected:
     std::shared_ptr<Texture> winPanel;
     std::shared_ptr<Texture> losePanel;
     // Create a button.  A button has an up image and a down image
+    std::shared_ptr<ui::PanelElement> _possessPanel;
     std::shared_ptr<Texture> possessButton;
     std::shared_ptr<Texture> unpossessButton;
 
     std::shared_ptr<Texture> enemyHighlightTexture;
     std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
-    std::shared_ptr<scene2::Label> _numberOfPossessions;
     /** whether or not the player has control*/
     bool _hasControl;
     
@@ -246,6 +244,8 @@ public:
     std::string getNextLevelID();
 
     void clearRootSceneNode();
+
+    void ChangeDrawOrder();
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

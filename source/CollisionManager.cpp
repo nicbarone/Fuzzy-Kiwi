@@ -10,10 +10,10 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
-#define DOOR_WIDTH 140
+#define DOOR_WIDTH 167
 #define DOOR_OFFSET 20
-#define LEFT_LEVEL_BOUND 44
-#define RIGHT_LEVEL_BOUND 1040
+#define LEFT_LEVEL_BOUND -300
+#define RIGHT_LEVEL_BOUND 1440
 
 void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEnemy,
 	const vector<std::shared_ptr<Enemy>>& enemies, const std::shared_ptr<Player>& player,
