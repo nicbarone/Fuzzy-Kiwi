@@ -640,7 +640,6 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _catDens.clear();
 
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
-
     //floor texture creation
     std::shared_ptr<Texture> wall = _assets->get<Texture>("levelWall");
 

@@ -49,6 +49,7 @@ protected:
     std::shared_ptr<Texture> catDenTexture;
     std::shared_ptr<Texture> doorTexture;
     std::shared_ptr<Texture> cageTexture;
+    std::shared_ptr<Texture> enemyTexture;
 
     vector< std::shared_ptr<cugl::scene2::Button>> buttons;
     /** function buttons*/
@@ -60,6 +61,7 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _catDen;
     std::shared_ptr<cugl::scene2::Button> _door;
     std::shared_ptr<cugl::scene2::Button> _objective;
+    std::shared_ptr<cugl::scene2::Button> _enemy;
 
     /** text input fields*/
     std::shared_ptr<cugl::scene2::Label> _floorsLabel;
@@ -80,7 +82,14 @@ protected:
 
     bool pendingPlacement = false;
     bool resetButtons = false;
+    int enemyPlacement = 0;
+    float pathBegin = 0;
+    float pathEnd = 0;
     std::shared_ptr<cugl::scene2::PolygonNode> pendingNode;
+    std::shared_ptr<cugl::scene2::PolygonNode> pendingEnemy;
+    std::shared_ptr<cugl::scene2::WireNode> pendingPath;
+    vector <std::shared_ptr<cugl::scene2::PolygonNode>> enemies;
+    vector <std::shared_ptr<cugl::scene2::WireNode>> paths;
 
 public:
 

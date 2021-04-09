@@ -67,18 +67,22 @@ void LevelEditor::dispose() {
     _rootScene = nullptr;
 }
 
-
+#if defined (CU_TOUCH_SCREEN)
+Input::activate<Touchscreen>();
+#else
 
 void LevelEditor::releaseButtons() {
-    resetButtons = true;
+    resetButtons = true; //to make sure the clear all button isn't triggered when resetting
     for (auto it = begin(buttons); it != end(buttons); ++it) {
         it->get()->setDown(false);
     }
-    if (pendingNode != nullptr) {
+    if (pendingNode != nullptr && enemyPlacement == 0) {
         _rootScene->removeChild(pendingNode);
     }
     pendingPlacement = false;
     resetButtons = false;
+
+
 }
 
 float closestNum(vector<float> arr, float num) {
@@ -115,14 +119,52 @@ Vec2 LevelEditor::snapToRow(Vec2 pos, string type) {
 }
 
 void LevelEditor::placeNode() {
-    if (pendingNode != nullptr) { //only true if the button clicked places nodes 
+    if (pendingNode != nullptr || pendingEnemy != nullptr) { //only true if the button clicked places nodes or placing enemies
         if (!pendingPlacement && Input::get<Mouse>()->buttonReleased().hasLeft()) { //the frame that a button is clicked
             pendingPlacement = true;
         }
-        pendingNode->setPosition(snapToRow(Input::get<Mouse>()->pointerPosition(), pendingNode->getName().substr(0, 3)));
-        if (pendingPlacement && Input::get<Mouse>()->buttonPressed().hasLeft()) { 
-            pendingNode = nullptr;
-            pendingPlacement = false;
+        if (pendingNode != nullptr){ //there might be some way to factor this out
+            pendingNode->setPosition(snapToRow(Input::get<Mouse>()->pointerPosition(), pendingNode->getName().substr(0, 3)));
+        }
+        if (enemyPlacement == 1) {
+            pathEnd = Input::get<Mouse>()->pointerPosition().x;
+            pendingPath->setPosition(snapToRow(Input::get<Mouse>()->pointerPosition(), "pat" ));
+            float diff = abs(pathBegin - pathEnd);
+            pendingPath->setPositionX(min(pathBegin,pathEnd));
+            pendingPath->setPolygon(Rect(0, 0, diff, 2));
+            pendingPath->setName("pat" + to_string(diff));
+        }
+        if (pendingPlacement && Input::get<Mouse>()->buttonPressed().hasLeft()) {
+            if (enemyPlacement == 3) {
+                pendingEnemy = pendingNode;
+                pendingNode = nullptr;
+                enemyPlacement = 2;
+                CULog("Enemy placed. Await path begin");
+            }
+            else if (enemyPlacement == 2) {
+                pathBegin = Input::get<Mouse>()->pointerPosition().x;
+                pendingPath = scene2::WireNode::alloc(Rect(0, 0, 0, 2));
+                pendingPath->setColor(Color4::RED);
+                pendingPath->setAnchor(Vec2(0, 0));
+                //pendingPath->setScale(20, 20);
+                _rootScene->addChild(pendingPath);
+                enemyPlacement = 1;
+                CULog("Path begin confirmed. Draw");
+            }
+            else if (enemyPlacement == 1) {
+                enemies.push_back(pendingEnemy);
+                paths.push_back(pendingPath);
+                pendingEnemy = nullptr;
+                pendingPath = nullptr;
+                enemyPlacement = 0;
+                CULog("Path confirmed");
+                pathBegin = 0;
+                pathEnd = 0;
+            }
+            else {
+                pendingNode = nullptr;
+                pendingPlacement = false;
+            }
             releaseButtons();
         }
     }
@@ -179,6 +221,9 @@ shared_ptr<JsonValue> LevelEditor::toJson() {
             tempObject->appendChild("texture", JsonValue::alloc("caged-animal"));
             decorationsArray->appendChild(tempObject);
         }
+        else if (currentNode->getName().substr(0, 3) == "ene" || currentNode->getName().substr(0, 3) == "pat") {
+            CULog("change of plans");
+        }
         else {
             int returnID = MessageBox(
                 NULL,
@@ -188,6 +233,25 @@ shared_ptr<JsonValue> LevelEditor::toJson() {
             );
         }
     }
+
+    for (int i = 0; i < enemies.size(); i++) {
+        shared_ptr<JsonValue> tempObject = JsonValue::allocObject();   
+        tempObject->appendChild("x_pos", JsonValue::alloc(enemies.at(i)->getPositionX()));
+        tempObject->appendChild("level", JsonValue::alloc((enemies.at(i)->getPositionY() - FLOOR_OFFSET) / FLOOR_HEIGHT));
+        tempObject->appendChild("patrol_start", JsonValue::alloc((long)paths.at(i)->getPositionX()));
+        tempObject->appendChild("patrol_end", JsonValue::alloc((long)stoi(paths.at(i)->getName().substr(3))));
+
+        shared_ptr<JsonValue> tempArray = JsonValue::allocArray();
+        string keys = enemies.at(i)->getName().substr(3);
+        if (keys != "") {
+            for (auto it = begin(keys); it != end(keys); ++it) {
+                tempArray->appendChild(JsonValue::alloc((long)(*it - '0')));
+            }
+        }
+        tempObject->appendChild("keyInt", tempArray);
+        enemyArray->appendChild(tempObject);
+    }
+
     result->appendChild("player", playerObject);
     result->appendChild("enemy", enemyArray);
     result->appendChild("decorations", decorationsArray);
@@ -273,6 +337,21 @@ void LevelEditor::update(float progress) {
     placeNode();
     if (Input::get<Mouse>()->buttonPressed().hasRight()) {
         releaseButtons();
+        if (enemyPlacement > 0) {
+            if (pendingEnemy != nullptr) {
+                _rootScene->removeChild(pendingEnemy);
+            }
+            if (pendingPath != nullptr) {
+                _rootScene->removeChild(pendingPath);
+            }
+            pendingEnemy = nullptr;
+            pendingPath = nullptr;
+            enemyPlacement = 0;
+            pathBegin = 0;
+            pathEnd = 0;
+            pendingNode = nullptr;
+            pendingPlacement = false;
+        }
     }
 }
 
@@ -352,6 +431,8 @@ void LevelEditor::buildScene() {
     _clear->addListener([=](const std::string& name, bool down) {
         if (!down && !resetButtons) {
             _rootScene->removeAllChildren();
+            enemies.clear();
+            paths.clear();
         }
     });
     buttons.push_back(_clear);
@@ -452,6 +533,26 @@ void LevelEditor::buildScene() {
     buttons.push_back(_objective);
     addChild(_objective);
 
+    //Enemy Button
+    enemyTexture = _assets->get<Texture>("enemy");
+    shared_ptr<scene2::Label> _enemyText = scene2::Label::alloc("Enemy", font);
+    _enemyText->setBackground(Color4::WHITE);
+    _enemy = scene2::Button::alloc(_enemyText, Color4::GRAY);
+    _enemy->setToggle(true);
+    _enemy->activate();
+    _enemy->setPosition(600, 0);
+    _enemy->addListener([=](const std::string& name, bool down) {
+        if (down) {
+            pendingNode = scene2::AnimationNode::alloc(enemyTexture, 1, 5);
+            pendingNode->setScale(0.05, 0.05);
+            pendingNode->setName("ene" + (_keyField->getText() != "" ? _keyField->getText() : ""));
+            _rootScene->addChild(pendingNode);
+            enemyPlacement = 3;
+        }
+        });
+    buttons.push_back(_enemy);
+    addChild(_enemy);
+
     //Save Button
     shared_ptr<scene2::Label> _saveText = scene2::Label::alloc("Save", font);
     _saveText->setBackground(Color4::WHITE);
@@ -470,7 +571,6 @@ void LevelEditor::buildScene() {
                 writer->writeJson(toJson());
                 writer->close();
             }
-            
         }
         });
     buttons.push_back(_save);
@@ -513,3 +613,4 @@ void LevelEditor::buildScene() {
     buttons.push_back(_load);
     addChild(_load);
 }
+#endif
