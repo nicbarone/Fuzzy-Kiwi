@@ -68,7 +68,7 @@ void LevelEditor::dispose() {
 }
 
 #if defined (CU_TOUCH_SCREEN)
-Input::activate<Touchscreen>();
+
 #else
 
 void LevelEditor::releaseButtons() {
@@ -132,7 +132,7 @@ void LevelEditor::placeNode() {
             float diff = abs(pathBegin - pathEnd);
             pendingPath->setPositionX(min(pathBegin,pathEnd));
             pendingPath->setPolygon(Rect(0, 0, diff, 2));
-            pendingPath->setName("pat" + to_string(diff));
+            pendingPath->setName("pat" + to_string(diff+ pendingPath->getPositionX()));
         }
         if (pendingPlacement && Input::get<Mouse>()->buttonPressed().hasLeft()) {
             if (enemyPlacement == 3) {
@@ -262,13 +262,31 @@ shared_ptr<JsonValue> LevelEditor::toJson() {
 }
 
 void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
+    if (enemyPlacement > 0) {
+        if (pendingEnemy != nullptr) {
+            _rootScene->removeChild(pendingEnemy);
+        }
+        if (pendingPath != nullptr) {
+            _rootScene->removeChild(pendingPath);
+        }
+        pendingEnemy = nullptr;
+        pendingPath = nullptr;
+        enemyPlacement = 0;
+        pathBegin = 0;
+        pathEnd = 0;
+        pendingNode = nullptr;
+        pendingPlacement = false;
+    }
     _rootScene->removeAllChildren();
+    enemies.clear();
+    paths.clear();
     shared_ptr<JsonValue> player = json->get("player");
     shared_ptr<JsonValue> staircaseDoor = json->get("staircase-door");
     shared_ptr<JsonValue> door = json->get("door");
     shared_ptr<JsonValue> decorations = json->get("decorations");
+    shared_ptr<JsonValue> enemyJson = json->get("enemy");
     shared_ptr<JsonValue> objectTemp;
-    shared_ptr<scene2::SceneNode> temp;
+    shared_ptr<scene2::PolygonNode> temp;
     //create cat
     if (player != nullptr) {
         temp = scene2::AnimationNode::alloc(catTexture, 1, 8);
@@ -319,6 +337,32 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
             temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
             temp->setScale(0.3, 0.3);
             _rootScene->addChildWithName(temp, "dec" + to_string(objectTemp->getInt("objective")));
+        }
+    }
+
+    //create enemies
+    if (enemyJson != nullptr) {
+        for (int i = 0; i < enemyJson->size(); i++) {
+            objectTemp = enemyJson->get(i);
+            temp = scene2::AnimationNode::alloc(enemyTexture, 1, 5);
+            temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
+            temp->setScale(0.05, 0.05);
+            shared_ptr<JsonValue> keys = objectTemp->get("keyInt");
+            string buffer = "";
+            for (int j = 0; j < keys->size(); j++) {
+                buffer.append(keys->get(j)->toString());
+            }
+            _rootScene->addChildWithName(temp, "ene" + buffer);
+            enemies.push_back(temp);
+            shared_ptr<scene2::WireNode> path = scene2::WireNode::alloc(Rect(0,0, objectTemp->getFloat("patrol_end") - objectTemp->getFloat("patrol_start"),2));
+            path->setAnchor(Vec2(0,0));
+            path->setPositionX(objectTemp->getFloat("patrol_start"));
+            path->setPositionY(objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
+            path->setColor(Color4::RED);
+            _rootScene->addChildWithName(path, "pat" + to_string(objectTemp->getFloat("patrol_end")));
+            paths.push_back(path);
+
+
         }
     }
 }
