@@ -279,10 +279,16 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-		}
-		,
+		},
 		"catDen": {
 			"file": "textures/CatDen.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"catPossessing": {
+			"file": "textures/CatPossessing.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
