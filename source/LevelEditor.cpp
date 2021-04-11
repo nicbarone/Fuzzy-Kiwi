@@ -67,10 +67,13 @@ void LevelEditor::dispose() {
     _rootScene = nullptr;
 }
 
+<<<<<<< HEAD
 #if defined (CU_TOUCH_SCREEN)
 
 #else
 
+=======
+>>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 void LevelEditor::releaseButtons() {
     resetButtons = true; //to make sure the clear all button isn't triggered when resetting
     for (auto it = begin(buttons); it != end(buttons); ++it) {
@@ -122,6 +125,8 @@ Vec2 LevelEditor::snapToRow(Vec2 pos, string type) {
 }
 
 void LevelEditor::placeNode() {
+#if defined (CU_TOUCH_SCREEN)
+#else
     if (pendingNode != nullptr || pendingEnemy != nullptr) { //only true if the button clicked places nodes or placing enemies
         if (!pendingPlacement && Input::get<Mouse>()->buttonReleased().hasLeft()) { //the frame that a button is clicked
             pendingPlacement = true;
@@ -171,10 +176,13 @@ void LevelEditor::placeNode() {
             releaseButtons();
         }
     }
+#endif
 }
 
 shared_ptr<JsonValue> LevelEditor::toJson() {
     shared_ptr<JsonValue> result = JsonValue::allocObject();
+#if defined (CU_TOUCH_SCREEN)
+#else
     shared_ptr<JsonValue> playerObject = JsonValue::allocObject();
     shared_ptr<JsonValue> enemyArray = JsonValue::allocArray();
     shared_ptr<JsonValue> decorationsArray = JsonValue::allocArray();
@@ -261,10 +269,12 @@ shared_ptr<JsonValue> LevelEditor::toJson() {
     result->appendChild("staircase-door", staircaseDoorArray);
     result->appendChild("door", doorArray);
     result->appendChild("floor", floorValue);
+#endif
     return result;
 }
 
 void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
+<<<<<<< HEAD
     if (enemyPlacement > 0) {
         if (pendingEnemy != nullptr) {
             _rootScene->removeChild(pendingEnemy);
@@ -280,6 +290,10 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
         pendingNode = nullptr;
         pendingPlacement = false;
     }
+=======
+#if defined (CU_TOUCH_SCREEN)
+#else
+>>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
     _rootScene->removeAllChildren();
     enemies.clear();
     paths.clear();
@@ -342,6 +356,7 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
             _rootScene->addChildWithName(temp, "dec" + to_string(objectTemp->getInt("objective")));
         }
     }
+<<<<<<< HEAD
 
     //create enemies
     if (enemyJson != nullptr) {
@@ -368,6 +383,9 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
 
         }
     }
+=======
+#endif
+>>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 }
 
 #pragma mark -
@@ -379,8 +397,9 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
  *
  * @param timestep  The amount of time (in seconds) since the last frame
  */
-void LevelEditor::update(float progress) {
-
+void LevelEditor::update(float timestep) {
+#if defined (CU_TOUCH_SCREEN)
+#else
     placeNode();
     if (Input::get<Mouse>()->buttonPressed().hasRight()) {
         releaseButtons();
@@ -400,9 +419,12 @@ void LevelEditor::update(float progress) {
             pendingPlacement = false;
         }
     }
+#endif
 }
 
 void LevelEditor::buildScene() {
+#if defined (CU_TOUCH_SCREEN)
+#else
     addChild(_rootScene);
     std::shared_ptr<Font> font = _assets->get<Font>("small-felt");
 
@@ -659,5 +681,5 @@ void LevelEditor::buildScene() {
         });
     buttons.push_back(_load);
     addChild(_load);
-}
 #endif
+}

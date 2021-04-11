@@ -55,7 +55,7 @@ bool LevelSelectMode::init(const std::shared_ptr<AssetManager>& assets) {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void LevelSelectMode::update(float progress) {
-    CULog("You are now in Level Select Mode. Enjoy your stay");
+    //CULog("You are now in Level Select Mode. Enjoy your stay");
 }
 
 void LevelSelectMode::buildScene() {
@@ -68,12 +68,13 @@ void LevelSelectMode::buildScene() {
     _mapPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
-            //CULog("Clicking on possess button!");
+            CULog("Clicking on first environment!");
             // Mark this button as clicked, proper handle will take place in update()
             _locationIndex = 0;
             _locationSelected = true;
         }
     });
+
     _levelSelectPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelSelectBG"));
     _levelSelectPanel->createChildButton(-100, 0, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1"));
     _levelSelectPanel->getChildButtons()[0]->getButton()->setScale(1.0f);
@@ -137,6 +138,7 @@ void LevelSelectMode::buildScene() {
 }
 
 void LevelSelectMode::deactivateButtons() {
+    CULog("deactivated");
     _mapPanel->getChildButtons()[0]->getButton()->deactivate();
     _settingsButton->getButton()->deactivate();
     _backButton->getButton()->deactivate();
@@ -146,9 +148,10 @@ void LevelSelectMode::deactivateButtons() {
 }
 
 void LevelSelectMode::activateButtons() {
-    _mapPanel->getChildButtons()[0]->getButton()->activate();
+    CULog("activated");
     _settingsButton->getButton()->activate();
     _backButton->getButton()->activate();
+    _mapPanel->getChildButtons()[0]->getButton()->activate();
     _mapPanel->getChildButtons()[0]->getButton()->setVisible(true);
     _settingsButton->getButton()->setVisible(true);
     _backButton->getButton()->setVisible(true);

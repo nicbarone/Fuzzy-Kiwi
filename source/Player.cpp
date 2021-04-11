@@ -72,7 +72,6 @@ void Player::setLevel(int level) {
 	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET + PLAYER_OFFSET);
 }
 
-
 void Player::PossessAnimation(bool possessing) {
 	std::function<bool()> frame0 = [&]() {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);

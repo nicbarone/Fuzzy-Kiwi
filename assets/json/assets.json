@@ -7,28 +7,8 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"close-normal": {
-			"file": "textures/CloseNormal.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"close-selected": {
-			"file": "textures/CloseSelected.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"cat-placeholder": {
-			"file": "textures/CatPlaceholder.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
 		"cat-walking": {
+<<<<<<< HEAD
 			"file": "textures/CatWalking.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
@@ -44,256 +24,232 @@
 		},
 		"enemy-placeholder": {
 			"file": "textures/EnemyPlaceholder.png",
+=======
+			"file": "textures/GameObject/Cat/CatWalking.png",
+>>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"enemy": {
-			"file": "textures/Enemy.png",
+			"file": "textures/GameObject/Enemy/Enemy.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"enemy-glow": {
-			"file": "textures/EnemyGlow.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"possessed-enemy-placeholder": {
-			"file": "textures/PossessedEnemyPlaceholder.png",
+			"file": "textures/GameObject/Enemy/EnemyGlow.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"possessed-enemy": {
-			"file": "textures/PossessedEnemy.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"possess-button": {
-			"file": "textures/Possess.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"unpossess-button": {
-			"file": "textures/Unpossess.png",
+			"file": "textures/GameObject/Enemy/PossessedEnemy.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"floor": {
-			"file": "textures/LongFloor.png",
+			"file": "textures/GameObject/LevelComponent/LongFloor.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"staircaseDoor": {
-			"file": "textures/StaircaseDoor.png",
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoor.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"door": {
-			"file": "textures/Door.png",
+			"file": "textures/GameObject/Door/Door.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"cagedAnimal": {
-			"file": "textures/CagedAnimal.png",
+			"file": "textures/GameObject/CagedAnimal/CagedAnimal.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"winIcon": {
-			"file": "textures/WinIcon.png",
+			"file": "textures/UI/Icon/WinIcon.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"levelCompleteBG": {
-			"file": "textures/LevelCompleteBG.png",
+			"file": "textures/UI/Background/LevelCompleteBG.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"winTitle": {
-			"file": "textures/WinTitle.png",
+			"file": "textures/UI/Icon/WinTitle.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"deadOrAlive": {
-			"file": "textures/DeadOrAlive.png",
+			"file": "textures/UI/Icon/DeadOrAlive.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"retry": {
-			"file": "textures/Retry.png",
+			"file": "textures/UI/Button/Retry.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"exit": {
-			"file": "textures/Exit.png",
+			"file": "textures/UI/Button/Exit.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"menu": {
-			"file": "textures/Menu.png",
+			"file": "textures/UI/Button/Menu.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"nextLevel": {
-			"file": "textures/NextLevel.png",
+			"file": "textures/UI/Button/NextLevel.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"levelWall": {
-			"file": "textures/levelWall.png",
+			"file": "textures/GameObject/LevelComponent/levelWall.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"levelFloor": {
-			"file": "textures/LevelFloor.png",
+			"file": "textures/GameObject/LevelComponent/LevelFloor.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"loseIcon": {
-			"file": "textures/LoseIcon.png",
+			"file": "textures/UI/Icon/LoseIcon.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"loseTitle": {
-			"file": "textures/LoseTitle.png",
+			"file": "textures/UI/Icon/LoseTitle.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"wasted": {
-			"file": "textures/Wasted.png",
+			"file": "textures/UI/Icon/Wasted.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"teamIcon": {
-			"file": "textures/FuzzyKiwiIcon1.png",
+			"file": "textures/UI/Icon/FuzzyKiwiIcon1.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"menuBackground": {
-			"file": "textures/MenuBackground.png",
+			"file": "textures/UI/Background/MenuBackground.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"playButton": {
-			"file": "textures/Play.png",
+			"file": "textures/UI/Button/Play.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"settingsButton": {
-			"file": "textures/Settings.png",
+			"file": "textures/UI/Button/Settings.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"mapBackground": {
-			"file": "textures/MapBackground.jpg",
+			"file": "textures/UI/Background/MapBackground.jpg",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"smallLab": {
-			"file": "textures/SmallLab.png",
+			"file": "textures/UI/Button/SmallLab.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"backButton": {
-			"file": "textures/BackButton.png",
+			"file": "textures/UI/Button/BackButton.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"levelSelectBG": {
-			"file": "textures/LevelSelectBackground.png",
+			"file": "textures/UI/Background/LevelSelectBackground.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"level1": {
-			"file": "textures/Level1.png",
+			"file": "textures/UI/Button/Level1.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"level2": {
-			"file": "textures/Level2.png",
+			"file": "textures/UI/Button/Level2.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"doorFrame": {
-			"file": "textures/DoorFrame.png",
+			"file": "textures/GameObject/Door/DoorFrame.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"possessButtonInRange": {
-			"file": "textures/PossessButtonInRange.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
+<<<<<<< HEAD
 		"possessButtonOutRange": {
 			"file": "textures/PossessButtonOutRange.png",
 			"minfilter": "nearest",
@@ -308,18 +264,24 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+=======
+>>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 		"catDen": {
-			"file": "textures/CatDen.png",
+			"file": "textures/GameObject/CatDen/CatDen.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-		}
-	},
-	"sounds": {
-		"menuBGM": {
-			"type": "sample",
-			"file": "bgm/MenuBGM.ogg"
+<<<<<<< HEAD
+=======
+		},
+		"catPossessing": {
+			"file": "textures/GameObject/Cat/CatPossessing.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+>>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 		}
 	},
 	"fonts": {
