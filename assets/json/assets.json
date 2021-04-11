@@ -35,6 +35,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"cat-possessing": {
+			"file": "textures/CatPossessing.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"enemy-placeholder": {
 			"file": "textures/EnemyPlaceholder.png",
 			"minfilter": "nearest",
@@ -300,17 +307,9 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-		}
-		,
+		},
 		"catDen": {
 			"file": "textures/CatDen.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"catPossessing": {
-			"file": "textures/CatPossessing.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

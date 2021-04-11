@@ -53,6 +53,8 @@ public:
 	/** returns true if the input point is currently being seen by this enemy and false otherwise*/
 	bool detectedPlayer(float x, int level, vector<Vec2> vision_blockers);
 
+	/** removes the given enemy from the _enemies vector, used after an enemy has been unpossessed*/
+	void removeEnemy(std::shared_ptr<Enemy> enemy);
 
 };
 #endif

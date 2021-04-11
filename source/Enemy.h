@@ -36,6 +36,7 @@ private:
 	bool _isActive;
 	int _frame;
 	int _frameCounter;
+	int _turnFrame;
 	/*list of keys the enemies has. Keys can open specific doors.*/
 	std::vector<int> _keys;
 

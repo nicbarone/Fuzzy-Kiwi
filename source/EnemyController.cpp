@@ -102,3 +102,6 @@ bool EnemyController::detectedPlayer(float x, int level, vector<Vec2> vision_blo
 	return false;
 }
 
+void EnemyController::removeEnemy(std::shared_ptr<Enemy> enemy) {
+	_enemies.erase(std::remove(_enemies.begin(), _enemies.end(), enemy), _enemies.end());
+}

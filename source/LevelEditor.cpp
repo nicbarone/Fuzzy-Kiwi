@@ -108,6 +108,9 @@ float LevelEditor::addOffset(float pos, string type) {
     else if (type == "den") {
         pos = pos + CAT_DEN_OFFSET;
     }
+    else if (type == "doo") {
+        pos = pos + 64;
+    }
     return pos;
 }
 
@@ -300,15 +303,15 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
         for (int i = 0; i < staircaseDoor->size(); i++) {
             objectTemp = staircaseDoor->get(i);
             if (objectTemp->getBool("isDen")) { //cat den
-                temp = scene2::AnimationNode::alloc(catDenTexture, 1, 8);
+                temp = scene2::AnimationNode::alloc(catDenTexture, 1, 1);
                 temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + CAT_DEN_OFFSET);
-                temp->setScale(0.25, 0.25);
+                temp->setScale(0.05, 0.05);
                 _rootScene->addChildWithName(temp, "den" + to_string(objectTemp->getInt("connection")));
             }
             else { //staircase door
                 temp = scene2::AnimationNode::alloc(staircaseDoorTexture, 1, 8);
                 temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + STAIRCASE_DOOR_OFFSET);
-                temp->setScale(0.55, 0.55);
+                temp->setScale(1.8, 1.8);
                 _rootScene->addChildWithName(temp, "sta" + to_string(objectTemp->getInt("connection")));
             }
         }
@@ -318,8 +321,8 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
         for (int i = 0; i < door->size(); i++) {
             objectTemp = door->get(i);
             temp = scene2::AnimationNode::alloc(doorTexture, 1, 11);
-            temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
-            temp->setScale(-0.65, 0.65);
+            temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + 64);
+            temp->setScale(1, 1);
             shared_ptr<JsonValue> keys = objectTemp->get("keyInt");
             string buffer = "";
             for (int j = 0; j < keys->size(); j++) {
@@ -512,7 +515,7 @@ void LevelEditor::buildScene() {
     _staircaseDoor->addListener([=](const std::string& name, bool down) {
         if (down) {
             pendingNode = scene2::AnimationNode::alloc(staircaseDoorTexture, 1, 8);
-            pendingNode->setScale(0.55, 0.55);
+            pendingNode->setScale(1.8, 1.8);
             pendingNode->setName("sta" + (_doorIDField->getText() != "" ? _doorIDField->getText() : "0"));
             _rootScene->addChild(pendingNode);
         }
@@ -521,7 +524,7 @@ void LevelEditor::buildScene() {
     addChild(_staircaseDoor);
 
     //Cat Den Button
-    catDenTexture = _assets->get<Texture>("staircaseDoor");
+    catDenTexture = _assets->get<Texture>("catDen");
     shared_ptr<scene2::Label> _catDenText = scene2::Label::alloc("Cat Den", font);
     _catDenText->setBackground(Color4::WHITE);
     _catDen = scene2::Button::alloc(_catDenText, Color4::GRAY);
@@ -530,8 +533,8 @@ void LevelEditor::buildScene() {
     _catDen->setPosition(330, 0);
     _catDen->addListener([=](const std::string& name, bool down) {
         if (down) {
-            pendingNode = scene2::AnimationNode::alloc(catDenTexture, 1, 8);
-            pendingNode->setScale(0.25, 0.25);
+            pendingNode = scene2::AnimationNode::alloc(catDenTexture, 1, 1);
+            pendingNode->setScale(0.05, 0.05);
             pendingNode->setName("den" + (_doorIDField->getText() != "" ? _doorIDField->getText() : "0"));
             _rootScene->addChild(pendingNode);
         }
@@ -550,7 +553,7 @@ void LevelEditor::buildScene() {
     _door->addListener([=](const std::string& name, bool down) {
         if (down) {
             pendingNode = scene2::AnimationNode::alloc(doorTexture, 1, 11);
-            pendingNode->setScale(-0.65, 0.65);
+            pendingNode->setScale(1, 1);
             pendingNode->setName("doo" + _keyField->getText());
             _rootScene->addChild(pendingNode);
         }

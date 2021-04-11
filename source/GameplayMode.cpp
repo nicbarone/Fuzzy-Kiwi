@@ -260,7 +260,7 @@ void GameplayMode::update(float timestep) {
                     _possessPanel->getChildButtons()[1]->setButtonState(ui::ButtonState::UNPOSSESS);
                     if (_json == nullptr) {
                         _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
-                        _tutorialText->setPosition(Vec2(100, 220));
+                        _tutorialText->setPosition(Vec2(100, 110));
                     }
                 }
             }
@@ -317,7 +317,7 @@ void GameplayMode::update(float timestep) {
                 _losePanel->getChildButtons()[1]->getButton()->activate();
                 if (_json == nullptr) {
                     _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
-                    _tutorialText->setPosition(Vec2(100, 220));
+                    _tutorialText->setPosition(Vec2(100, 110));
                 }
                 _hasControl = false;
             }
@@ -334,7 +334,7 @@ void GameplayMode::update(float timestep) {
         if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
             if (_json == nullptr) {
                 _tutorialText->setText("Oh no! You are stuck! Press the R key to retry");
-                _tutorialText->setPosition(Vec2(100, 220));
+                _tutorialText->setPosition(Vec2(100, 110));
             }
         }
     }
@@ -350,18 +350,20 @@ bool GameplayMode::attemptPossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
     if (enemy != nullptr) {
         vector<Vec2> doors = closedDoors();
-       /*std::shared_ptr<Texture> cats = _assets->get<Texture>("catPossessing");
-        int oldXPos = _player->getPos();
-        _player->getSceneNode()->setTexture( cats);
-        _player->SetSceneNode(scene2::AnimationNode::alloc(cats,1,8));
-        _player->getSceneNode()->setPosition(Vec2(oldXPos,100));*/
-            
-        //_player->getSceneNode()->setFrame(0);
+
+        //code used for cat jumping animation, incomplete and not activated in our release
+        //std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-possessing");
+        //_rootScene->removeChild(_player->getSceneNode());
+        //_player->SetSceneNode(scene2::AnimationNode::alloc(catJump, 1, 8));
+        //_player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET - 55);
+        //_player->getSceneNode()->setScale(0.15, 0.15);
+        //_rootScene->addChild(_player->getSceneNode());
         
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
         _player->set_possessEnemy(enemy);
         _enemyController->updatePossessed(enemy);
+        _rootScene->removeChild(enemy->getPatrolNode());
         enemy->setGlow(false);
         enemy->setPossessed();
         return true;
@@ -379,7 +381,8 @@ void GameplayMode::unpossess() {
     enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
 
-    //may want to remove the enemy from the vector in enemy controller eventually, seems good for now
+    
+    _enemyController->removeEnemy(enemy);
     _enemyController->updatePossessed(nullptr);
 }
 
@@ -464,8 +467,8 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
 
-    _enemyController->addEnemy(400, 0,  0, { 1 }, 200, 200, enemyTexture, altTexture, enemyHighlightTexture);
-    _enemyController->addEnemy(650, 0, 0, { 2 }, 300, 900,  enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(400, 0,  0, { 1 }, 400, 400, enemyTexture, altTexture, enemyHighlightTexture);
+    _enemyController->addEnemy(650, 0, 0, { 1 }, 300, 900,  enemyTexture, altTexture, enemyHighlightTexture);
 
 
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
@@ -490,8 +493,9 @@ void GameplayMode::buildScene() {
     // Text labels
     std::shared_ptr<Font> font = _assets->get<Font>("felt");
     _tutorialText = scene2::Label::alloc("Possess enemies to get past them, don't get spotted!", font);
+    _tutorialText->setForeground(Color4::WHITE);
     _tutorialText->setScale(Vec2(0.5, 0.5));
-    _tutorialText->setPosition(Vec2(60, 220));
+    _tutorialText->setPosition(Vec2(60, 110));
 
     // Add the logo and button to the scene graph
     addChild(_rootScene);
@@ -911,7 +915,7 @@ void GameplayMode::checkDoors() {
                     door->setDoor(!doorState);
                     if (_json == nullptr) {
                         _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
-                        _tutorialText->setPosition(Vec2(100, 220));
+                        _tutorialText->setPosition(Vec2(100, 110));
                     }
                 }
 
@@ -965,7 +969,7 @@ void GameplayMode::checkStaircaseDoors() {
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
                 if (_json == nullptr) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
-                    _tutorialText->setPosition(Vec2(200, 490));
+                    _tutorialText->setPosition(Vec2(200, 420));
                 }
                 break;
             }
@@ -998,7 +1002,7 @@ void GameplayMode::checkCatDens() {
                 _player->setLevel(catDen->getLevel());
                 if (_json == nullptr) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
-                    _tutorialText->setPosition(Vec2(200, 510));
+                    _tutorialText->setPosition(Vec2(200, 420));
                 }
                 break;
             }

@@ -95,7 +95,7 @@ void Player::PossessAnimation(bool possessing) {
 		return false;
 	};
 	if (possessing) {
-		int timeDiff = 25;
+		int timeDiff = 100;
 		cugl::Application::get()->schedule(frame0, 50 + timeDiff);
 		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 2);
 		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 3);
@@ -103,7 +103,7 @@ void Player::PossessAnimation(bool possessing) {
 	}
 	else
 	{
-		int timeDiff = 25;
+		int timeDiff = 100;
 		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
 		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 5);
 		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 6);

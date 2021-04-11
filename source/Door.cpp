@@ -98,8 +98,10 @@ void Door::setDoor(bool open) {
 	if (_blockedEnemy != nullptr) {
 		//CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
 		Vec2 temp = Vec2(_blockedEnemy->getPatrol().x, _blockedEnemy->getPatrol().y);
-		_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
-		_blockedEnemy->setOldPatrol(temp);
+		if (_blockedEnemy->isActive()) {
+			_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
+			_blockedEnemy->setOldPatrol(temp);
+		}
 		_blockedEnemy = nullptr;
 		//setBlockedEnemy(nullptr);
 		CULog("%d", _blockedEnemy == nullptr);

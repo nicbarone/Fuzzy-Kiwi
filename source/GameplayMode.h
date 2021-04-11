@@ -29,6 +29,7 @@
 //
 #ifndef __GAMEPLAY_MODE_H__
 #define __GAMEPLAY_MODE_H__
+#include <algorithm>
 #include <cugl/cugl.h>
 #include "Player.h"
 #include "Floor.h"
