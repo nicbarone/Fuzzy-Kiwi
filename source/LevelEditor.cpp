@@ -67,13 +67,7 @@ void LevelEditor::dispose() {
     _rootScene = nullptr;
 }
 
-<<<<<<< HEAD
-#if defined (CU_TOUCH_SCREEN)
 
-#else
-
-=======
->>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 void LevelEditor::releaseButtons() {
     resetButtons = true; //to make sure the clear all button isn't triggered when resetting
     for (auto it = begin(buttons); it != end(buttons); ++it) {
@@ -274,7 +268,11 @@ shared_ptr<JsonValue> LevelEditor::toJson() {
 }
 
 void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
-<<<<<<< HEAD
+
+
+
+#if defined (CU_TOUCH_SCREEN)
+#else
     if (enemyPlacement > 0) {
         if (pendingEnemy != nullptr) {
             _rootScene->removeChild(pendingEnemy);
@@ -290,10 +288,6 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
         pendingNode = nullptr;
         pendingPlacement = false;
     }
-=======
-#if defined (CU_TOUCH_SCREEN)
-#else
->>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
     _rootScene->removeAllChildren();
     enemies.clear();
     paths.clear();
@@ -356,7 +350,7 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
             _rootScene->addChildWithName(temp, "dec" + to_string(objectTemp->getInt("objective")));
         }
     }
-<<<<<<< HEAD
+
 
     //create enemies
     if (enemyJson != nullptr) {
@@ -383,9 +377,9 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
 
         }
     }
-=======
+
 #endif
->>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
+
 }
 
 #pragma mark -

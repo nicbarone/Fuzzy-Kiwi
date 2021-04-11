@@ -8,25 +8,7 @@
 			"wrapT": "clamp"
 		},
 		"cat-walking": {
-<<<<<<< HEAD
-			"file": "textures/CatWalking.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"cat-possessing": {
-			"file": "textures/CatPossessing.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"enemy-placeholder": {
-			"file": "textures/EnemyPlaceholder.png",
-=======
 			"file": "textures/GameObject/Cat/CatWalking.png",
->>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -249,31 +231,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-<<<<<<< HEAD
-		"possessButtonOutRange": {
-			"file": "textures/PossessButtonOutRange.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"unpossessButton": {
-			"file": "textures/UnpossessButton.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-=======
->>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 		"catDen": {
 			"file": "textures/GameObject/CatDen/CatDen.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-<<<<<<< HEAD
-=======
+
 		},
 		"catPossessing": {
 			"file": "textures/GameObject/Cat/CatPossessing.png",
@@ -281,7 +245,6 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
->>>>>>> 82e713d112ccf28d29fa47184592d4ecdee1ce80
 		}
 	},
 	"fonts": {
