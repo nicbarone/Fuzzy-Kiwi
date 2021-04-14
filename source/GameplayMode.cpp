@@ -328,12 +328,12 @@ bool GameplayMode::attemptPossess() {
         vector<Vec2> doors = closedDoors();
 
         //code used for cat jumping animation, incomplete and not activated in our release
-        //std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-possessing");
-        //_rootScene->removeChild(_player->getSceneNode());
-        //_player->SetSceneNode(scene2::AnimationNode::alloc(catJump, 1, 8));
-        //_player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET - 55);
-        //_player->getSceneNode()->setScale(0.15, 0.15);
-        //_rootScene->addChild(_player->getSceneNode());
+       std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
+        _rootScene->removeChild(_player->getSceneNode());
+        _player->SetSceneNode(scene2::AnimationNode::alloc(catJump, 1, 8));
+        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET -45);
+        _player->getSceneNode()->setScale(0.15, 0.15);
+        _rootScene->addChild(_player->getSceneNode());
         
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
