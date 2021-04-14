@@ -107,6 +107,8 @@ protected:
     std::shared_ptr<ui::PanelElement> _losePanel;
     /** The panel to menu*/
     std::shared_ptr<ui::PanelElement> _menuPanel;
+    /** The button to open menu */
+    std::shared_ptr<ui::ButtonElement> _menuButton;
     // Create panels
     std::shared_ptr<Texture> winPanel;
     std::shared_ptr<Texture> losePanel;
@@ -115,7 +117,13 @@ protected:
     std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
 
-    int _winStatus = 0; // 0 - on going; 1 - win; -1 - lose
+    enum class GameStatus {
+        RUNNING,
+        PAUSED,
+        WIN,
+        LOSE
+    };
+    GameStatus _gameStatus;
 
     /** whether or not the player has control*/
     bool _hasControl;
@@ -249,12 +257,12 @@ public:
 
     void ChangeDrawOrder();
 
-    void setWinStatus(int win) {
-        _winStatus = win;
+    void setGameStatus(GameStatus status) {
+        _gameStatus = status;
     }
 
-    int getWinStatus() {
-        return _winStatus;
+    GameStatus getGameStatus() {
+        return _gameStatus;
     }
 };
 
