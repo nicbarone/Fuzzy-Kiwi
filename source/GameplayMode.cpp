@@ -350,6 +350,7 @@ bool GameplayMode::attemptPossess() {
         _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET -45);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
+        _player->PossessAnimation(true);
        /* std::function<bool()> frame0 = [this]() {
             std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frameCounter);
             _frameCounter++;
