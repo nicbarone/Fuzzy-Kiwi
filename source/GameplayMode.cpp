@@ -327,7 +327,13 @@ bool GameplayMode::attemptPossess() {
         _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET -45);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
-        
+       /* std::function<bool()> frame0 = [this]() {
+            std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frameCounter);
+            _frameCounter++;
+            return false;
+        };
+        cugl::Application::get()->schedule(frame1, 50 + timeDiff * i);*/
+
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
         _player->set_possessEnemy(enemy);
