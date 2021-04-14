@@ -257,6 +257,7 @@ void GameplayMode::update(float timestep) {
         if (_inputManager->getAndResetPossessPressed()) {
             if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
                 if (attemptPossess()) {
+                    _possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
                     if (_json == nullptr) {
                         _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
                         _tutorialText->setPosition(Vec2(100, 110));
@@ -522,6 +523,15 @@ void GameplayMode::buildScene() {
 
 
     _rootScene->addChild(_tutorialText);
+
+    // make possess panel
+    _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
+    _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+    _possessPanel->getSceneNode()->setScale(0.15f);
+    _possessPanel->getSceneNode()->setPosition(size);
+    _possessPanel->createChildText(200, 0, 10, 10, "x " + to_string(_player->get_nPossess()), font);
+    _possessPanel->getChildTexts()[0]->setScale(Vec2(5.0f, 5.0f));
+    addChild(_possessPanel->getSceneNode());
 
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _menuButton->setTexture(_assets->get<Texture>("menuButton"));
@@ -791,7 +801,16 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Font> font = _assets->get<Font>("felt");
 
     addChild(_rootScene);
-    
+
+    // make possess panel
+    _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
+    _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+    _possessPanel->getSceneNode()->setScale(0.15f);
+    _possessPanel->getSceneNode()->setPosition(size);
+    _possessPanel->createChildText(200, 0, 10, 10, "x " + to_string(_player->get_nPossess()), font);
+    _possessPanel->getChildTexts()[0]->setScale(Vec2(5.0f, 5.0f));
+    addChild(_possessPanel->getSceneNode());
+
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _menuButton->setTexture(_assets->get<Texture>("menuButton"));
     _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
