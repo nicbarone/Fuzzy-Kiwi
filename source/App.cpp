@@ -73,8 +73,10 @@ void App::onShutdown() {
     Input::deactivate<Mouse>();
     Input::deactivate<Keyboard>();
 #endif
-
+    AudioEngine::get()->pause();
+    AudioEngine::get()->getMusicQueue()->clear();
     AudioEngine::stop();
+    //AudioEngine::stop();
     Application::onShutdown();  // YOU MUST END with call to parent
 }
 
