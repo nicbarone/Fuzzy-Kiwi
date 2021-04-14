@@ -29,6 +29,7 @@
 //
 #ifndef __GAMEPLAY_MODE_H__
 #define __GAMEPLAY_MODE_H__
+#include <algorithm>
 #include <cugl/cugl.h>
 #include "Player.h"
 #include "Floor.h"
@@ -102,7 +103,7 @@ protected:
     std::shared_ptr<CagedAnimal> _cagedAnimal;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
-    InputManager _inputManager;
+    std::shared_ptr<InputManager> _inputManager;
     /** The panel to win level*/
     std::shared_ptr<ui::PanelElement> _winPanel;
     /** The panel to lose level*/
@@ -110,10 +111,6 @@ protected:
     // Create panels
     std::shared_ptr<Texture> winPanel;
     std::shared_ptr<Texture> losePanel;
-    // Create a button.  A button has an up image and a down image
-    std::shared_ptr<ui::PanelElement> _possessPanel;
-    std::shared_ptr<Texture> possessButton;
-    std::shared_ptr<Texture> unpossessButton;
 
     std::shared_ptr<Texture> enemyHighlightTexture;
     std::shared_ptr<Texture> enemyTexture;
@@ -165,8 +162,8 @@ public:
      * 
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level);
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue>);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<InputManager> inputManager);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager);
 
 
     /** used to reset the level*/

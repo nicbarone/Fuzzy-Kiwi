@@ -39,7 +39,7 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets) {
 
 #if defined (CU_TOUCH_SCREEN)
     Input::activate<Touchscreen>();
-#else
+#elif defined (__WINDOWS__)
     Input::activate<Mouse>();
     Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::ALWAYS);
     Input::activate<Keyboard>();
@@ -67,9 +67,6 @@ void LevelEditor::dispose() {
     _rootScene = nullptr;
 }
 
-#if defined (CU_TOUCH_SCREEN)
-Input::activate<Touchscreen>();
-#else
 
 void LevelEditor::releaseButtons() {
     resetButtons = true; //to make sure the clear all button isn't triggered when resetting
@@ -108,6 +105,9 @@ float LevelEditor::addOffset(float pos, string type) {
     else if (type == "den") {
         pos = pos + CAT_DEN_OFFSET;
     }
+    else if (type == "doo") {
+        pos = pos + 64;
+    }
     return pos;
 }
 
@@ -119,6 +119,8 @@ Vec2 LevelEditor::snapToRow(Vec2 pos, string type) {
 }
 
 void LevelEditor::placeNode() {
+#if defined (CU_TOUCH_SCREEN)
+#elif defined (__WINDOWS__)
     if (pendingNode != nullptr || pendingEnemy != nullptr) { //only true if the button clicked places nodes or placing enemies
         if (!pendingPlacement && Input::get<Mouse>()->buttonReleased().hasLeft()) { //the frame that a button is clicked
             pendingPlacement = true;
@@ -132,7 +134,7 @@ void LevelEditor::placeNode() {
             float diff = abs(pathBegin - pathEnd);
             pendingPath->setPositionX(min(pathBegin,pathEnd));
             pendingPath->setPolygon(Rect(0, 0, diff, 2));
-            pendingPath->setName("pat" + to_string(diff));
+            pendingPath->setName("pat" + to_string(diff+ pendingPath->getPositionX()));
         }
         if (pendingPlacement && Input::get<Mouse>()->buttonPressed().hasLeft()) {
             if (enemyPlacement == 3) {
@@ -168,10 +170,13 @@ void LevelEditor::placeNode() {
             releaseButtons();
         }
     }
+#endif
 }
 
 shared_ptr<JsonValue> LevelEditor::toJson() {
     shared_ptr<JsonValue> result = JsonValue::allocObject();
+#if defined (CU_TOUCH_SCREEN)
+#elif defined (__WINDOWS__)
     shared_ptr<JsonValue> playerObject = JsonValue::allocObject();
     shared_ptr<JsonValue> enemyArray = JsonValue::allocArray();
     shared_ptr<JsonValue> decorationsArray = JsonValue::allocArray();
@@ -258,17 +263,41 @@ shared_ptr<JsonValue> LevelEditor::toJson() {
     result->appendChild("staircase-door", staircaseDoorArray);
     result->appendChild("door", doorArray);
     result->appendChild("floor", floorValue);
+#endif
     return result;
 }
 
 void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
+
+
+
+#if defined (CU_TOUCH_SCREEN)
+#elif defined (__WINDOWS__)
+    if (enemyPlacement > 0) {
+        if (pendingEnemy != nullptr) {
+            _rootScene->removeChild(pendingEnemy);
+        }
+        if (pendingPath != nullptr) {
+            _rootScene->removeChild(pendingPath);
+        }
+        pendingEnemy = nullptr;
+        pendingPath = nullptr;
+        enemyPlacement = 0;
+        pathBegin = 0;
+        pathEnd = 0;
+        pendingNode = nullptr;
+        pendingPlacement = false;
+    }
     _rootScene->removeAllChildren();
+    enemies.clear();
+    paths.clear();
     shared_ptr<JsonValue> player = json->get("player");
     shared_ptr<JsonValue> staircaseDoor = json->get("staircase-door");
     shared_ptr<JsonValue> door = json->get("door");
     shared_ptr<JsonValue> decorations = json->get("decorations");
+    shared_ptr<JsonValue> enemyJson = json->get("enemy");
     shared_ptr<JsonValue> objectTemp;
-    shared_ptr<scene2::SceneNode> temp;
+    shared_ptr<scene2::PolygonNode> temp;
     //create cat
     if (player != nullptr) {
         temp = scene2::AnimationNode::alloc(catTexture, 1, 8);
@@ -282,15 +311,15 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
         for (int i = 0; i < staircaseDoor->size(); i++) {
             objectTemp = staircaseDoor->get(i);
             if (objectTemp->getBool("isDen")) { //cat den
-                temp = scene2::AnimationNode::alloc(catDenTexture, 1, 8);
+                temp = scene2::AnimationNode::alloc(catDenTexture, 1, 1);
                 temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + CAT_DEN_OFFSET);
-                temp->setScale(0.25, 0.25);
+                temp->setScale(0.05, 0.05);
                 _rootScene->addChildWithName(temp, "den" + to_string(objectTemp->getInt("connection")));
             }
             else { //staircase door
                 temp = scene2::AnimationNode::alloc(staircaseDoorTexture, 1, 8);
                 temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + STAIRCASE_DOOR_OFFSET);
-                temp->setScale(0.55, 0.55);
+                temp->setScale(1.8, 1.8);
                 _rootScene->addChildWithName(temp, "sta" + to_string(objectTemp->getInt("connection")));
             }
         }
@@ -300,8 +329,8 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
         for (int i = 0; i < door->size(); i++) {
             objectTemp = door->get(i);
             temp = scene2::AnimationNode::alloc(doorTexture, 1, 11);
-            temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
-            temp->setScale(-0.65, 0.65);
+            temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + 64);
+            temp->setScale(1, 1);
             shared_ptr<JsonValue> keys = objectTemp->get("keyInt");
             string buffer = "";
             for (int j = 0; j < keys->size(); j++) {
@@ -321,6 +350,36 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
             _rootScene->addChildWithName(temp, "dec" + to_string(objectTemp->getInt("objective")));
         }
     }
+
+
+    //create enemies
+    if (enemyJson != nullptr) {
+        for (int i = 0; i < enemyJson->size(); i++) {
+            objectTemp = enemyJson->get(i);
+            temp = scene2::AnimationNode::alloc(enemyTexture, 1, 5);
+            temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
+            temp->setScale(0.05, 0.05);
+            shared_ptr<JsonValue> keys = objectTemp->get("keyInt");
+            string buffer = "";
+            for (int j = 0; j < keys->size(); j++) {
+                buffer.append(keys->get(j)->toString());
+            }
+            _rootScene->addChildWithName(temp, "ene" + buffer);
+            enemies.push_back(temp);
+            shared_ptr<scene2::WireNode> path = scene2::WireNode::alloc(Rect(0,0, objectTemp->getFloat("patrol_end") - objectTemp->getFloat("patrol_start"),2));
+            path->setAnchor(Vec2(0,0));
+            path->setPositionX(objectTemp->getFloat("patrol_start"));
+            path->setPositionY(objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
+            path->setColor(Color4::RED);
+            _rootScene->addChildWithName(path, "pat" + to_string(objectTemp->getFloat("patrol_end")));
+            paths.push_back(path);
+
+
+        }
+    }
+
+#endif
+
 }
 
 #pragma mark -
@@ -332,8 +391,9 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
  *
  * @param timestep  The amount of time (in seconds) since the last frame
  */
-void LevelEditor::update(float progress) {
-
+void LevelEditor::update(float timestep) {
+#if defined (CU_TOUCH_SCREEN)
+#elif defined (__WINDOWS__)
     placeNode();
     if (Input::get<Mouse>()->buttonPressed().hasRight()) {
         releaseButtons();
@@ -353,9 +413,12 @@ void LevelEditor::update(float progress) {
             pendingPlacement = false;
         }
     }
+#endif
 }
 
 void LevelEditor::buildScene() {
+#if defined (CU_TOUCH_SCREEN)
+#elif defined (__WINDOWS__)
     addChild(_rootScene);
     std::shared_ptr<Font> font = _assets->get<Font>("small-felt");
 
@@ -468,7 +531,7 @@ void LevelEditor::buildScene() {
     _staircaseDoor->addListener([=](const std::string& name, bool down) {
         if (down) {
             pendingNode = scene2::AnimationNode::alloc(staircaseDoorTexture, 1, 8);
-            pendingNode->setScale(0.55, 0.55);
+            pendingNode->setScale(1.8, 1.8);
             pendingNode->setName("sta" + (_doorIDField->getText() != "" ? _doorIDField->getText() : "0"));
             _rootScene->addChild(pendingNode);
         }
@@ -477,7 +540,7 @@ void LevelEditor::buildScene() {
     addChild(_staircaseDoor);
 
     //Cat Den Button
-    catDenTexture = _assets->get<Texture>("staircaseDoor");
+    catDenTexture = _assets->get<Texture>("catDen");
     shared_ptr<scene2::Label> _catDenText = scene2::Label::alloc("Cat Den", font);
     _catDenText->setBackground(Color4::WHITE);
     _catDen = scene2::Button::alloc(_catDenText, Color4::GRAY);
@@ -486,8 +549,8 @@ void LevelEditor::buildScene() {
     _catDen->setPosition(330, 0);
     _catDen->addListener([=](const std::string& name, bool down) {
         if (down) {
-            pendingNode = scene2::AnimationNode::alloc(catDenTexture, 1, 8);
-            pendingNode->setScale(0.25, 0.25);
+            pendingNode = scene2::AnimationNode::alloc(catDenTexture, 1, 1);
+            pendingNode->setScale(0.05, 0.05);
             pendingNode->setName("den" + (_doorIDField->getText() != "" ? _doorIDField->getText() : "0"));
             _rootScene->addChild(pendingNode);
         }
@@ -506,7 +569,7 @@ void LevelEditor::buildScene() {
     _door->addListener([=](const std::string& name, bool down) {
         if (down) {
             pendingNode = scene2::AnimationNode::alloc(doorTexture, 1, 11);
-            pendingNode->setScale(-0.65, 0.65);
+            pendingNode->setScale(1, 1);
             pendingNode->setName("doo" + _keyField->getText());
             _rootScene->addChild(pendingNode);
         }
@@ -612,5 +675,5 @@ void LevelEditor::buildScene() {
         });
     buttons.push_back(_load);
     addChild(_load);
-}
 #endif
+}

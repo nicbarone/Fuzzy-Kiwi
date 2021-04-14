@@ -13,4 +13,5 @@ extern const float PLAYER_OFFSET;
 extern const float CAT_DEN_OFFSET;
 extern const float GAME_WIDTH;
 extern const int MAX_LEVEL_NUM_PER_LOC;
+extern const int ENEMY_TURNING_FRAMES;
 #endif

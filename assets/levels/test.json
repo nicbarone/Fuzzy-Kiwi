@@ -1,18 +1,47 @@
 {
 	"player":	{
-		"x_pos":	125,
+		"x_pos":	188,
 		"level":	0,
 		"num_possessions":	1
 	},
 	"enemy":	[{
-			"x_pos":	466,
+			"x_pos":	684,
 			"level":	0,
-			"patrol_start":	270,
-			"patrol_end":	363,
+			"patrol_start":	413,
+			"patrol_end":	810,
 			"keyInt":	[]
 		}],
-	"decorations":	[],
-	"staircase-door":	[],
-	"door":	[],
+	"decorations":	[{
+			"x_pos":	838,
+			"level":	1,
+			"objective":	0,
+			"texture":	"caged-animal"
+		}],
+	"staircase-door":	[{
+			"x_pos":	287,
+			"level":	0,
+			"connection":	0,
+			"isDen":	true
+		}, {
+			"x_pos":	789,
+			"level":	0,
+			"connection":	0,
+			"isDen":	true
+		}, {
+			"x_pos":	405,
+			"level":	0,
+			"connection":	0,
+			"isDen":	false
+		}, {
+			"x_pos":	679,
+			"level":	1,
+			"connection":	0,
+			"isDen":	false
+		}],
+	"door":	[{
+			"x_pos":	487,
+			"level":	0.205128,
+			"keyInt":	[]
+		}],
 	"floor":	2
 }

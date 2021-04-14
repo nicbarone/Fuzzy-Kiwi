@@ -51,30 +51,34 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void MenuMode::update(float progress) {
-    CULog("You are now in Menu Mode. Enjoy your stay");
+    //CULog("You are now in Menu Mode. Enjoy your stay");
     
 }
 
-GameplayMode MenuMode::getGameScene(std::string id) {
+GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager) {
     if (id == "0_0") {
-        if (_gameplay.init(_assets, 0, 0)) {
+        if (_gameplay.init(_assets, 0, 0, inputManager)) {
             _gameplay.clearJson();
           return _gameplay;
         }
     }
     else if (id == "0_1") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level2.json");
-        _gameplay.init(_assets, 0, 1, reader->readJson());
+        _gameplay.init(_assets, 0, 1, reader->readJson(), inputManager);
         return _gameplay;
     }
     else {
         throw;
         return _gameplay;
     }
+    return _gameplay;
 }
 
 void MenuMode::buildScene() {
-    //AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"), true, 1.0f, true);
+    std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
+    //AudioEngine::get()->play("menuBGM", menuBGM, true, 1.0f, false);
+    std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+    audioQueue->play(menuBGM, true, 1.0f);
     //bool success = AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"));
     //AudioEngine::get()->setVolume("menuBGM",1.0f);
     //CULog("successful? %i", success?1:0);

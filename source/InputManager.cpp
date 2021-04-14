@@ -15,6 +15,8 @@ using namespace cugl;
 #define JSTICK_OFFSET    80
 /** This how far before we no longer regard a touch on screen as a click */
 #define TAP_THRESHOLD    10
+/** This defines the minimum valid swipe distance */
+#define SWIPE_THRESHOLD    100
 /** This tells how sensitive the camera is to zooming */
 #define ZOOM_SENSITIVITY    0.1f
 /** This tells how fast the camera is to moving */
@@ -27,6 +29,8 @@ using namespace cugl;
  * To use this controller, you will need to initialize it first
  */
 InputManager::InputManager() {
+    _forward = 0;
+    _keyForward = 0;
     _player = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
@@ -35,6 +39,8 @@ InputManager::InputManager() {
 
 InputManager::~InputManager()
 {
+    _forward = 0;
+    _keyForward = 0;
     _player = nullptr;
     _rootSceneNode = nullptr;
     _camMovement = false;
@@ -95,6 +101,10 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
  * @return true if the player was initialized correctly
  */
 bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::SceneNode> rootNode, cugl::Rect bounds) {
+    _possessPressed = false;
+    _unpossessPressed = false;
+    _forward = 0;
+    _keyForward = 0;
     _player = player;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
@@ -208,24 +218,19 @@ void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
  *
  * @param  pos  the current joystick position
  */
-void InputManager::processRightJoystick(const cugl::Vec2 pos) {
-    Vec2 diff = _rtouch.position - pos;
-
-    // Reset the anchor if we drifted too far
-    if (diff.lengthSquared() > JSTICK_RADIUS * JSTICK_RADIUS) {
-        diff.normalize();
-        diff *= (JSTICK_RADIUS + JSTICK_DIFF_MIN) / 2;
-        _rtouch.position = pos + diff;
+void InputManager::processRightSwipe(const cugl::Vec2 pos) {
+    _rtouch.position = pos;
+    float diff = _rtouch.beginPos.y - _rtouch.position.y;
+    // If distant enough, we recognize it as a valid swipe
+    if (diff > SWIPE_THRESHOLD) {
+        // Possess pressed
+        _possessPressed = true;
+        _rtouch.touchids.clear();
     }
-    _rightJoycenter = touch2Screen(_rtouch.position);
-
-    if (diff.length() > JSTICK_DIFF_MIN) {
-        _rightJoystick = true;
-        _camMoveDirection = Vec2(diff.x, -diff.y);
-    }
-    else {
-        _keyForward = 0;
-        _camMoveDirection = Vec2::ZERO;
+    else if (diff < -SWIPE_THRESHOLD) {
+        // Unpossess pressed
+        _unpossessPressed = true;
+        _rtouch.touchids.clear();
     }
 }
 
@@ -237,6 +242,9 @@ void InputManager::processRightJoystick(const cugl::Vec2 pos) {
  * @param focus	Whether the listener currently has focus
  */
 void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
+    if (_player == nullptr) {
+        return;
+    }
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
     // general touch (for tap on screen)
@@ -275,14 +283,10 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
         } // Otherwise all pivots are taken, no other pivots should be inserted
         // Only process if no touch in zone
         if (_rtouch.touchids.empty()) {
-            // Right is the floating joystick
+            _rtouch.beginPos = event.position;
             _rtouch.position = event.position;
             _rtouch.timestamp.mark();
             _rtouch.touchids.insert(event.touch);
-
-            _rightJoystick = true;
-            _rightJoycenter = touch2Screen(event.position);
-            _rightJoycenter.y += JSTICK_OFFSET;
         }
         break;
     case Zone::MID:
@@ -302,6 +306,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
  * @param focus	Whether the listener currently has focus
  */
 void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
+    if (_player == nullptr) return;
     // If the touch ended is one of the pivots, remove it
     if (_prev2Pivots[0].count(event.touch) != 0) {
         _prev2Pivots[0].clear();
@@ -314,6 +319,7 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
     if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
         if (_stouch.isSingleTap[event.touch]) {
             _tap_pos = _stouch.position;
+            CULog("tap pos %f, %f",_stouch.position.x, _stouch.position.y);
             _valid_tap = true;
         }
         _stouch.isSingleTap.erase(event.touch);
@@ -342,6 +348,7 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
  * @param focus	Whether the listener currently has focus
  */
 void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
+    if (_player == nullptr) return;
     Vec2 pos = event.position;
     if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
         if ((pos - _rtouch.position).length() > TAP_THRESHOLD) {
@@ -352,10 +359,12 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
         processLeftJoystick(pos);
     }
-    // If both pivots are present, measure the change in their distance and zoom
+    // If both pivots are present, measure the change in their distance and zoom and move of camera
     if (!_prev2Pivots[0].empty() && !_prev2Pivots[1].empty()) {
         // Previous distance
         float prevDist = (_prev2Pivots[0].begin()->second).distance(_prev2Pivots[1].begin()->second);
+        // Previous center of two pivots
+        Vec2 prevCenter = (_prev2Pivots[0].begin()->second + _prev2Pivots[1].begin()->second) / 2;
         // If one of the pivots is the current event
         if (_prev2Pivots[0].count(event.touch) != 0) {
             _prev2Pivots[0][event.touch] = Vec2(event.position.x, event.position.y);
@@ -364,6 +373,7 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
             _prev2Pivots[1][event.touch] = Vec2(event.position.x, event.position.y);
         }
         float curDist = (_prev2Pivots[0].begin()->second).distance(_prev2Pivots[1].begin()->second);
+        Vec2 curCenter = (_prev2Pivots[0].begin()->second + _prev2Pivots[1].begin()->second) / 2;
         if (abs(prevDist - curDist) > 1.0f) {
             // If passed the threshold of 0.1, then this counts as a dimension change
             float zoomFactor = (curDist - prevDist) / 100.0f;
@@ -375,10 +385,14 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
             // Handle center of zooming
             _rootSceneNode->setPosition(_rootSceneNode->getWorldPosition() + oldDist * (newScale / oldScale - 1));
         }
-        _camMoveDirection = Vec2::ZERO;
+        Vec2 diff = curCenter - prevCenter;
+        if (diff.length() > 5.0f) {
+            _camMoveDirection += Vec2(diff.x, -diff.y);
+        }
+        //_camMoveDirection = Vec2::ZERO;
     }
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
-        processRightJoystick(pos);
+        processRightSwipe(pos);
     }
 }
 
@@ -395,17 +409,17 @@ void InputManager::readInput() {
 #ifdef CU_MOBILE
     _forward = _keyForward;
     if (_valid_tap) {
-        _tap_pos = _stouch.position;
         _valid_tap = false;
     }
     else {
         _tap_pos = Vec2::ZERO;
     }
-
+    _rootSceneNode->setPosition(_rootSceneNode->getPosition() + _camMoveDirection * 0.6f);
+    _camMoveDirection = Vec2::ZERO;
 #else
     // Figure out, based on which player we are, which keys
     // control our actions (depends on player).
-    KeyCode left, right, camLeft, camRight, camUp, camDown, reset;
+    KeyCode left, right, camLeft, camRight, camUp, camDown, reset, possess, unpossess;
     left = KeyCode::A;
     right = KeyCode::D;
     camLeft = KeyCode::ARROW_LEFT;
@@ -413,6 +427,8 @@ void InputManager::readInput() {
     camUp = KeyCode::ARROW_UP;
     camDown = KeyCode::ARROW_DOWN;
     reset = KeyCode::R;
+    possess = KeyCode::F;
+    unpossess = KeyCode::E;
 
     // Convert keyboard state into game commands
     _forward = 0;
@@ -430,6 +446,12 @@ void InputManager::readInput() {
     else if (keys->keyDown(left) && !keys->keyDown(right)) {
         //CULog("Goring left");
         _forward = -1;
+    }
+    if (keys->keyDown(possess)) {
+        _possessPressed = true;
+    }
+    else if (keys->keyDown(unpossess)) {
+        _unpossessPressed = true;
     }
     if (Input::get<Mouse>()->buttonPressed().hasLeft()) {
         _tap_pos = Input::get<Mouse>()->pointerPosition();
@@ -465,7 +487,6 @@ void InputManager::readInput() {
     else {
         _rightJoystick = false;
     }
-#endif
     // Handle Camera Drag
     if (_rightJoystick) {
         _camMoveDirection.normalize();
@@ -479,4 +500,5 @@ void InputManager::readInput() {
         //CULog("Xval %f", -screen2World(_player->getPos()).x + _tbounds.size.width);
         //_rootSceneNode->setPosition(_rootSceneNode->nodeToParentCoords(_player->getSceneNode()->getPosition()));
     }
+#endif
 }

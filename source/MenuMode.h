@@ -88,7 +88,7 @@ public:
     }
 
     /** returns a GameplayMode constructed from the chosen level's json*/
-    GameplayMode getGameScene(std::string id);
+    GameplayMode getGameScene(std::string id, std::shared_ptr<InputManager> inputManager);
 
     /**
      * Internal helper to build the scene graph.

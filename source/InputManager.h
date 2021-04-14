@@ -13,6 +13,8 @@ private:
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
+    bool _possessPressed;
+    bool _unpossessPressed;
     bool _reset = false;
     Vec2 _camOriginalPos;
     bool _camMovement;
@@ -56,6 +58,7 @@ public:
     /** Information representing a single "touch" (possibly multi-finger) */
     struct TouchInstance {
         /** The anchor touch position (on start) */
+        cugl::Vec2 beginPos;
         cugl::Vec2 position;
         /** The current touch time */
         cugl::Timestamp timestamp;
@@ -157,10 +160,8 @@ public:
      * This will register movement as left or right (or neither).  It
      * will also move the joystick anchor if the touch position moves
      * too far.
-     *
-     * @param  pos  the current joystick position
      */
-    void processRightJoystick(const cugl::Vec2 pos);
+    void processRightSwipe(const cugl::Vec2 pos);
 
 #pragma mark Touch and Mouse Callbacks
     /**
@@ -199,6 +200,24 @@ public:
      */
     float getForward() {
         return _forward;
+    }
+
+    /**
+     * Getter for the possess pressed, and set it back to false;
+     */
+    bool getAndResetPossessPressed() {
+        bool result = _possessPressed;
+        _possessPressed = false;
+        return result;
+    }
+
+    /**
+     * Getter for the unpossess pressed, and set it back to false;
+     */
+    bool getAndResetUnpossessPressed() {
+        bool result = _unpossessPressed;
+        _unpossessPressed = false;
+        return result;
     }
 
     /**

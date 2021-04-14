@@ -42,8 +42,8 @@ void App::onStartup() {
     _assets->loadDirectory("json/assets.json");
 
     //Input manager
-    _inputManager = InputManager();
-    _inputManager.init(nullptr, scene2::SceneNode::alloc(), getSafeBounds());
+    _inputManager = std::shared_ptr<InputManager>(new InputManager());
+    _inputManager->init(nullptr, scene2::SceneNode::alloc(), getSafeBounds());
     AudioEngine::start();
     Application::onStartup(); // YOU MUST END with call to parent
 }
@@ -73,8 +73,10 @@ void App::onShutdown() {
     Input::deactivate<Mouse>();
     Input::deactivate<Keyboard>();
 #endif
-
+    AudioEngine::get()->pause();
+    AudioEngine::get()->getMusicQueue()->clear();
     AudioEngine::stop();
+    //AudioEngine::stop();
     Application::onShutdown();  // YOU MUST END with call to parent
 }
 
@@ -119,11 +121,11 @@ void App::onResume() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void App::update(float timestep) {
-    _inputManager.readInput();
+    if (!_inGameplay) _inputManager->readInput();
     if (!_loaded && counter > 0) {
         _loading.update(0.01f);
         counter=0;
-        if (true) {
+        if (false) {
             CULog("si");
             _inEditor = true;
             _levelEditor.init(_assets);
@@ -162,7 +164,7 @@ void App::update(float timestep) {
         else if (_levelSelect.getLevelSelected()) {
             // Load the level
             std::string level = _levelSelect.getLevelSelectID();
-            _gameplay = _menu.getGameScene(level);
+            _gameplay = _menu.getGameScene(level, _inputManager);
             _gameplay.reset();
             _inLevelSelect = false;
             _inGameplay = true;
@@ -199,7 +201,7 @@ void App::update(float timestep) {
                 _inGameplay = false;
             }
             else {
-                _gameplay = _menu.getGameScene(_gameplay.getNextLevelID());
+                _gameplay = _menu.getGameScene(_gameplay.getNextLevelID(),_inputManager);
                 _gameplay.reset();
             }
         }

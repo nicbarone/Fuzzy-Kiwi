@@ -28,7 +28,7 @@ protected:
     LevelSelectMode _levelSelect;
     /** The controller for the level editor*/
     LevelEditor _levelEditor;
-    InputManager _inputManager;
+    std::shared_ptr<InputManager> _inputManager;
     /** Whether or not we have finished loading all assets */
     bool _loaded;
     /** for testing purposes, loading screen will show for 2 seconds*/

@@ -97,7 +97,7 @@ public:
 	/** setter for level, overloaded for this class to also change scene node position, deprecates changeFloor()*/
 	void setLevel(int level);
 
-	void Player::PossessAnimation(bool open);
+	void PossessAnimation(bool possessing);
 
 };
 

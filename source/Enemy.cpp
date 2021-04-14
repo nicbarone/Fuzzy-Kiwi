@@ -17,7 +17,8 @@ Enemy::Enemy() :
 	_isPossessed(false),
 	_isActive(false),
 	_frame(0),
-	_frameCounter(0)
+	_frameCounter(0),
+	_turnFrame(0)
 {
 	_keys = { 0 };
 	_sceneNode = nullptr;
@@ -32,6 +33,7 @@ void Enemy::dispose() {
 	_patrolStart = 0;
 	_patrolEnd = 0;
 	_visionRange = 0;
+	_turnFrame = 0;
 	_isStuck = false;
 	_movingRight = false;
 	_isPossessed = false;
@@ -62,11 +64,17 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	_patrolNode = scene2::WireNode::alloc(Rect(0, 0, patrolEnd - patrolStart, 2));
-	_patrolNode->setPosition(Vec2((patrolStart+patrolEnd)/2, level * FLOOR_HEIGHT + FLOOR_OFFSET+65));
+	_patrolNode->setPosition(Vec2((patrolStart+patrolEnd)/2, level * FLOOR_HEIGHT + FLOOR_OFFSET - 75));
 	_patrolNode->setColor(Color4::RED);
-
+	if (patrolStart == patrolEnd && patrolStart < x) {
+		_movingRight = false;
+		_sceneNode->setScale(-0.05, 0.05);
+	}
+	else {
+		_movingRight = true;
+		_sceneNode->setScale(0.05, 0.05);
+	}
 	_frame = 0;
-	_sceneNode->setScale(0.05, 0.05);
 	return true;
 }
 
@@ -85,21 +93,38 @@ void Enemy::move(float direction) {
 			_frame = _frame % 5;
 		}
 		
-		if (_movingRight) {
-			Entity::setVelocity(Vec2(_speed,0));
+		if (_movingRight && original < _patrolEnd) {
+			Entity::setVelocity(Vec2(_speed, 0));
+		}
+		else if (!_movingRight && original > _patrolStart){
+			Entity::setVelocity(Vec2(-_speed, 0));
 		}
 		else {
-			Entity::setVelocity(Vec2(-_speed, 0));
+			Entity::setVelocity(Vec2(0, 0));
 		}
 		Entity::setPos(original + Entity::getVelocity().x);
 		_sceneNode->setPositionX(original + Entity::getVelocity().x);
 		if (Entity::getPos() >= _patrolEnd) {
-			_movingRight = false;
-			_sceneNode->setScale(-0.05, 0.05);
+			if (_turnFrame < ENEMY_TURNING_FRAMES) {
+				_turnFrame++;
+				_frame = 0;
+			}
+			else {
+				_movingRight = false;
+				_sceneNode->setScale(-0.05, 0.05);
+				_turnFrame = 0;
+			}
 		}
 		else if (Entity::getPos() <= _patrolStart) {
-			_movingRight = true;
-			_sceneNode->setScale(0.05, 0.05);
+			if (_turnFrame < ENEMY_TURNING_FRAMES) {
+				_turnFrame++;
+				_frame = 0;
+			}
+			else {
+				_movingRight = true;
+				_sceneNode->setScale(0.05, 0.05);
+				_turnFrame = 0;
+			}
 		}
 		
 	}
