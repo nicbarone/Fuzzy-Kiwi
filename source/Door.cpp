@@ -40,6 +40,7 @@ void Door::setDoor(bool open) {
 	std::function<bool()> frame0 = [this]() {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frameCounter);
 		_frameCounter++;
+		//old version
 		return false;
 	};
 	std::function<bool()> frame1 = [this](){
