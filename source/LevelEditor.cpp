@@ -39,7 +39,7 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets) {
 
 #if defined (CU_TOUCH_SCREEN)
     Input::activate<Touchscreen>();
-#else
+#elif defined (__WINDOWS__)
     Input::activate<Mouse>();
     Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::ALWAYS);
     Input::activate<Keyboard>();
@@ -120,7 +120,7 @@ Vec2 LevelEditor::snapToRow(Vec2 pos, string type) {
 
 void LevelEditor::placeNode() {
 #if defined (CU_TOUCH_SCREEN)
-#else
+#elif defined (__WINDOWS__)
     if (pendingNode != nullptr || pendingEnemy != nullptr) { //only true if the button clicked places nodes or placing enemies
         if (!pendingPlacement && Input::get<Mouse>()->buttonReleased().hasLeft()) { //the frame that a button is clicked
             pendingPlacement = true;
@@ -176,7 +176,7 @@ void LevelEditor::placeNode() {
 shared_ptr<JsonValue> LevelEditor::toJson() {
     shared_ptr<JsonValue> result = JsonValue::allocObject();
 #if defined (CU_TOUCH_SCREEN)
-#else
+#elif defined (__WINDOWS__)
     shared_ptr<JsonValue> playerObject = JsonValue::allocObject();
     shared_ptr<JsonValue> enemyArray = JsonValue::allocArray();
     shared_ptr<JsonValue> decorationsArray = JsonValue::allocArray();
@@ -272,7 +272,7 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
 
 
 #if defined (CU_TOUCH_SCREEN)
-#else
+#elif defined (__WINDOWS__)
     if (enemyPlacement > 0) {
         if (pendingEnemy != nullptr) {
             _rootScene->removeChild(pendingEnemy);
@@ -393,7 +393,7 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
  */
 void LevelEditor::update(float timestep) {
 #if defined (CU_TOUCH_SCREEN)
-#else
+#elif defined (__WINDOWS__)
     placeNode();
     if (Input::get<Mouse>()->buttonPressed().hasRight()) {
         releaseButtons();
@@ -418,7 +418,7 @@ void LevelEditor::update(float timestep) {
 
 void LevelEditor::buildScene() {
 #if defined (CU_TOUCH_SCREEN)
-#else
+#elif defined (__WINDOWS__)
     addChild(_rootScene);
     std::shared_ptr<Font> font = _assets->get<Font>("small-felt");
 

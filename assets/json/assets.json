@@ -256,6 +256,12 @@
 			"file": "fonts/MarkerFelt.ttf",
 			"size": 24
 		}
+	},
+	"sounds": {
+		"menuBGM": {
+			"type": "sample",
+			"file": "bgm/MenuBGM.ogg"
+		}
 	}
-	}
+}
 

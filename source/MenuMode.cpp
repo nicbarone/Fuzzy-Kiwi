@@ -75,9 +75,9 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
 }
 
 void MenuMode::buildScene() {
-    //AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"), true, 1.0f, true);
-    //bool success = AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"));
-    //AudioEngine::get()->setVolume("menuBGM",1.0f);
+    AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"), true, 1.0f, true);
+    bool success = AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"));
+    AudioEngine::get()->setVolume("menuBGM",1.0f);
     //CULog("successful? %i", success?1:0);
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
