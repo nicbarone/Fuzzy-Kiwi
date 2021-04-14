@@ -112,6 +112,9 @@ protected:
     std::shared_ptr<Texture> enemyHighlightTexture;
     std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
+
+    int _winStatus = 0; // 0 - on going; 1 - win; -1 - lose
+
     /** whether or not the player has control*/
     bool _hasControl;
     
@@ -243,6 +246,14 @@ public:
     void clearRootSceneNode();
 
     void ChangeDrawOrder();
+
+    void setWinStatus(int win) {
+        _winStatus = win;
+    }
+
+    int getWinStatus() {
+        return _winStatus;
+    }
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

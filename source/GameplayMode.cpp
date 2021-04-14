@@ -55,6 +55,7 @@ using namespace cugl;
  */
 
 bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<InputManager> inputManager) {
+    setWinStatus(0);
     _inputManager = inputManager;
     _locationIndex = location;
     _levelIndex = level;
@@ -168,6 +169,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
 
 
 void GameplayMode::reset() {
+    setWinStatus(0);
     //_scene = nullptr;
     Size size = Application::get()->getDisplaySize();
     _winPanel->getChildButtons()[0]->getButton()->deactivate();
@@ -206,6 +208,9 @@ void GameplayMode::reset() {
 void GameplayMode::update(float timestep) {
     if (_reset) {
         reset();
+    }
+    if (getWinStatus() != 0) {
+        return;
     }
     // Read input controller input
     _inputManager->readInput();
@@ -255,6 +260,7 @@ void GameplayMode::update(float timestep) {
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (cageCollision != 0) {
+            setWinStatus(1);
             // shows win Panel
             _winPanel->setVisible(true);
             _winPanel->getChildButtons()[0]->getButton()->activate();
@@ -282,6 +288,7 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
             if (_player->getSceneNode()->isVisible() || 
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
+                setWinStatus(-1);
                 _losePanel->setVisible(true);
                 _losePanel->getChildButtons()[0]->getButton()->activate();
                 _losePanel->getChildButtons()[1]->getButton()->activate();
