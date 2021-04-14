@@ -105,6 +105,8 @@ protected:
     std::shared_ptr<ui::PanelElement> _winPanel;
     /** The panel to lose level*/
     std::shared_ptr<ui::PanelElement> _losePanel;
+    /** The panel to menu*/
+    std::shared_ptr<ui::PanelElement> _menuPanel;
     // Create panels
     std::shared_ptr<Texture> winPanel;
     std::shared_ptr<Texture> losePanel;

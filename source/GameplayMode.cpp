@@ -711,6 +711,21 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
     addChild(_rootScene);
 
+    // Create Menu Panel
+    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
+    /*_winPanel->getSceneNode()->setScale(0.75f);
+    _winPanel->setVisible(false);
+    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
+    _winPanel->getChildButtons()[1]->getButton()->setName("retry");
+    _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+    });*/
+
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
