@@ -75,8 +75,8 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
 }
 
 void MenuMode::buildScene() {
-    std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
-    AudioEngine::get()->play("menuBGM", menuBGM, true, 1.0f, true);
+    /*std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
+    AudioEngine::get()->play("menuBGM", menuBGM, true, 1.0f, true);*/
     //bool success = AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"));
     //AudioEngine::get()->setVolume("menuBGM",1.0f);
     //CULog("successful? %i", success?1:0);
