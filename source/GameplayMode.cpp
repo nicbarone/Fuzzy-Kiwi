@@ -292,7 +292,7 @@ void GameplayMode::update(float timestep) {
         if (_player->getPossess()) {
             _player->setPos(_player->get_possessEnemy()->getPos());
         }
-        else {
+        else if(_hasControl) {
             _player->move(_inputManager->getForward());
         }
         // Enemy movement
@@ -375,21 +375,27 @@ void GameplayMode::unpossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
     if (enemy == nullptr) return;
     _hasControl = false;
-    _player->setPos((_enemyController->getPossessed()->getPos()));
-    _player->setLevel(_enemyController->getPossessed()->getLevel());
+    _player->setLevel(enemy->getLevel());
+    _player->getSceneNode()->setVisible(true);
+    
+    _player->PossessAnimation(false);
     _player->setPossess(false);
-    _player->setLevel(_enemyController->getPossessed()->getLevel());
-    _enemyController->getPossessed()->getSceneNode()->setVisible(false);
-    _enemyController->getPossessed()->dispose();
-    _enemyController->removeEnemy(_enemyController->getPossessed());
-    _enemyController->updatePossessed(nullptr);
-    _hasControl = true;
+    _player->setPos((enemy->getPos()));
+    enemy->getSceneNode()->setVisible(false);
+    enemy->dispose();
 
-    std::function<bool()> frame6 = [&]() {
-        _player->getSceneNode()->setVisible(true);
+
+    _enemyController->removeEnemy(enemy);
+    _enemyController->updatePossessed(nullptr);
+
+    _player->getSceneNode()->setPositionX(_player->getPos());
+    
+
+    std::function<bool()> delayInput = [&]() {
+        _hasControl = true;
         return false;
     };
-    cugl::Application::get()->schedule(frame6, 800);
+    cugl::Application::get()->schedule(delayInput, 400);
     
     
 }

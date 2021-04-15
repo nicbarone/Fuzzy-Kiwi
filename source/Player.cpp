@@ -94,20 +94,33 @@ void Player::PossessAnimation(bool possessing) {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(4);
 		return false;
 	};
+	std::function<bool()> frame5 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(5);
+		return false;
+	};
+	std::function<bool()> frame6 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(6);
+		return false;
+	};
+	std::function<bool()> frame7 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
+		return false;
+	};
 	if (possessing) {
 		int timeDiff = 100;
+		
 		cugl::Application::get()->schedule(frame0, 50 + timeDiff);
-		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 2);
-		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 3);
-		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 4);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 2);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 3);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
 	}
 	else
 	{
 		int timeDiff = 100;
-		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
-		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 5);
-		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 6);
-		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 7);
+		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 1);
+		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 2);
+		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 3);
+		
 	}
 
 
