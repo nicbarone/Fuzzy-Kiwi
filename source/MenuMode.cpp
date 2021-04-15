@@ -52,7 +52,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
  */
 void MenuMode::update(float progress) {
     //CULog("You are now in Menu Mode. Enjoy your stay");
-    
+
 }
 
 GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager) {
@@ -75,7 +75,7 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
 }
 
 void MenuMode::buildScene() {
-    std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
+    //std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
     //AudioEngine::get()->play("menuBGM", menuBGM, true, 1.0f, false);
     std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
     //audioQueue->play(menuBGM, true, 1.0f); //This line of code is the devil
@@ -124,4 +124,3 @@ void MenuMode::activateButtons() {
     _menuPanel->getChildButtons()[0]->getButton()->activate();
     _menuPanel->getChildButtons()[1]->getButton()->activate();
 }
-

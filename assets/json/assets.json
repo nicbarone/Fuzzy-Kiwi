@@ -245,6 +245,48 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"paused": {
+			"file": "textures/UI/Icon/Paused.jpg",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"restartLevel": {
+			"file": "textures/UI/Button/RestartLevel.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"returnToMenu": {
+			"file": "textures/UI/Button/ReturnToMenu.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"resume": {
+			"file": "textures/UI/Button/Resume.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"menuButton": {
+			"file": "textures/UI/Button/MenuButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"possessCounter": {
+			"file": "textures/UI/Icon/PossessCounter.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
 	},
 	"fonts": {

@@ -43,6 +43,7 @@ void ui::ButtonElement::setTexture(const std::shared_ptr<Texture> texture)
 	buttonUpNode->setTexture(texture);
 	Color4 downColor = Color4f::CORNFLOWER;
 	_button = cugl::scene2::Button::alloc(scene2::PolygonNode::allocWithTexture(texture), downColor);
+	_button->setPosition(getPos(), _pos_y);
 }
 
 void ui::ButtonElement::setTexture(const std::shared_ptr<Texture> texture, Color4f down)
@@ -52,6 +53,7 @@ void ui::ButtonElement::setTexture(const std::shared_ptr<Texture> texture, Color
 	std::shared_ptr<cugl::scene2::PolygonNode> buttonUpNode = cugl::scene2::PolygonNode::alloc((Rect(Vec2(getPos(), getY()), getSize())));
 	buttonUpNode->setTexture(texture);
 	_button = cugl::scene2::Button::alloc(scene2::PolygonNode::allocWithTexture(texture), down);
+	_button->setPosition(getPos(), _pos_y);
 }
 
 ui::PanelElement::PanelElement():

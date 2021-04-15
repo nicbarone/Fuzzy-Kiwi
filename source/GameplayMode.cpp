@@ -55,6 +55,7 @@ using namespace cugl;
  */
 
 bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<InputManager> inputManager) {
+    setGameStatus(GameStatus::RUNNING);
     _inputManager = inputManager;
     _locationIndex = location;
     _levelIndex = level;
@@ -168,6 +169,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
 
 
 void GameplayMode::reset() {
+    setGameStatus(GameStatus::RUNNING);
     //_scene = nullptr;
     Size size = Application::get()->getDisplaySize();
     _winPanel->getChildButtons()[0]->getButton()->deactivate();
@@ -175,6 +177,9 @@ void GameplayMode::reset() {
     _winPanel->getChildButtons()[2]->getButton()->deactivate();
     _losePanel->getChildButtons()[0]->getButton()->deactivate();
     _losePanel->getChildButtons()[1]->getButton()->deactivate();
+    _menuPanel->getChildButtons()[0]->getButton()->deactivate();
+    _menuPanel->getChildButtons()[1]->getButton()->deactivate();
+    _menuPanel->getChildButtons()[2]->getButton()->deactivate();
     size *= GAME_WIDTH / size.width;
     removeAllChildren();
     
@@ -207,6 +212,22 @@ void GameplayMode::update(float timestep) {
     if (_reset) {
         reset();
     }
+    if (getGameStatus() == GameStatus::PAUSED) {
+        _menuPanel->setVisible(true);
+        _menuPanel->getChildButtons()[0]->getButton()->activate();
+        _menuPanel->getChildButtons()[1]->getButton()->activate();
+        _menuPanel->getChildButtons()[2]->getButton()->activate();
+    }
+    else {
+        _menuPanel->setVisible(false);
+        _menuPanel->getChildButtons()[0]->getButton()->deactivate();
+        _menuPanel->getChildButtons()[1]->getButton()->deactivate();
+        _menuPanel->getChildButtons()[2]->getButton()->deactivate();
+    }
+    if (getGameStatus() != GameStatus::RUNNING) {
+        return;
+    }
+
     // Read input controller input
     _inputManager->readInput();
     if (_hasControl) {
@@ -236,6 +257,7 @@ void GameplayMode::update(float timestep) {
         if (_inputManager->getAndResetPossessPressed()) {
             if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
                 if (attemptPossess()) {
+                    _possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
                     if (_json == nullptr) {
                         _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
                         _tutorialText->setPosition(Vec2(100, 110));
@@ -255,6 +277,7 @@ void GameplayMode::update(float timestep) {
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (cageCollision != 0) {
+            setGameStatus(GameStatus::WIN);
             // shows win Panel
             _winPanel->setVisible(true);
             _winPanel->getChildButtons()[0]->getButton()->activate();
@@ -282,6 +305,7 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
             if (_player->getSceneNode()->isVisible() || 
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
+                setGameStatus(GameStatus::LOSE);
                 _losePanel->setVisible(true);
                 _losePanel->getChildButtons()[0]->getButton()->activate();
                 _losePanel->getChildButtons()[1]->getButton()->activate();
@@ -322,12 +346,12 @@ bool GameplayMode::attemptPossess() {
         vector<Vec2> doors = closedDoors();
 
         //code used for cat jumping animation, incomplete and not activated in our release
-        //std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-possessing");
-        //_rootScene->removeChild(_player->getSceneNode());
-        //_player->SetSceneNode(scene2::AnimationNode::alloc(catJump, 1, 8));
-        //_player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET - 55);
-        //_player->getSceneNode()->setScale(0.15, 0.15);
-        //_rootScene->addChild(_player->getSceneNode());
+       std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
+        _rootScene->removeChild(_player->getSceneNode());
+        _player->SetSceneNode(scene2::AnimationNode::alloc(catJump, 1, 8));
+        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET -45);
+        _player->getSceneNode()->setScale(0.15, 0.15);
+        _rootScene->addChild(_player->getSceneNode());
         
         _player->getSceneNode()->setVisible(false);
         _player->setPossess(true);
@@ -489,6 +513,69 @@ void GameplayMode::buildScene() {
 
 
     _rootScene->addChild(_tutorialText);
+
+    // make possess panel
+    _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
+    _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+    _possessPanel->getSceneNode()->setScale(0.15f);
+    _possessPanel->getSceneNode()->setPosition(size);
+    _possessPanel->createChildText(200, 0, 10, 10, "x " + to_string(_player->get_nPossess()), font);
+    _possessPanel->getChildTexts()[0]->setScale(Vec2(5.0f, 5.0f));
+    addChild(_possessPanel->getSceneNode());
+
+    _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
+    _menuButton->setTexture(_assets->get<Texture>("menuButton"));
+    _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
+    _menuButton->getButton()->setScale(0.3f);
+    _menuButton->getButton()->setPosition(0,size.height);
+    _menuButton->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            setGameStatus(GameStatus::PAUSED);
+        }
+        });
+    _menuButton->getButton()->activate();
+    addChild(_menuButton->getButton());
+
+    // Create Menu Panel
+    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelCompleteBG"));
+    _menuPanel->getSceneNode()->setScale(0.75f);
+    _menuPanel->setVisible(false);
+    _menuPanel->createChildPanel(0, 160, 0, _assets->get<Texture>("paused"));
+    _menuPanel->getChildPanels()[0]->getSceneNode()->setScale(0.3f);
+    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
+    _menuPanel->getChildButtons()[0]->getButton()->setName("resume");
+    _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            setGameStatus(GameStatus::RUNNING);
+        }
+        });
+    _menuPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
+    _menuPanel->getChildButtons()[1]->getButton()->setName("restartLevel");
+    _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+        });
+    _menuPanel->createChildButton(0, -300, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE);
+    _menuPanel->getChildButtons()[2]->getButton()->setName("returnToMenu");
+    _menuPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _backToMenu = true;
+        }
+    });
+    addChild(_menuPanel->getSceneNode());
 
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
@@ -704,6 +791,69 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Font> font = _assets->get<Font>("felt");
 
     addChild(_rootScene);
+
+    // make possess panel
+    _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
+    _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+    _possessPanel->getSceneNode()->setScale(0.15f);
+    _possessPanel->getSceneNode()->setPosition(size);
+    _possessPanel->createChildText(200, 0, 10, 10, "x " + to_string(_player->get_nPossess()), font);
+    _possessPanel->getChildTexts()[0]->setScale(Vec2(5.0f, 5.0f));
+    addChild(_possessPanel->getSceneNode());
+
+    _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
+    _menuButton->setTexture(_assets->get<Texture>("menuButton"));
+    _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
+    _menuButton->getButton()->setScale(0.3f);
+    _menuButton->getButton()->setPosition(0, size.height);
+    _menuButton->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            setGameStatus(GameStatus::PAUSED);
+        }
+        });
+    _menuButton->getButton()->activate();
+    addChild(_menuButton->getButton());
+
+    // Create Menu Panel
+    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelCompleteBG"));
+    _menuPanel->getSceneNode()->setScale(0.75f);
+    _menuPanel->setVisible(false);
+    _menuPanel->createChildPanel(0, 160, 0, _assets->get<Texture>("paused"));
+    _menuPanel->getChildPanels()[0]->getSceneNode()->setScale(0.3f);
+    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
+    _menuPanel->getChildButtons()[0]->getButton()->setName("resume");
+    _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            setGameStatus(GameStatus::RUNNING);
+        }
+    });
+    _menuPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
+    _menuPanel->getChildButtons()[1]->getButton()->setName("restartLevel");
+    _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _reset = true;
+        }
+    });
+    _menuPanel->createChildButton(0, -300, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE);
+    _menuPanel->getChildButtons()[2]->getButton()->setName("returnToMenu");
+    _menuPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _backToMenu = true;
+        }
+    });
+    addChild(_menuPanel->getSceneNode());
 
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");

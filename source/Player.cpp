@@ -73,6 +73,7 @@ void Player::setLevel(int level) {
 }
 
 void Player::PossessAnimation(bool possessing) {
+	//use this field in brackets now you can reference any field defined in player or class
 	std::function<bool()> frame0 = [&]() {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
 		return false;
