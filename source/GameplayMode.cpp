@@ -342,31 +342,31 @@ void GameplayMode::update(float timestep) {
 bool GameplayMode::attemptPossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
     if (enemy != nullptr) {
-        vector<Vec2> doors = closedDoors();
+        _hasControl = false;
+        _player->setPossess(true);
+        _player->set_possessEnemy(_enemyController->closestEnemy());
+        _enemyController->updatePossessed(_enemyController->closestEnemy());
+        _rootScene->removeChild(_enemyController->closestEnemy()->getPatrolNode());
+        _enemyController->closestEnemy()->setGlow(false);
 
-        //code used for cat jumping animation, incomplete and not activated in our release
-       std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
         _rootScene->removeChild(_player->getSceneNode());
         _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
-        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET -45);
+        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET - 45);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
         _player->PossessAnimation(true);
-       /* std::function<bool()> frame0 = [this]() {
-            std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frameCounter);
-            _frameCounter++;
+
+        std::function<bool()> frame6 = [&]() {
+            _player->getSceneNode()->setVisible(false);
+            _enemyController->closestEnemy()->setPossessed();
+            _hasControl = true;
             return false;
         };
-        cugl::Application::get()->schedule(frame1, 50 + timeDiff * i);*/
-
-        _player->getSceneNode()->setVisible(false);
-        _player->setPossess(true);
-        _player->set_possessEnemy(enemy);
-        _enemyController->updatePossessed(enemy);
-        _rootScene->removeChild(enemy->getPatrolNode());
-        enemy->setGlow(false);
-        enemy->setPossessed();
+        cugl::Application::get()->schedule(frame6, 800);
         return true;
+
+        //code used for cat jumping animation, incomplete and not activated in our release
     }
     return false;
 }
@@ -374,17 +374,24 @@ bool GameplayMode::attemptPossess() {
 void GameplayMode::unpossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
     if (enemy == nullptr) return;
-    _player->setPos((enemy->getPos()));
-    _player->setLevel(enemy->getLevel());
-    _player->getSceneNode()->setVisible(true);
+    _hasControl = false;
+    _player->setPos((_enemyController->getPossessed()->getPos()));
+    _player->setLevel(_enemyController->getPossessed()->getLevel());
     _player->setPossess(false);
     _player->setLevel(_enemyController->getPossessed()->getLevel());
-    enemy->getSceneNode()->setVisible(false);
-    enemy->dispose();
-
-    
-    _enemyController->removeEnemy(enemy);
+    _enemyController->getPossessed()->getSceneNode()->setVisible(false);
+    _enemyController->getPossessed()->dispose();
+    _enemyController->removeEnemy(_enemyController->getPossessed());
     _enemyController->updatePossessed(nullptr);
+    _hasControl = true;
+
+    std::function<bool()> frame6 = [&]() {
+        _player->getSceneNode()->setVisible(true);
+        return false;
+    };
+    cugl::Application::get()->schedule(frame6, 800);
+    
+    
 }
 
 /**
