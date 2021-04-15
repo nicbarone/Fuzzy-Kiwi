@@ -243,6 +243,8 @@ public:
     void clearRootSceneNode();
 
     void ChangeDrawOrder();
+
+    void toSaveJson();
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

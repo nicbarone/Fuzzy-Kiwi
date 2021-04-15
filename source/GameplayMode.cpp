@@ -311,6 +311,7 @@ void GameplayMode::update(float timestep) {
 
     //resetting
     if (_inputManager->didReset()) {
+        toSaveJson();
         reset();
     }
 }
@@ -939,6 +940,84 @@ void GameplayMode::ChangeDrawOrder() {
     if (index != 0) {
         CULog("the index is %d", index);
     }
+}
+
+void GameplayMode::toSaveJson() {
+    shared_ptr<JsonValue> playerObject = JsonValue::allocObject();
+    shared_ptr<JsonValue> enemyArray = JsonValue::allocArray();
+    shared_ptr<JsonValue> decorationsArray = JsonValue::allocArray();
+    shared_ptr<JsonValue> staircaseDoorArray = JsonValue::allocArray();
+    shared_ptr<JsonValue> doorArray = JsonValue::allocArray();
+
+    //player
+    playerObject->appendChild("x_pos", JsonValue::alloc(_player->getPos()));
+    playerObject->appendChild("level", JsonValue::alloc((long)_player->getLevel()));
+    playerObject->appendChild("num_possessions", JsonValue::alloc((long) _player->get_nPossess()));
+
+    //enemies
+    vector<shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
+    for (auto it = begin(enemies); it != end(enemies); ++it) {
+        shared_ptr<JsonValue> tempObject = JsonValue::allocObject(); //for enemy
+        tempObject->appendChild("x_pos", JsonValue::alloc(it->get()->getPos()));
+        tempObject->appendChild("level", JsonValue::alloc((long)it->get()->getLevel()));
+        tempObject->appendChild("patrol_start", JsonValue::alloc((long) it->get()->getPatrol().x));
+        tempObject->appendChild("patrol_end", JsonValue::alloc((long)it->get()->getPatrol().y));
+        shared_ptr<JsonValue> tempArray = JsonValue::allocArray(); //for keys
+        vector<int> keys = it->get()->getKeys();
+        for (auto it2 = begin(keys); it2 != end(keys); ++it2) {
+            tempArray->appendChild(JsonValue::alloc((long) *it2));
+        }
+        tempObject->appendChild("keys", tempArray);
+        enemyArray->appendChild(tempObject);
+    }
+    for (auto it = begin(_catDens); it != end(_catDens); ++it) {
+        shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
+        tempObject->appendChild("x_pos", JsonValue::alloc(it->get()->getPos().x));
+        tempObject->appendChild("level", JsonValue::alloc((long) it->get()->getLevel()));
+        tempObject->appendChild("connection", JsonValue::alloc((long) 0)); //TODO: HARDCODED BECAUSE CURRENT THERE IS NO FIELD FOR IT
+        tempObject->appendChild("isDen", JsonValue::alloc(true));
+        staircaseDoorArray->appendChild(tempObject);
+    }
+    for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {
+        shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
+        tempObject->appendChild("x_pos", JsonValue::alloc(it->get()->getPos().x));
+        tempObject->appendChild("level", JsonValue::alloc((long)it->get()->getLevel()));
+        tempObject->appendChild("connection", JsonValue::alloc((long)0)); //TODO: HARDCODED BECAUSE CURRENT THERE IS NO FIELD FOR IT
+        tempObject->appendChild("isDen", JsonValue::alloc(false));
+        staircaseDoorArray->appendChild(tempObject);
+    }
+    for (auto it = begin(_doors); it != end(_doors); ++it) {
+        shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
+        tempObject->appendChild("x_pos", JsonValue::alloc(it->get()->getPos().x));
+        tempObject->appendChild("level", JsonValue::alloc((long)it->get()->getLevel()));
+        shared_ptr<JsonValue> tempArray = JsonValue::allocArray(); //for keys
+        vector<int> keys = it->get()->getKeys();
+        for (auto it2 = begin(keys); it2 != end(keys); ++it2) {
+            tempArray->appendChild(JsonValue::alloc((long)*it2));
+        }
+        tempObject->appendChild("keyInt", tempArray);
+        doorArray->appendChild(tempObject);
+    }
+    //TODO IF WE EVER GET MORE THAN 1 DECORATIONS
+    shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
+    tempObject->appendChild("x_pos", JsonValue::alloc((long) _cagedAnimal->getPos().x));
+    tempObject->appendChild("level", JsonValue::alloc((long) _cagedAnimal->getLevel()));
+    tempObject->appendChild("objective", JsonValue::alloc((long) 1));
+    tempObject->appendChild("texture", JsonValue::alloc("caged-animal"));
+    decorationsArray->appendChild(tempObject);
+
+    shared_ptr<JsonValue> result = JsonValue::allocObject();
+    result->appendChild("player", playerObject);
+    result->appendChild("enemy", enemyArray);
+    result->appendChild("decorations", decorationsArray);
+    result->appendChild("staircase-door", staircaseDoorArray);
+    result->appendChild("door", doorArray);
+    result->appendChild("floor", JsonValue::alloc((long)1));
+
+    shared_ptr<JsonWriter> writer = JsonWriter::alloc("levels/save.json");
+    writer->writeJson(result);
+    writer->close();
+
 }
 
 

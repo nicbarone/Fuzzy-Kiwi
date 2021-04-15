@@ -78,7 +78,7 @@ void MenuMode::buildScene() {
     std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
     //AudioEngine::get()->play("menuBGM", menuBGM, true, 1.0f, false);
     std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
-    audioQueue->play(menuBGM, true, 1.0f);
+    //audioQueue->play(menuBGM, true, 1.0f); //This line of code is the devil
     //bool success = AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"));
     //AudioEngine::get()->setVolume("menuBGM",1.0f);
     //CULog("successful? %i", success?1:0);
