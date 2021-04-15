@@ -1,11 +1,11 @@
 {
 	"player":	{
-		"x_pos":	-258,
+		"x_pos":	-300,
 		"level":	0,
 		"num_possessions":	0
 	},
 	"enemy":	[{
-			"x_pos":	617,
+			"x_pos":	764,
 			"level":	0,
 			"patrol_start":	500,
 			"patrol_end":	800,
