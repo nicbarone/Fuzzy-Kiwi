@@ -352,7 +352,7 @@ bool GameplayMode::attemptPossess() {
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
         _rootScene->removeChild(_player->getSceneNode());
         _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
-        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET - 45);
+        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
         _player->PossessAnimation(true);
@@ -363,7 +363,7 @@ bool GameplayMode::attemptPossess() {
             _hasControl = true;
             return false;
         };
-        cugl::Application::get()->schedule(frame6, 800);
+        cugl::Application::get()->schedule(frame6, 500);
         return true;
 
         //code used for cat jumping animation, incomplete and not activated in our release
@@ -393,10 +393,16 @@ void GameplayMode::unpossess() {
 
     std::function<bool()> delayInput = [&]() {
         _hasControl = true;
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
+        _rootScene->removeChild(_player->getSceneNode());
+        _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
+        _player->getSceneNode()->setPosition(_player->getPos()+30, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+        _player->getSceneNode()->setScale(0.15, 0.15);
+        _rootScene->addChild(_player->getSceneNode());
         return false;
     };
-    cugl::Application::get()->schedule(delayInput, 400);
-    
+    cugl::Application::get()->schedule(delayInput, 1100);
+    //_player->getSceneNode()->setFrame(7);
     
 }
 

@@ -107,19 +107,22 @@ void Player::PossessAnimation(bool possessing) {
 		return false;
 	};
 	if (possessing) {
-		int timeDiff = 100;
-		
-		cugl::Application::get()->schedule(frame0, 50 + timeDiff);
+		int timeDiff = 75;
+		CULog("h");
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 1);
 		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 2);
 		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 3);
 		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
 	}
 	else
 	{
-		int timeDiff = 100;
+		CULog("h2");
+		int timeDiff = 75;
 		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 1);
 		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 2);
 		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 3);
+		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 4);
+		//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
 		
 	}
 
