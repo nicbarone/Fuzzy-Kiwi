@@ -352,7 +352,7 @@ bool GameplayMode::attemptPossess() {
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
         _rootScene->removeChild(_player->getSceneNode());
         _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
-        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+        _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
         _player->PossessAnimation(true);
@@ -388,20 +388,21 @@ void GameplayMode::unpossess() {
     _enemyController->removeEnemy(enemy);
     _enemyController->updatePossessed(nullptr);
 
-    _player->getSceneNode()->setPositionX(_player->getPos());
+    _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET);
     
 
     std::function<bool()> delayInput = [&]() {
-        _hasControl = true;
+        
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
         _rootScene->removeChild(_player->getSceneNode());
         _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
-        _player->getSceneNode()->setPosition(_player->getPos()+30, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
+        _player->setPos(_player->getPos()+80);
+        _hasControl = true;
         return false;
     };
-    cugl::Application::get()->schedule(delayInput, 1100);
+    cugl::Application::get()->schedule(delayInput, 600);
     //_player->getSceneNode()->setFrame(7);
     
 }
@@ -531,9 +532,10 @@ void GameplayMode::buildScene() {
         _rootScene->addChild(it->get()->getSceneNode());
         _rootScene->addChild(it->get()->getPatrolNode());
     }
+    _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
 
-    _rootScene->addChild(_player->getSceneNode());
+    
     //_rootScene->getChildren()[]
     //every time the level changes draw the player than draw the door frame 
 
@@ -808,9 +810,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         _rootScene->addChild(it->get()->getPatrolNode());
     }
     _rootScene->addChild(_cagedAnimal->getSceneNode());
+    
     _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
-
+    
 
 
 
