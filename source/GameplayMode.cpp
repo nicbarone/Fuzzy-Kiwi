@@ -921,7 +921,6 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         }
         });
     addChild(_losePanel->getSceneNode());
-
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
 }
@@ -1154,7 +1153,8 @@ void GameplayMode::toSaveJson() {
         result->appendChild("door", doorArray);
         result->appendChild("floor", JsonValue::alloc((long)1));
 
-        shared_ptr<JsonWriter> writer = JsonWriter::alloc("levels/save.json");
+        shared_ptr<JsonWriter> writer = JsonWriter::alloc(Application::get()->getSaveDirectory() + "save.json");
+        
         writer->writeJson(result);
         writer->close();
     }
