@@ -60,6 +60,7 @@ void App::onStartup() {
  * causing the application to be deleted.
  */
 void App::onShutdown() {
+    _gameplay.toSaveJson();
     _loading.dispose();
     _gameplay.dispose();
     _assets = nullptr;

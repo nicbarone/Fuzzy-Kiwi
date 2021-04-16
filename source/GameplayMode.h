@@ -85,7 +85,7 @@ protected:
     std::shared_ptr<CatDen> _level1CatDenRight;
     /** A reference to the list of all cat dens in the level*/
     std::vector<shared_ptr<CatDen>> _catDens;
-   
+
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;
     /** A reference to the level 1 door frame*/
@@ -129,8 +129,8 @@ protected:
 
     /** whether or not the player has control*/
     bool _hasControl;
-    
-    /** 
+
+    /**
      * Internal helper to build the scene graph.
      *
      * Scene graphs are not required.  You could manage all scenes just like
@@ -139,7 +139,7 @@ protected:
      */
     void buildScene();
     void buildScene(std::shared_ptr<JsonValue>);
-    
+
 public:
     /**
      * Creates, but does not initialized a new application.
@@ -151,16 +151,16 @@ public:
      * advanced configuration of the application before it starts.
      */
     GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false) {}
-    
+
     /**
      * Disposes of this application, releasing all resources.
      *
-     * This destructor is called by main.cpp when the application quits. 
+     * This destructor is called by main.cpp when the application quits.
      * It simply calls the dispose() method in Application.  There is nothing
      * special to do here.
      */
     ~GameplayMode() { }
-    
+
         /**
      * Initializes the controller contents, and starts the game
      *
@@ -171,7 +171,7 @@ public:
      * @param assets    The (loaded) assets for this game mode
      * @param location    The location the level is selected
      * @param level    The number the selected level is within the current location
-     * 
+     *
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<InputManager> inputManager);
@@ -180,7 +180,7 @@ public:
 
     /** used to reset the level*/
     void reset();
-    
+
     /**
      * The method called to update the application data.
      *
@@ -193,7 +193,7 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep) override;
-    
+
     /** Used to check if there exists current possessable enemy in range */
     bool enemyInPossessRange();
 
@@ -206,7 +206,7 @@ public:
         does whatever is necessary to unpossess, kind of a mess right now
     should it be in this file? who knows*/
     void unpossess();
-    
+
     /**
      * The method called to draw the application to the screen.
      *
@@ -218,7 +218,7 @@ public:
      */
     void draw();
 
-    /*Function called every update to check if the player is trying to close or 
+    /*Function called every update to check if the player is trying to close or
     open a door*/
     void checkDoors();
 
@@ -259,6 +259,7 @@ public:
 
     void ChangeDrawOrder();
 
+    void toSaveJson();
     void setGameStatus(GameStatus status) {
         _gameStatus = status;
     }
