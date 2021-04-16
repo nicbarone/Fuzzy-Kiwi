@@ -621,7 +621,7 @@ void GameplayMode::buildScene() {
     addChild(_winPanel->getSceneNode());
 
     // Create Lose Panel
-    losePanel = _assets->get<Texture>("levelCompleteBG");
+    losePanel = _assets->get<Texture>("levelFailedBG");
     _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
     _losePanel->getSceneNode()->setScale(0.75f);
     _losePanel->setVisible(false);
@@ -900,18 +900,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
     // Create Lose Panel
-    losePanel = _assets->get<Texture>("levelCompleteBG");
+    losePanel = _assets->get<Texture>("levelFailedBG");
     _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
-    _losePanel->getSceneNode()->setScale(0.75f);
+    _losePanel->getSceneNode()->setScale(min(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
     _losePanel->setVisible(false);
-    _losePanel->createChildPanel(0, 160, 0, _assets->get<Texture>("loseIcon"));
-    _losePanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
-    _losePanel->createChildPanel(0, -45, 0, _assets->get<Texture>("loseTitle"));
-    _losePanel->getChildPanels()[1]->getSceneNode()->setScale(1.2f);
-    _losePanel->createChildPanel(0, 100, 0, _assets->get<Texture>("wasted"));
-    _losePanel->getChildPanels()[2]->getSceneNode()->setScale(0.5f);
     _losePanel->createChildButton(0, -170, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
     _losePanel->getChildButtons()[0]->getButton()->setName("retry");
+    _losePanel->getChildButtons()[0]->getButton()->setScale(8.0f);
     _losePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {

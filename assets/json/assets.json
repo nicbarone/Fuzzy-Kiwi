@@ -77,6 +77,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"levelFailedBG": {
+			"file": "textures/UI/Background/LevelFailedBG.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"winTitle": {
 			"file": "textures/UI/Icon/WinTitle.png",
 			"minfilter": "nearest",
