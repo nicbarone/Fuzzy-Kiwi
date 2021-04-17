@@ -652,7 +652,7 @@ void GameplayMode::buildScene() {
             _nextLevel = true;
         }
         });
-    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
+    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retryOld"), Color4f::WHITE);
     _winPanel->getChildButtons()[1]->getButton()->setName("retry");
     _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -938,7 +938,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _nextLevel = true;
         }
         });
-    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
+    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retryOld"), Color4f::WHITE);
     _winPanel->getChildButtons()[1]->getButton()->setName("retry");
     _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released

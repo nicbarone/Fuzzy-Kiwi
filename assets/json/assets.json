@@ -126,6 +126,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"retryOld": {
+			"file": "textures/UI/Button/RetryOld.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"nextLevel": {
 			"file": "textures/UI/Button/NextLevel.png",
 			"minfilter": "nearest",
