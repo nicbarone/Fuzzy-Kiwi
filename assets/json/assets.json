@@ -287,7 +287,15 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"EnemyDying": {
+			"file": "textures/UI/Icon/EnemyDying.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
+
 	},
 	"fonts": {
 		"felt": {

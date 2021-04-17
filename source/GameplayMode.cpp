@@ -359,7 +359,7 @@ bool GameplayMode::attemptPossess() {
 
         std::function<bool()> frame6 = [&]() {
             _player->getSceneNode()->setVisible(false);
-            _enemyController->closestEnemy()->setPossessed();
+            _enemyController->closestEnemy()->setAsPossessed();
             _hasControl = true;
             return false;
         };
@@ -379,15 +379,26 @@ void GameplayMode::unpossess() {
     _player->getSceneNode()->setVisible(true);
     
     _player->PossessAnimation(false);
+    
     _player->setPossess(false);
     _player->setPos((enemy->getPos()));
-    enemy->getSceneNode()->setVisible(false);
+
+    //_enemy
+    enemy->setPossessed(false);
+    std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("cat-walking");
+    _rootScene->removeChild(enemy->getSceneNode());
+    enemy->SetSceneNode(Enemy::alloc(enemy->getPos(), 0, enemy->getLevel(), {}, 0, 0, EnemyDying, 
+        EnemyDying, EnemyDying)->getSceneNode());
+    enemy->getSceneNode()->setPosition(enemy->getPos(), enemy->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+    enemy->getSceneNode()->setScale(0.15, 0.15);
+    _rootScene->addChild(enemy->getSceneNode());
+    enemy->enemyDyingAnimation();
+     
+
+   enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
-
-
     _enemyController->removeEnemy(enemy);
     _enemyController->updatePossessed(nullptr);
-
     _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET);
     
 
