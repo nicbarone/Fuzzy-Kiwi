@@ -384,7 +384,7 @@ void GameplayMode::unpossess() {
     _player->setPos((enemy->getPos()));
 
     //_enemy
-    enemy->setPossessed(false);
+   /* enemy->setPossessed(false);
     std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("cat-walking");
     _rootScene->removeChild(enemy->getSceneNode());
     enemy->SetSceneNode(Enemy::alloc(enemy->getPos(), 0, enemy->getLevel(), {}, 0, 0, EnemyDying, 
@@ -392,7 +392,7 @@ void GameplayMode::unpossess() {
     enemy->getSceneNode()->setPosition(enemy->getPos(), enemy->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
     enemy->getSceneNode()->setScale(0.15, 0.15);
     _rootScene->addChild(enemy->getSceneNode());
-    enemy->enemyDyingAnimation();
+    enemy->enemyDyingAnimation();*/
      
 
    enemy->getSceneNode()->setVisible(false);
