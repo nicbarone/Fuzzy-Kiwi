@@ -662,7 +662,7 @@ void GameplayMode::buildScene() {
             _reset = true;
         }
         });
-    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
+    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menuOld"), Color4f::WHITE);
 
     _winPanel->getChildButtons()[2]->getButton()->setName("menu");
     _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -948,7 +948,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _reset = true;
         }
         });
-    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
+    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menuOld"), Color4f::WHITE);
 
     _winPanel->getChildButtons()[2]->getButton()->setName("menu");
     _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
