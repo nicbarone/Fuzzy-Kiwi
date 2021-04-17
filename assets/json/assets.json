@@ -315,6 +315,27 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"usedPossession": {
+			"file": "textures/UI/Icon/PossessionUsed.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"availablePossession": {
+			"file": "textures/UI/Icon/PossesionLeft.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"pausedBackground": {
+			"file": "textures/UI/Background/PauseBackground.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
 	},
 	"fonts": {
