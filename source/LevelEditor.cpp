@@ -20,7 +20,8 @@ using namespace cugl;
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets) {
+bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputManager> inputManager) {
+    _inputManager = inputManager;
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     // Lock the scene to a reasonable resolution
@@ -56,6 +57,7 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets) {
     _rootScene->setContentSize(Application::get()->getSafeBounds().size);
 
     buildScene();
+    _inputManager->init(Player::alloc(150, 0, 0, catTexture), _rootScene, getBounds());
     return true;
 }
 
@@ -116,6 +118,24 @@ Vec2 LevelEditor::snapToRow(Vec2 pos, string type) {
     pos.y = dimen.height - pos.y;
     pos.y = addOffset(closestNum(floorHeights, pos.y), type);
     return pos;
+}
+
+void LevelEditor::clearEnemyPlacement() {
+    if (enemyPlacement > 0) {
+        if (pendingEnemy != nullptr) {
+            _rootScene->removeChild(pendingEnemy);
+        }
+        if (pendingPath != nullptr) {
+            _rootScene->removeChild(pendingPath);
+        }
+        pendingEnemy = nullptr;
+        pendingPath = nullptr;
+        enemyPlacement = 0;
+        pathBegin = 0;
+        pathEnd = 0;
+        pendingNode = nullptr;
+        pendingPlacement = false;
+    }
 }
 
 void LevelEditor::placeNode() {
@@ -397,21 +417,7 @@ void LevelEditor::update(float timestep) {
     placeNode();
     if (Input::get<Mouse>()->buttonPressed().hasRight()) {
         releaseButtons();
-        if (enemyPlacement > 0) {
-            if (pendingEnemy != nullptr) {
-                _rootScene->removeChild(pendingEnemy);
-            }
-            if (pendingPath != nullptr) {
-                _rootScene->removeChild(pendingPath);
-            }
-            pendingEnemy = nullptr;
-            pendingPath = nullptr;
-            enemyPlacement = 0;
-            pathBegin = 0;
-            pathEnd = 0;
-            pendingNode = nullptr;
-            pendingPlacement = false;
-        }
+        clearEnemyPlacement();
     }
 #endif
 }
@@ -493,6 +499,8 @@ void LevelEditor::buildScene() {
     _clear->activate();
     _clear->addListener([=](const std::string& name, bool down) {
         if (!down && !resetButtons) {
+            releaseButtons();
+            clearEnemyPlacement();
             _rootScene->removeAllChildren();
             enemies.clear();
             paths.clear();
@@ -511,6 +519,8 @@ void LevelEditor::buildScene() {
     _cat->setPosition(120, 0);
     _cat->addListener([=](const std::string& name, bool down) {
             if (down) {
+                releaseButtons();
+                clearEnemyPlacement();
                 pendingNode = scene2::AnimationNode::alloc(catTexture, 1, 8);
                 pendingNode->setScale(0.15, 0.15);
                 pendingNode->setName("cat" + (_numPossessionField->getText() != "" ? _numPossessionField->getText() : "1"));
@@ -530,6 +540,8 @@ void LevelEditor::buildScene() {
     _staircaseDoor->setPosition(170, 0);
     _staircaseDoor->addListener([=](const std::string& name, bool down) {
         if (down) {
+            releaseButtons();
+            clearEnemyPlacement();
             pendingNode = scene2::AnimationNode::alloc(staircaseDoorTexture, 1, 8);
             pendingNode->setScale(1.8, 1.8);
             pendingNode->setName("sta" + (_doorIDField->getText() != "" ? _doorIDField->getText() : "0"));
@@ -549,6 +561,8 @@ void LevelEditor::buildScene() {
     _catDen->setPosition(330, 0);
     _catDen->addListener([=](const std::string& name, bool down) {
         if (down) {
+            releaseButtons();
+            clearEnemyPlacement();
             pendingNode = scene2::AnimationNode::alloc(catDenTexture, 1, 1);
             pendingNode->setScale(0.05, 0.05);
             pendingNode->setName("den" + (_doorIDField->getText() != "" ? _doorIDField->getText() : "0"));
@@ -568,6 +582,9 @@ void LevelEditor::buildScene() {
     _door->setPosition(420, 0);
     _door->addListener([=](const std::string& name, bool down) {
         if (down) {
+
+            releaseButtons();
+            clearEnemyPlacement();
             pendingNode = scene2::AnimationNode::alloc(doorTexture, 1, 11);
             pendingNode->setScale(1, 1);
             pendingNode->setName("doo" + _keyField->getText());
@@ -587,6 +604,8 @@ void LevelEditor::buildScene() {
     _objective->setPosition(500, 0);
     _objective->addListener([=](const std::string& name, bool down) {
         if (down) {
+            releaseButtons();
+            clearEnemyPlacement();
             pendingNode = scene2::AnimationNode::alloc(cageTexture, 1, 1);
             pendingNode->setScale(0.3, 0.3);
             pendingNode->setName("dec" + (_objectiveField->getText() != "" ? _objectiveField->getText() : "0"));
@@ -606,6 +625,8 @@ void LevelEditor::buildScene() {
     _enemy->setPosition(600, 0);
     _enemy->addListener([=](const std::string& name, bool down) {
         if (down) {
+            releaseButtons();
+            clearEnemyPlacement();
             pendingNode = scene2::AnimationNode::alloc(enemyTexture, 1, 5);
             pendingNode->setScale(0.05, 0.05);
             pendingNode->setName("ene" + (_keyField->getText() != "" ? _keyField->getText() : ""));
@@ -624,6 +645,8 @@ void LevelEditor::buildScene() {
     _save->setPosition(800, 0);
     _save->addListener([=](const std::string& name, bool down) {
         if (down) {
+            releaseButtons();
+            clearEnemyPlacement();
             if (_filePathField->getText() == "") {
                 shared_ptr<JsonWriter> writer = JsonWriter::alloc("levels/test.json");
                 writer->writeJson(toJson());
@@ -647,6 +670,8 @@ void LevelEditor::buildScene() {
     _load->setPosition(950, 0);
     _load->addListener([=](const std::string& name, bool down) {
         if (down) {
+            releaseButtons();
+            clearEnemyPlacement();
             if (_filePathField->getText() == "") {
                 int returnID = MessageBox(
                     NULL,

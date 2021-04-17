@@ -41,7 +41,7 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
     /** The loaders to (synchronously) load in assets */
     std::shared_ptr<cugl::AssetManager> _assets;
-    InputManager _inputManager;
+    std::shared_ptr<InputManager> _inputManager;
 
     /** textures*/
     std::shared_ptr<Texture> catTexture;
@@ -145,7 +145,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputManager> inputManager);
 
     /**
         helper function for snapping placement to rows
@@ -167,6 +167,7 @@ public:
 
     void buildScene();
 
+    void clearEnemyPlacement();
 };
 
 #endif /* __LEVEL_EDITOR_H__ */
