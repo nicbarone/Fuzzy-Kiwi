@@ -295,7 +295,7 @@ void GameplayMode::update(float timestep) {
         if (_player->getPossess()) {
             _player->setPos(_player->get_possessEnemy()->getPos());
         }
-        else {
+        else if(_hasControl) {
             _player->move(_inputManager->getForward());
         }
         // Enemy movement
@@ -345,24 +345,31 @@ void GameplayMode::update(float timestep) {
 bool GameplayMode::attemptPossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
     if (enemy != nullptr) {
-        vector<Vec2> doors = closedDoors();
+        _hasControl = false;
+        _player->setPossess(true);
+        _player->set_possessEnemy(_enemyController->closestEnemy());
+        _enemyController->updatePossessed(_enemyController->closestEnemy());
+        _rootScene->removeChild(_enemyController->closestEnemy()->getPatrolNode());
+        _enemyController->closestEnemy()->setGlow(false);
 
-        //code used for cat jumping animation, incomplete and not activated in our release
-       std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
         _rootScene->removeChild(_player->getSceneNode());
-        _player->SetSceneNode(scene2::AnimationNode::alloc(catJump, 1, 8));
-        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET -45);
+        _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
+        _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
-        
-        _player->getSceneNode()->setVisible(false);
-        _player->setPossess(true);
-        _player->set_possessEnemy(enemy);
-        _enemyController->updatePossessed(enemy);
-        _rootScene->removeChild(enemy->getPatrolNode());
-        enemy->setGlow(false);
-        enemy->setPossessed();
+        _player->PossessAnimation(true);
+
+        std::function<bool()> frame6 = [&]() {
+            _player->getSceneNode()->setVisible(false);
+            _enemyController->closestEnemy()->setAsPossessed();
+            _hasControl = true;
+            return false;
+        };
+        cugl::Application::get()->schedule(frame6, 500);
         return true;
+
+        //code used for cat jumping animation, incomplete and not activated in our release
     }
     return false;
 }
@@ -370,17 +377,48 @@ bool GameplayMode::attemptPossess() {
 void GameplayMode::unpossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
     if (enemy == nullptr) return;
-    _player->setPos((enemy->getPos()));
+    _hasControl = false;
     _player->setLevel(enemy->getLevel());
     _player->getSceneNode()->setVisible(true);
-    _player->setPossess(false);
-    _player->setLevel(_enemyController->getPossessed()->getLevel());
-    enemy->getSceneNode()->setVisible(false);
-    enemy->dispose();
-
     
+    _player->PossessAnimation(false);
+    
+    _player->setPossess(false);
+    _player->setPos((enemy->getPos()));
+
+    //_enemy
+   /* enemy->setPossessed(false);
+    std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("cat-walking");
+    _rootScene->removeChild(enemy->getSceneNode());
+    enemy->SetSceneNode(Enemy::alloc(enemy->getPos(), 0, enemy->getLevel(), {}, 0, 0, EnemyDying, 
+        EnemyDying, EnemyDying)->getSceneNode());
+    enemy->getSceneNode()->setPosition(enemy->getPos(), enemy->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+    enemy->getSceneNode()->setScale(0.15, 0.15);
+    _rootScene->addChild(enemy->getSceneNode());
+    enemy->enemyDyingAnimation();*/
+     
+
+   enemy->getSceneNode()->setVisible(false);
+    enemy->dispose();
     _enemyController->removeEnemy(enemy);
     _enemyController->updatePossessed(nullptr);
+    _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET);
+    
+
+    std::function<bool()> delayInput = [&]() {
+        
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
+        _rootScene->removeChild(_player->getSceneNode());
+        _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
+        _player->getSceneNode()->setScale(0.15, 0.15);
+        _rootScene->addChild(_player->getSceneNode());
+        _player->setPos(_player->getPos()+80);
+        _hasControl = true;
+        return false;
+    };
+    cugl::Application::get()->schedule(delayInput, 600);
+    //_player->getSceneNode()->setFrame(7);
+    
 }
 
 /**
@@ -438,6 +476,7 @@ void GameplayMode::buildScene() {
     
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
     std::shared_ptr<Texture> catDen = _assets->get<Texture>("catDen");
+    std::shared_ptr<Texture> cats = _assets->get<Texture>("catPossessing");
 
     //caged animal
     int s = 1;
@@ -507,9 +546,10 @@ void GameplayMode::buildScene() {
         _rootScene->addChild(it->get()->getSceneNode());
         _rootScene->addChild(it->get()->getPatrolNode());
     }
+    _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
 
-    _rootScene->addChild(_player->getSceneNode());
+    
     //_rootScene->getChildren()[]
     //every time the level changes draw the player than draw the door frame 
 
@@ -790,9 +830,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         _rootScene->addChild(it->get()->getPatrolNode());
     }
     _rootScene->addChild(_cagedAnimal->getSceneNode());
+    
     _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
-
+    
 
 
 
