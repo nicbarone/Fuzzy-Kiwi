@@ -17,6 +17,7 @@ using namespace cugl;
  */
 bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
     _playPressed = false;
+    _gameLoaded = false;
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     // Lock the scene to a reasonable resolution
@@ -97,7 +98,14 @@ void MenuMode::buildScene() {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
-            _playPressed = true;
+            if (filetool::file_exists("levels\\save.json")) {
+                _saveGamePanel->setVisible(true);
+                _saveGamePanel->getChildButtons()[0]->getButton()->activate();
+                _saveGamePanel->getChildButtons()[1]->getButton()->activate();
+            }
+            else {
+                _playPressed = true;
+            }
         }
     });
     _menuPanel->getChildButtons()[0]->getButton()->activate();
@@ -113,11 +121,41 @@ void MenuMode::buildScene() {
     });
     _menuPanel->getChildButtons()[1]->getButton()->activate();
     addChild(_menuPanel->getSceneNode());
+    // make save game panel
+    _saveGamePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("savegamePanel"));
+    _saveGamePanel->setVisible(false);
+    _saveGamePanel->getSceneNode()->setScale(2.0f);
+    _saveGamePanel->createChildButton(-80, -30, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("no"), Color4f::WHITE);
+    _saveGamePanel->getChildButtons()[0]->getButton()->setName("no");
+    _saveGamePanel->getChildButtons()[0]->getButton()->setScale(1.0f);
+    _saveGamePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _playPressed = true;
+        }
+    });
+    _saveGamePanel->createChildButton(80, -30, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("yes"), Color4f::WHITE);
+    _saveGamePanel->getChildButtons()[1]->getButton()->setName("yes");
+    _saveGamePanel->getChildButtons()[1]->getButton()->setScale(1.0f);
+    _saveGamePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            //CULog("Clicking on possess button!");
+            // Mark this button as clicked, proper handle will take place in update()
+            _gameLoaded = true;
+        }
+    });
+    addChild(_saveGamePanel->getSceneNode());
 }
 
 void MenuMode::deactivateButtons() {
     _menuPanel->getChildButtons()[0]->getButton()->deactivate();
     _menuPanel->getChildButtons()[1]->getButton()->deactivate();
+    _saveGamePanel->setVisible(false);
+    _saveGamePanel->getChildButtons()[0]->getButton()->deactivate();
+    _saveGamePanel->getChildButtons()[1]->getButton()->deactivate();
 }
 
 void MenuMode::activateButtons() {
