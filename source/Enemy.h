@@ -77,12 +77,16 @@ public:
 	/** changes the x position of the enemy based on its patrol path and current position*/
 	void move(float direction);
 
+	/** changes the possessed state of the enemy*/
+	void setPossessed(bool isPossessed) {
+		_isPossessed = isPossessed;
+	}
 	/** changes possessed state of the enemy*/
 	bool getPossessed() {
 		return _isPossessed;
 	}
 	/** changes the possessed state of the enemy*/
-	void setPossessed();
+	void setAsPossessed();
 
 	/** returns the possessed state of the enemy*/
 	bool isPossessed() { return _isPossessed; }
@@ -138,6 +142,14 @@ public:
 	std::vector<int> getKeys() {
 		return _keys;
 	}
+
+	void enemyDyingAnimation();
+
+	void SetSceneNode(std::shared_ptr<scene2::AnimationNode> newNode) {
+		_sceneNode = newNode;
+	}
 };
+
+
 
 #endif
