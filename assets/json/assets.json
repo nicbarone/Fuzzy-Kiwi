@@ -352,7 +352,7 @@
 			"wrapT": "clamp"
 		},
 		"EnemyDying": {
-			"file": "textures/UI/Icon/EnemyDying.png",
+			"file": "textures/GameObject/Enemy/EnemyDying.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

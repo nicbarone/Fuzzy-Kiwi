@@ -56,11 +56,11 @@ public:
 
 	void dispose();
 
-	bool init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow);
+	bool init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow);
 
-	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
+	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
-		return (result->init(x, level, ang, keys, patrolStart, patrolEnd, enemy, alt, glow) ? result : nullptr);
+		return (result->init(x, level, ang, keys, patrolStart, patrolEnd, num_frames, enemy, alt, glow) ? result : nullptr);
 	}
 
 
