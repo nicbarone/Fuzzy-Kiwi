@@ -12,6 +12,7 @@ private:
 	int _frame;
 	int _frameCounter;
 	bool _isOpen;
+	int _connectedDoors;
 	/*list of keys that unlock the staircase door.*/
 	std::vector<int> _keys;
 public:
@@ -22,13 +23,13 @@ public:
 
 	void dispose();
 
-	bool init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns,
+	bool init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int _connectedDoors, int rows, int columns,
 		std::shared_ptr<Texture> texture);
 
-	static std::shared_ptr<StaircaseDoor> alloc(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns,
-		std::shared_ptr<Texture> texture) {
+	static std::shared_ptr<StaircaseDoor> alloc(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int _connectedDoors, 
+		int rows, int columns, std::shared_ptr<Texture> texture) {
 		std::shared_ptr<StaircaseDoor> result = std::make_shared<StaircaseDoor>();
-		return (result->init(x, ang, scale, level, color,keys, rows, columns, texture) ? result : nullptr);
+		return (result->init(x, ang, scale, level, color,keys, _connectedDoors, rows, columns, texture) ? result : nullptr);
 	}
 
 	void setIsOpen(bool open) {
@@ -49,6 +50,13 @@ public:
 
 	std::vector<int> getKeys() {
 		return _keys;
+	}
+
+	int getConnectedDoors() {
+		return _connectedDoors;
+	}
+	void setCurrentDoor(int connectedDoors) {
+		_connectedDoors = connectedDoors;
 	}
 };
 

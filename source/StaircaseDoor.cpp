@@ -5,15 +5,17 @@ StaircaseDoor::StaircaseDoor() :
 	_frame(0),
 	_frameCounter(9)
 {
+	_connectedDoors = 0;
 	_isOpen = false;
 }
 
 void StaircaseDoor::dispose() {
 	ConstructionElement::dispose();
+	_connectedDoors = 0;
 	_isOpen = false;
 }
 
-bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns, std::shared_ptr<Texture> texture)
+bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int connectedDoors, int rows, int columns, std::shared_ptr<Texture> texture)
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
@@ -21,7 +23,23 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	setAngle(ang);
 	setScale(scale);
 	setLevel(level);
-	setColor(color);
+	_connectedDoors = connectedDoors;
+	if (_connectedDoors == 1)
+	{
+		setColor(cugl::Color4::WHITE);
+	}
+	if (_connectedDoors == 2)
+	{
+		setColor(cugl::Color4::BLUE);
+	}
+	if (_connectedDoors == 3)
+	{
+		setColor(cugl::Color4::GREEN);
+	}
+	if (_connectedDoors == 4)
+	{
+		setColor(cugl::Color4::RED);
+	}
 	_keys = keys;
 	_frame = 0;
 	_isOpen = false;

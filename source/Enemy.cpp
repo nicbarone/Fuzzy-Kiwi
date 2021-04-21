@@ -79,7 +79,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	return true;
 }
 
-bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd,
+bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
 	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
@@ -93,7 +93,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_tableTexture = table;
 	_isActive = true;
 	_frameCounter = 7;
-	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
+	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, num_frames);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	if (patrolStart != patrolEnd) {
 		_startTableNode = scene2::PolygonNode::allocWithTexture(_tableTexture);
@@ -221,29 +221,29 @@ void Enemy::enemyDyingAnimation() {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(3);
 		return false;
 	};
-	//std::function<bool()> frame4 = [&]() {
-	//	std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(4);
-	//	return false;
-	//};
-	//std::function<bool()> frame5 = [&]() {
-	//	std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(5);
-	//	return false;
-	//};
-	//std::function<bool()> frame6 = [&]() {
-	//	std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(6);
-	//	return false;
-	//};
-	//std::function<bool()> frame7 = [&]() {
-	//	std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
-	//	return false;
-	//};
+	std::function<bool()> frame4 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(4);
+		return false;
+	};
+	std::function<bool()> frame5 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(5);
+		return false;
+	};
+	std::function<bool()> frame6 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(6);
+		return false;
+	};
+	std::function<bool()> frame7 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
+		return false;
+	};
 	int timeDiff = 75;
 	CULog("h");
 	cugl::Application::get()->schedule(frame0, 50 + timeDiff * 1);
 	cugl::Application::get()->schedule(frame1, 50 + timeDiff * 2);
-	cugl::Application::get()->schedule(frame2, 50 + timeDiff * 3);
+	/*cugl::Application::get()->schedule(frame2, 50 + timeDiff * 3);
 	cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
-	/*cugl::Application::get()->schedule(frame4, 50 + timeDiff * 5);
+	cugl::Application::get()->schedule(frame4, 50 + timeDiff * 5);
 	cugl::Application::get()->schedule(frame5, 50 + timeDiff * 6);
 	cugl::Application::get()->schedule(frame6, 50 + timeDiff * 7);
 	cugl::Application::get()->schedule(frame7, 50 + timeDiff * 8);*/

@@ -18,6 +18,8 @@ private:
 	/** whether the player is hidden, i.e. in staircase or in den*/
 	bool _isHidden;
 
+	int _currentDoor;
+
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
 	std::shared_ptr<Enemy> _possessingEnemy;
@@ -34,11 +36,11 @@ public:
 	void dispose();
 	
 
-	bool init(float x, int level, float ang, const std::shared_ptr<Texture> cat);
+	bool init(float x, int level, float ang, int num_frames, const std::shared_ptr<Texture> cat);
 
-	static std::shared_ptr<Player> alloc(float x, int level, float ang, const std::shared_ptr<Texture> cat) {
+	static std::shared_ptr<Player> alloc(float x, int level, float ang, int num_frames, const std::shared_ptr<Texture> cat) {
 		std::shared_ptr<Player> result = std::make_shared<Player>();
-		return (result->init(x, level, ang, cat) ? result : nullptr);
+		return (result->init(x, level, ang, num_frames, cat) ? result : nullptr);
 
 	}
 
@@ -97,7 +99,15 @@ public:
 	/** setter for level, overloaded for this class to also change scene node position, deprecates changeFloor()*/
 	void setLevel(int level);
 
+	int getCurrentDoor() {
+		return _currentDoor;
+	}
+	void setCurrentDoor(int currDoor) {
+		_currentDoor = currDoor;
+	}
 	void PossessAnimation(bool possessing);
+
+	void Player::EnemyDying();
 
 };
 
