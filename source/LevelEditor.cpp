@@ -5,7 +5,7 @@ using namespace cugl;
 
 /** This is the ideal size of the logo */
 #define SCENE_SIZE  1024
-
+#define ENEMY_SCALE 0.65
 #pragma mark -
 #pragma mark Constructors
 
@@ -133,9 +133,10 @@ void LevelEditor::clearEnemyPlacement() {
         enemyPlacement = 0;
         pathBegin = 0;
         pathEnd = 0;
-        pendingNode = nullptr;
+        
         pendingPlacement = false;
     }
+    pendingNode = nullptr;
 }
 
 void LevelEditor::placeNode() {
@@ -378,7 +379,7 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
             objectTemp = enemyJson->get(i);
             temp = scene2::AnimationNode::alloc(enemyTexture, 1, 5);
             temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET);
-            temp->setScale(0.05, 0.05);
+            temp->setScale(ENEMY_SCALE, ENEMY_SCALE);
             shared_ptr<JsonValue> keys = objectTemp->get("keyInt");
             string buffer = "";
             for (int j = 0; j < keys->size(); j++) {
@@ -628,7 +629,7 @@ void LevelEditor::buildScene() {
             releaseButtons();
             clearEnemyPlacement();
             pendingNode = scene2::AnimationNode::alloc(enemyTexture, 1, 5);
-            pendingNode->setScale(0.05, 0.05);
+            pendingNode->setScale(ENEMY_SCALE, ENEMY_SCALE);
             pendingNode->setName("ene" + (_keyField->getText() != "" ? _keyField->getText() : ""));
             _rootScene->addChild(pendingNode);
             enemyPlacement = 3;

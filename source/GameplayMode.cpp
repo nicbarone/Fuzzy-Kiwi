@@ -75,7 +75,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     _rootScene->setContentSize(size);
     _reset = false;
     _backToMenu = false;
-    
+
     // Create an asset manager to load all assets
     _assets = assets;
 
@@ -180,7 +180,7 @@ void GameplayMode::reset() {
     _menuPanel->getChildButtons()[2]->getButton()->deactivate();
     size *= GAME_WIDTH / size.width;
     removeAllChildren();
-    
+
     // Create a scene graph the same size as the window
     alloc(size.width, size.height);
     _rootScene = scene2::SceneNode::alloc();
@@ -271,7 +271,7 @@ void GameplayMode::update(float timestep) {
                 unpossess();
             }
         }
-        
+
         checkStaircaseDoors();
         checkDoors();
         checkCatDens();
@@ -304,7 +304,7 @@ void GameplayMode::update(float timestep) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
         }
         if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
-            if (_player->getSceneNode()->isVisible() || 
+            if (_player->getSceneNode()->isVisible() ||
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
                 setGameStatus(GameStatus::LOSE);
                 _losePanel->setVisible(true);
@@ -378,7 +378,7 @@ void GameplayMode::unpossess() {
     _hasControl = false;
     _player->setLevel(enemy->getLevel());
     _player->getSceneNode()->setVisible(true);
-    
+
     /*std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("EnemyDying");
     int enemyPos = enemy->getPos();
     int enemyLevel = enemy->getLevel();
@@ -398,7 +398,7 @@ void GameplayMode::unpossess() {
     _player->setPossess(false);
     //_player->setPos((enemy->getPos()));
 
-     
+
    /*int level = enemy->getLevel();
    int pos = enemy->getPos();*/
    enemy->getSceneNode()->setVisible(false);
@@ -406,7 +406,7 @@ void GameplayMode::unpossess() {
     _enemyController->removeEnemy(enemy);
     _enemyController->updatePossessed(nullptr);
     _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET + 50);
-    
+
 
     std::function<bool()> delayInput = [&]() {
         int level = _player->getLevel();
@@ -422,7 +422,7 @@ void GameplayMode::unpossess() {
     };
     cugl::Application::get()->schedule(delayInput, 1100);
     //_player->getSceneNode()->setFrame(7);
-    
+
 }
 
 /**
@@ -477,7 +477,7 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
-    
+
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
     std::shared_ptr<Texture> catDen = _assets->get<Texture>("catDen");
     std::shared_ptr<Texture> cats = _assets->get<Texture>("catPossessing");
@@ -492,7 +492,7 @@ void GameplayMode::buildScene() {
     _catDens = { _level1CatDenLeft,_level1CatDenRight };
     _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
     _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
-    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, { 1 },2, 1, 8, staircaseDoor);
+    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor);
     _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(1, 1), 1, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor);
     _staircaseDoors = { _level1StairDoor, _level2StairDoor};
     _level1Door = Door::alloc(590,0, Vec2(1, 1), 0,cugl::Color4::WHITE, { 1 }, 1, 8, door);
@@ -514,7 +514,7 @@ void GameplayMode::buildScene() {
     //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
     //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
 
-   
+
     // Find the safe area, adapting to the iPhone X
     Rect safe = Application::get()->getSafeBounds();
     safe.origin *= scale;
@@ -523,7 +523,7 @@ void GameplayMode::buildScene() {
     // Get the right and bottom offsets.
     float bOffset = safe.origin.y;
     float rOffset = (size.width) - (safe.origin.x + safe.size.width);
-    
+
     // Text labels
     std::shared_ptr<Font> font = _assets->get<Font>("futura");
     _tutorialText = scene2::Label::alloc("Possess enemies to get past them, don't get spotted!", font);
@@ -563,9 +563,9 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
 
-    
+
     //_rootScene->getChildren()[]
-    //every time the level changes draw the player than draw the door frame 
+    //every time the level changes draw the player than draw the door frame
 
 
     _rootScene->addChild(_tutorialText);
@@ -723,6 +723,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
     _hasControl = true;
     _doors.clear();
+    _doorFrames.clear();
     _staircaseDoors.clear();
     _catDens.clear();
 
@@ -733,6 +734,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloor");
     //Staircase door texture creation
     std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
+    //Cat den texture creation
+    std::shared_ptr<Texture> catden = _assets->get<Texture>("catDen");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
 
@@ -756,27 +759,35 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     if (playerJSON != nullptr) {
         string numPossessions = to_string(playerJSON->getInt("num_possessions"));
         _player = Player::alloc(playerJSON->getFloat("x_pos"), playerJSON->getInt("level"), 0, 8, cat);
+        _player->set_nPossess(playerJSON->getFloat("num_possessions"));
 
     }
     if (enemiesJSON != nullptr) {
         for (int i = 0; i < enemiesJSON->size(); i++) {
             objectTemp = enemiesJSON->get(i);
-            shared_ptr<JsonValue> keyArray = objectTemp->get("keys");
+            shared_ptr<JsonValue> keyArray = objectTemp->get("keyInt");
             vector<int> key = {};
             if (!keyArray->isNull()) {
                 for (int j = 0; j < keyArray->size(); j++) {
                     key.push_back(stoi(keyArray->get(j)->toString()));
                 }
             }
-            _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 
+            _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0,
                 key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"),5, enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
         }
     }
     if (staircaseDoorJSON != nullptr) {
         for (int i = 0; i < staircaseDoorJSON->size(); i++) {
             objectTemp = staircaseDoorJSON->get(i);
-            _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1,1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, {1},1, 1, 8, staircaseDoor));
+            if (objectTemp->getBool("isDen")) {
+                _catDens.push_back(CatDen::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.05, 0.05), objectTemp->getInt("level"),
+                    cugl::Color4::WHITE, 1, 1, catden));
+            }
+            else {
+                _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
+                    cugl::Color4::WHITE, { 1 }, objectTemp->getInt("connection"), 1, 8, staircaseDoor));
+            }
+
         }
     }
     if (doorJSON != nullptr) {
@@ -791,7 +802,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
                 cugl::Color4::WHITE, {1}, 1, 8, door));
-            _level1DoorFrame = DoorFrame::alloc(objectTemp->getFloat("x_pos")-75, 0, Vec2(1.0, 1), 1, cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame);
+            _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos")-77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
         }
     }
     if (decorationsJSON != nullptr) {
@@ -799,7 +810,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             objectTemp = decorationsJSON->get(i);
             _cagedAnimal = CagedAnimal::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"),
                 cugl::Color4::WHITE, { }, 1, 1, cagedAnimal);
-            
+
         }
     }
 
@@ -808,6 +819,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
     _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
     _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
+
+
 
 
     Rect safe = Application::get()->getSafeBounds();
@@ -830,7 +843,25 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _rootScene->addChild(_level1Floor->getSceneNode());
     _rootScene->addChild(_level2Floor->getSceneNode());
 
+    shared_ptr<Wall> tempwall;
+    shared_ptr<Floor> tempfloor;
+    if (json->getInt("floor") > 2) {
+        tempwall = Wall::alloc(550, 0, Vec2(s, s), 2, cugl::Color4::WHITE, 1, 1, wall);
+        _rootScene->addChild(tempwall->getSceneNode());
+        tempfloor = Floor::alloc(555, 0, Vec2(s, s), 2, cugl::Color4::WHITE, 1, 1, floor);
+        _rootScene->addChild(tempfloor->getSceneNode());
+    }
+    if (json->getInt("floor") > 3) {
+        tempwall = Wall::alloc(550, 0, Vec2(s, s), 3, cugl::Color4::WHITE, 1, 1, wall);
+        _rootScene->addChild(tempwall->getSceneNode());
+        tempfloor = Floor::alloc(555, 0, Vec2(s, s), 3, cugl::Color4::WHITE, 1, 1, floor);
+        _rootScene->addChild(tempfloor->getSceneNode());
+    }
+
     for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {
+        _rootScene->addChild(it->get()->getSceneNode());
+    }
+    for (auto it = begin(_catDens); it != end(_catDens); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
     }
     for (auto it = begin(_doors); it != end(_doors); ++it) {
@@ -847,15 +878,17 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _rootScene->addChild(it->get()->getPatrolNode());
         }
     }
-
+    _rootScene->addChild(_cagedAnimal->getSceneNode());
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
     }
-    _rootScene->addChild(_cagedAnimal->getSceneNode());
-    
+
+
     _rootScene->addChild(_player->getSceneNode());
-    _rootScene->addChild(_level1DoorFrame->getSceneNode());
-    
+    for (auto it = begin(_doorFrames); it != end(_doorFrames); ++it) {
+        _rootScene->addChild(it->get()->getSceneNode());
+    }
+
 
 
 
@@ -1071,7 +1104,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
                 _player->setCurrentDoor(staircaseDoor->getConnectedDoors());
-                
+
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }
@@ -1244,10 +1277,8 @@ void GameplayMode::toSaveJson() {
         result->appendChild("floor", JsonValue::alloc((long)1));
 
         shared_ptr<JsonWriter> writer = JsonWriter::alloc(Application::get()->getSaveDirectory() + "save.json");
-        
+
         writer->writeJson(result);
         writer->close();
     }
 }
-
-
