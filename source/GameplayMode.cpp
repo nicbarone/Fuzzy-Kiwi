@@ -384,18 +384,9 @@ void GameplayMode::unpossess() {
     _player->setPossess(false);
     _player->setPos((enemy->getPos()));
 
-    //_enemy
-   /* enemy->setPossessed(false);
-    std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("cat-walking");
-    _rootScene->removeChild(enemy->getSceneNode());
-    enemy->SetSceneNode(Enemy::alloc(enemy->getPos(), 0, enemy->getLevel(), {}, 0, 0, EnemyDying, 
-        EnemyDying, EnemyDying)->getSceneNode());
-    enemy->getSceneNode()->setPosition(enemy->getPos(), enemy->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
-    enemy->getSceneNode()->setScale(0.15, 0.15);
-    _rootScene->addChild(enemy->getSceneNode());
-    enemy->enemyDyingAnimation();*/
      
-
+   /*int level = enemy->getLevel();
+   int pos = enemy->getPos();*/
    enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
     _enemyController->removeEnemy(enemy);
@@ -404,13 +395,14 @@ void GameplayMode::unpossess() {
     
 
     std::function<bool()> delayInput = [&]() {
-        
+        int level = _player->getLevel();
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
         _rootScene->removeChild(_player->getSceneNode());
         _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
+        _player->setPos(_player->getPos()+80);
+        _player->setLevel(level);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
-        _player->setPos(_player->getPos()+80);
         _hasControl = true;
         return false;
     };

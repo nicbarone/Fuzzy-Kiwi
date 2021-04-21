@@ -126,10 +126,10 @@ void App::update(float timestep) {
     if (!_loaded && counter > 0) {
         _loading.update(0.01f);
         counter=0;
-        if (false) {
+        if (USE_LEVEL_EDITOR) {
             CULog("si");
             _inEditor = true;
-            _levelEditor.init(_assets);
+            _levelEditor.init(_assets, _inputManager);
             _loaded = true;
         }
     }
