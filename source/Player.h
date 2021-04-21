@@ -114,7 +114,7 @@ public:
 	}
 	void PossessAnimation(bool possessing);
 
-	void Player::EnemyDying();
+	void EnemyDying();
 
 };
 

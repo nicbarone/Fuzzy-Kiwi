@@ -781,7 +781,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             objectTemp = staircaseDoorJSON->get(i);
             if (objectTemp->getBool("isDen")) {
                 _catDens.push_back(CatDen::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.05, 0.05), objectTemp->getInt("level"),
-                    cugl::Color4::WHITE, 1, 1, catden));
+                    cugl::Color4::WHITE, objectTemp->getInt("connection"), 1, 1, catden));
             }
             else {
                 _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
