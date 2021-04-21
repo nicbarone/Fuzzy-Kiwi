@@ -820,7 +820,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         _rootScene->addChild(it->get()->getSceneNode());
     }
     for (auto it = begin(_doors); it != end(_doors); ++it) {
-        
+        _rootScene->addChild(it->get()->getSceneNode());
     }
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         if (it->get()->getStartTableNode() != nullptr) {
