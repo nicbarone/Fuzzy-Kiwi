@@ -257,7 +257,10 @@ void GameplayMode::update(float timestep) {
         if (_inputManager->getAndResetPossessPressed()) {
             if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
                 if (attemptPossess()) {
-                    _possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
+                    //_possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
+                    for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
+                        _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
+                    }
                     if (_json == nullptr) {
                         _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
                         _tutorialText->setPosition(Vec2(100, 110));
@@ -292,7 +295,7 @@ void GameplayMode::update(float timestep) {
         if (_player->getPossess()) {
             _player->setPos(_player->get_possessEnemy()->getPos());
         }
-        else {
+        else if(_hasControl) {
             _player->move(_inputManager->getForward());
         }
         // Enemy movement
@@ -342,24 +345,31 @@ void GameplayMode::update(float timestep) {
 bool GameplayMode::attemptPossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
     if (enemy != nullptr) {
-        vector<Vec2> doors = closedDoors();
+        _hasControl = false;
+        _player->setPossess(true);
+        _player->set_possessEnemy(_enemyController->closestEnemy());
+        _enemyController->updatePossessed(_enemyController->closestEnemy());
+        _rootScene->removeChild(_enemyController->closestEnemy()->getPatrolNode());
+        _enemyController->closestEnemy()->setGlow(false);
 
-        //code used for cat jumping animation, incomplete and not activated in our release
-       std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
         _rootScene->removeChild(_player->getSceneNode());
-        _player->SetSceneNode(scene2::AnimationNode::alloc(catJump, 1, 8));
-        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET -45);
+        _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
+        _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
-        
-        _player->getSceneNode()->setVisible(false);
-        _player->setPossess(true);
-        _player->set_possessEnemy(enemy);
-        _enemyController->updatePossessed(enemy);
-        _rootScene->removeChild(enemy->getPatrolNode());
-        enemy->setGlow(false);
-        enemy->setPossessed();
+        _player->PossessAnimation(true);
+
+        std::function<bool()> frame6 = [&]() {
+            _player->getSceneNode()->setVisible(false);
+            _enemyController->closestEnemy()->setAsPossessed();
+            _hasControl = true;
+            return false;
+        };
+        cugl::Application::get()->schedule(frame6, 500);
         return true;
+
+        //code used for cat jumping animation, incomplete and not activated in our release
     }
     return false;
 }
@@ -367,17 +377,48 @@ bool GameplayMode::attemptPossess() {
 void GameplayMode::unpossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
     if (enemy == nullptr) return;
-    _player->setPos((enemy->getPos()));
+    _hasControl = false;
     _player->setLevel(enemy->getLevel());
     _player->getSceneNode()->setVisible(true);
-    _player->setPossess(false);
-    _player->setLevel(_enemyController->getPossessed()->getLevel());
-    enemy->getSceneNode()->setVisible(false);
-    enemy->dispose();
-
     
+    _player->PossessAnimation(false);
+    
+    _player->setPossess(false);
+    _player->setPos((enemy->getPos()));
+
+    //_enemy
+   /* enemy->setPossessed(false);
+    std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("cat-walking");
+    _rootScene->removeChild(enemy->getSceneNode());
+    enemy->SetSceneNode(Enemy::alloc(enemy->getPos(), 0, enemy->getLevel(), {}, 0, 0, EnemyDying, 
+        EnemyDying, EnemyDying)->getSceneNode());
+    enemy->getSceneNode()->setPosition(enemy->getPos(), enemy->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+    enemy->getSceneNode()->setScale(0.15, 0.15);
+    _rootScene->addChild(enemy->getSceneNode());
+    enemy->enemyDyingAnimation();*/
+     
+
+   enemy->getSceneNode()->setVisible(false);
+    enemy->dispose();
     _enemyController->removeEnemy(enemy);
     _enemyController->updatePossessed(nullptr);
+    _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET);
+    
+
+    std::function<bool()> delayInput = [&]() {
+        
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
+        _rootScene->removeChild(_player->getSceneNode());
+        _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
+        _player->getSceneNode()->setScale(0.15, 0.15);
+        _rootScene->addChild(_player->getSceneNode());
+        _player->setPos(_player->getPos()+80);
+        _hasControl = true;
+        return false;
+    };
+    cugl::Application::get()->schedule(delayInput, 600);
+    //_player->getSceneNode()->setFrame(7);
+    
 }
 
 /**
@@ -435,6 +476,7 @@ void GameplayMode::buildScene() {
     
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
     std::shared_ptr<Texture> catDen = _assets->get<Texture>("catDen");
+    std::shared_ptr<Texture> cats = _assets->get<Texture>("catPossessing");
 
     //caged animal
     int s = 1;
@@ -504,22 +546,36 @@ void GameplayMode::buildScene() {
         _rootScene->addChild(it->get()->getSceneNode());
         _rootScene->addChild(it->get()->getPatrolNode());
     }
+    _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
 
-    _rootScene->addChild(_player->getSceneNode());
+    
     //_rootScene->getChildren()[]
     //every time the level changes draw the player than draw the door frame 
 
 
     _rootScene->addChild(_tutorialText);
 
-    // make possess panel
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
     _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-    _possessPanel->getSceneNode()->setScale(0.15f);
+    _possessPanel->getSceneNode()->setScale(1.0f);
     _possessPanel->getSceneNode()->setPosition(size);
-    _possessPanel->createChildText(200, 0, 10, 10, "x " + to_string(_player->get_nPossess()), font);
-    _possessPanel->getChildTexts()[0]->setScale(Vec2(5.0f, 5.0f));
+    // TODO: get max possess number
+    std::shared_ptr<Texture> possessUsed = _assets->get<Texture>("usedPossession");
+    std::shared_ptr<Texture> possessAvailable = _assets->get<Texture>("availablePossession");
+    for (int i = 0; i < _player->get_nPossess(); i++) {
+        _possessPanel->createChildPanel(0, 0, 0, possessUsed);
+        _possessPanel->getChildPanels()[0]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+        _possessPanel->getChildPanels()[0]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[0]->setPos(_possessPanel->getSceneNode()->getContentSize()
+            * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[0]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
+
+        _possessPanel->createChildPanel(0, 0, 0, possessAvailable);
+        _possessPanel->getChildPanels()[1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+        _possessPanel->getChildPanels()[1]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[1]->setPos(_possessPanel->getSceneNode()->getContentSize()
+            * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[1]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
+    }
     addChild(_possessPanel->getSceneNode());
 
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
@@ -539,12 +595,11 @@ void GameplayMode::buildScene() {
     addChild(_menuButton->getButton());
 
     // Create Menu Panel
-    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelCompleteBG"));
-    _menuPanel->getSceneNode()->setScale(0.75f);
+    std::shared_ptr<Texture> pausedBackground = _assets->get<Texture>("pausedBackground");
+    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, pausedBackground);
+    _menuPanel->getSceneNode()->setScale(min(size.width / pausedBackground->getSize().width, size.height / pausedBackground->getSize().height));
     _menuPanel->setVisible(false);
-    _menuPanel->createChildPanel(0, 160, 0, _assets->get<Texture>("paused"));
-    _menuPanel->getChildPanels()[0]->getSceneNode()->setScale(0.3f);
-    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
+    _menuPanel->createChildButton(0, 60, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
     _menuPanel->getChildButtons()[0]->getButton()->setName("resume");
     _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -554,7 +609,7 @@ void GameplayMode::buildScene() {
             setGameStatus(GameStatus::RUNNING);
         }
         });
-    _menuPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
+    _menuPanel->createChildButton(0, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
     _menuPanel->getChildButtons()[1]->getButton()->setName("restartLevel");
     _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -564,7 +619,7 @@ void GameplayMode::buildScene() {
             _reset = true;
         }
         });
-    _menuPanel->createChildButton(0, -300, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE);
+    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("exit"), Color4f::WHITE);
     _menuPanel->getChildButtons()[2]->getButton()->setName("returnToMenu");
     _menuPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -573,7 +628,7 @@ void GameplayMode::buildScene() {
             // Mark this button as clicked, proper handle will take place in update()
             _backToMenu = true;
         }
-    });
+        });
     addChild(_menuPanel->getSceneNode());
 
     // Create Win Panel
@@ -597,7 +652,7 @@ void GameplayMode::buildScene() {
             _nextLevel = true;
         }
         });
-    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
+    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retryOld"), Color4f::WHITE);
     _winPanel->getChildButtons()[1]->getButton()->setName("retry");
     _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -607,7 +662,7 @@ void GameplayMode::buildScene() {
             _reset = true;
         }
         });
-    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
+    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menuOld"), Color4f::WHITE);
 
     _winPanel->getChildButtons()[2]->getButton()->setName("menu");
     _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -625,7 +680,7 @@ void GameplayMode::buildScene() {
     _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
     _losePanel->getSceneNode()->setScale(min(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
     _losePanel->setVisible(false);
-    _losePanel->createChildButton(0, -170, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
+    _losePanel->createChildButton(230, -350, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
     _losePanel->getChildButtons()[0]->getButton()->setName("retry");
     _losePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -635,7 +690,7 @@ void GameplayMode::buildScene() {
             _reset = true;
         }
         });
-    _losePanel->createChildButton(0, -230, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
+    _losePanel->createChildButton(230, -850, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
     _losePanel->getChildButtons()[1]->getButton()->setName("menu");
     _losePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -775,9 +830,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         _rootScene->addChild(it->get()->getPatrolNode());
     }
     _rootScene->addChild(_cagedAnimal->getSceneNode());
+    
     _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
-
+    
 
 
 
@@ -788,10 +844,24 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // make possess panel
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
     _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-    _possessPanel->getSceneNode()->setScale(0.15f);
+    _possessPanel->getSceneNode()->setScale(1.0f);
     _possessPanel->getSceneNode()->setPosition(size);
-    _possessPanel->createChildText(200, 0, 10, 10, "x " + to_string(_player->get_nPossess()), font);
-    _possessPanel->getChildTexts()[0]->setScale(Vec2(5.0f, 5.0f));
+    // TODO: get max possess number
+    std::shared_ptr<Texture> possessUsed = _assets->get<Texture>("usedPossession");
+    std::shared_ptr<Texture> possessAvailable = _assets->get<Texture>("availablePossession");
+    for (int i = 0; i < _player->get_nPossess(); i++) {
+        _possessPanel->createChildPanel(0, 0, 0, possessUsed);
+        _possessPanel->getChildPanels()[0]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+        _possessPanel->getChildPanels()[0]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[0]->setPos(_possessPanel->getSceneNode()->getContentSize()
+            * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[0]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
+
+        _possessPanel->createChildPanel(0, 0, 0, possessAvailable);
+        _possessPanel->getChildPanels()[1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+        _possessPanel->getChildPanels()[1]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[1]->setPos(_possessPanel->getSceneNode()->getContentSize()
+            * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[1]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
+    }
     addChild(_possessPanel->getSceneNode());
 
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
@@ -811,12 +881,11 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     addChild(_menuButton->getButton());
 
     // Create Menu Panel
-    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelCompleteBG"));
-    _menuPanel->getSceneNode()->setScale(0.75f);
+    std::shared_ptr<Texture> pausedBackground = _assets->get<Texture>("pausedBackground");
+    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, pausedBackground);
+    _menuPanel->getSceneNode()->setScale(min(size.width / pausedBackground->getSize().width, size.height / pausedBackground->getSize().height));
     _menuPanel->setVisible(false);
-    _menuPanel->createChildPanel(0, 160, 0, _assets->get<Texture>("paused"));
-    _menuPanel->getChildPanels()[0]->getSceneNode()->setScale(0.3f);
-    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
+    _menuPanel->createChildButton(0, 60, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
     _menuPanel->getChildButtons()[0]->getButton()->setName("resume");
     _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -826,7 +895,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             setGameStatus(GameStatus::RUNNING);
         }
     });
-    _menuPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
+    _menuPanel->createChildButton(0, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
     _menuPanel->getChildButtons()[1]->getButton()->setName("restartLevel");
     _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -836,7 +905,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _reset = true;
         }
     });
-    _menuPanel->createChildButton(0, -300, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE);
+    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("exit"), Color4f::WHITE);
     _menuPanel->getChildButtons()[2]->getButton()->setName("returnToMenu");
     _menuPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -869,7 +938,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _nextLevel = true;
         }
         });
-    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
+    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retryOld"), Color4f::WHITE);
     _winPanel->getChildButtons()[1]->getButton()->setName("retry");
     _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -879,7 +948,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _reset = true;
         }
         });
-    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
+    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menuOld"), Color4f::WHITE);
 
     _winPanel->getChildButtons()[2]->getButton()->setName("menu");
     _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -892,15 +961,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         });
     addChild(_winPanel->getSceneNode());
 
-
     // Create Lose Panel
     losePanel = _assets->get<Texture>("levelFailedBG");
     _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
     _losePanel->getSceneNode()->setScale(min(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
     _losePanel->setVisible(false);
-    _losePanel->createChildButton(200, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
+    _losePanel->createChildButton(230, -350, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
     _losePanel->getChildButtons()[0]->getButton()->setName("retry");
-    _losePanel->getChildButtons()[0]->getButton()->setScale(6.0f);
     _losePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
@@ -909,9 +976,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _reset = true;
         }
         });
-    _losePanel->createChildButton(450, -480, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
+    _losePanel->createChildButton(230, -850, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
     _losePanel->getChildButtons()[1]->getButton()->setName("menu");
-    _losePanel->getChildButtons()[1]->getButton()->setScale(6.0f);
     _losePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {

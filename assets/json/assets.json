@@ -119,6 +119,20 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"menuOld": {
+			"file": "textures/UI/Button/MenuOld.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"retryOld": {
+			"file": "textures/UI/Button/RetryOld.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"nextLevel": {
 			"file": "textures/UI/Button/NextLevel.png",
 			"minfilter": "nearest",
@@ -294,7 +308,57 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"savegamePanel": {
+			"file": "textures/UI/Background/SaveGamePanel.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"yes": {
+			"file": "textures/UI/Button/YesButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"no": {
+			"file": "textures/UI/Button/NoButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"usedPossession": {
+			"file": "textures/UI/Icon/PossessionUsed.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"availablePossession": {
+			"file": "textures/UI/Icon/PossesionLeft.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"pausedBackground": {
+			"file": "textures/UI/Background/PauseBackground.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"EnemyDying": {
+			"file": "textures/UI/Icon/EnemyDying.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
+
 	},
 	"fonts": {
 		"felt": {

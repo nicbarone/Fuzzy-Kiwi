@@ -9,9 +9,12 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     bool _levelSelected = false;
     bool _playPressed = false;
+    bool _gameLoaded = false;
     GameplayMode _gameplay;
     std::shared_ptr<Texture> menuPanel;
     std::shared_ptr<ui::PanelElement> _menuPanel;
+    /** The panel to tell the people they have a save-game */
+    std::shared_ptr<ui::PanelElement> _saveGamePanel;
 public:
     /**
      * Creates, but does not initialized a new application.
@@ -85,6 +88,14 @@ public:
 
     void setPlayPressed(bool pressed) {
         _playPressed = pressed;
+    }
+
+    bool getGameLoaded() {
+        return _gameLoaded;
+    }
+
+    void setGameLoaded(bool loaded) {
+        _gameLoaded = loaded;
     }
 
     /** returns a GameplayMode constructed from the chosen level's json*/

@@ -65,6 +65,9 @@ protected:
     std::shared_ptr<EnemyController> _enemyController;
     /** A reference to the player*/
     std::shared_ptr<Player> _player;
+    /** A reference to the player*/
+    std::shared_ptr<Door> _possessingCat;
+
     /** A reference to the level 1 floor*/
     std::shared_ptr<Floor> _level1Floor;
     /** A reference to the level 1 staircase door*/

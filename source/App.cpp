@@ -184,6 +184,15 @@ void App::update(float timestep) {
             _inMenu = false;
             _inLevelSelect = true;
         }
+        else if (_menu.getGameLoaded()) {
+            _menu.setGameLoaded(false);
+            _menu.deactivateButtons();
+            shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\save.json");
+            _gameplay.init(_assets, 0, 1, reader->readJson(), _inputManager);
+            _gameplay.reset();
+            _inMenu = false;
+            _inGameplay = true;
+        }
     }
     else {
         _gameplay.update(timestep);

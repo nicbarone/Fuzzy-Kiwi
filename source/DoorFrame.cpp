@@ -1,7 +1,7 @@
 #include "DoorFrame.h"
 using namespace cugl;
 
-#define DOOR_FRAME_OFFSET 42
+#define DOOR_FRAME_OFFSET 43
 DoorFrame::DoorFrame() :
 	_frame(0),
 	_frameCounter(8)
