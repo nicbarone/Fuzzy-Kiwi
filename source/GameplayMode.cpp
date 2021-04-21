@@ -878,11 +878,11 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _rootScene->addChild(it->get()->getPatrolNode());
         }
     }
-
+    _rootScene->addChild(_cagedAnimal->getSceneNode());
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
     }
-    _rootScene->addChild(_cagedAnimal->getSceneNode());
+
 
     _rootScene->addChild(_player->getSceneNode());
     for (auto it = begin(_doorFrames); it != end(_doorFrames); ++it) {

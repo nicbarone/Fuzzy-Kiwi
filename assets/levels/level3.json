@@ -44,7 +44,7 @@
 	"staircase-door":	[{
 			"x_pos":	435,
 			"level":	0,
-			"connection":	0,
+			"connection":	2,
 			"isDen":	false
 		}, {
 			"x_pos":	885,
@@ -54,7 +54,7 @@
 		}, {
 			"x_pos":	1000,
 			"level":	1,
-			"connection":	0,
+			"connection":	2,
 			"isDen":	false
 		}, {
 			"x_pos":	500,
