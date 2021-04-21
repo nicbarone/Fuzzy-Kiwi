@@ -11,3 +11,4 @@ const float CAT_DEN_OFFSET = -13;
 const float GAME_WIDTH = 1024;
 const int MAX_LEVEL_NUM_PER_LOC = 2;
 const int ENEMY_TURNING_FRAMES = 30;
+const bool USE_LEVEL_EDITOR = true;
