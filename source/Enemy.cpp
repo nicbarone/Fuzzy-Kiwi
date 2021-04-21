@@ -50,7 +50,7 @@ void Enemy::dispose() {
 	Entity::dispose();
 }
 
-bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd,  int num_frames, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
+bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
 	Entity::setLevel(level);
@@ -62,7 +62,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_glowTexture = glow;
 	_isActive = true;
 	_frameCounter = 7;
-	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, num_frames);
+	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	_patrolNode = scene2::WireNode::alloc(Rect(0, 0, patrolEnd - patrolStart, 2));
 	_patrolNode->setPosition(Vec2((patrolStart + patrolEnd) / 2, level * FLOOR_HEIGHT + FLOOR_OFFSET - 75));
@@ -79,7 +79,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	return true;
 }
 
-bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd,
+bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
 	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
@@ -93,7 +93,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_tableTexture = table;
 	_isActive = true;
 	_frameCounter = 7;
-	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
+	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, num_frames);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	if (patrolStart != patrolEnd) {
 		_startTableNode = scene2::PolygonNode::allocWithTexture(_tableTexture);

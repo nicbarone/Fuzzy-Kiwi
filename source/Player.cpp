@@ -9,7 +9,8 @@ Player::Player() :
 	_isPossessing(false),
 	_isHidden(false),
 	_frame(0),
-	_frameCounter(12)
+	_frameCounter(12),
+	_currentDoor(0)
 {
 
 	_sceneNode = nullptr;
@@ -25,6 +26,7 @@ void Player::dispose() {
 	_sceneNode = nullptr;
 	_frame = 0;
 	_frameCounter = 7;
+	_currentDoor = 0;
 	Entity::dispose();
 }
 
@@ -163,7 +165,7 @@ void Player::PossessAnimation(bool possessing) {
 		};
 
 
-		int timeDiff = 150;
+		int timeDiff = 130;
 		CULog("h");
 		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 1);
 		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 2);
