@@ -57,22 +57,23 @@ void MenuMode::update(float progress) {
 }
 
 GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager) {
-    if (id == "0_0") {
-        if (_gameplay.init(_assets, 0, 0, inputManager)) {
+    if (id == "0") {
+        if (_gameplay.init(_assets, 0, inputManager)) {
             _gameplay.clearJson();
           return _gameplay;
         }
     }
-    else if (id == "0_1") {
+    //else if (id == "1") {
+    else {    
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level2.json");
-        _gameplay.init(_assets, 0, 1, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 1, reader->readJson(), inputManager);
         return _gameplay;
     }
-    else {
-        throw;
-        return _gameplay;
-    }
-    return _gameplay;
+    //else {
+    //    throw;
+    //    return _gameplay;
+    //}
+    //return _gameplay;
 }
 
 void MenuMode::buildScene() {
@@ -93,9 +94,8 @@ void MenuMode::buildScene() {
 
     menuPanel = _assets->get<Texture>("menuBackground");
     _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, menuPanel);
-    _menuPanel->createChildPanel(420, 180, 0, _assets->get<Texture>("teamIcon"));
-    _menuPanel->getChildPanels()[0]->getSceneNode()->setScale(0.2f);
-    _menuPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("playButton"), Color4f::WHITE);
+    _menuPanel->getSceneNode()->setScale(min(size.width / menuPanel->getSize().width, size.height / menuPanel->getSize().height));
+    _menuPanel->createChildButton(1000, 325, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("playButton"), Color4f::WHITE);
     _menuPanel->getChildButtons()[0]->getButton()->setName("playButton");
     _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -113,17 +113,6 @@ void MenuMode::buildScene() {
         }
     });
     _menuPanel->getChildButtons()[0]->getButton()->activate();
-    _menuPanel->createChildButton(-450, 220, 25, 25, ui::ButtonState::AVAILABLE, _assets->get<Texture>("settingsButton"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[1]->getButton()->setName("settingsButton");
-    _menuPanel->getChildButtons()[1]->getButton()->setScale(0.8f);
-    _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            CULog("Clicking on settings button!");
-            // Mark this button as clicked, proper handle will take place in update()
-        }
-    });
-    _menuPanel->getChildButtons()[1]->getButton()->activate();
     addChild(_menuPanel->getSceneNode());
     // make save game panel
     _saveGamePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("savegamePanel"));
@@ -156,7 +145,6 @@ void MenuMode::buildScene() {
 
 void MenuMode::deactivateButtons() {
     _menuPanel->getChildButtons()[0]->getButton()->deactivate();
-    _menuPanel->getChildButtons()[1]->getButton()->deactivate();
     _saveGamePanel->setVisible(false);
     _saveGamePanel->getChildButtons()[0]->getButton()->deactivate();
     _saveGamePanel->getChildButtons()[1]->getButton()->deactivate();
@@ -164,5 +152,4 @@ void MenuMode::deactivateButtons() {
 
 void MenuMode::activateButtons() {
     _menuPanel->getChildButtons()[0]->getButton()->activate();
-    _menuPanel->getChildButtons()[1]->getButton()->activate();
 }

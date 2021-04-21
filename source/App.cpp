@@ -152,16 +152,6 @@ void App::update(float timestep) {
             _inLevelSelect = false;
             _inMenu = true;
         }
-        else if (_levelSelect.getLocationSelected()) {
-            _levelSelect.setLocationSelected(false);
-            _levelSelect.activateLevelSelectButtons();
-            _levelSelect.deactivateButtons();
-        }
-        else if (_levelSelect.getBackToLocationSelect()) {
-            _levelSelect.setBackToLocationSelect(false);
-            _levelSelect.activateButtons();
-            _levelSelect.deactivateLevelSelectButtons();
-        }
         else if (_levelSelect.getLevelSelected()) {
             // Load the level
             std::string level = _levelSelect.getLevelSelectID();
@@ -171,7 +161,7 @@ void App::update(float timestep) {
             _inGameplay = true;
             _levelSelect.clearLevelSelectID();
             _levelSelect.setLevelSelected(false);
-            _levelSelect.deactivateLevelSelectButtons();
+            _levelSelect.deactivateButtons();
         }
     }
     else if (_inMenu){
@@ -188,7 +178,7 @@ void App::update(float timestep) {
             _menu.setGameLoaded(false);
             _menu.deactivateButtons();
             shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\save.json");
-            _gameplay.init(_assets, 0, 1, reader->readJson(), _inputManager);
+            _gameplay.init(_assets, 1, reader->readJson(), _inputManager);
             _gameplay.reset();
             _inMenu = false;
             _inGameplay = true;
@@ -198,15 +188,15 @@ void App::update(float timestep) {
         _gameplay.update(timestep);
         if (_gameplay.getBackToMenu()) {
             _gameplay.setBackToMenu(false);
-            _menu.activateButtons();
-            _inMenu = true;
+            _levelSelect.activateButtons();
+            _inGameplay = false;
+            _inLevelSelect = true;
         }
         else if (_gameplay.getNextLevel()) {
             _gameplay.setNextlevel(false);
             std::string level = _gameplay.getNextLevelID();
             if (level == "Location Cleared") {
                 _levelSelect.activateButtons();
-                _levelSelect.deactivateLevelSelectButtons();
                 _inLevelSelect = true;
                 _inGameplay = false;
             }

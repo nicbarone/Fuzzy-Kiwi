@@ -49,7 +49,6 @@ protected:
     bool _reset;
     bool _backToMenu;
     bool _nextLevel;
-    int _locationIndex;
     int _levelIndex;
 
     std::shared_ptr<cugl::JsonValue> _json;
@@ -173,13 +172,12 @@ public:
      * memory allocation.  Instead, allocation happens in this method.
      *
      * @param assets    The (loaded) assets for this game mode
-     * @param location    The location the level is selected
      * @param level    The number the selected level is within the current location
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<InputManager> inputManager);
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager);
 
 
     /** used to reset the level*/

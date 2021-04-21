@@ -126,15 +126,8 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"menuOld": {
-			"file": "textures/UI/Button/MenuOld.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"retryOld": {
-			"file": "textures/UI/Button/RetryOld.png",
+		"tryAgain": {
+			"file": "textures/UI/Button/TryAgain.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -247,6 +240,62 @@
 		},
 		"level2": {
 			"file": "textures/UI/Button/Level2.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level3": {
+			"file": "textures/UI/Button/Level3.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level4": {
+			"file": "textures/UI/Button/Level4.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level5": {
+			"file": "textures/UI/Button/Level5.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level6": {
+			"file": "textures/UI/Button/Level6.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level7": {
+			"file": "textures/UI/Button/Level7.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level8": {
+			"file": "textures/UI/Button/Level8.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level9": {
+			"file": "textures/UI/Button/Level9.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level10": {
+			"file": "textures/UI/Button/Level10.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

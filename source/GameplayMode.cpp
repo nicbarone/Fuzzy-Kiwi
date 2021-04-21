@@ -54,10 +54,9 @@ using namespace cugl;
  * causing the application to run.
  */
 
-bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<InputManager> inputManager) {
+bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager) {
     setGameStatus(GameStatus::RUNNING);
     _inputManager = inputManager;
-    _locationIndex = location;
     _levelIndex = level;
     Size size = Application::get()->getDisplaySize();
 
@@ -110,9 +109,8 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     return true;
 }
 
-bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int location, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager) {
+bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager) {
     _inputManager = inputManager;
-    _locationIndex = location;
     _levelIndex = level;
     Size size = Application::get()->getDisplaySize();
     _json = json;
@@ -386,18 +384,9 @@ void GameplayMode::unpossess() {
     _player->setPossess(false);
     _player->setPos((enemy->getPos()));
 
-    //_enemy
-   /* enemy->setPossessed(false);
-    std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("cat-walking");
-    _rootScene->removeChild(enemy->getSceneNode());
-    enemy->SetSceneNode(Enemy::alloc(enemy->getPos(), 0, enemy->getLevel(), {}, 0, 0, EnemyDying, 
-        EnemyDying, EnemyDying)->getSceneNode());
-    enemy->getSceneNode()->setPosition(enemy->getPos(), enemy->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
-    enemy->getSceneNode()->setScale(0.15, 0.15);
-    _rootScene->addChild(enemy->getSceneNode());
-    enemy->enemyDyingAnimation();*/
      
-
+   /*int level = enemy->getLevel();
+   int pos = enemy->getPos();*/
    enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
     _enemyController->removeEnemy(enemy);
@@ -406,13 +395,14 @@ void GameplayMode::unpossess() {
     
 
     std::function<bool()> delayInput = [&]() {
-        
+        int level = _player->getLevel();
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
         _rootScene->removeChild(_player->getSceneNode());
         _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
+        _player->setPos(_player->getPos()+80);
+        _player->setLevel(level);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
-        _player->setPos(_player->getPos()+80);
         _hasControl = true;
         return false;
     };
@@ -591,8 +581,8 @@ void GameplayMode::buildScene() {
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _menuButton->setTexture(_assets->get<Texture>("menuButton"));
     _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
-    _menuButton->getButton()->setScale(0.3f);
-    _menuButton->getButton()->setPosition(0,size.height);
+    _menuButton->getButton()->setScale(1.0f);
+    _menuButton->getButton()->setPosition(15.0f,size.height - 15.0f);
     _menuButton->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
@@ -644,15 +634,10 @@ void GameplayMode::buildScene() {
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
-    _winPanel->getSceneNode()->setScale(0.75f);
+    _winPanel->getSceneNode()->setScale(min(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
     _winPanel->setVisible(false);
-    _winPanel->createChildPanel(0, 160, 0, _assets->get<Texture>("winIcon"));
-    _winPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
-    _winPanel->createChildPanel(0, -45, 0, _assets->get<Texture>("winTitle"));
-    _winPanel->getChildPanels()[1]->getSceneNode()->setScale(1.2f);
-    _winPanel->createChildPanel(135, 10, 0, _assets->get<Texture>("deadOrAlive"));
-    _winPanel->getChildPanels()[2]->getSceneNode()->setScale(1.2f);
-    _winPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE);
+    _winPanel->createChildButton(1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE);
+    _winPanel->getChildButtons()[0]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()[0]->getButton()->setName("nextLevel");
     _winPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -662,7 +647,8 @@ void GameplayMode::buildScene() {
             _nextLevel = true;
         }
         });
-    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retryOld"), Color4f::WHITE);
+    _winPanel->createChildButton(-1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("tryAgain"), Color4f::WHITE);
+    _winPanel->getChildButtons()[1]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()[1]->getButton()->setName("retry");
     _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -672,8 +658,8 @@ void GameplayMode::buildScene() {
             _reset = true;
         }
         });
-    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menuOld"), Color4f::WHITE);
-
+    _winPanel->createChildButton(-1700, 1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE);
+    _winPanel->getChildButtons()[2]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()[2]->getButton()->setName("menu");
     _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -889,8 +875,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _menuButton->setTexture(_assets->get<Texture>("menuButton"));
     _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
-    _menuButton->getButton()->setScale(0.3f);
-    _menuButton->getButton()->setPosition(0, size.height);
+    _menuButton->getButton()->setScale(1.0f);
+    _menuButton->getButton()->setPosition(15.0f, size.height - 15.0f);
     _menuButton->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
@@ -942,15 +928,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
-    _winPanel->getSceneNode()->setScale(0.75f);
+    _winPanel->getSceneNode()->setScale(min(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
     _winPanel->setVisible(false);
-    _winPanel->createChildPanel(0, 160, 0, _assets->get<Texture>("winIcon"));
-    _winPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
-    _winPanel->createChildPanel(0, -45, 0, _assets->get<Texture>("winTitle"));
-    _winPanel->getChildPanels()[1]->getSceneNode()->setScale(1.2f);
-    _winPanel->createChildPanel(135, 10, 0, _assets->get<Texture>("deadOrAlive"));
-    _winPanel->getChildPanels()[2]->getSceneNode()->setScale(1.2f);
-    _winPanel->createChildButton(0, -160, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE);
+    _winPanel->createChildButton(1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE);
+    _winPanel->getChildButtons()[0]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()[0]->getButton()->setName("nextLevel");
     _winPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -960,7 +941,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _nextLevel = true;
         }
         });
-    _winPanel->createChildButton(0, -220, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retryOld"), Color4f::WHITE);
+    _winPanel->createChildButton(-1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("tryAgain"), Color4f::WHITE);
+    _winPanel->getChildButtons()[1]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()[1]->getButton()->setName("retry");
     _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -970,8 +952,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _reset = true;
         }
         });
-    _winPanel->createChildButton(0, -280, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menuOld"), Color4f::WHITE);
-
+    _winPanel->createChildButton(-1700, 1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE);
+    _winPanel->getChildButtons()[2]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()[2]->getButton()->setName("menu");
     _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -1151,7 +1133,7 @@ std::string GameplayMode::getNextLevelID() {
     }
     else {
         // Otherwise return the next level by adding 1 to the levelIndex at the same location
-        return to_string(_locationIndex) + "_" + to_string(_levelIndex + 1);
+        return to_string(_levelIndex + 1);
     }
 }
 
