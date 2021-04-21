@@ -58,6 +58,7 @@ public:
 	void setCurrentDoor(int connectedDoors) {
 		_connectedDoors = connectedDoors;
 	}
+
 };
 
 #endif/* __STAIRCASEDOOR_H__ */

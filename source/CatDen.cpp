@@ -3,7 +3,8 @@ using namespace cugl;
 
 CatDen::CatDen() :
 	_frame(0),
-	_frameCounter(9)
+	_frameCounter(9),
+	_connectedDens(0)
 {
 	_isOpen = false;
 }
@@ -11,9 +12,10 @@ CatDen::CatDen() :
 void CatDen::dispose() {
 	ConstructionElement::dispose();
 	_isOpen = false;
+	_connectedDens = 0;
 }
 
-bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows, int columns, std::shared_ptr<Texture> texture)
+bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int connectedDens, int rows, int columns, std::shared_ptr<Texture> texture)
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
@@ -22,6 +24,23 @@ bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int row
 	setScale(scale);
 	setLevel(level);
 	setColor(color);
+	_connectedDens = connectedDens;
+	if (_connectedDens == 1)
+	{
+		setColor(cugl::Color4::WHITE);
+	}
+	if (_connectedDens == 2)
+	{
+		setColor(cugl::Color4::BLUE);
+	}
+	if (_connectedDens == 3)
+	{
+		setColor(cugl::Color4::GREEN);
+	}
+	if (_connectedDens == 4)
+	{
+		setColor(cugl::Color4::RED);
+	}
 	_frame = 0;
 	_isOpen = false;
 	return true;

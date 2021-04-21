@@ -15,6 +15,7 @@ Player::Player() :
 
 	_sceneNode = nullptr;
 	_texture = nullptr;
+	_currentDen = 0;
 }
 
 
@@ -27,6 +28,7 @@ void Player::dispose() {
 	_frame = 0;
 	_frameCounter = 7;
 	_currentDoor = 0;
+	_currentDen = 0;
 	Entity::dispose();
 }
 
