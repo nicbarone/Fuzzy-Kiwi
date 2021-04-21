@@ -34,11 +34,11 @@ public:
 	void dispose();
 	
 
-	bool init(float x, int level, float ang, const std::shared_ptr<Texture> cat);
+	bool init(float x, int level, float ang, int num_frames, const std::shared_ptr<Texture> cat);
 
-	static std::shared_ptr<Player> alloc(float x, int level, float ang, const std::shared_ptr<Texture> cat) {
+	static std::shared_ptr<Player> alloc(float x, int level, float ang, int num_frames, const std::shared_ptr<Texture> cat) {
 		std::shared_ptr<Player> result = std::make_shared<Player>();
-		return (result->init(x, level, ang, cat) ? result : nullptr);
+		return (result->init(x, level, ang, num_frames, cat) ? result : nullptr);
 
 	}
 
@@ -98,6 +98,8 @@ public:
 	void setLevel(int level);
 
 	void PossessAnimation(bool possessing);
+
+	void Player::EnemyDying();
 
 };
 

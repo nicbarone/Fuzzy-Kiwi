@@ -29,7 +29,7 @@ void Player::dispose() {
 }
 
 
-bool Player::init(float x, int level, float ang, std::shared_ptr<Texture> cat)
+bool Player::init(float x, int level, float ang, int num_frames, std::shared_ptr<Texture> cat)
 
 {
 	Entity::setPos(x);
@@ -37,7 +37,7 @@ bool Player::init(float x, int level, float ang, std::shared_ptr<Texture> cat)
 	Entity::setAngle(0);
 	Entity::setLevel(level);
 	_texture = cat;
-	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 8);
+	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, num_frames);
 	_sceneNode->setScale(0.15, 0.15);
 	_sceneNode->setPosition(Vec2(x, level*FLOOR_HEIGHT+FLOOR_OFFSET-55));
 	return true;
@@ -123,8 +123,54 @@ void Player::PossessAnimation(bool possessing) {
 		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 3);
 		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 4);
 		//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
-		
+
 	}
-
-
 }
+
+	void Player::EnemyDying() {
+
+		std::function<bool()> frame0 = [&]() {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
+			return false;
+		};
+		std::function<bool()> frame1 = [&]() {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(1);
+			return false;
+		};
+		std::function<bool()> frame2 = [&]() {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(2);
+			return false;
+		};
+		std::function<bool()> frame3 = [&]() {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(3);
+			return false;
+		};
+		std::function<bool()> frame4 = [&]() {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(4);
+			return false;
+		};
+		std::function<bool()> frame5 = [&]() {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(5);
+			return false;
+		};
+		std::function<bool()> frame6 = [&]() {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(6);
+			return false;
+		};
+		std::function<bool()> frame7 = [&]() {
+			std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
+			return false;
+		};
+
+
+		int timeDiff = 150;
+		CULog("h");
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 1);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 2);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 3);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
+		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 5);
+		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 6);
+		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 7);
+	
+	}

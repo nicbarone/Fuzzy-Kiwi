@@ -352,7 +352,7 @@ bool GameplayMode::attemptPossess() {
 
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
         _rootScene->removeChild(_player->getSceneNode());
-        _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
         _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
@@ -379,10 +379,24 @@ void GameplayMode::unpossess() {
     _player->setLevel(enemy->getLevel());
     _player->getSceneNode()->setVisible(true);
     
-    _player->PossessAnimation(false);
-    
+    /*std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("EnemyDying");
+    int enemyPos = enemy->getPos();
+    int enemyLevel = enemy->getLevel();
+    _rootScene->removeChild(enemy->getSceneNode());
+    enemy->SetSceneNode(Enemy::alloc(enemyPos, enemyLevel, 0, {}, 0, 0, 9,EnemyDying,
+        EnemyDying, EnemyDying)->getSceneNode());*/
+    //enemy->enemyDyingAnimation();
+    int level = _player->getLevel();
+    std::shared_ptr<Texture> enemyDying = _assets->get<Texture>("EnemyDying");
+    _rootScene->removeChild(_player->getSceneNode());
+    _player->SetSceneNode(Player::alloc(150, 0, 0, 9, enemyDying)->getSceneNode());
+    _player->setLevel(level);
+    //_player->getSceneNode()->setPositionY(_player->getSceneNode()->getPositionY() + 50);
+    _player->getSceneNode()->setScale(0.3, 0.3);
+    _rootScene->addChild(_player->getSceneNode());
+    _player->EnemyDying();
     _player->setPossess(false);
-    _player->setPos((enemy->getPos()));
+    //_player->setPos((enemy->getPos()));
 
      
    /*int level = enemy->getLevel();
@@ -391,22 +405,22 @@ void GameplayMode::unpossess() {
     enemy->dispose();
     _enemyController->removeEnemy(enemy);
     _enemyController->updatePossessed(nullptr);
-    _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET);
+    _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET + 50);
     
 
     std::function<bool()> delayInput = [&]() {
         int level = _player->getLevel();
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
         _rootScene->removeChild(_player->getSceneNode());
-        _player->SetSceneNode(Player::alloc(150, 0, 0, catJump)->getSceneNode());
-        _player->setPos(_player->getPos()+80);
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
+        _player->setPos(_player->getPos()+69);
         _player->setLevel(level);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
         _hasControl = true;
         return false;
     };
-    cugl::Application::get()->schedule(delayInput, 600);
+    cugl::Application::get()->schedule(delayInput, 1500);
     //_player->getSceneNode()->setFrame(7);
     
 }
@@ -453,7 +467,7 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
     // Create the player
     std::shared_ptr<Texture> catPossessing = _assets->get<Texture>("catPossessing");
-    _player = Player::alloc(150, 0, 0, cat);
+    _player = Player::alloc(150, 0, 0, 8, cat);
 
     //floor texture creation
     std::shared_ptr<Texture> wall = _assets->get<Texture>("levelWall");
@@ -492,8 +506,8 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
     tableTexture = _assets->get<Texture>("lab-table");
-    _enemyController->addEnemy(400, 0,  0, { 1 }, 400, 400, enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
-    _enemyController->addEnemy(650, 0, 0, { 1 }, 300, 900,  enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
+    _enemyController->addEnemy(400, 0,  0, { 1 }, 400, 400,5 , enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
+    _enemyController->addEnemy(650, 0, 0, { 1 }, 300, 900, 5 ,  enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
 
 
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
@@ -741,7 +755,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     shared_ptr<JsonValue> objectTemp;
     if (playerJSON != nullptr) {
         string numPossessions = to_string(playerJSON->getInt("num_possessions"));
-        _player = Player::alloc(playerJSON->getFloat("x_pos"), playerJSON->getInt("level"), 0, cat);
+        _player = Player::alloc(playerJSON->getFloat("x_pos"), playerJSON->getInt("level"), 0, 8, cat);
 
     }
     if (enemiesJSON != nullptr) {
@@ -755,7 +769,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 
-                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
+                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"),5, enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
         }
     }
     if (staircaseDoorJSON != nullptr) {

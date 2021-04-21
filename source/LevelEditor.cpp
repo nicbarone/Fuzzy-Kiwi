@@ -57,7 +57,7 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets, std::shared_
     _rootScene->setContentSize(Application::get()->getSafeBounds().size);
 
     buildScene();
-    _inputManager->init(Player::alloc(150, 0, 0, catTexture), _rootScene, getBounds());
+    _inputManager->init(Player::alloc(150, 0, 0, 8, catTexture), _rootScene, getBounds());
     return true;
 }
 
