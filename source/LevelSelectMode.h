@@ -8,15 +8,10 @@ class LevelSelectMode : public cugl::Scene2 {
 protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     bool _levelSelected = false;
-    bool _locationSelected = false;
-    bool _backToLocationSelect = false;
     bool _backButtonPressed = false;
-    int _locationIndex = -1;
     std::string _levelID = "";
     GameplayMode _gameplay;
-    std::shared_ptr<ui::PanelElement> _mapPanel;
     std::shared_ptr<ui::PanelElement> _levelSelectPanel;
-    std::shared_ptr<ui::ButtonElement> _settingsButton;
     std::shared_ptr<ui::ButtonElement> _backButton;
 public:
     /**
@@ -96,22 +91,6 @@ public:
     void setLevelSelected(bool selected) {
         _levelSelected = selected;
     }
-
-    bool getBackToLocationSelect() {
-        return _backToLocationSelect;
-    }
-
-    void setBackToLocationSelect(bool back) {
-        _backToLocationSelect = back;
-    }
-
-    bool getLocationSelected() {
-        return _locationSelected;
-    }
-
-    void setLocationSelected(bool pressed) {
-        _locationSelected = pressed;
-    }
     
     bool getBackPressed() {
         return _backButtonPressed;
@@ -132,9 +111,6 @@ public:
 
     void deactivateButtons();
     void activateButtons();
-
-    void activateLevelSelectButtons();
-    void deactivateLevelSelectButtons();
 };
 
 #endif /* __LEVEL_SELECT_MODE_H__ */
