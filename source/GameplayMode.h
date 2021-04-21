@@ -102,6 +102,7 @@ protected:
     std::shared_ptr<CagedAnimal> _cagedAnimal;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
+    std::vector<shared_ptr<DoorFrame>> _doorFrames;
     std::shared_ptr<InputManager> _inputManager;
     /** The panel to win level*/
     std::shared_ptr<ui::PanelElement> _winPanel;
