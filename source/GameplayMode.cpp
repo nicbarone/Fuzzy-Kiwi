@@ -784,7 +784,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             }
             else {
                 _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                    cugl::Color4::WHITE, { 1 }, 1, 8, staircaseDoor));
+                    cugl::Color4::WHITE, { 1 }, objectTemp->getInt("connection"), 1, 8, staircaseDoor));
             }
 
         }
