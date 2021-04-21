@@ -15,7 +15,7 @@
 			"wrapT": "clamp"
 		},
 		"enemy": {
-			"file": "textures/GameObject/Enemy/Enemy.png",
+			"file": "textures/GameObject/Enemy/Enemy-Walking.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -30,6 +30,13 @@
 		},
 		"possessed-enemy": {
 			"file": "textures/GameObject/Enemy/PossessedEnemy.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"lab-table": {
+			"file": "textures/GameObject/Enemy/Lab-Table.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -367,6 +374,14 @@
 		},
 		"small-felt": {
 			"file": "fonts/MarkerFelt.ttf",
+			"size": 24
+		},
+		"futura": {
+			"file": "fonts/Futura-Regular.ttf",
+			"size": 48
+		},
+		"futura-bold": {
+			"file": "fonts/Futura-Bold.ttf",
 			"size": 24
 		}
 	},

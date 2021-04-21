@@ -8,6 +8,7 @@ extern const float DEFAULT_VISION;
 extern const float POSSESS_RANGE;
 extern const float ENEMY_SPEED;
 extern const float PLAYER_SPEED;
+extern const float TABLE_OFFSET;
 extern const float STAIRCASE_DOOR_OFFSET;
 extern const float PLAYER_OFFSET;
 extern const float CAT_DEN_OFFSET;

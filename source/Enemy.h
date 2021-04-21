@@ -45,7 +45,10 @@ private:
 	std::shared_ptr<Texture> _texture;
 	std::shared_ptr<Texture> _altTexture;
 	std::shared_ptr<Texture> _glowTexture;
+	std::shared_ptr<Texture> _tableTexture;
 	std::shared_ptr<scene2::WireNode> _patrolNode;
+	std::shared_ptr<scene2::PolygonNode> _startTableNode;
+	std::shared_ptr<scene2::PolygonNode> _endTableNode;
 
 
 public:
@@ -57,12 +60,20 @@ public:
 	void dispose();
 
 	bool init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow);
+	
+	bool init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, 
+		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table);
 
 	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
 		return (result->init(x, level, ang, keys, patrolStart, patrolEnd, enemy, alt, glow) ? result : nullptr);
 	}
 
+	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd,
+		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table) {
+		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
+		return (result->init(x, level, ang, keys, patrolStart, patrolEnd, enemy, alt, glow, table) ? result : nullptr);
+	}
 
 	/** returns the AnimationNode associated with the player*/
 	std::shared_ptr<scene2::AnimationNode> getSceneNode() {
@@ -72,6 +83,16 @@ public:
 	/** returns the WireNode associated with the patrol path*/
 	std::shared_ptr<scene2::WireNode> getPatrolNode() {
 		return _patrolNode;
+	}
+
+	/** returns the node associated with the start table node*/
+	std::shared_ptr<scene2::PolygonNode> getStartTableNode() {
+		return _startTableNode;
+	}
+
+	/** returns the node associated with the end table node*/
+	std::shared_ptr<scene2::PolygonNode> getEndTableNode() {
+		return _endTableNode;
 	}
 
 	/** changes the x position of the enemy based on its patrol path and current position*/
@@ -95,8 +116,8 @@ public:
 	void setPatrol(float x1, float x2) {
 		_patrolStart = x1;
 		_patrolEnd = x2;
-		_patrolNode->setPolygon(Rect(0, 0, x1 - x2, 2));
-		_patrolNode->setPositionX((x1 + x2) / 2);
+		//_patrolNode->setPolygon(Rect(0, 0, x1 - x2, 2));
+		//_patrolNode->setPositionX((x1 + x2) / 2);
 	}
 	/** sets the _patrolStart and _patrolEnd of the old patrol of the enemy that
 	is changed due to hitting a door*/

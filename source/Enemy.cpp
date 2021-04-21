@@ -5,6 +5,7 @@ using namespace cugl;
 /** temp def for enemy movement, will be more variable later*/
 #define PATROL_START 50
 #define PATROL_END 800
+#define SCALE 0.65
 
 Enemy::Enemy() :
 
@@ -49,7 +50,7 @@ void Enemy::dispose() {
 	Entity::dispose();
 }
 
-bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd,  std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
+bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
 	Entity::setLevel(level);
@@ -64,15 +65,49 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
 	_patrolNode = scene2::WireNode::alloc(Rect(0, 0, patrolEnd - patrolStart, 2));
-	_patrolNode->setPosition(Vec2((patrolStart+patrolEnd)/2, level * FLOOR_HEIGHT + FLOOR_OFFSET - 75));
+	_patrolNode->setPosition(Vec2((patrolStart + patrolEnd) / 2, level * FLOOR_HEIGHT + FLOOR_OFFSET - 75));
 	_patrolNode->setColor(Color4::RED);
 	if (patrolStart == patrolEnd && patrolStart < x) {
 		_movingRight = false;
-		_sceneNode->setScale(-0.05, 0.05);
+		_sceneNode->setScale(-SCALE, SCALE);
 	}
 	else {
 		_movingRight = true;
-		_sceneNode->setScale(0.05, 0.05);
+		_sceneNode->setScale(SCALE, SCALE);
+	}
+	_frame = 0;
+	return true;
+}
+
+bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd,
+	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table) {
+	Entity::setPos(x);
+	Entity::setAngle(0);
+	Entity::setLevel(level);
+	_keys = keys;
+	_patrolStart = patrolStart;
+	_patrolEnd = patrolEnd;
+	_texture = enemy;
+	_altTexture = alt;
+	_glowTexture = glow;
+	_tableTexture = table;
+	_isActive = true;
+	_frameCounter = 7;
+	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 5);
+	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
+	if (patrolStart != patrolEnd) {
+		_startTableNode = scene2::PolygonNode::allocWithTexture(_tableTexture);
+		_startTableNode->setPosition(patrolStart, level * FLOOR_HEIGHT + FLOOR_OFFSET - TABLE_OFFSET);
+		_endTableNode = scene2::PolygonNode::allocWithTexture(_tableTexture);
+		_endTableNode->setPosition(patrolEnd, level * FLOOR_HEIGHT + FLOOR_OFFSET - TABLE_OFFSET);
+	}
+	if (patrolStart == patrolEnd && patrolStart < x) {
+		_movingRight = false;
+		_sceneNode->setScale(-SCALE, SCALE);
+	}
+	else {
+		_movingRight = true;
+		_sceneNode->setScale(SCALE, SCALE);
 	}
 	_frame = 0;
 	return true;
@@ -111,7 +146,7 @@ void Enemy::move(float direction) {
 			}
 			else {
 				_movingRight = false;
-				_sceneNode->setScale(-0.05, 0.05);
+				_sceneNode->setScale(-SCALE, SCALE);
 				_turnFrame = 0;
 			}
 		}
@@ -122,7 +157,7 @@ void Enemy::move(float direction) {
 			}
 			else {
 				_movingRight = true;
-				_sceneNode->setScale(0.05, 0.05);
+				_sceneNode->setScale(SCALE, SCALE);
 				_turnFrame = 0;
 			}
 		}
@@ -133,11 +168,11 @@ void Enemy::move(float direction) {
 		_sceneNode->setPositionX(original + getVelocity().x);
 		if (direction == 1) {
 			_movingRight = true;
-			_sceneNode->setScale(0.05, 0.05);
+			_sceneNode->setScale(SCALE, SCALE);
 		}
 		else if (direction == -1) {
 			_movingRight = false;
-			_sceneNode->setScale(-0.05, 0.05);
+			_sceneNode->setScale(-SCALE, SCALE);
 		}
 		if (direction != 0)
 		{

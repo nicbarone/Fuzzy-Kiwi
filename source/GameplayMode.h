@@ -120,6 +120,7 @@ protected:
 
     std::shared_ptr<Texture> enemyHighlightTexture;
     std::shared_ptr<Texture> enemyTexture;
+    std::shared_ptr<Texture> tableTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
 
     enum class GameStatus {

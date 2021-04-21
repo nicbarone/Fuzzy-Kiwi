@@ -96,14 +96,14 @@ void Door::setDoor(bool open) {
 	}
 	//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frame);
 	if (_blockedEnemy != nullptr) {
-		//CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
+		CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
 		Vec2 temp = Vec2(_blockedEnemy->getPatrol().x, _blockedEnemy->getPatrol().y);
-		if (_blockedEnemy->isActive()) {
+		if (_blockedEnemy->isActive() ) {
 			_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
 			_blockedEnemy->setOldPatrol(temp);
 		}
 		_blockedEnemy = nullptr;
-		//setBlockedEnemy(nullptr);
+		setBlockedEnemy(nullptr);
 		CULog("%d", _blockedEnemy == nullptr);
 
 	}

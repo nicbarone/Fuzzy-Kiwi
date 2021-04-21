@@ -25,7 +25,8 @@ public:
 	void dispose();
 
 	/** creates and adds an enemy to this controller*/
-	void addEnemy(float x, int level, float ang, vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow);
+	void addEnemy(float x, int level, float ang, vector<int> keys, float patrolStart, float patrolEnd, 
+		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table);
 
 	/** returns the vector of enemies managed by this controller*/
 	vector<std::shared_ptr<Enemy>> getEnemies() {

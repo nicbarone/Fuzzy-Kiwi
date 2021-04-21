@@ -349,7 +349,7 @@ bool GameplayMode::attemptPossess() {
         _player->setPossess(true);
         _player->set_possessEnemy(_enemyController->closestEnemy());
         _enemyController->updatePossessed(_enemyController->closestEnemy());
-        _rootScene->removeChild(_enemyController->closestEnemy()->getPatrolNode());
+//        _rootScene->removeChild(_enemyController->closestEnemy()->getPatrolNode());
         _enemyController->closestEnemy()->setGlow(false);
 
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
@@ -501,9 +501,9 @@ void GameplayMode::buildScene() {
     enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
-
-    _enemyController->addEnemy(400, 0,  0, { 1 }, 400, 400, enemyTexture, altTexture, enemyHighlightTexture);
-    _enemyController->addEnemy(650, 0, 0, { 1 }, 300, 900,  enemyTexture, altTexture, enemyHighlightTexture);
+    tableTexture = _assets->get<Texture>("lab-table");
+    _enemyController->addEnemy(400, 0,  0, { 1 }, 400, 400, enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
+    _enemyController->addEnemy(650, 0, 0, { 1 }, 300, 900,  enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
 
 
     //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
@@ -521,7 +521,7 @@ void GameplayMode::buildScene() {
     float rOffset = (size.width) - (safe.origin.x + safe.size.width);
     
     // Text labels
-    std::shared_ptr<Font> font = _assets->get<Font>("felt");
+    std::shared_ptr<Font> font = _assets->get<Font>("futura");
     _tutorialText = scene2::Label::alloc("Possess enemies to get past them, don't get spotted!", font);
     _tutorialText->setForeground(Color4::WHITE);
     _tutorialText->setScale(Vec2(0.5, 0.5));
@@ -543,8 +543,18 @@ void GameplayMode::buildScene() {
     _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
     for (auto it = begin(enemies); it != end(enemies); ++it) {
+        if (it->get()->getStartTableNode() != nullptr) {
+            _rootScene->addChild(it->get()->getStartTableNode());
+        }
+        if (it->get()->getEndTableNode() != nullptr) {
+            _rootScene->addChild(it->get()->getEndTableNode());
+        }
+        if (it->get()->getPatrolNode() != nullptr) {
+            _rootScene->addChild(it->get()->getPatrolNode());
+        }
+    }
+    for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
-        _rootScene->addChild(it->get()->getPatrolNode());
     }
     _rootScene->addChild(_player->getSceneNode());
     _rootScene->addChild(_level1DoorFrame->getSceneNode());
@@ -734,6 +744,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     enemyTexture = _assets->get<Texture>("enemy");
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
+    tableTexture = _assets->get<Texture>("lab-table");
 
     //JSON PROCESSING
     shared_ptr<JsonValue> playerJSON = json->get("player");
@@ -758,7 +769,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 
-                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), enemyTexture, altTexture, enemyHighlightTexture);
+                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
         }
     }
     if (staircaseDoorJSON != nullptr) {
@@ -823,11 +834,22 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         _rootScene->addChild(it->get()->getSceneNode());
     }
     for (auto it = begin(_doors); it != end(_doors); ++it) {
-        _rootScene->addChild(it->get()->getSceneNode());
+        
     }
     for (auto it = begin(enemies); it != end(enemies); ++it) {
+        if (it->get()->getStartTableNode() != nullptr) {
+            _rootScene->addChild(it->get()->getStartTableNode());
+        }
+        if (it->get()->getEndTableNode() != nullptr) {
+            _rootScene->addChild(it->get()->getEndTableNode());
+        }
+        if (it->get()->getPatrolNode() != nullptr) {
+            _rootScene->addChild(it->get()->getPatrolNode());
+        }
+    }
+
+    for (auto it = begin(enemies); it != end(enemies); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
-        _rootScene->addChild(it->get()->getPatrolNode());
     }
     _rootScene->addChild(_cagedAnimal->getSceneNode());
     
@@ -837,7 +859,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
 
-    std::shared_ptr<Font> font = _assets->get<Font>("felt");
+    std::shared_ptr<Font> font = _assets->get<Font>("futura");
 
     addChild(_rootScene);
 
