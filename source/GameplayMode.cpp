@@ -487,8 +487,8 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
     _level1Wall = Wall::alloc(550, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1,1, wall);
     _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
-    _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE, 1, 1, catDen);
-    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE, 1, 1, catDen);
+    _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen);
+    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen);
     _catDens = { _level1CatDenLeft,_level1CatDenRight };
     _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
     _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
@@ -1143,13 +1143,16 @@ void GameplayMode::checkCatDens() {
                 _player->getLevel() == catDen->getLevel() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 _player->getSceneNode()->setVisible(!visibility);
+                _player->setCurrentDen(catDen->getConnectedDens());
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }
 
             else if (!visibility &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager->getRootSceneNode()->getScaleY() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()&&
+                _player->getCurrentDen() == catDen->getConnectedDens()){
+                _player->setCurrentDen(0);
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setPos(catDen->getPos().x);
                 _player->setLevel(catDen->getLevel());

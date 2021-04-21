@@ -19,6 +19,7 @@ private:
 	bool _isHidden;
 
 	int _currentDoor;
+	int _currentDen;
 
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
@@ -104,6 +105,12 @@ public:
 	}
 	void setCurrentDoor(int currDoor) {
 		_currentDoor = currDoor;
+	}
+	int getCurrentDen() {
+		return _currentDen;
+	}
+	void setCurrentDen(int currDen) {
+		_currentDen = currDen;
 	}
 	void PossessAnimation(bool possessing);
 
