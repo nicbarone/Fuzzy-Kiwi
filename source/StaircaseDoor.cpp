@@ -23,9 +23,24 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	setAngle(ang);
 	setScale(scale);
 	setLevel(level);
-	setColor(color);
-	_keys = keys;
 	_connectedDoors = connectedDoors;
+	if (_connectedDoors == 1)
+	{
+		setColor(cugl::Color4::WHITE);
+	}
+	if (_connectedDoors == 2)
+	{
+		setColor(cugl::Color4::BLUE);
+	}
+	if (_connectedDoors == 3)
+	{
+		setColor(cugl::Color4::GREEN);
+	}
+	if (_connectedDoors == 4)
+	{
+		setColor(cugl::Color4::RED);
+	}
+	_keys = keys;
 	_frame = 0;
 	_isOpen = false;
 	return true;

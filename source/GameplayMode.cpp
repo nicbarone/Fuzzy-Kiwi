@@ -492,8 +492,8 @@ void GameplayMode::buildScene() {
     _catDens = { _level1CatDenLeft,_level1CatDenRight };
     _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
     _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
-    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor);
-    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(1, 1), 1, cugl::Color4::WHITE, { 1 }, 1, 1, 8, staircaseDoor);
+    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, { 1 },2, 1, 8, staircaseDoor);
+    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(1, 1), 1, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor);
     _staircaseDoors = { _level1StairDoor, _level2StairDoor};
     _level1Door = Door::alloc(590,0, Vec2(1, 1), 0,cugl::Color4::WHITE, { 1 }, 1, 8, door);
     _level1DoorFrame = DoorFrame::alloc(515, 0, Vec2(1.0, 1), 0, cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame);
