@@ -759,6 +759,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     if (playerJSON != nullptr) {
         string numPossessions = to_string(playerJSON->getInt("num_possessions"));
         _player = Player::alloc(playerJSON->getFloat("x_pos"), playerJSON->getInt("level"), 0, 8, cat);
+        _player->set_nPossess(playerJSON->getFloat("num_possessions"));
 
     }
     if (enemiesJSON != nullptr) {
