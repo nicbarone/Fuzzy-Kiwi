@@ -169,6 +169,16 @@ public:
 	void SetSceneNode(std::shared_ptr<scene2::AnimationNode> newNode) {
 		_sceneNode = newNode;
 	}
+
+
+	/** changes the moving state of the enemy*/
+	void setMovingRight(bool movingRight) {
+		_movingRight = movingRight;
+	}
+	/** gets the moving right state of the enemy*/
+	bool getMovingRight() {
+		return _movingRight;
+	}
 };
 
 

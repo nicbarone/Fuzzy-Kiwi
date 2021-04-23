@@ -354,17 +354,23 @@ bool GameplayMode::attemptPossess() {
         _rootScene->removeChild(_player->getSceneNode());
         _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
         _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
-        _player->getSceneNode()->setScale(0.15, 0.15);
+        if (_player->getMovingRight()) {
+            _player->getSceneNode()->setScale(0.15, 0.15);
+        }
+        else {
+            _player->getSceneNode()->setScale(-0.15, 0.15);
+        }
+        
         _rootScene->addChild(_player->getSceneNode());
         _player->PossessAnimation(true);
 
-        std::function<bool()> frame6 = [&]() {
+        std::function<bool()> setPossessed = [&]() {
             _player->getSceneNode()->setVisible(false);
             _enemyController->closestEnemy()->setAsPossessed();
             _hasControl = true;
             return false;
         };
-        cugl::Application::get()->schedule(frame6, 500);
+        cugl::Application::get()->schedule(setPossessed, 500);
         return true;
 
         //code used for cat jumping animation, incomplete and not activated in our release
@@ -378,7 +384,10 @@ void GameplayMode::unpossess() {
     _hasControl = false;
     _player->setLevel(enemy->getLevel());
     _player->getSceneNode()->setVisible(true);
-
+    int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+    if (cageCollision != 0) {
+        return;
+    }
     /*std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("EnemyDying");
     int enemyPos = enemy->getPos();
     int enemyLevel = enemy->getLevel();
@@ -389,11 +398,22 @@ void GameplayMode::unpossess() {
     int level = _player->getLevel();
     std::shared_ptr<Texture> enemyDying = _assets->get<Texture>("EnemyDying");
     _rootScene->removeChild(_player->getSceneNode());
-    _player->SetSceneNode(Player::alloc(150, 0, 0, 9, enemyDying)->getSceneNode());
+    bool movingRight = enemy->getMovingRight();
+    if (enemy->getMovingRight()) {
+        _player->SetSceneNode(Player::alloc(150, 0, 270, 9, enemyDying)->getSceneNode());
+        _player->getSceneNode()->setScale(Vec2(1, -1));
+        _player->getSceneNode()->setScale(0.3, 0.3);
+    }
+    else {
+        _player->SetSceneNode(Player::alloc(150, 0, 270, 9, enemyDying)->getSceneNode());
+        _player->getSceneNode()->setScale(Vec2(1, -1));
+        _player->getSceneNode()->setScale(-0.3, 0.3);
+    }
     _player->setLevel(level);
     //_player->getSceneNode()->setPositionY(_player->getSceneNode()->getPositionY() + 50);
-    _player->getSceneNode()->setScale(0.3, 0.3);
+   
     _rootScene->addChild(_player->getSceneNode());
+   
     _player->EnemyDying();
     _player->setPossess(false);
     //_player->setPos((enemy->getPos()));
@@ -408,19 +428,36 @@ void GameplayMode::unpossess() {
     _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET + 50);
 
 
-    std::function<bool()> delayInput = [&]() {
+    std::function<bool()> delayInputRight = [&]() {
         int level = _player->getLevel();
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
         _rootScene->removeChild(_player->getSceneNode());
-        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
-        _player->setPos(_player->getPos()+69);
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());     
+        _player->setPos(_player->getPos() + 55);
         _player->setLevel(level);
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
         _hasControl = true;
         return false;
     };
-    cugl::Application::get()->schedule(delayInput, 1100);
+    std::function<bool()> delayInputLeft = [&]() {
+        int level = _player->getLevel();
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
+        _rootScene->removeChild(_player->getSceneNode());
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
+        _player->setPos(_player->getPos() - 55);
+        _player->setLevel(level);
+        _player->getSceneNode()->setScale(-0.15, 0.15);
+        _rootScene->addChild(_player->getSceneNode());
+        _hasControl = true;
+        return false;
+    };
+    if (movingRight) {
+        cugl::Application::get()->schedule(delayInputRight, 1100);
+    }
+    else {
+        cugl::Application::get()->schedule(delayInputLeft, 1100);
+    }
     //_player->getSceneNode()->setFrame(7);
 
 }
@@ -488,7 +525,7 @@ void GameplayMode::buildScene() {
     _level1Wall = Wall::alloc(550, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1,1, wall);
     _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
     _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen);
-    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 2, 1, catDen);
+    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen);
     _catDens = { _level1CatDenLeft,_level1CatDenRight };
     _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
     _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);

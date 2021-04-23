@@ -20,6 +20,7 @@ private:
 
 	int _currentDoor;
 	int _currentDen;
+	bool _movingRight;
 
 	std::shared_ptr<scene2::AnimationNode> _sceneNode;
 	std::shared_ptr<Texture> _texture;
@@ -115,6 +116,15 @@ public:
 	void PossessAnimation(bool possessing);
 
 	void EnemyDying();
+
+	/** sets player's movingRight state*/
+	void setMovingRight(bool movingRight) {
+		_movingRight = movingRight;
+	}
+	/**gets player's movingRight state*/
+	int getMovingRight() {
+		return _movingRight;
+	}
 
 };
 
