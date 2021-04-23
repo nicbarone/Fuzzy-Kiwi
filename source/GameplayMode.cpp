@@ -579,15 +579,15 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> possessAvailable = _assets->get<Texture>("availablePossession");
     for (int i = 0; i < _player->get_nPossess(); i++) {
         _possessPanel->createChildPanel(0, 0, 0, possessUsed);
-        _possessPanel->getChildPanels()[0]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[0]->getSceneNode()->setScale(0.5f);
-        _possessPanel->getChildPanels()[0]->setPos(_possessPanel->getSceneNode()->getContentSize()
+        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[i * 2]->setPos(_possessPanel->getSceneNode()->getContentSize()
             * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[0]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
 
         _possessPanel->createChildPanel(0, 0, 0, possessAvailable);
-        _possessPanel->getChildPanels()[1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[1]->getSceneNode()->setScale(0.5f);
-        _possessPanel->getChildPanels()[1]->setPos(_possessPanel->getSceneNode()->getContentSize()
+        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[i * 2 + 1]->setPos(_possessPanel->getSceneNode()->getContentSize()
             * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[1]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
     }
     addChild(_possessPanel->getSceneNode());
@@ -906,15 +906,15 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> possessAvailable = _assets->get<Texture>("availablePossession");
     for (int i = 0; i < _player->get_nPossess(); i++) {
         _possessPanel->createChildPanel(0, 0, 0, possessUsed);
-        _possessPanel->getChildPanels()[0]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[0]->getSceneNode()->setScale(0.5f);
-        _possessPanel->getChildPanels()[0]->setPos(_possessPanel->getSceneNode()->getContentSize()
+        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[i * 2]->setPos(_possessPanel->getSceneNode()->getContentSize()
             * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[0]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
 
         _possessPanel->createChildPanel(0, 0, 0, possessAvailable);
-        _possessPanel->getChildPanels()[1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[1]->getSceneNode()->setScale(0.5f);
-        _possessPanel->getChildPanels()[1]->setPos(_possessPanel->getSceneNode()->getContentSize()
+        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
+        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[i * 2 + 1]->setPos(_possessPanel->getSceneNode()->getContentSize()
             * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[1]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
     }
     addChild(_possessPanel->getSceneNode());
