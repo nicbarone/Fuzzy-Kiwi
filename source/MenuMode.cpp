@@ -58,10 +58,10 @@ void MenuMode::update(float progress) {
 
 GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager) {
     if (id == "0") {
-        if (_gameplay.init(_assets, 0, inputManager)) {
-            _gameplay.clearJson();
-          return _gameplay;
-        }
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level1.json");
+        _gameplay.init(_assets, 0, reader->readJson(), inputManager);
+        _gameplay.setShowTutorial(true);
+        return _gameplay;
     }
     else if (id == "1") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level2.json");
@@ -70,18 +70,18 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
     }
     else if (id == "2") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level3.json");
-        _gameplay.init(_assets, 1, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 2, reader->readJson(), inputManager);
         return _gameplay;
     }
     else if (id == "3") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level4.json");
-        _gameplay.init(_assets, 1, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 3, reader->readJson(), inputManager);
         return _gameplay;
     }
     //else if (id == "4") {
     else {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level5.json");
-        _gameplay.init(_assets, 1, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 4, reader->readJson(), inputManager);
         return _gameplay;
     }
     /*else {
@@ -92,17 +92,10 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
 }
 
 void MenuMode::buildScene() {
-    //std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
-    //AudioEngine::get()->play("menuBGM", menuBGM, true, 1.0f, false);
+    std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
     std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
     //audioQueue->play(menuBGM, true, 1.0f); //This line of code is the devil
-    ////AudioEngine::get()->play("menuBGM", menuBGM, true, 1.0f, false);
-    //std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
-    //audioQueue->play(menuBGM, true, 1.0f);
 
-    //bool success = AudioEngine::get()->play("menuBGM", _assets->get<Sound>("menuBGM"));
-    //AudioEngine::get()->setVolume("menuBGM",1.0f);
-    //CULog("successful? %i", success?1:0);
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
     size *= scale;

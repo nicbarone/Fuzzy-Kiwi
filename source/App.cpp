@@ -77,7 +77,7 @@ void App::onShutdown() {
     AudioEngine::get()->pause();
     AudioEngine::get()->getMusicQueue()->clear();
     AudioEngine::stop();
-    //AudioEngine::stop();
+
     Application::onShutdown();  // YOU MUST END with call to parent
 }
 

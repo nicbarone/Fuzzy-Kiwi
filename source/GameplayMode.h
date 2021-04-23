@@ -87,6 +87,10 @@ protected:
     std::shared_ptr<CatDen> _level1CatDenRight;
     /** A reference to the list of all cat dens in the level*/
     std::vector<shared_ptr<CatDen>> _catDens;
+    /** A reference to the list of all walls in the level*/
+    std::vector<shared_ptr<Wall>> _walls;
+    /** A reference to the list of all doors in the level*/
+    std::vector<shared_ptr<Floor>> _floors;
 
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;
@@ -122,6 +126,9 @@ protected:
     std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<Texture> tableTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
+    std::shared_ptr<scene2::Label> _tutorialText2;
+
+    bool _showTutorialText;
 
     enum class GameStatus {
         RUNNING,
@@ -154,7 +161,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false) {}
+    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false), _showTutorialText(false) {}
 
     /**
      * Disposes of this application, releasing all resources.
@@ -269,6 +276,12 @@ public:
 
     GameStatus getGameStatus() {
         return _gameStatus;
+    }
+
+    void setShowTutorial(bool boolean) {
+        _showTutorialText = boolean;
+        _tutorialText->setVisible(boolean);
+        _tutorialText2->setVisible(boolean);
     }
 };
 
