@@ -127,6 +127,8 @@ protected:
     std::shared_ptr<Texture> tableTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
 
+    bool _showTutorialText;
+
     enum class GameStatus {
         RUNNING,
         PAUSED,
@@ -158,7 +160,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false) {}
+    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false), _showTutorialText(false) {}
 
     /**
      * Disposes of this application, releasing all resources.
@@ -273,6 +275,11 @@ public:
 
     GameStatus getGameStatus() {
         return _gameStatus;
+    }
+
+    void setShowTutorial(bool boolean) {
+        _showTutorialText = boolean;
+        _tutorialText->setVisible(boolean);
     }
 };
 

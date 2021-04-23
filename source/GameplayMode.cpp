@@ -259,7 +259,7 @@ void GameplayMode::update(float timestep) {
                     for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
                         _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
                     }
-                    if (_json == nullptr) {
+                    if (_showTutorialText) {
                         _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
                         _tutorialText->setPosition(Vec2(100, 110));
                     }
@@ -310,7 +310,7 @@ void GameplayMode::update(float timestep) {
                 _losePanel->setVisible(true);
                 _losePanel->getChildButtons()[0]->getButton()->activate();
                 _losePanel->getChildButtons()[1]->getButton()->activate();
-                if (_json == nullptr) {
+                if (_showTutorialText) {
                     _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
                     _tutorialText->setPosition(Vec2(100, 110));
                 }
@@ -327,7 +327,7 @@ void GameplayMode::update(float timestep) {
 
         //tutorial text trigger
         if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
-            if (_json == nullptr) {
+            if (_showTutorialText) {
                 _tutorialText->setText("Oh no! You are stuck! Use the top left pause button to retry");
                 _tutorialText->setPosition(Vec2(100, 110));
             }
@@ -716,6 +716,7 @@ void GameplayMode::buildScene() {
 }
 
 void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
+
     //clearRootSceneNode();
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
@@ -889,7 +890,12 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
     std::shared_ptr<Font> font = _assets->get<Font>("futura");
-
+    _tutorialText = scene2::Label::alloc("Possess enemies to get past them, don't get spotted!", font);
+    _tutorialText->setForeground(Color4::WHITE);
+    _tutorialText->setScale(Vec2(0.5, 0.5));
+    _tutorialText->setPosition(Vec2(60, 110));
+    _tutorialText->setVisible(_showTutorialText);
+    _rootScene->addChild(_tutorialText);
     addChild(_rootScene);
 
     // make possess panel
@@ -1059,7 +1065,7 @@ void GameplayMode::checkDoors() {
                     std::back_inserter(key_intersection));
                 if (!key_intersection.empty()) {
                     door->setDoor(!doorState);
-                    if (_json == nullptr) {
+                    if (_showTutorialText) {
                         _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
                         _tutorialText->setPosition(Vec2(100, 110));
                     }
@@ -1116,7 +1122,7 @@ void GameplayMode::checkStaircaseDoors() {
                 //ChangeDrawOrder();
                 //ChangeDrawOrder();
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
-                if (_json == nullptr) {
+                if (_showTutorialText) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                     _tutorialText->setPosition(Vec2(200, 420));
                 }
@@ -1152,7 +1158,7 @@ void GameplayMode::checkCatDens() {
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setPos(catDen->getPos().x);
                 _player->setLevel(catDen->getLevel());
-                if (_json == nullptr) {
+                if (_showTutorialText) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                     _tutorialText->setPosition(Vec2(200, 420));
                 }
