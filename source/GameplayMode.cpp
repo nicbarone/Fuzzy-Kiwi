@@ -328,7 +328,7 @@ void GameplayMode::update(float timestep) {
         //tutorial text trigger
         if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
             if (_json == nullptr) {
-                _tutorialText->setText("Oh no! You are stuck! Press the R key to retry");
+                _tutorialText->setText("Oh no! You are stuck! Use the top left pause button to retry");
                 _tutorialText->setPosition(Vec2(100, 110));
             }
         }

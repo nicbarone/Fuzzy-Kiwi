@@ -71,6 +71,14 @@ bool AudioQueue::init(const std::shared_ptr<audio::AudioFader>& slot) {
             _panPool.push_back(AudioPanner::alloc(_queue->getChannels(),2,_queue->getRate()));
         }
         
+		_queue->setCallback([=](const std::shared_ptr<cugl::audio::AudioNode>& node,
+						 		cugl::audio::AudioNode::Action action) {
+			if (action != cugl::audio::AudioNode::Action::LOOPBACK) {
+				bool success = (action == cugl::audio::AudioNode::Action::COMPLETE);
+				this->gcollect(node,success);
+			}
+		});
+        
         return true;
     }
     return true;
