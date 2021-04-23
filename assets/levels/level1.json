@@ -19,13 +19,13 @@
 		}],
 	"decorations":	[{
 			"x_pos":	820,
-			"level":	2,
+			"level":	1,
 			"objective":	0,
 			"texture":	"caged-animal"
 		}],
 	"staircase-door":	[{
 			"x_pos":	550,
-			"level":	0,
+			"level":	1,
 			"connection":	1,
 			"isDen":	false
 		}, {

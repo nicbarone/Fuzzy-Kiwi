@@ -87,6 +87,10 @@ protected:
     std::shared_ptr<CatDen> _level1CatDenRight;
     /** A reference to the list of all cat dens in the level*/
     std::vector<shared_ptr<CatDen>> _catDens;
+    /** A reference to the list of all walls in the level*/
+    std::vector<shared_ptr<Wall>> _walls;
+    /** A reference to the list of all doors in the level*/
+    std::vector<shared_ptr<Floor>> _floors;
 
     /** A reference to the level 1 door*/
     std::shared_ptr<Door> _level1Door;

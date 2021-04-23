@@ -814,11 +814,11 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         }
     }
 
-    int s = 1.4;
-    _level1Wall = Wall::alloc(550, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, wall);
-    _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
-    _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
-    _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
+
+
+
+
+
 
 
 
@@ -836,25 +836,21 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
     _player->getSceneNode()->setName("Player");
 
-    _rootScene->addChild(_level1Wall->getSceneNode());
-    _rootScene->addChild(_level2Wall->getSceneNode());
-    _level1Floor->getSceneNode()->setName("Level1Floor");
-    _level2Floor->getSceneNode()->setName("Level2Floor");
-    _rootScene->addChild(_level1Floor->getSceneNode());
-    _rootScene->addChild(_level2Floor->getSceneNode());
+    //_rootScene->addChild(_level1Wall->getSceneNode());
+    //_rootScene->addChild(_level2Wall->getSceneNode());
+    //_level1Floor->getSceneNode()->setName("Level1Floor");
+    //_level2Floor->getSceneNode()->setName("Level2Floor");
+    //_rootScene->addChild(_level1Floor->getSceneNode());
+    //_rootScene->addChild(_level2Floor->getSceneNode());
 
+    
+    int s = 1.4;
     shared_ptr<Wall> tempwall;
     shared_ptr<Floor> tempfloor;
-    if (json->getInt("floor") > 2) {
-        tempwall = Wall::alloc(550, 0, Vec2(s, s), 2, cugl::Color4::WHITE, 1, 1, wall);
+    for (int i = 0; i < json->getInt("floor"); i++) {
+        tempwall = Wall::alloc(550, 0, Vec2(s, s), i, cugl::Color4::WHITE, 1, 1, wall);
         _rootScene->addChild(tempwall->getSceneNode());
-        tempfloor = Floor::alloc(555, 0, Vec2(s, s), 2, cugl::Color4::WHITE, 1, 1, floor);
-        _rootScene->addChild(tempfloor->getSceneNode());
-    }
-    if (json->getInt("floor") > 3) {
-        tempwall = Wall::alloc(550, 0, Vec2(s, s), 3, cugl::Color4::WHITE, 1, 1, wall);
-        _rootScene->addChild(tempwall->getSceneNode());
-        tempfloor = Floor::alloc(555, 0, Vec2(s, s), 3, cugl::Color4::WHITE, 1, 1, floor);
+        tempfloor = Floor::alloc(555, 0, Vec2(s, s), i, cugl::Color4::WHITE, 1, 1, floor);
         _rootScene->addChild(tempfloor->getSceneNode());
     }
 
