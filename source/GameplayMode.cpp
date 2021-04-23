@@ -110,6 +110,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
 }
 
 bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager) {
+    _showTutorialText = false;
     _inputManager = inputManager;
     _levelIndex = level;
     Size size = Application::get()->getDisplaySize();
@@ -262,6 +263,8 @@ void GameplayMode::update(float timestep) {
                     if (_showTutorialText) {
                         _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
                         _tutorialText->setPosition(Vec2(100, 110));
+                        _tutorialText2->setText("Swipe downwards to unpossess, two fingers to move the camera.");
+                        _tutorialText2->setPosition(Vec2(100, 420));
                     }
                 }
             }
@@ -313,6 +316,7 @@ void GameplayMode::update(float timestep) {
                 if (_showTutorialText) {
                     _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
                     _tutorialText->setPosition(Vec2(100, 110));
+                    _tutorialText2->setVisible(false);
                 }
                 _hasControl = false;
             }
@@ -330,6 +334,8 @@ void GameplayMode::update(float timestep) {
             if (_showTutorialText) {
                 _tutorialText->setText("Oh no! You are stuck! Use the top left pause button to retry");
                 _tutorialText->setPosition(Vec2(100, 110));
+                _tutorialText2->setText("The paw on the top right indicates the number of possessions you have remaining.");
+                _tutorialText2->setPosition(Vec2(100, 420));
             }
         }
     }
@@ -896,6 +902,12 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _tutorialText->setPosition(Vec2(60, 110));
     _tutorialText->setVisible(_showTutorialText);
     _rootScene->addChild(_tutorialText);
+    _tutorialText2 = scene2::Label::alloc("Use the left side of the screen to move, swipe upwards to possess.", font);
+    _tutorialText2->setForeground(Color4::WHITE);
+    _tutorialText2->setScale(Vec2(0.5, 0.5));
+    _tutorialText2->setPosition(Vec2(60, 420));
+    _tutorialText2->setVisible(_showTutorialText);
+    _rootScene->addChild(_tutorialText2);
     addChild(_rootScene);
 
     // make possess panel
@@ -1068,6 +1080,8 @@ void GameplayMode::checkDoors() {
                     if (_showTutorialText) {
                         _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
                         _tutorialText->setPosition(Vec2(100, 110));
+                        _tutorialText2->setText("Connected doors are indicated by color. Holes in the walls work similarly but can only be used in cat form.");
+                        _tutorialText2->setPosition(Vec2(100, 420));
                     }
                 }
 
@@ -1125,6 +1139,8 @@ void GameplayMode::checkStaircaseDoors() {
                 if (_showTutorialText) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                     _tutorialText->setPosition(Vec2(200, 420));
+                    _tutorialText2->setText("Congrats, you did it!");
+                    _tutorialText2->setPosition(Vec2(300, 110));
                 }
                 break;
             }
