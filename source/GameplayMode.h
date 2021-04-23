@@ -126,6 +126,7 @@ protected:
     std::shared_ptr<Texture> enemyTexture;
     std::shared_ptr<Texture> tableTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
+    std::shared_ptr<scene2::Label> _tutorialText2;
 
     bool _showTutorialText;
 
@@ -280,6 +281,7 @@ public:
     void setShowTutorial(bool boolean) {
         _showTutorialText = boolean;
         _tutorialText->setVisible(boolean);
+        _tutorialText2->setVisible(boolean);
     }
 };
 
