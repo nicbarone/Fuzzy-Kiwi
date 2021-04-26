@@ -587,7 +587,7 @@ void GameplayMode::buildScene() {
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
     _rootScene->addChild(_level2Floor->getSceneNode());
 
-    _rootScene->addChild(_level1StairDoor->getSceneNode());
+   /* _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         if (it->get()->getStartTableNode() != nullptr) {
@@ -604,7 +604,7 @@ void GameplayMode::buildScene() {
         _rootScene->addChild(it->get()->getSceneNode());
     }
     _rootScene->addChild(_player->getSceneNode());
-    _rootScene->addChild(_level1DoorFrame->getSceneNode());
+    _rootScene->addChild(_level1DoorFrame->getSceneNode());*/
 
 
     //_rootScene->getChildren()[]
