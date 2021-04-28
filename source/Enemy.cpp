@@ -6,6 +6,8 @@ using namespace cugl;
 #define PATROL_START 50
 #define PATROL_END 800
 #define SCALE 0.65
+#define VISION_HEIGHT 70
+#define SCIENTIST_WIDTH 85
 
 Enemy::Enemy() :
 
@@ -27,6 +29,7 @@ Enemy::Enemy() :
 	_altTexture = nullptr;
 	_glowTexture = nullptr;
 	_patrolNode = nullptr;
+	_visionNode = nullptr;
 }
 
 
@@ -44,6 +47,7 @@ void Enemy::dispose() {
 	_altTexture = nullptr;
 	_glowTexture = nullptr;
 	_patrolNode = nullptr;
+	_visionNode = nullptr;
 	_frame = 0;
 	_keys = { 0 };
 	_frameCounter = 0;
@@ -67,6 +71,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_patrolNode = scene2::WireNode::alloc(Rect(0, 0, patrolEnd - patrolStart, 2));
 	_patrolNode->setPosition(Vec2((patrolStart + patrolEnd) / 2, level * FLOOR_HEIGHT + FLOOR_OFFSET - 75));
 	_patrolNode->setColor(Color4::RED);
+
 	if (patrolStart == patrolEnd && patrolStart < x) {
 		_movingRight = false;
 		_sceneNode->setScale(-SCALE, SCALE);
@@ -75,6 +80,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 		_movingRight = true;
 		_sceneNode->setScale(SCALE, SCALE);
 	}
+
 	_frame = 0;
 	return true;
 }
@@ -94,7 +100,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_isActive = true;
 	_frameCounter = 7;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, num_frames);
-	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET));
+	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + ENEMY_OFFSET));
 	if (patrolStart != patrolEnd) {
 		_startTableNode = scene2::PolygonNode::allocWithTexture(_tableTexture);
 		_startTableNode->setPosition(patrolStart, level * FLOOR_HEIGHT + FLOOR_OFFSET - TABLE_OFFSET);
@@ -108,6 +114,18 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	else {
 		_movingRight = true;
 		_sceneNode->setScale(SCALE, SCALE);
+	}
+	if (_movingRight) {
+		_visionNode = scene2::WireNode::alloc(Rect(0, 0, DEFAULT_VISION+ SCIENTIST_WIDTH, 2));
+		_visionNode->setColor(Color4::RED);
+		_visionNode->setPosition(_sceneNode->getContentWidth()+ SCIENTIST_WIDTH, VISION_HEIGHT);
+		_sceneNode->addChild(_visionNode);
+	}
+	else {
+		_visionNode = scene2::WireNode::alloc(Rect(0, 0, -DEFAULT_VISION+ SCIENTIST_WIDTH, 2));
+		_visionNode->setColor(Color4::RED);
+		_visionNode->setPosition(-_sceneNode->getContentWidth() - SCIENTIST_WIDTH, VISION_HEIGHT);
+		_sceneNode->addChild(_visionNode);
 	}
 	_frame = 0;
 	return true;

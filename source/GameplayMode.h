@@ -51,6 +51,8 @@ protected:
     bool _nextLevel;
     int _levelIndex;
 
+    int _numFloors;
+    /** a reference to the json with which this instance of GameplayMode is created*/
     std::shared_ptr<cugl::JsonValue> _json;
     /** The parent scene node for a level*/
     std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
@@ -98,10 +100,6 @@ protected:
     std::shared_ptr<DoorFrame> _level1DoorFrame;
     /** A reference to the level 2 door*/
     std::shared_ptr<Door> _level2Door;
-    /** A reference to the left wall*/
-    std::shared_ptr<Floor> _leftWall;
-    /** A reference to the right wall*/
-    std::shared_ptr<Floor> _rightWall;
     /** A reference to the cagedAnimal*/
     std::shared_ptr<CagedAnimal> _cagedAnimal;
     /** A reference to the list of all doors in the level*/
@@ -161,7 +159,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false), _showTutorialText(false) {}
+    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false), _showTutorialText(false), _numFloors(0) {}
 
     /**
      * Disposes of this application, releasing all resources.
