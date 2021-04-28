@@ -16,7 +16,9 @@ using namespace cugl;
 /** This how far before we no longer regard a touch on screen as a click */
 #define TAP_THRESHOLD    10
 /** This defines the minimum valid swipe distance */
-#define SWIPE_THRESHOLD    100
+#define SWIPE_THRESHOLD    200
+/** This defines the minimum valid swipe time difference */
+#define SWIPE_TIME_THRESHOLD    1000
 /** This tells how sensitive the camera is to zooming */
 #define ZOOM_SENSITIVITY    0.1f
 /** This tells how fast the camera is to moving */
@@ -52,7 +54,10 @@ InputManager::~InputManager()
  */
 void InputManager::createZones() {
     _lzone = _tbounds;
+    _lzone.origin.y = _tbounds.origin.y + _lzone.size.height * (1.0f - LEFT_ZONE);
     _lzone.size.width *= LEFT_ZONE;
+    _lzone.size.height *= LEFT_ZONE;
+    
     _rzone = _tbounds;
     _rzone.size.width *= RIGHT_ZONE;
     _rzone.origin.x = _tbounds.origin.x + _tbounds.size.width - _rzone.size.width;
@@ -71,13 +76,13 @@ InputManager::Zone InputManager::getZone(const Vec2 pos) const {
     if (_lzone.contains(pos)) {
         return Zone::LEFT;
     }
-    else if (_rzone.contains(pos)) {
-        return Zone::RIGHT;
-    }
-    else if (_tbounds.contains(pos)) {
-        return Zone::MID;
-    }
-    return Zone::UNDEFINED;
+    //else if (_rzone.contains(pos)) {
+        //return Zone::RIGHT;
+    //}
+    //else if (_tbounds.contains(pos)) {
+        //return Zone::MID;
+    //}
+    return Zone::RIGHT;
 }
 
 /**
@@ -221,17 +226,22 @@ void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
 void InputManager::processRightSwipe(const cugl::Vec2 pos) {
     _rtouch.position = pos;
     float diff = _rtouch.beginPos.y - _rtouch.position.y;
-    // If distant enough, we recognize it as a valid swipe
-    if (diff > SWIPE_THRESHOLD) {
-        // Possess pressed
-        _possessPressed = true;
-        _rtouch.touchids.clear();
+    int timeDiff = Timestamp::ellapsedMillis(_rtouch.beginTimestamp, _rtouch.timestamp);
+    // valid swipe only if the the swipe is fast enough
+    if (timeDiff < SWIPE_TIME_THRESHOLD) {
+        // If distant enough, we recognize it as a valid swipe
+        if (diff > SWIPE_THRESHOLD) {
+            // Possess pressed
+            _possessPressed = true;
+            _rtouch.touchids.clear();
+        }
+        else if (diff < -SWIPE_THRESHOLD) {
+            // Unpossess pressed
+            _unpossessPressed = true;
+            _rtouch.touchids.clear();
+        }
     }
-    else if (diff < -SWIPE_THRESHOLD) {
-        // Unpossess pressed
-        _unpossessPressed = true;
-        _rtouch.touchids.clear();
-    }
+    
 }
 
 #pragma mark Touch and Mouse Callbacks
@@ -285,6 +295,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
         if (_rtouch.touchids.empty()) {
             _rtouch.beginPos = event.position;
             _rtouch.position = event.position;
+            _rtouch.beginTimestamp.mark();
             _rtouch.timestamp.mark();
             _rtouch.touchids.insert(event.touch);
         }
@@ -392,6 +403,7 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
         //_camMoveDirection = Vec2::ZERO;
     }
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+        _rtouch.timestamp.mark();
         processRightSwipe(pos);
     }
 }

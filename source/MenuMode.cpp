@@ -102,7 +102,7 @@ void MenuMode::buildScene() {
 
     menuPanel = _assets->get<Texture>("menuBackground");
     _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, menuPanel);
-    _menuPanel->getSceneNode()->setScale(min(size.width / menuPanel->getSize().width, size.height / menuPanel->getSize().height));
+    _menuPanel->getSceneNode()->setScale(max(size.width / menuPanel->getSize().width, size.height / menuPanel->getSize().height));
     _menuPanel->createChildButton(1000, 325, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("playButton"), Color4f::WHITE);
     _menuPanel->getChildButtons()[0]->getButton()->setName("playButton");
     _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -125,7 +125,7 @@ void MenuMode::buildScene() {
     // make save game panel
     _saveGamePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("savegamePanel"));
     _saveGamePanel->setVisible(false);
-    _saveGamePanel->getSceneNode()->setScale(min(size.width / _assets->get<Texture>("savegamePanel")->getSize().width, size.height / _assets->get<Texture>("savegamePanel")->getSize().height));
+    _saveGamePanel->getSceneNode()->setScale(max(size.width / _assets->get<Texture>("savegamePanel")->getSize().width, size.height / _assets->get<Texture>("savegamePanel")->getSize().height));
     _saveGamePanel->createChildButton(-125, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("no"), Color4f::WHITE);
     _saveGamePanel->getChildButtons()[0]->getButton()->setName("no");
     _saveGamePanel->getChildButtons()[0]->getButton()->setScale(1.0f);

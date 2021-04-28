@@ -655,7 +655,7 @@ void GameplayMode::buildScene() {
     // Create Menu Panel
     std::shared_ptr<Texture> pausedBackground = _assets->get<Texture>("pausedBackground");
     _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, pausedBackground);
-    _menuPanel->getSceneNode()->setScale(min(size.width / pausedBackground->getSize().width, size.height / pausedBackground->getSize().height));
+    _menuPanel->getSceneNode()->setScale(max(size.width / pausedBackground->getSize().width, size.height / pausedBackground->getSize().height));
     _menuPanel->setVisible(false);
     _menuPanel->createChildButton(0, 60, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
     _menuPanel->getChildButtons()[0]->getButton()->setName("resume");
@@ -692,7 +692,7 @@ void GameplayMode::buildScene() {
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
-    _winPanel->getSceneNode()->setScale(min(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
+    _winPanel->getSceneNode()->setScale(max(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
     _winPanel->setVisible(false);
     _winPanel->createChildButton(1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE);
     _winPanel->getChildButtons()[0]->getButton()->setScale(1.5f);
@@ -732,7 +732,7 @@ void GameplayMode::buildScene() {
     // Create Lose Panel
     losePanel = _assets->get<Texture>("levelFailedBG");
     _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
-    _losePanel->getSceneNode()->setScale(min(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
+    _losePanel->getSceneNode()->setScale(max(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
     _losePanel->setVisible(false);
     _losePanel->createChildButton(230, -350, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
     _losePanel->getChildButtons()[0]->getButton()->setName("retry");
@@ -996,7 +996,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // Create Menu Panel
     std::shared_ptr<Texture> pausedBackground = _assets->get<Texture>("pausedBackground");
     _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, pausedBackground);
-    _menuPanel->getSceneNode()->setScale(min(size.width / pausedBackground->getSize().width, size.height / pausedBackground->getSize().height));
+    _menuPanel->getSceneNode()->setScale(max(size.width / pausedBackground->getSize().width, size.height / pausedBackground->getSize().height));
     _menuPanel->setVisible(false);
     _menuPanel->createChildButton(0, 60, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
     _menuPanel->getChildButtons()[0]->getButton()->setName("resume");
@@ -1033,7 +1033,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // Create Win Panel
     winPanel = _assets->get<Texture>("levelCompleteBG");
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
-    _winPanel->getSceneNode()->setScale(min(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
+    _winPanel->getSceneNode()->setScale(max(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
     _winPanel->setVisible(false);
     _winPanel->createChildButton(1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE);
     _winPanel->getChildButtons()[0]->getButton()->setScale(1.5f);
@@ -1073,7 +1073,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // Create Lose Panel
     losePanel = _assets->get<Texture>("levelFailedBG");
     _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
-    _losePanel->getSceneNode()->setScale(min(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
+    _losePanel->getSceneNode()->setScale(max(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
     _losePanel->setVisible(false);
     _losePanel->createChildButton(230, -350, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
     _losePanel->getChildButtons()[0]->getButton()->setName("retry");

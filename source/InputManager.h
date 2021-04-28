@@ -60,6 +60,7 @@ public:
         /** The anchor touch position (on start) */
         cugl::Vec2 beginPos;
         cugl::Vec2 position;
+        cugl::Timestamp beginTimestamp;
         /** The current touch time */
         cugl::Timestamp timestamp;
         /** The touch id(s) for future reference */
