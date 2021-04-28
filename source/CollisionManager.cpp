@@ -84,14 +84,14 @@ int collisions::checkForCagedAnimalCollision(const std::shared_ptr<Player>& play
 	const std::shared_ptr<CagedAnimal>& cagedAnimal) {
 	if (cagedAnimal->getPos().x - player->getPos() <= DOOR_WIDTH / 2 &&
 		cagedAnimal->getPos().x - player->getPos() >= 0 &&
-		cagedAnimal->getLevel() == player->getLevel()) {
+		cagedAnimal->getLevel() == player->getLevel() && !player->getPossess()) {
 		return 1;
 
 	}
 	else if (cagedAnimal->getSceneNode()->isVisible() &&
 		player->getPos() - cagedAnimal->getPos().x <= DOOR_WIDTH / 2 &&
 		player->getPos() - cagedAnimal->getPos().x >= 0 &&
-		cagedAnimal->getLevel() == player->getLevel()) {
+		cagedAnimal->getLevel() == player->getLevel() && !player->getPossess()) {
 		return 2;
 	}
 	return 0;

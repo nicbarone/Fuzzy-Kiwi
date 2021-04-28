@@ -177,7 +177,8 @@ void App::update(float timestep) {
         else if (_menu.getGameLoaded()) {
             _menu.setGameLoaded(false);
             _menu.deactivateButtons();
-            shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\save.json");
+            CULog(Application::getSaveDirectory().c_str());
+            shared_ptr<JsonReader> reader = JsonReader::alloc(Application::getSaveDirectory() + "save.json");
             _gameplay.init(_assets, 1, reader->readJson(), _inputManager);
             _gameplay.reset();
             _inMenu = false;

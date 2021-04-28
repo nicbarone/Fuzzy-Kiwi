@@ -49,6 +49,7 @@ private:
 	std::shared_ptr<scene2::WireNode> _patrolNode;
 	std::shared_ptr<scene2::PolygonNode> _startTableNode;
 	std::shared_ptr<scene2::PolygonNode> _endTableNode;
+	std::shared_ptr<scene2::WireNode> _visionNode;
 
 
 public:
@@ -80,9 +81,14 @@ public:
 		return _sceneNode;
 	}
 
-	/** returns the WireNode associated with the patrol path*/
+	/** OBSOLETE: returns the WireNode associated with the patrol path*/
 	std::shared_ptr<scene2::WireNode> getPatrolNode() {
 		return _patrolNode;
+	}
+
+	/** returns the WireNode associated with the vision path*/
+	std::shared_ptr<scene2::WireNode> getVisionNode() {
+		return _visionNode;
 	}
 
 	/** returns the node associated with the start table node*/
