@@ -23,5 +23,6 @@ bool CagedAnimal::init(int x, float ang, Vec2 scale, int level, Color4 color, st
 	_keys = keys;
 	_frame = 0;
 	_isOpen = false;
+	getSceneNode()->setPriority(level);
 	return true;
 }

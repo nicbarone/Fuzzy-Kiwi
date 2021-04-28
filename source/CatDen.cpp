@@ -43,6 +43,7 @@ bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int con
 	}
 	_frame = 0;
 	_isOpen = false;
+	getSceneNode()->setPriority(level);
 	return true;
 }
 

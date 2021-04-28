@@ -84,6 +84,7 @@ public:
 	/** sets the floor level of the construction element*/
 	void setLevel(int level) {
 		_level = level;
+		getSceneNode()->setPriority(level);
 	}
 
 	/** returns an int representing the floor level of the construction element*/

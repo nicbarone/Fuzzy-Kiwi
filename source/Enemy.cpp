@@ -76,6 +76,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 		_sceneNode->setScale(SCALE, SCALE);
 	}
 	_frame = 0;
+	getSceneNode()->setPriority(level + 0.2f);
 	return true;
 }
 
@@ -110,6 +111,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 		_sceneNode->setScale(SCALE, SCALE);
 	}
 	_frame = 0;
+	getSceneNode()->setPriority(level + 0.2f);
 	return true;
 }
 
@@ -200,6 +202,7 @@ void Enemy::setAsPossessed() {
 void Enemy::setLevel(int level) {
 	Entity::setLevel(level);
 	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+	_sceneNode->setPriority(level+0.2f);
 }
 
 

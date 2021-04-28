@@ -69,7 +69,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     }
     // Create a scene graph the same size as the window
     //_scene = Scene2::alloc(size.width, size.height);
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
 
     _rootScene->setContentSize(size);
@@ -124,7 +124,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     }
     // Create a scene graph the same size as the window
     //_scene = Scene2::alloc(size.width, size.height);
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
 
     _rootScene->setContentSize(size);
@@ -184,7 +184,7 @@ void GameplayMode::reset() {
 
     // Create a scene graph the same size as the window
     alloc(size.width, size.height);
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(size);
     _reset = false;
@@ -484,7 +484,7 @@ void GameplayMode::draw() {
 
 void GameplayMode::clearRootSceneNode() {
     Size size = Application::get()->getDisplaySize();
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(size);
 }
@@ -893,9 +893,11 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     shared_ptr<Floor> tempfloor;
     for (int i = 0; i < json->getInt("floor"); i++) {
         tempwall = Wall::alloc(550, 0, Vec2(s, s), i, cugl::Color4::WHITE, 1, 1, wall);
+        tempwall->setLevel(i);
         _rootScene->addChild(tempwall->getSceneNode());
         tempfloor = Floor::alloc(555, 0, Vec2(s, s), i, cugl::Color4::WHITE, 1, 1, floor);
         _rootScene->addChild(tempfloor->getSceneNode());
+        tempfloor->setLevel(i);
     }
 
     for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {

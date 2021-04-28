@@ -27,7 +27,7 @@ private:
     Vec2 _mouse_rightJoystick_startPos;
     /** If pressed possess button then true, otherwise false */
     std::shared_ptr<Player> _player;
-    std::shared_ptr<cugl::scene2::SceneNode> _rootSceneNode;
+    std::shared_ptr<cugl::scene2::OrderedNode> _rootSceneNode;
     //std::vector<std::shared_ptr<Enemy>> _enemies;
     //std::vector<std::shared_ptr<Interactables>> _interactable_objects;
     //std::vector<std::shared_ptr<Blocker>> _blocking_objects;
@@ -109,7 +109,7 @@ public:
      *
      * @return true if the player was initialized correctly
      */
-    bool init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::SceneNode> rootNode, cugl::Rect bounds);
+    bool init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::OrderedNode> rootNode, cugl::Rect bounds);
 
     /**
      * Reads the input for this player and converts the result into game logic.
@@ -237,14 +237,14 @@ public:
     /**
      * Getter for the scene camera
      */
-    std::shared_ptr<cugl::scene2::SceneNode> getRootSceneNode() {
+    std::shared_ptr<cugl::scene2::OrderedNode> getRootSceneNode() {
         return _rootSceneNode;
     }
 
     /**
      * Getter for the scene camera
      */
-    void setRootSceneNode(std::shared_ptr<cugl::scene2::SceneNode> rootNode) {
+    void setRootSceneNode(std::shared_ptr<cugl::scene2::OrderedNode> rootNode) {
         _rootSceneNode = rootNode;
     }
 

@@ -16,5 +16,6 @@ bool Floor::init(int x, float ang, Vec2 scale, int level, Color4 color, int rows
 	setScale(scale);
 	setLevel(level);
 	setColor(color);
+	getSceneNode()->setPriority(level);
 	return true;
 }

@@ -43,7 +43,7 @@ void App::onStartup() {
 
     //Input manager
     _inputManager = std::shared_ptr<InputManager>(new InputManager());
-    _inputManager->init(nullptr, scene2::SceneNode::alloc(), getSafeBounds());
+    _inputManager->init(nullptr, scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND), getSafeBounds());
     AudioEngine::start();
     Application::onStartup(); // YOU MUST END with call to parent
 }

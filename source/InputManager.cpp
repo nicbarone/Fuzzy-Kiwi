@@ -100,7 +100,7 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
  *
  * @return true if the player was initialized correctly
  */
-bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::SceneNode> rootNode, cugl::Rect bounds) {
+bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::OrderedNode> rootNode, cugl::Rect bounds) {
     _possessPressed = false;
     _unpossessPressed = false;
     _forward = 0;
