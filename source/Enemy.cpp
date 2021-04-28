@@ -102,6 +102,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_frameCounter = 7;
 	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, num_frames);
 	_sceneNode->setPosition(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + ENEMY_OFFSET));
+	_sceneNode->setScale(SCALE, SCALE);
 	if (patrolStart != patrolEnd) {
 		_startTableNode = scene2::PolygonNode::allocWithTexture(_tableTexture);
 		_startTableNode->setPosition(patrolStart, level * FLOOR_HEIGHT + FLOOR_OFFSET - TABLE_OFFSET);
@@ -112,22 +113,19 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 		_movingRight = false;
 		_sceneNode->setScale(-SCALE, SCALE);
 	}
-	else {
+	else if (patrolStart == patrolEnd && patrolStart >= x){
 		_movingRight = true;
 		_sceneNode->setScale(SCALE, SCALE);
 	}
 	if (_movingRight) {
 		_visionNode = scene2::WireNode::alloc(Rect(0, 0, DEFAULT_VISION+ SCIENTIST_WIDTH, 2));
-		_visionNode->setColor(Color4::RED);
-		_visionNode->setPosition(_sceneNode->getContentWidth()+ SCIENTIST_WIDTH, VISION_HEIGHT);
-		_sceneNode->addChild(_visionNode);
 	}
 	else {
-		_visionNode = scene2::WireNode::alloc(Rect(0, 0, -DEFAULT_VISION+ SCIENTIST_WIDTH, 2));
-		_visionNode->setColor(Color4::RED);
-		_visionNode->setPosition(-_sceneNode->getContentWidth() - SCIENTIST_WIDTH, VISION_HEIGHT);
-		_sceneNode->addChild(_visionNode);
+		_visionNode = scene2::WireNode::alloc(Rect(0, 0, -DEFAULT_VISION- SCIENTIST_WIDTH, 2));
 	}
+	_visionNode->setColor(Color4::RED);
+	_visionNode->setPosition(_sceneNode->getContentWidth() + SCIENTIST_WIDTH, VISION_HEIGHT);
+	_sceneNode->addChild(_visionNode);
 	_frame = 0;
 	getSceneNode()->setPriority(level + 0.2f);
 	return true;
@@ -219,7 +217,7 @@ void Enemy::setAsPossessed() {
 
 void Enemy::setLevel(int level) {
 	Entity::setLevel(level);
-	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET + ENEMY_OFFSET);
 	_sceneNode->setPriority(level+0.2f);
 }
 
