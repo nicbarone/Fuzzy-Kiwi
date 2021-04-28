@@ -8,6 +8,7 @@ Player::Player() :
 	_nPossessions(1),
 	_isPossessing(false),
 	_isHidden(false),
+	_movingRight(false),
 	_frame(0),
 	_frameCounter(12),
 	_currentDoor(0)
@@ -23,6 +24,7 @@ void Player::dispose() {
 	_nPossessions = 0;
 	_isPossessing = false;
 	_isHidden = false;
+	_movingRight = false;
 	_texture = nullptr;
 	_sceneNode = nullptr;
 	_frame = 0;
@@ -52,9 +54,11 @@ void Player::move(float direction) {
 	manualMove(direction, PLAYER_SPEED);
 	_sceneNode->setPositionX(original + getVelocity().x);
 	if (direction == 1) {
+		_movingRight = true;
 		_sceneNode->setScale(0.15, 0.15);
 	}
 	else if (direction == -1) {
+		_movingRight = false;
 		_sceneNode->setScale(-0.15, 0.15);
 	}
 	if (direction != 0)
