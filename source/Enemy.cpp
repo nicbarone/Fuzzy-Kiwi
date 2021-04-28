@@ -127,6 +127,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	}
 	_visionNode->setColor(Color4::RED);
 	_visionNode->setPosition(_sceneNode->getContentWidth() + SCIENTIST_WIDTH, VISION_HEIGHT);
+	_visionNode->setPriority(level + 0.4f);
 	_sceneNode->addChild(_visionNode);
 	_frame = 0;
 	getSceneNode()->setPriority(level + 0.2f);

@@ -78,6 +78,7 @@ public:
 
 	void SetSceneNode(std::shared_ptr<scene2::AnimationNode> newNode) {
 		_sceneNode = newNode;
+		_sceneNode->setPriority(getLevel());
 	}
 
 	/** gets the possession state of the cat*/

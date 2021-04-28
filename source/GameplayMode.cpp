@@ -124,7 +124,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     }
     // Create a scene graph the same size as the window
     //_scene = Scene2::alloc(size.width, size.height);
-    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
 
     _rootScene->setContentSize(size);
@@ -184,7 +184,7 @@ void GameplayMode::reset() {
 
     // Create a scene graph the same size as the window
     alloc(size.width, size.height);
-    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(size);
     _reset = false;
@@ -373,6 +373,7 @@ bool GameplayMode::attemptPossess() {
         std::function<bool()> setPossessed = [&]() {
             _player->getSceneNode()->setVisible(false);
             _enemyController->closestEnemy()->setAsPossessed();
+            _enemyController->closestEnemy()->getSceneNode()->removeAllChildren();
             _hasControl = true;
             return false;
         };
