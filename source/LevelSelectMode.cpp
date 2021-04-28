@@ -176,7 +176,7 @@ void LevelSelectMode::buildScene() {
     _backButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _backButton->setTexture(_assets->get<Texture>("backButton"));
     _backButton->getButton()->setName("backButton");
-    _backButton->getButton()->setScale(0.3f);
+    _backButton->getButton()->setScale(1.0f);
     _backButton->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
     _backButton->setPos(Vec2(size.width - 100, 60));
     _backButton->getButton()->addListener([=](const std::string& name, bool down) {

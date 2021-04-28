@@ -99,8 +99,10 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	if (patrolStart != patrolEnd) {
 		_startTableNode = scene2::PolygonNode::allocWithTexture(_tableTexture);
 		_startTableNode->setPosition(patrolStart, level * FLOOR_HEIGHT + FLOOR_OFFSET - TABLE_OFFSET);
+		_startTableNode->setPriority(level + 0.4f);
 		_endTableNode = scene2::PolygonNode::allocWithTexture(_tableTexture);
 		_endTableNode->setPosition(patrolEnd, level * FLOOR_HEIGHT + FLOOR_OFFSET - TABLE_OFFSET);
+		_endTableNode->setPriority(level + 0.4f);
 	}
 	if (patrolStart == patrolEnd && patrolStart < x) {
 		_movingRight = false;
