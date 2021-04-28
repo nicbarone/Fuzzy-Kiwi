@@ -113,7 +113,7 @@ public:
 	void setCurrentDen(int currDen) {
 		_currentDen = currDen;
 	}
-	void PossessAnimation(bool possessing);
+	void PossessAnimation(int possessing);
 
 	void EnemyDying();
 

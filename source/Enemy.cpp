@@ -206,7 +206,7 @@ void Enemy::setLevel(int level) {
 }
 
 
-void Enemy::enemyDyingAnimation() {
+void Enemy::enemyOpeningDoorAnimation() {
 	//use this field in brackets now you can reference any field defined in player or class
 	std::function<bool()> frame0 = [&]() {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);

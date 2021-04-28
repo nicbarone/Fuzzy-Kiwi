@@ -87,7 +87,7 @@ void StaircaseDoor::setDoor(bool open) {
 		return false;
 	};
 	if (open) {
-		int timeDiff = 25;
+		int timeDiff = 450;
 		cugl::Application::get()->schedule(frame1, 50 + timeDiff);
 		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 2);
 		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 3);
@@ -98,7 +98,7 @@ void StaircaseDoor::setDoor(bool open) {
 	}
 	else
 	{
-		int timeDiff = 25;
+		int timeDiff = 450;
 		cugl::Application::get()->schedule(frame6, 50 + timeDiff);
 		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 2);
 		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 3);
