@@ -164,7 +164,7 @@ public:
 		return _keys;
 	}
 
-	void enemyDyingAnimation();
+	void enemyOpeningDoorAnimation();
 
 	void SetSceneNode(std::shared_ptr<scene2::AnimationNode> newNode) {
 		_sceneNode = newNode;

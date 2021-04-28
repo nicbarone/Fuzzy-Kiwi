@@ -80,7 +80,7 @@ void Player::setLevel(int level) {
 	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET + PLAYER_OFFSET);
 }
 
-void Player::PossessAnimation(bool possessing) {
+void Player::PossessAnimation(int possessing) {
 	//use this field in brackets now you can reference any field defined in player or class
 	std::function<bool()> frame0 = [&]() {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
@@ -114,7 +114,7 @@ void Player::PossessAnimation(bool possessing) {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
 		return false;
 	};
-	if (possessing) {
+	if (possessing==0) {
 		int timeDiff = 75;
 		CULog("h");
 		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 1);
@@ -122,7 +122,7 @@ void Player::PossessAnimation(bool possessing) {
 		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 3);
 		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
 	}
-	else
+	else if (possessing == 1)
 	{
 		CULog("h2");
 		int timeDiff = 75;
@@ -132,6 +132,14 @@ void Player::PossessAnimation(bool possessing) {
 		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 4);
 		//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
 
+	}
+	else if (possessing == 2) {
+		int timeDiff = 25;
+		CULog("h");
+		cugl::Application::get()->schedule(frame4, 0 + timeDiff * 5);
+		cugl::Application::get()->schedule(frame5, 0 + timeDiff * 6);
+		cugl::Application::get()->schedule(frame6, 0 + timeDiff * 7);
+		cugl::Application::get()->schedule(frame7, 0 + timeDiff * 8);
 	}
 }
 

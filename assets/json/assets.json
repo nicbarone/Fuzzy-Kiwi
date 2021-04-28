@@ -413,6 +413,13 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
+		},
+		"EnemyOpeningDoor": {
+			"file": "textures/GameObject/Enemy/EnemyOpeningDoor.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		}
 
 	},
