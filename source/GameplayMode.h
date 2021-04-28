@@ -55,7 +55,7 @@ protected:
     /** a reference to the json with which this instance of GameplayMode is created*/
     std::shared_ptr<cugl::JsonValue> _json;
     /** The parent scene node for a level*/
-    std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
+    std::shared_ptr<cugl::scene2::OrderedNode> _rootScene;
     /** The loaders to (synchronously) load in assets */
     std::shared_ptr<cugl::AssetManager> _assets;
     /** A scene graph, used to display our 2D scenes */

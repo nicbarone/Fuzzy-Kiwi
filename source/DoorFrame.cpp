@@ -32,5 +32,6 @@ bool DoorFrame::init(int x, float ang, Vec2 scale, int level, Color4 color, std:
 	_frame = 0;
 	_blockedEnemy = nullptr;
 	_isOpen = false;
+	getSceneNode()->setPriority(level + 0.4f);
 	return true;
 }

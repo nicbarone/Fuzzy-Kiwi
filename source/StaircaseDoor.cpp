@@ -43,6 +43,7 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	_keys = keys;
 	_frame = 0;
 	_isOpen = false;
+	getSceneNode()->setPriority(level);
 	return true;
 }
 
@@ -86,7 +87,7 @@ void StaircaseDoor::setDoor(bool open) {
 		return false;
 	};
 	if (open) {
-		int timeDiff = 25;
+		int timeDiff = 450;
 		cugl::Application::get()->schedule(frame1, 50 + timeDiff);
 		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 2);
 		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 3);
@@ -97,7 +98,7 @@ void StaircaseDoor::setDoor(bool open) {
 	}
 	else
 	{
-		int timeDiff = 25;
+		int timeDiff = 450;
 		cugl::Application::get()->schedule(frame6, 50 + timeDiff);
 		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 2);
 		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 3);

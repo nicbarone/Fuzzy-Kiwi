@@ -38,7 +38,7 @@ extern const float FLOOR_HEIGHT;
 class LevelEditor : public cugl::Scene2 {
 protected:
     /** The parent scene node for a level*/
-    std::shared_ptr<cugl::scene2::SceneNode> _rootScene;
+    std::shared_ptr<cugl::scene2::OrderedNode> _rootScene;
     /** The loaders to (synchronously) load in assets */
     std::shared_ptr<cugl::AssetManager> _assets;
     std::shared_ptr<InputManager> _inputManager;

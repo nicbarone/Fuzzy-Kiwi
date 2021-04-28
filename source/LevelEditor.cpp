@@ -52,7 +52,7 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets, std::shared_
     }
 
     _assets = assets;
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ORDER);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(Application::get()->getSafeBounds().size);
 

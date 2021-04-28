@@ -94,7 +94,7 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
 void MenuMode::buildScene() {
     std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
     std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
-    //audioQueue->play(menuBGM, true, 1.0f); //This line of code is the devil
+    audioQueue->play(menuBGM, true, 1.0f); //This line of code is the devil
 
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;

@@ -69,7 +69,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     }
     // Create a scene graph the same size as the window
     //_scene = Scene2::alloc(size.width, size.height);
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
 
     _rootScene->setContentSize(size);
@@ -124,7 +124,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     }
     // Create a scene graph the same size as the window
     //_scene = Scene2::alloc(size.width, size.height);
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
 
     _rootScene->setContentSize(size);
@@ -184,7 +184,7 @@ void GameplayMode::reset() {
 
     // Create a scene graph the same size as the window
     alloc(size.width, size.height);
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(size);
     _reset = false;
@@ -368,7 +368,7 @@ bool GameplayMode::attemptPossess() {
         }
         
         _rootScene->addChild(_player->getSceneNode());
-        _player->PossessAnimation(true);
+        _player->PossessAnimation(0);
 
         std::function<bool()> setPossessed = [&]() {
             _player->getSceneNode()->setVisible(false);
@@ -484,7 +484,7 @@ void GameplayMode::draw() {
 
 void GameplayMode::clearRootSceneNode() {
     Size size = Application::get()->getDisplaySize();
-    _rootScene = scene2::SceneNode::alloc();
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
     _rootScene->setContentSize(size);
 }
@@ -587,7 +587,7 @@ void GameplayMode::buildScene() {
     vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
     _rootScene->addChild(_level2Floor->getSceneNode());
 
-    _rootScene->addChild(_level1StairDoor->getSceneNode());
+   /* _rootScene->addChild(_level1StairDoor->getSceneNode());
     _rootScene->addChild(_level2StairDoor->getSceneNode());
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         if (it->get()->getStartTableNode() != nullptr) {
@@ -604,7 +604,7 @@ void GameplayMode::buildScene() {
         _rootScene->addChild(it->get()->getSceneNode());
     }
     _rootScene->addChild(_player->getSceneNode());
-    _rootScene->addChild(_level1DoorFrame->getSceneNode());
+    _rootScene->addChild(_level1DoorFrame->getSceneNode());*/
 
 
     //_rootScene->getChildren()[]
@@ -897,9 +897,11 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     shared_ptr<Floor> tempfloor;
     for (int i = 0; i < json->getInt("floor"); i++) {
         tempwall = Wall::alloc(550, 0, Vec2(s, s), i, cugl::Color4::WHITE, 1, 1, wall);
+        tempwall->setLevel(i);
         _rootScene->addChild(tempwall->getSceneNode());
         tempfloor = Floor::alloc(555, 0, Vec2(s, s), i, cugl::Color4::WHITE, 1, 1, floor);
         _rootScene->addChild(tempfloor->getSceneNode());
+        tempfloor->setLevel(i);
     }
 
     for (auto it = begin(_staircaseDoors); it != end(_staircaseDoors); ++it) {
@@ -1105,14 +1107,35 @@ void GameplayMode::checkDoors() {
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y+25) < 110.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
-
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()) {
-                std::vector<int> intersect;
+                _hasControl = false;
+                std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
+                _enemyController->getPossessed()->getSceneNode()->setVisible(false);
+                _rootScene->removeChild(_player ->getSceneNode());
+                _player->SetSceneNode(Player::alloc(150, 0, 0, 9, EnemyOpeningDoor)->getSceneNode());
+                _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+                if (_enemyController->getPossessed()->getMovingRight()) {
+                    _player->getSceneNode()->setScale(0.63, 0.63);
+                }
+                else {
+                    _player->getSceneNode()->setScale(-0.63, 0.63);
+                }
+                _player->PossessAnimation(2);
+
+                std::function<bool()> openDoor = [&]() {
+                    _player->getSceneNode()->setVisible(false);
+                    _enemyController->getPossessed()->getSceneNode()->setVisible(true);
+                    //_enemyController->getPossessed()->setPos(_enemyController->getPossessed()->getPos() + 130);
+                    _hasControl = true;
+                    return false;
+                };
+                
                 std::vector<int> v1 = _enemyController->getPossessed()->getKeys();
                 std::vector<int> v2 = door->getKeys();
                 /*std::sort(v1.begin(), v1.end());
                 std::sort(v2.begin(), v2.end());*/
                 std::vector<int> key_intersection;
+
                 std::set_intersection(v1.begin(), v1.end(),
                     v2.begin(), v2.end(),
                     std::back_inserter(key_intersection));
@@ -1125,6 +1148,9 @@ void GameplayMode::checkDoors() {
                         _tutorialText2->setPosition(Vec2(100, 420));
                     }
                 }
+                cugl::Application::get()->schedule(openDoor, 500);
+                _rootScene->addChild(_player->getSceneNode());
+                std::vector<int> intersect;
 
             }
         }

@@ -82,6 +82,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	}
 
 	_frame = 0;
+	getSceneNode()->setPriority(level + 0.2f);
 	return true;
 }
 
@@ -128,6 +129,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 		_sceneNode->addChild(_visionNode);
 	}
 	_frame = 0;
+	getSceneNode()->setPriority(level + 0.2f);
 	return true;
 }
 
@@ -218,10 +220,11 @@ void Enemy::setAsPossessed() {
 void Enemy::setLevel(int level) {
 	Entity::setLevel(level);
 	_sceneNode->setPositionY(Entity::getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+	_sceneNode->setPriority(level+0.2f);
 }
 
 
-void Enemy::enemyDyingAnimation() {
+void Enemy::enemyOpeningDoorAnimation() {
 	//use this field in brackets now you can reference any field defined in player or class
 	std::function<bool()> frame0 = [&]() {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(0);
