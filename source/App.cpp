@@ -171,6 +171,7 @@ void App::update(float timestep) {
         if (_menu.getPlayPressed()) {
             _menu.setPlayPressed(false);
             _menu.deactivateButtons();
+            _levelSelect.init(_assets);
             CULog("si");
             _inMenu = false;
             _inLevelSelect = true;
@@ -178,6 +179,7 @@ void App::update(float timestep) {
         else if (_menu.getGameLoaded()) {
             _menu.setGameLoaded(false);
             _menu.deactivateButtons();
+            _levelSelect.setLevelSelected(false);
             CULog(Application::getSaveDirectory().c_str());
             shared_ptr<JsonReader> reader = JsonReader::alloc(Application::getSaveDirectory() + "save.json");
             _gameplay.init(_assets, 1, reader->readJson(), _inputManager);
@@ -191,6 +193,7 @@ void App::update(float timestep) {
         if (_gameplay.getBackToMenu()) {
             _gameplay.setBackToMenu(false);
             _levelSelect.activateButtons();
+            _inGameplay = false;
             _inGameplay = false;
             _inLevelSelect = true;
         }

@@ -18,6 +18,7 @@ using namespace cugl;
 bool LevelSelectMode::init(const std::shared_ptr<AssetManager>& assets) {
     _levelID = "";
     _backButtonPressed = false;
+    _levelSelected = false;
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     // Lock the scene to a reasonable resolution
