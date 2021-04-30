@@ -792,7 +792,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
     std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloor");
     //Staircase door texture creation
-    std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
+    std::shared_ptr<Texture> orangeStaircaseDoor = _assets->get<Texture>("staircaseDoorOrange");
+    std::shared_ptr<Texture> redStaircaseDoor = _assets->get<Texture>("staircaseDoorRed");
+    std::shared_ptr<Texture> purpleStaircaseDoor = _assets->get<Texture>("staircaseDoorPurple");
+    std::shared_ptr<Texture> yellowStaircaseDoor = _assets->get<Texture>("staircaseDoorYellow");
     //Cat den texture creation
     std::shared_ptr<Texture> catden = _assets->get<Texture>("catDen");
     //Door texture creation
@@ -854,7 +857,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             }
             else {
                 _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                    cugl::Color4::WHITE, { 1 }, objectTemp->getInt("connection"), 1, 8, staircaseDoor));
+                    cugl::Color4::WHITE, { 1 }, objectTemp->getInt("connection"), 2, 8, orangeStaircaseDoor,
+                     redStaircaseDoor, purpleStaircaseDoor, yellowStaircaseDoor, orangeStaircaseDoor));
             }
 
         }

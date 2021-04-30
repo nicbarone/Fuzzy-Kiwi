@@ -16,8 +16,8 @@ void StaircaseDoor::dispose() {
 }
 
 bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int connectedDoors, 
-	int rows, int columns, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> Redtexture, 
-	std::shared_ptr<Texture> Purpletexture, std::shared_ptr<Texture> yellowTexture, std::shared_ptr<Texture> Orangetexture)
+	int rows, int columns, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> redTexture,
+	std::shared_ptr<Texture> purpleTexture, std::shared_ptr<Texture> yellowTexture, std::shared_ptr<Texture> orangeTexture)
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET+ STAIRCASE_DOOR_OFFSET));
@@ -27,23 +27,23 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	_connectedDoors = connectedDoors;
 	if (_connectedDoors == 1)
 	{
-		setTexture(texture);
+		setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	}
 	if (_connectedDoors == 2)
 	{
-		setTexture(Redtexture);
+		setSceneNode(scene2::AnimationNode::alloc(redTexture, rows, columns));
 	}
 	if (_connectedDoors == 3)
 	{
-		setTexture(Purpletexture);
+		setSceneNode(scene2::AnimationNode::alloc(purpleTexture, rows, columns));
 	}
 	if (_connectedDoors == 4)
 	{
-		setTexture(yellowTexture);
+		setSceneNode(scene2::AnimationNode::alloc(yellowTexture, rows, columns));
 	}
 	if (_connectedDoors == 5)
 	{
-		setTexture(Orangetexture);
+		setSceneNode(scene2::AnimationNode::alloc(orangeTexture, rows, columns));
 	}
 
 	_keys = keys;

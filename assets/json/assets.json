@@ -56,13 +56,6 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"staircaseOrangeDoorRed": {
-			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorRed.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
 		"staircaseDoorPurple": {
 			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorPurple.png",
 			"minfilter": "nearest",
