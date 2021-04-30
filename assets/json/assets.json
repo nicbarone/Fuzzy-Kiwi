@@ -49,8 +49,36 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"staircaseDoor": {
-			"file": "textures/GameObject/StaircaseDoor/StaircaseDoor.png",
+		"staircaseDoorOrange": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorOrange.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"staircaseOrangeDoorRed": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorRed.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"staircaseDoorPurple": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorPurple.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"staircaseDoorRed": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorRed.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"staircaseDoorYellow": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorYellow.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

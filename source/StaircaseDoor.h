@@ -24,12 +24,15 @@ public:
 	void dispose();
 
 	bool init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int _connectedDoors, int rows, int columns,
-		std::shared_ptr<Texture> texture);
+		std::shared_ptr<Texture> texture, std::shared_ptr<Texture> redTexture,
+		std::shared_ptr<Texture> purpleTexture, std::shared_ptr<Texture> yellowTexture, std::shared_ptr<Texture> orangeTexture);
 
 	static std::shared_ptr<StaircaseDoor> alloc(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int _connectedDoors, 
-		int rows, int columns, std::shared_ptr<Texture> texture) {
+		int rows, int columns, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> redTexture,
+		std::shared_ptr<Texture> purpleTexture, std::shared_ptr<Texture> yellowTexture, std::shared_ptr<Texture> orangeTexture) {
 		std::shared_ptr<StaircaseDoor> result = std::make_shared<StaircaseDoor>();
-		return (result->init(x, ang, scale, level, color,keys, _connectedDoors, rows, columns, texture) ? result : nullptr);
+		return (result->init(x, ang, scale, level, color,keys, _connectedDoors, rows, columns, texture, redTexture,
+			purpleTexture, yellowTexture, orangeTexture) ? result : nullptr);
 	}
 
 	void setIsOpen(bool open) {

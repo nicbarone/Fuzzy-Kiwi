@@ -519,6 +519,10 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloor");
     //Staircase door texture creation
     std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
+    std::shared_ptr<Texture> staircaseDoorOrange = _assets->get<Texture>("staircaseDoorOrange");
+    std::shared_ptr<Texture> staircaseDoorRed = _assets->get<Texture>("StaircaseDoorRed");
+    std::shared_ptr<Texture> staircaseDoorPurple = _assets->get<Texture>("StaircaseDoorPurple");
+    std::shared_ptr<Texture> staircaseDoorYellow = _assets->get<Texture>("staircaseDoorYellow");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
 
@@ -536,8 +540,10 @@ void GameplayMode::buildScene() {
     _catDens = { _level1CatDenLeft,_level1CatDenRight };
     _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
     _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
-    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor);
-    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(1, 1), 1, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor);
+    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor, 
+         staircaseDoorRed, staircaseDoorPurple, staircaseDoorYellow, staircaseDoorOrange);
+    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(1, 1), 1, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor,
+        staircaseDoorRed, staircaseDoorPurple, staircaseDoorYellow, staircaseDoorOrange);
     _staircaseDoors = { _level1StairDoor, _level2StairDoor};
     _level1Door = Door::alloc(590,0, Vec2(1, 1), 0,cugl::Color4::WHITE, { 1 }, 1, 8, door);
     _level1DoorFrame = DoorFrame::alloc(515, 0, Vec2(1.0, 1), 0, cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame);

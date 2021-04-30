@@ -15,10 +15,11 @@ void StaircaseDoor::dispose() {
 	_isOpen = false;
 }
 
-bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int connectedDoors, int rows, int columns, std::shared_ptr<Texture> texture)
+bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int connectedDoors, 
+	int rows, int columns, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> Redtexture, 
+	std::shared_ptr<Texture> Purpletexture, std::shared_ptr<Texture> yellowTexture, std::shared_ptr<Texture> Orangetexture)
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
-	setTexture(texture);
 	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET+ STAIRCASE_DOOR_OFFSET));
 	setAngle(ang);
 	setScale(scale);
@@ -26,20 +27,25 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	_connectedDoors = connectedDoors;
 	if (_connectedDoors == 1)
 	{
-		setColor(cugl::Color4::WHITE);
+		setTexture(texture);
 	}
 	if (_connectedDoors == 2)
 	{
-		setColor(cugl::Color4::BLUE);
+		setTexture(Redtexture);
 	}
 	if (_connectedDoors == 3)
 	{
-		setColor(cugl::Color4::GREEN);
+		setTexture(Purpletexture);
 	}
 	if (_connectedDoors == 4)
 	{
-		setColor(cugl::Color4::RED);
+		setTexture(yellowTexture);
 	}
+	if (_connectedDoors == 5)
+	{
+		setTexture(Orangetexture);
+	}
+
 	_keys = keys;
 	_frame = 0;
 	_isOpen = false;
