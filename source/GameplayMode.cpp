@@ -168,6 +168,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
 
 
 void GameplayMode::reset() {
+
     setGameStatus(GameStatus::RUNNING);
     //_scene = nullptr;
     Size size = Application::get()->getDisplaySize();
@@ -193,6 +194,11 @@ void GameplayMode::reset() {
     }
     else {
         buildScene();
+    }
+    if (_json->getLong("level", -1L) != -1) {
+        _levelIndex = _json->getLong("level", -1L);
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level" + std::to_string(_levelIndex) + ".json");
+        _json = reader->readJson();
     }
 }
 
@@ -761,6 +767,7 @@ void GameplayMode::buildScene() {
 
 void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
+
     //clearRootSceneNode();
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
@@ -771,7 +778,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _doorFrames.clear();
     _staircaseDoors.clear();
     _catDens.clear();
-
+    
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
     //floor texture creation
     std::shared_ptr<Texture> wall = _assets->get<Texture>("levelWall");
@@ -1326,7 +1333,7 @@ void GameplayMode::toSaveJson() {
             shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
             tempObject->appendChild("x_pos", JsonValue::alloc(it->get()->getPos().x));
             tempObject->appendChild("level", JsonValue::alloc((long)it->get()->getLevel()));
-            tempObject->appendChild("connection", JsonValue::alloc((long)it->get()->getConnectedDens())); //TODO: HARDCODED BECAUSE CURRENT THERE IS NO FIELD FOR IT
+            tempObject->appendChild("connection", JsonValue::alloc((long)it->get()->getConnectedDens())); 
             tempObject->appendChild("isDen", JsonValue::alloc(true));
             staircaseDoorArray->appendChild(tempObject);
         }
@@ -1334,7 +1341,7 @@ void GameplayMode::toSaveJson() {
             shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
             tempObject->appendChild("x_pos", JsonValue::alloc(it->get()->getPos().x));
             tempObject->appendChild("level", JsonValue::alloc((long)it->get()->getLevel()));
-            tempObject->appendChild("connection", JsonValue::alloc((long)it->get()->getConnectedDoors())); //TODO: HARDCODED BECAUSE CURRENT THERE IS NO FIELD FOR IT
+            tempObject->appendChild("connection", JsonValue::alloc((long)it->get()->getConnectedDoors()));
             tempObject->appendChild("isDen", JsonValue::alloc(false));
             staircaseDoorArray->appendChild(tempObject);
         }
@@ -1365,7 +1372,7 @@ void GameplayMode::toSaveJson() {
         result->appendChild("staircase-door", staircaseDoorArray);
         result->appendChild("door", doorArray);
         result->appendChild("floor", JsonValue::alloc((long)_numFloors));
-
+        result->appendChild("level", JsonValue::alloc((long)_levelIndex));
         shared_ptr<JsonWriter> writer = JsonWriter::alloc(Application::get()->getSaveDirectory() + "save.json");
 
         writer->writeJson(result);
