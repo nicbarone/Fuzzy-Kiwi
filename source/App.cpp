@@ -125,6 +125,7 @@ void App::update(float timestep) {
     if (!_inGameplay) _inputManager->readInput();
     if (!_loaded && counter > 0) {
         _menu.init(_assets);
+        _levelSelect.init(_assets);
         _loading.update(0.01f);
         counter=0;
         if (USE_LEVEL_EDITOR) {
@@ -170,7 +171,6 @@ void App::update(float timestep) {
         if (_menu.getPlayPressed()) {
             _menu.setPlayPressed(false);
             _menu.deactivateButtons();
-            _levelSelect.init(_assets);
             CULog("si");
             _inMenu = false;
             _inLevelSelect = true;
