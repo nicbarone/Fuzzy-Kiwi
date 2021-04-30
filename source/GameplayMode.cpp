@@ -757,6 +757,7 @@ void GameplayMode::buildScene() {
     addChild(_losePanel->getSceneNode());
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
+    _rootScene->setScale(Vec2(0.6f, 0.6f));
 }
 
 void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
@@ -1098,6 +1099,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     addChild(_losePanel->getSceneNode());
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
+    _rootScene->setScale(Vec2(0.6f, 0.6f));
 }
 
 
