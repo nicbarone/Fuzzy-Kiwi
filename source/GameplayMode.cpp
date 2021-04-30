@@ -197,7 +197,7 @@ void GameplayMode::reset() {
     }
     if (_json->getLong("level", -1L) != -1) {
         _levelIndex = _json->getLong("level", -1L);
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level" + std::to_string(_levelIndex) + ".json");
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level" + std::to_string(_levelIndex+1) + ".json");
         _json = reader->readJson();
     }
 }
