@@ -124,6 +124,7 @@ void App::onResume() {
 void App::update(float timestep) {
     if (!_inGameplay) _inputManager->readInput();
     if (!_loaded && counter > 0) {
+        _menu.init(_assets);
         _loading.update(0.01f);
         counter=0;
         if (USE_LEVEL_EDITOR) {
@@ -138,7 +139,7 @@ void App::update(float timestep) {
     }
     else if (!_loaded && !_inEditor){
         _loading.dispose(); // Disables the input listeners in this mode
-        _menu.init(_assets);
+        
         _loaded = true;
         _inMenu = true;
         
