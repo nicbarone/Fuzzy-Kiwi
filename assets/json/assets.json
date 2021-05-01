@@ -466,6 +466,26 @@
 		"menuBGM": {
 			"type": "sample",
 			"file": "bgm/MenuBGM.ogg"
+		},
+		"jumpOff": {
+			"type": "sample",
+			"file": "sound effect/jump_off.ogg"
+		},
+		"possess": {
+			"type": "sample",
+			"file": "sound effect/possess.ogg"
+		},
+		"useDoor": {
+			"type": "sample",
+			"file": "sound effect/use_door.ogg"
+		},
+		"useStaircase": {
+			"type": "sample",
+			"file": "sound effect/use_staircase.ogg"
+		},
+		"winCondition": {
+			"type": "sample",
+			"file": "sound effect/win_condition.ogg"
 		}
 	}
 }
