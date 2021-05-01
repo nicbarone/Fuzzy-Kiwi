@@ -19,11 +19,8 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	int rows, int columns, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> redTexture,
 	std::shared_ptr<Texture> purpleTexture, std::shared_ptr<Texture> yellowTexture, std::shared_ptr<Texture> orangeTexture)
 {
-	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
-	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET+ STAIRCASE_DOOR_OFFSET));
-	setAngle(ang);
-	setScale(scale);
-	setLevel(level);
+	//setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
+
 	_connectedDoors = connectedDoors;
 	if (_connectedDoors == 1)
 	{
@@ -45,7 +42,10 @@ bool StaircaseDoor::init(int x, float ang, Vec2 scale, int level, Color4 color, 
 	{
 		setSceneNode(scene2::AnimationNode::alloc(orangeTexture, rows, columns));
 	}
-
+	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + STAIRCASE_DOOR_OFFSET));
+	setAngle(ang);
+	setScale(scale);
+	setLevel(level);
 	_keys = keys;
 	_frame = 0;
 	_isOpen = false;
