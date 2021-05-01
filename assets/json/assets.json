@@ -477,15 +477,15 @@
 		},
 		"useDoor": {
 			"type": "sample",
-			"file": "sound effect/use_door.mp3"
+			"file": "sound effect/use_door.ogg"
 		},
 		"useStaircase": {
 			"type": "sample",
-			"file": "sound effect/use_staircase.mp3"
+			"file": "sound effect/use_staircase.ogg"
 		},
 		"winCondition": {
 			"type": "sample",
-			"file": "sound effect/win_condition.mp3"
+			"file": "sound effect/win_condition.ogg"
 		}
 	}
 }
