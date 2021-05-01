@@ -193,7 +193,7 @@ void App::update(float timestep) {
         if (_gameplay.getBackToMenu()) {
             _gameplay.setBackToMenu(false);
             _levelSelect.activateButtons();
-            _inGameplay = false;
+            _levelSelect.setLevelSelected(false);
             _inGameplay = false;
             _inLevelSelect = true;
         }
