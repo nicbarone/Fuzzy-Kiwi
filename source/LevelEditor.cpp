@@ -47,7 +47,7 @@ bool LevelEditor::init(const std::shared_ptr<AssetManager>& assets, std::shared_
     Input::activate<TextInput>();
 #endif
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 5; i++) {
         floorHeights.push_back(FLOOR_OFFSET + FLOOR_HEIGHT * i);
     }
 
@@ -120,6 +120,19 @@ Vec2 LevelEditor::snapToRow(Vec2 pos, string type) {
     return pos;
 }
 
+Vec2 LevelEditor::adjustForCamera(Vec2 pos) {
+    float rootOffsetX = _rootScene->getPositionX() - SCENE_SIZE / 2;
+    float rootOffsetY = _rootScene->getPositionY() - 288;
+    //pos.x = pos.x - _rootScene->getPositionX();
+    CULog(("X: " + to_string(_rootScene->getPositionX()- SCENE_SIZE/2)).c_str());
+    CULog(("Y: " + to_string(_rootScene->getPositionY() - 288)).c_str());
+    CULog(("Scale X: " + to_string(_rootScene->getScaleX())).c_str());
+    CULog(("Scale Y: " + to_string(_rootScene->getScaleY())).c_str());
+    pos.x = pos.x - rootOffsetX;
+    pos.y = pos.y + rootOffsetY;
+    return pos;
+}
+
 void LevelEditor::clearEnemyPlacement() {
     if (enemyPlacement > 0) {
         if (pendingEnemy != nullptr) {
@@ -147,7 +160,7 @@ void LevelEditor::placeNode() {
             pendingPlacement = true;
         }
         if (pendingNode != nullptr){ //there might be some way to factor this out
-            pendingNode->setPosition(snapToRow(Input::get<Mouse>()->pointerPosition(), pendingNode->getName().substr(0, 3)));
+            pendingNode->setPosition(snapToRow(adjustForCamera(Input::get<Mouse>()->pointerPosition()), pendingNode->getName().substr(0, 3)));
         }
         if (enemyPlacement == 1) {
             pathEnd = Input::get<Mouse>()->pointerPosition().x;
@@ -340,7 +353,7 @@ void LevelEditor::fromJson(shared_ptr<JsonValue> json) {
             else { //staircase door
                 temp = scene2::AnimationNode::alloc(staircaseDoorTexture, 1, 8);
                 temp->setPosition(objectTemp->getFloat("x_pos"), objectTemp->getInt("level") * FLOOR_HEIGHT + FLOOR_OFFSET + STAIRCASE_DOOR_OFFSET);
-                temp->setScale(1.8, 1.8);
+                temp->setScale(1, 1);
                 _rootScene->addChildWithName(temp, "sta" + to_string(objectTemp->getInt("connection")));
             }
         }
@@ -419,6 +432,9 @@ void LevelEditor::update(float timestep) {
     if (Input::get<Mouse>()->buttonPressed().hasRight()) {
         releaseButtons();
         clearEnemyPlacement();
+    }
+    if (_inputManager->didReset()) {
+        _rootScene->setScale(Vec2(1, 1));
     }
 #endif
 }
@@ -532,7 +548,7 @@ void LevelEditor::buildScene() {
     addChild(_cat);
 
     //Staircase Door Button
-    staircaseDoorTexture = _assets->get<Texture>("staircaseDoor");
+    staircaseDoorTexture = _assets->get<Texture>("staircaseDoorOrange");
     shared_ptr<scene2::Label> _staircaseDoorText = scene2::Label::alloc("Staircase Door", font);
     _staircaseDoorText->setBackground(Color4::WHITE);
     _staircaseDoor = scene2::Button::alloc(_staircaseDoorText, Color4::GRAY);
@@ -544,7 +560,7 @@ void LevelEditor::buildScene() {
             releaseButtons();
             clearEnemyPlacement();
             pendingNode = scene2::AnimationNode::alloc(staircaseDoorTexture, 1, 8);
-            pendingNode->setScale(1.8, 1.8);
+            pendingNode->setScale(1, 1);
             pendingNode->setName("sta" + (_doorIDField->getText() != "" ? _doorIDField->getText() : "0"));
             _rootScene->addChild(pendingNode);
         }

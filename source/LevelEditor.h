@@ -157,6 +157,11 @@ public:
     Vec2 snapToRow(Vec2 pos, string type);
 
     /**
+        helper function for placing stuff after camera pan/zoom
+    */
+    Vec2 adjustForCamera(Vec2 pos);
+
+    /**
      * The method called to update the game mode.
      *
      * This method updates the progress bar amount.
