@@ -879,7 +879,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             }
             else {
                 _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                    cugl::Color4::WHITE, { 1 }, objectTemp->getInt("connection"), 2, 8, orangeStaircaseDoor,
+                    cugl::Color4::WHITE, { 1 }, objectTemp->getInt("connection"), 1, 8, orangeStaircaseDoor,
                      redStaircaseDoor, purpleStaircaseDoor, yellowStaircaseDoor, orangeStaircaseDoor));
             }
 
@@ -1155,8 +1155,10 @@ void GameplayMode::checkDoors() {
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
                 _enemyController->getPossessed()->getSceneNode()->setVisible(false);
                 _rootScene->removeChild(_player ->getSceneNode());
-                _player->SetSceneNode(Player::alloc(150, 0, 0, 9, EnemyOpeningDoor)->getSceneNode());
-                _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+                _player->SetSceneNode(Player::alloc(150, _enemyController->getPossessed()->getLevel(), 0, 9, EnemyOpeningDoor)->getSceneNode());
+                _player->setLevel(_enemyController->getPossessed()->getLevel());
+                CULog("level: %d", _player->getLevel());
+                _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
                 if (_enemyController->getPossessed()->getMovingRight()) {
                     _player->getSceneNode()->setScale(0.63, 0.63);
                 }
