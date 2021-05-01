@@ -101,17 +101,31 @@ void StaircaseDoor::setDoor(bool open) {
 		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 5);
 		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 6);
 		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 7);
+		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 8);
+		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 9);
+		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 10);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 11);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 12);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 13);
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 14);
 	}
 	else
 	{
 		int timeDiff = 50;
-		cugl::Application::get()->schedule(frame6, 50 + timeDiff);
-		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 2);
-		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 3);
-		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
-		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 5);
-		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 6);
-		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 7);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 2);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 3);
+		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 4);
+		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 5);
+		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 6);
+		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 7);
+		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 8);
+		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 9);
+		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 10);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 11);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 12);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 13);
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 14);
 	}
 
 }
