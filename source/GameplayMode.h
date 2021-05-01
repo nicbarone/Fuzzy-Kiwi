@@ -125,6 +125,11 @@ protected:
     std::shared_ptr<Texture> tableTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
     std::shared_ptr<scene2::Label> _tutorialText2;
+    std::shared_ptr<Sound> _possessSound;
+    std::shared_ptr<Sound> _jumpOffSound;
+    std::shared_ptr<Sound> _winSound;
+    std::shared_ptr<Sound> _doorSound;
+    std::shared_ptr<Sound> _staircaseSound;
 
     bool _showTutorialText;
 

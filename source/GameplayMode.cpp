@@ -55,6 +55,11 @@ using namespace cugl;
  */
 
 bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager) {
+    _possessSound = nullptr;
+    _winSound = nullptr;
+    _doorSound = nullptr;
+    _staircaseSound = nullptr;
+    _jumpOffSound = nullptr;
     setGameStatus(GameStatus::RUNNING);
     _inputManager = inputManager;
     _levelIndex = level;
@@ -110,6 +115,11 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
 }
 
 bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager) {
+    _possessSound = nullptr;
+    _winSound = nullptr;
+    _doorSound = nullptr;
+    _staircaseSound = nullptr;
+    _jumpOffSound = nullptr;
     _showTutorialText = false;
     _inputManager = inputManager;
     _levelIndex = level;
@@ -262,6 +272,7 @@ void GameplayMode::update(float timestep) {
         if (_inputManager->getAndResetPossessPressed()) {
             if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
                 if (attemptPossess()) {
+                    AudioEngine::get()->play("possess", _possessSound,false,1.0f,true);
                     //_possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
                     for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
                         _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
@@ -278,6 +289,7 @@ void GameplayMode::update(float timestep) {
         else if (_inputManager->getAndResetUnpossessPressed()) {
             if (_player->get_possessEnemy() != nullptr) {
                 unpossess();
+                AudioEngine::get()->play("unpossess", _jumpOffSound);
             }
         }
 
@@ -288,6 +300,7 @@ void GameplayMode::update(float timestep) {
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (cageCollision != 0) {
             setGameStatus(GameStatus::WIN);
+            AudioEngine::get()->play("win", _winSound);
             // shows win Panel
             _winPanel->setVisible(true);
             _winPanel->getChildButtons()[0]->getButton()->activate();
@@ -504,6 +517,11 @@ void GameplayMode::clearRootSceneNode() {
  * have become standard in most game engines.
  */
 void GameplayMode::buildScene() {
+    _possessSound = _assets->get<Sound>("possess");
+    _winSound = _assets->get<Sound>("winCondition");
+    _doorSound = _assets->get<Sound>("useDoor");
+    _staircaseSound = _assets->get<Sound>("useStaircase");
+    _jumpOffSound = _assets->get<Sound>("jumpOff");
     // First clear root scene
     //clearRootSceneNode();
     Size  size = Application::get()->getDisplaySize();
@@ -773,7 +791,11 @@ void GameplayMode::buildScene() {
 }
 
 void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
-
+    _possessSound = _assets->get<Sound>("possess");
+    _winSound = _assets->get<Sound>("winCondition");
+    _doorSound = _assets->get<Sound>("useDoor");
+    _staircaseSound = _assets->get<Sound>("useStaircase");
+    _jumpOffSound = _assets->get<Sound>("jumpOff");
 
     //clearRootSceneNode();
     Size  size = Application::get()->getDisplaySize();
@@ -1128,6 +1150,7 @@ void GameplayMode::checkDoors() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y+25) < 110.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                AudioEngine::get()->play("doorOpen", _doorSound);
                 _hasControl = false;
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
                 _enemyController->getPossessed()->getSceneNode()->setVisible(false);
@@ -1207,7 +1230,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
                 _player->setCurrentDoor(staircaseDoor->getConnectedDoors());
-
+                AudioEngine::get()->play("staircaseOpen", _staircaseSound);
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }
@@ -1220,6 +1243,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _enemyController->getPossessed()->getSceneNode()->setVisible(!visibility);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                AudioEngine::get()->play("staircaseClose", _staircaseSound);
                 //ChangeDrawOrder();
                 //ChangeDrawOrder();
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
