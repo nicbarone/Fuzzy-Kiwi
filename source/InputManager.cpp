@@ -268,6 +268,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
     case Zone::LEFT:
         // Only process if no touch in zone
         if (_ltouch.touchids.empty()) {
+            _ltouch.beginPos = event.position;
             // Left is the floating joystick
             _ltouch.position = event.position;
             _ltouch.timestamp.mark();
@@ -338,6 +339,8 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
     }
     Zone zone = getZone(pos);
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
+        _ltouch.beginPos = Vec2::ZERO;
+        _ltouch.position = Vec2::ZERO;
         _ltouch.touchids.clear();
         _keyForward = 0;
         _leftJoystick = false;

@@ -114,6 +114,7 @@ protected:
     std::shared_ptr<ui::PanelElement> _menuPanel;
     /** The panel to keep track of possess numbers */
     std::shared_ptr<ui::PanelElement> _possessPanel;
+    std::shared_ptr<ui::PanelElement> _joystickPanel;
     /** The button to open menu */
     std::shared_ptr<ui::ButtonElement> _menuButton;
     // Create panels

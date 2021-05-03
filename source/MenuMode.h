@@ -13,8 +13,6 @@ protected:
     GameplayMode _gameplay;
     std::shared_ptr<Texture> menuPanel;
     std::shared_ptr<ui::PanelElement> _menuPanel;
-    /** The panel to tell the people they have a save-game */
-    std::shared_ptr<ui::PanelElement> _saveGamePanel;
 public:
     /**
      * Creates, but does not initialized a new application.
