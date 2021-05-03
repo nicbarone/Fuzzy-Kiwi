@@ -190,7 +190,7 @@ void GameplayMode::reset() {
     if (_json != nullptr) {
         buildScene(_json);
     }
-    
+
     if (_json->getLong("level", -1L) != -1) {
         _levelIndex = _json->getLong("level", -1L);
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level" + std::to_string(_levelIndex+1) + ".json");
@@ -265,14 +265,6 @@ void GameplayMode::update(float timestep) {
                 _tutorialText2->setPositionX(0);
             }
         }
-        if (_inputManager->getTapPos().x != 0) {
-            /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
-            CULog("x: %f, y: %f", _level1StairDoor->getPos().x, _level1StairDoor->getPos().y);*/
-            //CULog("x: %f", abs(_player->getPos().x - _level1StairDoor->getPos().x));
-            //CULog("Is possessing: %d", _player->getPossess());
-            //CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
-
-        }    //546 546
 
         Size  size = Application::get()->getDisplaySize();
         float scale = GAME_WIDTH / size.width;
@@ -303,7 +295,7 @@ void GameplayMode::update(float timestep) {
         else if (_inputManager->getAndResetUnpossessPressed()) {
             if (_player->get_possessEnemy() != nullptr) {
                 unpossess();
-                
+
             }
         }
 
@@ -332,6 +324,10 @@ void GameplayMode::update(float timestep) {
         else if(_hasControl) {
             _player->move(_inputManager->getForward());
         }
+#ifdef CU_MOBILE
+        // move joystick for visualization
+        _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition()/_joystickPanel->getSceneNode()->getScaleX()-_inputManager->getJoystickPosition()/2.0f);
+#endif
         // Enemy movement
         _enemyController->moveEnemies(_inputManager->getForward());
         _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
@@ -399,7 +395,7 @@ bool GameplayMode::attemptPossess() {
         else {
             _player->getSceneNode()->setScale(-0.15, 0.15);
         }
-        
+
         _rootScene->addChild(_player->getSceneNode());
         _player->PossessAnimation(0);
 
@@ -452,9 +448,9 @@ void GameplayMode::unpossess() {
     }
     _player->setLevel(level);
     //_player->getSceneNode()->setPositionY(_player->getSceneNode()->getPositionY() + 50);
-   
+
     _rootScene->addChild(_player->getSceneNode());
-   
+
     _player->EnemyDying();
     _player->setPossess(false);
     //_player->setPos((enemy->getPos()));
@@ -473,7 +469,7 @@ void GameplayMode::unpossess() {
         int level = _player->getLevel();
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
         _rootScene->removeChild(_player->getSceneNode());
-        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());     
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
         _player->setPos(_player->getPos() + 55);
         _player->setLevel(level);
         _player->getSceneNode()->setScale(0.15, 0.15);
@@ -544,7 +540,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _doorFrames.clear();
     _staircaseDoors.clear();
     _catDens.clear();
-    
+
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
     //floor texture creation
     std::shared_ptr<Texture> wall = _assets->get<Texture>("levelWall");
@@ -599,7 +595,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 _player->setPos(objectTemp->getFloat("x_pos"));
                 _player->setLevel(objectTemp->getInt("level"));
                 _player->getSceneNode()->setVisible(false);
-                
+
                 _player->setPossess(true);
                 _player->set_possessEnemy(_enemyController->getEnemies().back());
                 _player->get_possessEnemy()->setAsPossessed();
@@ -731,6 +727,15 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _rootScene->addChild(_tutorialText2);
     addChild(_rootScene);
 
+#ifdef CU_MOBILE
+    // make joystick panel
+    _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
+    _joystickPanel->getSceneNode()->setScale(1.0f);
+    _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
+    _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
+    addChild(_joystickPanel->getSceneNode());
+#endif
+
     // make possess panel
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
     _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
@@ -757,7 +762,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _menuButton->setTexture(_assets->get<Texture>("menuButton"));
     _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
-    _menuButton->getButton()->setScale(1.0f);
+    _menuButton->getButton()->setScale(0.75f);
     _menuButton->getButton()->setPosition(15.0f, size.height - 15.0f);
     _menuButton->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -911,7 +916,7 @@ void GameplayMode::checkDoors() {
                     _hasControl = true;
                     return false;
                 };
-                
+
                 std::vector<int> v1 = _enemyController->getPossessed()->getKeys();
                 std::vector<int> v2 = door->getKeys();
                 /*std::sort(v1.begin(), v1.end());
@@ -1002,7 +1007,7 @@ void GameplayMode::checkStaircaseDoors() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y-20) < 110.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()&&
                 staircaseDoor->getConnectedDoors()== _player->getCurrentDoor()) {
-                _player->setCurrentDoor(0); 
+                _player->setCurrentDoor(0);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
                 AudioEngine::get()->play("staircaseClose", _assets->get<Sound>("useDoor"), false, 1.0f, true);
@@ -1136,7 +1141,7 @@ void GameplayMode::toSaveJson() {
         playerObject->appendChild("num_possessions", JsonValue::alloc((long)_player->get_nPossess()));
 
         //enemies
-        
+
         vector<shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
         for (auto it = begin(enemies); it != end(enemies); ++it) {
             shared_ptr<JsonValue> tempObject = JsonValue::allocObject(); //for enemy
@@ -1159,7 +1164,7 @@ void GameplayMode::toSaveJson() {
             shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
             tempObject->appendChild("x_pos", JsonValue::alloc(it->get()->getPos().x));
             tempObject->appendChild("level", JsonValue::alloc((long)it->get()->getLevel()));
-            tempObject->appendChild("connection", JsonValue::alloc((long)it->get()->getConnectedDens())); 
+            tempObject->appendChild("connection", JsonValue::alloc((long)it->get()->getConnectedDens()));
             tempObject->appendChild("isDen", JsonValue::alloc(true));
             staircaseDoorArray->appendChild(tempObject);
         }
