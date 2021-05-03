@@ -17,17 +17,10 @@ void CatDen::dispose() {
 
 bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int connectedDens, int rows, int columns, std::shared_ptr<Texture> texture)
 {
-	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
-	setTexture(texture);
-	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET+ CAT_DEN_OFFSET));
-	setAngle(ang);
-	setScale(scale);
-	setLevel(level);
-	setColor(color);
 	_connectedDens = connectedDens;
 	if (_connectedDens == 1)
 	{
-		setColor(cugl::Color4::WHITE);
+		setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	}
 	if (_connectedDens == 2)
 	{
@@ -41,6 +34,13 @@ bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int con
 	{
 		setColor(cugl::Color4::RED);
 	}
+	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
+	setTexture(texture);
+	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + CAT_DEN_OFFSET));
+	setAngle(ang);
+	setScale(scale);
+	setLevel(level);
+	setColor(color);
 	_frame = 0;
 	_isOpen = false;
 	getSceneNode()->setPriority(level);

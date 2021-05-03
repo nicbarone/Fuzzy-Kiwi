@@ -302,6 +302,7 @@ void GameplayMode::update(float timestep) {
         checkStaircaseDoors();
         checkDoors();
         checkCatDens();
+        //checkEnemyPossession();
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (cageCollision != 0) {
@@ -888,15 +889,15 @@ void GameplayMode::checkDoors() {
     for (shared_ptr<Door> door : _doors) {
         bool doorState = door->getIsOpen();
         if (_enemyController->getPossessed() != nullptr) {
-            if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager->getRootSceneNode()->getScaleX() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y+25) < 110.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+            if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 AudioEngine::get()->play("doorOpen", _assets->get<Sound>("useDoor"), false, 1.0f, true);
                 _hasControl = false;
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
                 _enemyController->getPossessed()->getSceneNode()->setVisible(false);
-                _rootScene->removeChild(_player ->getSceneNode());
+                _rootScene->removeChild(_player->getSceneNode());
                 _player->SetSceneNode(Player::alloc(150, _enemyController->getPossessed()->getLevel(), 0, 9, EnemyOpeningDoor)->getSceneNode());
                 _player->setLevel(_enemyController->getPossessed()->getLevel());
                 CULog("level: %d", _player->getLevel());
@@ -947,6 +948,41 @@ void GameplayMode::checkDoors() {
 
 }
 
+void GameplayMode::checkEnemyPossession() {
+    for (shared_ptr<Enemy> enemy : _enemyController->getEnemies()) {
+        if (_enemyController->getPossessed() == nullptr) {
+            CULog("player position: %f", enemy->getSceneNode()->getWorldPosition().x);
+            //CULog("Whether it is true %d", abs(_player->getPos() - enemy->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX());
+            if (abs(_player->getPos() - enemy->getSceneNode()->getWorldPosition().x) < 270.0f * _inputManager->getRootSceneNode()->getScaleX() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - enemy->getSceneNode()->getWorldPosition().y+25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+                _player->getLevel() == enemy->getLevel() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 285.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                //AudioEngine::get()->play("doorOpen", _assets->get<Sound>("useDoor"), false, 1.0f, true);
+                if (attemptPossess()) {
+                    AudioEngine::get()->play("possess", _assets->get<Sound>("possess"));
+                    //_possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
+                    for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
+                        _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
+                    }
+                    if (_showTutorialText) {
+                        _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
+                        _tutorialText->setPosition(Vec2(100, 110));
+                        _tutorialText2->setText("Swipe downwards to unpossess, two fingers to move the camera.");
+                        _tutorialText2->setPosition(Vec2(100, 420));
+                    }
+                }
+            }
+        }
+        else if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - enemy->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+            _player->getLevel() == enemy->getLevel() &&
+            abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 310.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+            //AudioEngine::get()->play("doorOpen", _assets->get<Sound>("useDoor"), false, 1.0f, true);
+            unpossess();
+        }
+    }
+
+}
+
 void GameplayMode::checkStaircaseDoors() {
 
     bool visibility;
@@ -966,11 +1002,11 @@ void GameplayMode::checkStaircaseDoors() {
                 v2.begin(), v2.end(),
                 std::back_inserter(key_intersection));
             bool StaircasedoorState = staircaseDoor->getIsOpen();
-            if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager->getRootSceneNode()->getScaleX() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y-20) < 110.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+            if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y-20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
 
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()&&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()&&
                 !key_intersection.empty()) {
                 _hasControl = false;
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
@@ -1004,8 +1040,8 @@ void GameplayMode::checkStaircaseDoors() {
             }
 
             else if (!visibility &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y-20) < 110.0f * _inputManager->getRootSceneNode()->getScaleY() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()&&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y-20) < 170.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()&&
                 staircaseDoor->getConnectedDoors()== _player->getCurrentDoor()) {
                 _player->setCurrentDoor(0);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
@@ -1062,10 +1098,10 @@ void GameplayMode::checkCatDens() {
         visibility = _player->getSceneNode()->isVisible();
         for (shared_ptr<CatDen> catDen : _catDens) {
             bool StaircasedoorState = catDen->getIsOpen();
-            if (visibility && abs(_player->getSceneNode()->getWorldPosition().x - catDen->getSceneNode()->getWorldPosition().x) < 110.0f * _inputManager->getRootSceneNode()->getScaleX() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+            if (visibility && abs(_player->getSceneNode()->getWorldPosition().x - catDen->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _player->getLevel() == catDen->getLevel() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setCurrentDen(catDen->getConnectedDens());
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
@@ -1073,8 +1109,8 @@ void GameplayMode::checkCatDens() {
             }
 
             else if (!visibility &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 80.0f * _inputManager->getRootSceneNode()->getScaleY() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 60.0f * _inputManager->getRootSceneNode()->getScaleX()&&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()&&
                 _player->getCurrentDen() == catDen->getConnectedDens()){
                 _player->setCurrentDen(0);
                 _player->getSceneNode()->setVisible(!visibility);
@@ -1089,6 +1125,7 @@ void GameplayMode::checkCatDens() {
         }
     }
 }
+
 
 
 vector<Vec2> GameplayMode::closedDoors() {

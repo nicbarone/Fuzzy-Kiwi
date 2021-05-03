@@ -231,6 +231,9 @@ public:
     open a door*/
     void checkDoors();
 
+    /*Function called every update to check if the player is trying to possess an enemy*/
+    void checkEnemyPossession();
+
     /*Function called every update to check if the player is trying to exit
     or enter a staircase door*/
     void checkStaircaseDoors();
