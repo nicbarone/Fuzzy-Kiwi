@@ -204,6 +204,20 @@ public:
     }
 
     /**
+     * Returns the relative position of roystick should be relative to the joystick center
+     */
+    Vec2 getJoystickPosition() {
+        if (_ltouch.touchids.empty()) {
+            return Vec2::ZERO;
+        }
+        else {
+            Vec2 ori = _ltouch.position - _ltouch.beginPos;
+            CULog("difference being: %f, %f",-ori.x,ori.y);
+            return Vec2(-ori.x,ori.y);
+        }
+    }
+
+    /**
      * Getter for the possess pressed, and set it back to false;
      */
     bool getAndResetPossessPressed() {

@@ -307,6 +307,10 @@ void GameplayMode::update(float timestep) {
         else if(_hasControl) {
             _player->move(_inputManager->getForward());
         }
+#ifdef CU_MOBILE
+        // move joystick for visualization
+        _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition()/0.3f-_inputManager->getJoystickPosition());
+#endif
         // Enemy movement
         _enemyController->moveEnemies(_inputManager->getForward());
         _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
@@ -627,6 +631,15 @@ void GameplayMode::buildScene() {
 
 
     _rootScene->addChild(_tutorialText);
+
+#ifdef CU_MOBILE
+    // make joystick panel
+    _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
+    _joystickPanel->getSceneNode()->setScale(0.3f);
+    _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
+    _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
+    addChild(_joystickPanel->getSceneNode());
+#endif
 
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
     _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
@@ -972,6 +985,15 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _tutorialText2->setVisible(_showTutorialText);
     _rootScene->addChild(_tutorialText2);
     addChild(_rootScene);
+
+#ifdef CU_MOBILE
+    // make joystick panel
+    _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
+    _joystickPanel->getSceneNode()->setScale(0.3f);
+    _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth() * _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
+    _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
+    addChild(_joystickPanel->getSceneNode());
+#endif
 
     // make possess panel
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));

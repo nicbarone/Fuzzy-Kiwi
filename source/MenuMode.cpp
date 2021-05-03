@@ -53,7 +53,15 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
  */
 void MenuMode::update(float progress) {
     //CULog("You are now in Menu Mode. Enjoy your stay");
-
+    // If save file exists then show this button
+    if (filetool::file_exists(Application::get()->getSaveDirectory() + "save.json")) {
+        _menuPanel->getChildButtons()[1]->getButton()->setVisible(true);
+        _menuPanel->getChildButtons()[1]->getButton()->activate();
+    }
+    else {
+        _menuPanel->getChildButtons()[1]->getButton()->setVisible(false);
+        _menuPanel->getChildButtons()[1]->getButton()->deactivate();
+    }
 }
 
 GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager) {
@@ -108,22 +116,23 @@ void MenuMode::buildScene() {
     _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            if (filetool::file_exists("levels\\save.json")) {
-                _saveGamePanel->setVisible(true);
-                _saveGamePanel->getChildButtons()[0]->getButton()->activate();
-                _saveGamePanel->getChildButtons()[1]->getButton()->activate();
-            }
-            else {
-                _playPressed = true;
-            }
+            _playPressed = true;
         }
     });
     _menuPanel->getChildButtons()[0]->getButton()->activate();
+    _menuPanel->createChildButton(950, -700, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("loadGame"), Color4f::WHITE);
+    _menuPanel->getChildButtons()[1]->getButton()->setScale(Vec2(1.2f, 1.2f));
+    _menuPanel->getChildButtons()[1]->getButton()->setName("loadButton");
+    _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameLoaded = true;
+        }
+        });
+    _menuPanel->getChildButtons()[1]->getButton()->activate();
     addChild(_menuPanel->getSceneNode());
     // make save game panel
-    _saveGamePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("savegamePanel"));
+    /*_saveGamePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("savegamePanel"));
     _saveGamePanel->setVisible(false);
     _saveGamePanel->getSceneNode()->setScale(max(size.width / _assets->get<Texture>("savegamePanel")->getSize().width, size.height / _assets->get<Texture>("savegamePanel")->getSize().height));
     _saveGamePanel->createChildButton(-125, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("no"), Color4f::WHITE);
@@ -148,14 +157,14 @@ void MenuMode::buildScene() {
             _gameLoaded = true;
         }
     });
-    addChild(_saveGamePanel->getSceneNode());
+    addChild(_saveGamePanel->getSceneNode());*/
 }
 
 void MenuMode::deactivateButtons() {
     _menuPanel->getChildButtons()[0]->getButton()->deactivate();
-    _saveGamePanel->setVisible(false);
+    /*_saveGamePanel->setVisible(false);
     _saveGamePanel->getChildButtons()[0]->getButton()->deactivate();
-    _saveGamePanel->getChildButtons()[1]->getButton()->deactivate();
+    _saveGamePanel->getChildButtons()[1]->getButton()->deactivate();*/
 }
 
 void MenuMode::activateButtons() {
