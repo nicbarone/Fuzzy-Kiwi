@@ -191,6 +191,7 @@ void App::update(float timestep) {
     else {
         _gameplay.update(timestep);
         if (_gameplay.getBackToMenu()) {
+            _gameplay.toSaveJson();
             _gameplay.setBackToMenu(false);
             _levelSelect.activateButtons();
             _levelSelect.setLevelSelected(false);

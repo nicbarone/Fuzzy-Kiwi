@@ -212,7 +212,6 @@ public:
         }
         else {
             Vec2 ori = _ltouch.position - _ltouch.beginPos;
-            CULog("difference being: %f, %f",-ori.x,ori.y);
             return Vec2(-ori.x,ori.y);
         }
     }

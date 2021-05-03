@@ -55,6 +55,7 @@ void MenuMode::update(float progress) {
     //CULog("You are now in Menu Mode. Enjoy your stay");
     // If save file exists then show this button
     if (filetool::file_exists(Application::get()->getSaveDirectory() + "save.json")) {
+        CULog("save file exists!");
         _menuPanel->getChildButtons()[1]->getButton()->setVisible(true);
         _menuPanel->getChildButtons()[1]->getButton()->activate();
     }
@@ -129,42 +130,13 @@ void MenuMode::buildScene() {
             _gameLoaded = true;
         }
         });
+    _menuPanel->getChildButtons()[1]->getButton()->setVisible(false);
     _menuPanel->getChildButtons()[1]->getButton()->activate();
     addChild(_menuPanel->getSceneNode());
-    // make save game panel
-    /*_saveGamePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("savegamePanel"));
-    _saveGamePanel->setVisible(false);
-    _saveGamePanel->getSceneNode()->setScale(max(size.width / _assets->get<Texture>("savegamePanel")->getSize().width, size.height / _assets->get<Texture>("savegamePanel")->getSize().height));
-    _saveGamePanel->createChildButton(-125, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("no"), Color4f::WHITE);
-    _saveGamePanel->getChildButtons()[0]->getButton()->setName("no");
-    _saveGamePanel->getChildButtons()[0]->getButton()->setScale(1.0f);
-    _saveGamePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _playPressed = true;
-        }
-    });
-    _saveGamePanel->createChildButton(125, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("yes"), Color4f::WHITE);
-    _saveGamePanel->getChildButtons()[1]->getButton()->setName("yes");
-    _saveGamePanel->getChildButtons()[1]->getButton()->setScale(1.0f);
-    _saveGamePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _gameLoaded = true;
-        }
-    });
-    addChild(_saveGamePanel->getSceneNode());*/
 }
 
 void MenuMode::deactivateButtons() {
     _menuPanel->getChildButtons()[0]->getButton()->deactivate();
-    /*_saveGamePanel->setVisible(false);
-    _saveGamePanel->getChildButtons()[0]->getButton()->deactivate();
-    _saveGamePanel->getChildButtons()[1]->getButton()->deactivate();*/
 }
 
 void MenuMode::activateButtons() {
