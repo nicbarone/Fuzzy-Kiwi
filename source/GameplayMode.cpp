@@ -260,27 +260,19 @@ void GameplayMode::update(float timestep) {
 
         if (_inputManager->getAndResetPossessPressed()) {
             if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
-                for (shared_ptr<Enemy> enemy : _enemyController->getEnemies()) {
-                        //CULog("Whether it is true %d", abs(_player->getPos() - enemy->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX());
-                        if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - enemy->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
-                            _player->getLevel() == enemy->getLevel() &&
-                            abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 300.0f * _inputManager->getRootSceneNode()->getScaleX()) {
-                            //AudioEngine::get()->play("doorOpen", _assets->get<Sound>("useDoor"), false, 1.0f, true);
-                            if (attemptPossess()) {
-                                AudioEngine::get()->play("possess", _assets->get<Sound>("possess"));
-                                //_possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
-                                for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
-                                    _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
-                                }
-                                if (_showTutorialText) {
-                                    _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
-                                    _tutorialText->setPosition(Vec2(100, 110));
-                                    _tutorialText2->setText("Swipe downwards to unpossess, two fingers to move the camera.");
-                                    _tutorialText2->setPosition(Vec2(100, 420));
-                                }
-                            }
-                        }
+                if (attemptPossess()) {
+                    AudioEngine::get()->play("possess", _assets->get<Sound>("possess"));
+                    //_possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
+                    for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
+                        _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
                     }
+                    if (_showTutorialText) {
+                        _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
+                        _tutorialText->setPosition(Vec2(100, 110));
+                        _tutorialText2->setText("Swipe downwards to unpossess, two fingers to move the camera.");
+                        _tutorialText2->setPosition(Vec2(100, 420));
+                    }
+                }
             }
         }
         else if (_inputManager->getAndResetUnpossessPressed()) {
@@ -293,7 +285,7 @@ void GameplayMode::update(float timestep) {
         checkStaircaseDoors();
         checkDoors();
         checkCatDens();
-        checkEnemyPossession();
+        //checkEnemyPossession();
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (cageCollision != 0) {
@@ -1199,14 +1191,26 @@ void GameplayMode::checkEnemyPossession() {
             if (abs(_player->getPos() - enemy->getSceneNode()->getWorldPosition().x) < 270.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - enemy->getSceneNode()->getWorldPosition().y+25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _player->getLevel() == enemy->getLevel() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 300.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 285.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 //AudioEngine::get()->play("doorOpen", _assets->get<Sound>("useDoor"), false, 1.0f, true);
-                attemptPossess();
+                if (attemptPossess()) {
+                    AudioEngine::get()->play("possess", _assets->get<Sound>("possess"));
+                    //_possessPanel->getChildTexts()[0]->setText("x "+to_string(_player->get_nPossess()));
+                    for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
+                        _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
+                    }
+                    if (_showTutorialText) {
+                        _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
+                        _tutorialText->setPosition(Vec2(100, 110));
+                        _tutorialText2->setText("Swipe downwards to unpossess, two fingers to move the camera.");
+                        _tutorialText2->setPosition(Vec2(100, 420));
+                    }
+                }
             }
         }
         else if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - enemy->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
             _player->getLevel() == enemy->getLevel() &&
-            abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 300.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+            abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 310.0f * _inputManager->getRootSceneNode()->getScaleX()) {
             //AudioEngine::get()->play("doorOpen", _assets->get<Sound>("useDoor"), false, 1.0f, true);
             unpossess();
         }

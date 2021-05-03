@@ -337,6 +337,30 @@
 			"wrapT": "clamp"
 
 		},
+		"catDenBlue": {
+			"file": "textures/GameObject/CatDen/CatDenBlue.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+
+		},
+		"catDenGrey": {
+			"file": "textures/GameObject/CatDen/CatDenGrey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+
+		},
+		"catDenPurple": {
+			"file": "textures/GameObject/CatDen/CatDenPurple.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+
+		},
 		"catPossessing": {
 			"file": "textures/GameObject/Cat/CatPossessing.png",
 			"minfilter": "nearest",
