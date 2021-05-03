@@ -126,7 +126,7 @@ protected:
     std::shared_ptr<scene2::Label> _tutorialText;
     std::shared_ptr<scene2::Label> _tutorialText2;
 
-    bool _showTutorialText;
+    int _showTutorialText;
 
     enum class GameStatus {
         RUNNING,
@@ -146,7 +146,7 @@ protected:
      * you do in 3152.  However, they greatly simplify scene management, and
      * have become standard in most game engines.
      */
-    void buildScene();
+
     void buildScene(std::shared_ptr<JsonValue>);
 
 public:
@@ -159,7 +159,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false), _showTutorialText(false), _numFloors(0) {}
+    GameplayMode() : cugl::Scene2(), _hasControl(false), _reset(false), _backToMenu(false), _nextLevel(false), _showTutorialText(0), _numFloors(0) {}
 
     /**
      * Disposes of this application, releasing all resources.
@@ -276,10 +276,10 @@ public:
         return _gameStatus;
     }
 
-    void setShowTutorial(bool boolean) {
-        _showTutorialText = boolean;
-        _tutorialText->setVisible(boolean);
-        _tutorialText2->setVisible(boolean);
+    void setShowTutorial(int value) {
+        _showTutorialText = value;
+        _tutorialText->setVisible(value == 1);
+        _tutorialText2->setVisible(value == 2);
     }
 };
 
