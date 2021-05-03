@@ -91,7 +91,6 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
 #endif
 
     // Build the scene from these assets
-    buildScene();
 
 
     // Report the safe area
@@ -191,9 +190,7 @@ void GameplayMode::reset() {
     if (_json != nullptr) {
         buildScene(_json);
     }
-    else {
-        buildScene();
-    }
+
     if (_json->getLong("level", -1L) != -1) {
         _levelIndex = _json->getLong("level", -1L);
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level" + std::to_string(_levelIndex+1) + ".json");
@@ -231,13 +228,42 @@ void GameplayMode::update(float timestep) {
     if (getGameStatus() != GameStatus::RUNNING) {
         return;
     }
+    if (_showTutorialText == 1) {
+        if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen()) {
+            _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
+            _tutorialText->setPositionX(0);
+        }
+    }
+    if (_showTutorialText == 2) {
+        if (_player->getLevel() == 0 && _player->getPos() > 950) {
+            _tutorialText2->setText("Staircase doors work similarly to cat dens but can only be used while possessing. Tap on them to enter and leave!");
+            _tutorialText2->setPositionX(0);
+        }
 
+        if (_player->getLevel() == 1) {
+            _tutorialText2->setText("Nice work! Touch the cage in the cat form to complete the level.");
+            _tutorialText2->setPosition(Vec2(100, 420));
+            _tutorialText2->setPriority(3);
+        }
+        if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
+            _tutorialText2->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
+            _tutorialText2->setPositionX(0);
+        }
+    }
     // Read input controller input
     _inputManager->readInput();
     if (_hasControl) {
         if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
-            //very temporary modification to test whether it works, dont want to work with highlight right now
             _enemyController->closestEnemy()->setGlow(true);
+            if (_showTutorialText == 1) {
+                _tutorialText->setText("When in range to possess, the enemy will be highlighted. Swipe up to possess!");
+                _tutorialText->setPositionX(0);
+                //TODO: ADD ANIMATED HAND
+            }
+            else if (_showTutorialText == 2) {
+                _tutorialText2->setText("The paws on the top right indicate the number of possessions you have in a level. Use them wisely!");
+                _tutorialText2->setPositionX(0);
+            }
         }
 
         Size  size = Application::get()->getDisplaySize();
@@ -258,19 +284,18 @@ void GameplayMode::update(float timestep) {
                     for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
                         _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
                     }
-                    if (_showTutorialText) {
-                        _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
+                    if (_showTutorialText == 1) {
+                        _tutorialText->setText("You can open doors by clicking on them. You can only open doors while possessing an enemy and near the door.");
                         _tutorialText->setPosition(Vec2(100, 110));
-                        _tutorialText2->setText("Swipe downwards to unpossess, two fingers to move the camera.");
-                        _tutorialText2->setPosition(Vec2(100, 420));
                     }
+
                 }
             }
         }
         else if (_inputManager->getAndResetUnpossessPressed()) {
             if (_player->get_possessEnemy() != nullptr) {
                 unpossess();
-                
+
             }
         }
 
@@ -318,8 +343,8 @@ void GameplayMode::update(float timestep) {
                 _losePanel->setVisible(true);
                 _losePanel->getChildButtons()[0]->getButton()->activate();
                 _losePanel->getChildButtons()[1]->getButton()->activate();
-                if (_showTutorialText) {
-                    _tutorialText->setText("Oh no! You got caught! Press the R key to retry");
+                if (_showTutorialText == 1) {
+                    _tutorialText->setText("Oh no! You got caught!");
                     _tutorialText->setPosition(Vec2(100, 110));
                     _tutorialText2->setVisible(false);
                 }
@@ -336,12 +361,12 @@ void GameplayMode::update(float timestep) {
 
         //tutorial text trigger
         if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
-            if (_showTutorialText) {
+            /*if (_showTutorialText) {
                 _tutorialText->setText("Oh no! You are stuck! Use the top left pause button to retry");
                 _tutorialText->setPosition(Vec2(100, 110));
                 _tutorialText2->setText("The paw on the top right indicates the number of possessions you have remaining.");
                 _tutorialText2->setPosition(Vec2(100, 420));
-            }
+            }*/
         }
     }
 
@@ -371,7 +396,7 @@ bool GameplayMode::attemptPossess() {
         else {
             _player->getSceneNode()->setScale(-0.15, 0.15);
         }
-        
+
         _rootScene->addChild(_player->getSceneNode());
         _player->PossessAnimation(0);
 
@@ -424,9 +449,9 @@ void GameplayMode::unpossess() {
     }
     _player->setLevel(level);
     //_player->getSceneNode()->setPositionY(_player->getSceneNode()->getPositionY() + 50);
-   
+
     _rootScene->addChild(_player->getSceneNode());
-   
+
     _player->EnemyDying();
     _player->setPossess(false);
     //_player->setPos((enemy->getPos()));
@@ -445,7 +470,7 @@ void GameplayMode::unpossess() {
         int level = _player->getLevel();
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
         _rootScene->removeChild(_player->getSceneNode());
-        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());     
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
         _player->setPos(_player->getPos() + 55);
         _player->setLevel(level);
         _player->getSceneNode()->setScale(0.15, 0.15);
@@ -502,287 +527,7 @@ void GameplayMode::clearRootSceneNode() {
  * you do in 3152.  However, they greatly simplify scene management, and
  * have become standard in most game engines.
  */
-void GameplayMode::buildScene() {
-    // First clear root scene
-    //clearRootSceneNode();
-    Size  size = Application::get()->getDisplaySize();
-    float scale = GAME_WIDTH / size.width;
-    size *= scale;
 
-    _hasControl = true;
-
-    // Placeholder cat
-    //std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
-    std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
-    // Create the player
-    std::shared_ptr<Texture> catPossessing = _assets->get<Texture>("catPossessing");
-    _player = Player::alloc(150, 0, 0, 8, cat);
-
-    //floor texture creation
-    std::shared_ptr<Texture> wall = _assets->get<Texture>("levelWall");
-
-    std::shared_ptr<Texture> floor = _assets->get<Texture>("levelFloor");
-    //Staircase door texture creation
-    std::shared_ptr<Texture> staircaseDoor = _assets->get<Texture>("staircaseDoor");
-    std::shared_ptr<Texture> staircaseDoorOrange = _assets->get<Texture>("staircaseDoorOrange");
-    std::shared_ptr<Texture> staircaseDoorRed = _assets->get<Texture>("StaircaseDoorRed");
-    std::shared_ptr<Texture> staircaseDoorPurple = _assets->get<Texture>("StaircaseDoorPurple");
-    std::shared_ptr<Texture> staircaseDoorYellow = _assets->get<Texture>("staircaseDoorYellow");
-    //Door texture creation
-    std::shared_ptr<Texture> door = _assets->get<Texture>("door");
-
-    std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
-    std::shared_ptr<Texture> catDen = _assets->get<Texture>("catDen");
-    std::shared_ptr<Texture> catDenGreen = _assets->get<Texture>("catDenGreen");
-    std::shared_ptr<Texture> catDenPurple = _assets->get<Texture>("catDenPurple");
-    std::shared_ptr<Texture> catDenBlue = _assets->get<Texture>("catDenBlue");
-    std::shared_ptr<Texture> catDenGrey = _assets->get<Texture>("catDenGrey");
-    std::shared_ptr<Texture> cats = _assets->get<Texture>("catPossessing");
-
-    //caged animal
-    int s = 1;
-    std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
-    _level1Wall = Wall::alloc(550, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1,1, wall);
-    _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
-    _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen, catDenGreen, catDenPurple, catDenBlue, catDenGrey);
-    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen, catDenGreen, catDenPurple, catDenBlue, catDenGrey);
-    _catDens = { _level1CatDenLeft,_level1CatDenRight };
-    _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
-    _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
-    _level1StairDoor = StaircaseDoor::alloc(950, 0, Vec2(1, 1), 0, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor, 
-         staircaseDoorRed, staircaseDoorPurple, staircaseDoorYellow, staircaseDoorOrange);
-    _level2StairDoor = StaircaseDoor::alloc(550, 0, Vec2(1, 1), 1, cugl::Color4::WHITE, { 1 },1, 1, 8, staircaseDoor,
-        staircaseDoorRed, staircaseDoorPurple, staircaseDoorYellow, staircaseDoorOrange);
-    _staircaseDoors = { _level1StairDoor, _level2StairDoor};
-    _level1Door = Door::alloc(590,0, Vec2(1, 1), 0,cugl::Color4::WHITE, { 1 }, 1, 8, door);
-    _level1DoorFrame = DoorFrame::alloc(515, 0, Vec2(1.0, 1), 0, cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame);
-
-    _doors = { _level1Door};
-    _cagedAnimal = CagedAnimal::alloc(820, 0, Vec2(0.3, 0.3), 1, cugl::Color4::WHITE, { 1 }, 1, 1, cagedAnimal);
-    // Enemy creation
-    _enemyController = make_shared<EnemyController>();
-    enemyTexture = _assets->get<Texture>("enemy");
-    std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
-    enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
-    tableTexture = _assets->get<Texture>("lab-table");
-    _enemyController->addEnemy(400, 0,  0, { 1 }, 400, 400,5 , enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
-    _enemyController->addEnemy(650, 0, 0, { 1 }, 300, 900, 5 ,  enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
-
-
-    //std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
-    //_enemyController->addEnemy(50, 1, 300, 800, 0, enemyTexture, altTexture);
-    //_enemyController->addEnemy(50, 0, 50, 600, 0, enemyTexture, altTexture);
-
-
-    // Find the safe area, adapting to the iPhone X
-    Rect safe = Application::get()->getSafeBounds();
-    safe.origin *= scale;
-    safe.size *= scale;
-
-    // Get the right and bottom offsets.
-    float bOffset = safe.origin.y;
-    float rOffset = (size.width) - (safe.origin.x + safe.size.width);
-
-    // Text labels
-    std::shared_ptr<Font> font = _assets->get<Font>("futura");
-    _tutorialText = scene2::Label::alloc("Possess enemies to get past them, don't get spotted!", font);
-    _tutorialText->setForeground(Color4::WHITE);
-    _tutorialText->setScale(Vec2(0.5, 0.5));
-    _tutorialText->setPosition(Vec2(60, 110));
-
-    // Add the logo and button to the scene graph
-    addChild(_rootScene);
-    _rootScene->addChild(_level1Wall->getSceneNode());
-    _rootScene->addChild(_level2Wall->getSceneNode());
-
-    _rootScene->addChild(_cagedAnimal->getSceneNode());
-    _rootScene->addChild(_level1Floor->getSceneNode());
-    _rootScene->addChild(_level1CatDenLeft->getSceneNode());
-    _rootScene->addChild(_level1CatDenRight->getSceneNode());
-    _rootScene->addChild(_level1Door->getSceneNode());
-    vector<std::shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
-    _rootScene->addChild(_level2Floor->getSceneNode());
-
-   /* _rootScene->addChild(_level1StairDoor->getSceneNode());
-    _rootScene->addChild(_level2StairDoor->getSceneNode());
-    for (auto it = begin(enemies); it != end(enemies); ++it) {
-        if (it->get()->getStartTableNode() != nullptr) {
-            _rootScene->addChild(it->get()->getStartTableNode());
-        }
-        if (it->get()->getEndTableNode() != nullptr) {
-            _rootScene->addChild(it->get()->getEndTableNode());
-        }
-        if (it->get()->getPatrolNode() != nullptr) {
-            _rootScene->addChild(it->get()->getPatrolNode());
-        }
-    }
-    for (auto it = begin(enemies); it != end(enemies); ++it) {
-        _rootScene->addChild(it->get()->getSceneNode());
-    }
-    _rootScene->addChild(_player->getSceneNode());
-    _rootScene->addChild(_level1DoorFrame->getSceneNode());*/
-
-
-    //_rootScene->getChildren()[]
-    //every time the level changes draw the player than draw the door frame
-
-
-    _rootScene->addChild(_tutorialText);
-
-#ifdef CU_MOBILE
-    // make joystick panel
-    _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
-    _joystickPanel->getSceneNode()->setScale(1.0f);
-    _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
-    _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
-    addChild(_joystickPanel->getSceneNode());
-#endif
-
-    _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
-    _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-    _possessPanel->getSceneNode()->setScale(1.0f);
-    _possessPanel->getSceneNode()->setPosition(size);
-    // TODO: get max possess number
-    std::shared_ptr<Texture> possessUsed = _assets->get<Texture>("usedPossession");
-    std::shared_ptr<Texture> possessAvailable = _assets->get<Texture>("availablePossession");
-    for (int i = 0; i < _player->get_nPossess(); i++) {
-        _possessPanel->createChildPanel(0, 0, 0, possessUsed);
-        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setScale(0.5f);
-        _possessPanel->getChildPanels()[i * 2]->setPos(_possessPanel->getSceneNode()->getContentSize()
-            * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[0]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
-
-        _possessPanel->createChildPanel(0, 0, 0, possessAvailable);
-        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setScale(0.5f);
-        _possessPanel->getChildPanels()[i * 2 + 1]->setPos(_possessPanel->getSceneNode()->getContentSize()
-            * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[1]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
-    }
-    addChild(_possessPanel->getSceneNode());
-
-    _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
-    _menuButton->setTexture(_assets->get<Texture>("menuButton"));
-    _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
-    _menuButton->getButton()->setScale(0.75f);
-    _menuButton->getButton()->setPosition(15.0f,size.height - 15.0f);
-    _menuButton->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            setGameStatus(GameStatus::PAUSED);
-        }
-        });
-    _menuButton->getButton()->activate();
-    addChild(_menuButton->getButton());
-
-    // Create Menu Panel
-    std::shared_ptr<Texture> pausedBackground = _assets->get<Texture>("pausedBackground");
-    _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, pausedBackground);
-    _menuPanel->getSceneNode()->setScale(max(size.width / pausedBackground->getSize().width, size.height / pausedBackground->getSize().height));
-    _menuPanel->setVisible(false);
-    _menuPanel->createChildButton(0, 60, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[0]->getButton()->setName("resume");
-    _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            setGameStatus(GameStatus::RUNNING);
-        }
-        });
-    _menuPanel->createChildButton(0, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[1]->getButton()->setName("restartLevel");
-    _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _reset = true;
-        }
-        });
-    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("exit"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[2]->getButton()->setName("returnToMenu");
-    _menuPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _backToMenu = true;
-        }
-        });
-    addChild(_menuPanel->getSceneNode());
-
-    // Create Win Panel
-    winPanel = _assets->get<Texture>("levelCompleteBG");
-    _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
-    _winPanel->getSceneNode()->setScale(max(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
-    _winPanel->setVisible(false);
-    _winPanel->createChildButton(1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE);
-    _winPanel->getChildButtons()[0]->getButton()->setScale(1.5f);
-    _winPanel->getChildButtons()[0]->getButton()->setName("nextLevel");
-    _winPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _nextLevel = true;
-        }
-        });
-    _winPanel->createChildButton(-1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("tryAgain"), Color4f::WHITE);
-    _winPanel->getChildButtons()[1]->getButton()->setScale(1.5f);
-    _winPanel->getChildButtons()[1]->getButton()->setName("retry");
-    _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _reset = true;
-        }
-        });
-    _winPanel->createChildButton(-1700, 1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE);
-    _winPanel->getChildButtons()[2]->getButton()->setScale(1.5f);
-    _winPanel->getChildButtons()[2]->getButton()->setName("menu");
-    _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _backToMenu = true;
-        }
-        });
-    addChild(_winPanel->getSceneNode());
-
-    // Create Lose Panel
-    losePanel = _assets->get<Texture>("levelFailedBG");
-    _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
-    _losePanel->getSceneNode()->setScale(max(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
-    _losePanel->setVisible(false);
-    _losePanel->createChildButton(230, -350, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
-    _losePanel->getChildButtons()[0]->getButton()->setName("retry");
-    _losePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _reset = true;
-        }
-        });
-    _losePanel->createChildButton(230, -850, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
-    _losePanel->getChildButtons()[1]->getButton()->setName("menu");
-    _losePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _backToMenu = true;
-        }
-        });
-    addChild(_losePanel->getSceneNode());
-    // Initialize input manager
-    _inputManager->init(_player, _rootScene, getBounds());
-    _rootScene->setScale(Vec2(0.6f, 0.6f));
-}
 
 void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
@@ -796,7 +541,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _doorFrames.clear();
     _staircaseDoors.clear();
     _catDens.clear();
-    
+
     std::shared_ptr<Texture> cat = _assets->get<Texture>("cat-walking");
     //floor texture creation
     std::shared_ptr<Texture> wall = _assets->get<Texture>("levelWall");
@@ -855,7 +600,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 _player->setPos(objectTemp->getFloat("x_pos"));
                 _player->setLevel(objectTemp->getInt("level"));
                 _player->getSceneNode()->setVisible(false);
-                
+
                 _player->setPossess(true);
                 _player->set_possessEnemy(_enemyController->getEnemies().back());
                 _player->get_possessEnemy()->setAsPossessed();
@@ -973,17 +718,17 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
     std::shared_ptr<Font> font = _assets->get<Font>("futura");
-    _tutorialText = scene2::Label::alloc("Possess enemies to get past them, don't get spotted!", font);
+    _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move! Pinch in and out to change zoom levels and swipe with two fingers to pan.", font);
     _tutorialText->setForeground(Color4::WHITE);
     _tutorialText->setScale(Vec2(0.5, 0.5));
-    _tutorialText->setPosition(Vec2(60, 110));
-    _tutorialText->setVisible(_showTutorialText);
+    _tutorialText->setPosition(Vec2(-100, 110));
+    _tutorialText->setVisible(_showTutorialText == 1);
     _rootScene->addChild(_tutorialText);
-    _tutorialText2 = scene2::Label::alloc("Use the left side of the screen to move, swipe upwards to possess.", font);
+    _tutorialText2 = scene2::Label::alloc("The holes in the wall are cat dens and can be used to travel to different cat dens while in cat form. Simply click on them to enter and leave!", font);
     _tutorialText2->setForeground(Color4::WHITE);
     _tutorialText2->setScale(Vec2(0.5, 0.5));
-    _tutorialText2->setPosition(Vec2(60, 420));
-    _tutorialText2->setVisible(_showTutorialText);
+    _tutorialText2->setPosition(Vec2(-200, 110));
+    _tutorialText2->setVisible(_showTutorialText == 2);
     _rootScene->addChild(_tutorialText2);
     addChild(_rootScene);
 
@@ -1188,11 +933,13 @@ void GameplayMode::checkDoors() {
                     std::back_inserter(key_intersection));
                 if (!key_intersection.empty()) {
                     door->setDoor(!doorState);
-                    if (_showTutorialText) {
-                        _tutorialText->setText("Click on the staircase door to enter the staircase and click on a connected door to leave");
+                    if (_showTutorialText == 1) {
+                        _tutorialText->setText("Nice work! To complete the level, touch the caged animal in cat form. Swipe down to unpossess!");
                         _tutorialText->setPosition(Vec2(100, 110));
-                        _tutorialText2->setText("Connected doors are indicated by color. Holes in the walls work similarly but can only be used in cat form.");
-                        _tutorialText2->setPosition(Vec2(100, 420));
+                    }
+                    else if(_showTutorialText == 2){
+                        _tutorialText2->setText("Time your movement to reach the staircase door! The enemy ahead can only detect you when you are possessing if he sees your back.");
+                        _tutorialText2->setPosition(Vec2(-200, 110));
                     }
                 }
                 cugl::Application::get()->schedule(openDoor, 500);
@@ -1300,7 +1047,7 @@ void GameplayMode::checkStaircaseDoors() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y-20) < 170.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()&&
                 staircaseDoor->getConnectedDoors()== _player->getCurrentDoor()) {
-                _player->setCurrentDoor(0); 
+                _player->setCurrentDoor(0);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
                 AudioEngine::get()->play("staircaseClose", _assets->get<Sound>("useDoor"), false, 1.0f, true);
@@ -1332,11 +1079,14 @@ void GameplayMode::checkStaircaseDoors() {
                 cugl::Application::get()->schedule(openDoor, 500);
 
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
-                if (_showTutorialText) {
+                if (_showTutorialText == 2) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                     _tutorialText->setPosition(Vec2(200, 420));
+                }
+
+                if (_showTutorialText == 2) {
                     _tutorialText2->setText("Congrats, you did it!");
-                    _tutorialText2->setPosition(Vec2(300, 110));
+                    _tutorialText2->setPosition(Vec2(300, 420));
                 }
                 break;
             }
@@ -1370,7 +1120,7 @@ void GameplayMode::checkCatDens() {
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setPos(catDen->getPos().x);
                 _player->setLevel(catDen->getLevel());
-                if (_showTutorialText) {
+                if (_showTutorialText == 1) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                     _tutorialText->setPosition(Vec2(200, 420));
                 }
@@ -1432,7 +1182,7 @@ void GameplayMode::toSaveJson() {
         playerObject->appendChild("num_possessions", JsonValue::alloc((long)_player->get_nPossess()));
 
         //enemies
-        
+
         vector<shared_ptr<Enemy>> enemies = _enemyController->getEnemies();
         for (auto it = begin(enemies); it != end(enemies); ++it) {
             shared_ptr<JsonValue> tempObject = JsonValue::allocObject(); //for enemy
@@ -1455,7 +1205,7 @@ void GameplayMode::toSaveJson() {
             shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
             tempObject->appendChild("x_pos", JsonValue::alloc(it->get()->getPos().x));
             tempObject->appendChild("level", JsonValue::alloc((long)it->get()->getLevel()));
-            tempObject->appendChild("connection", JsonValue::alloc((long)it->get()->getConnectedDens())); 
+            tempObject->appendChild("connection", JsonValue::alloc((long)it->get()->getConnectedDens()));
             tempObject->appendChild("isDen", JsonValue::alloc(true));
             staircaseDoorArray->appendChild(tempObject);
         }
