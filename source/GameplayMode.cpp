@@ -239,14 +239,6 @@ void GameplayMode::update(float timestep) {
             //very temporary modification to test whether it works, dont want to work with highlight right now
             _enemyController->closestEnemy()->setGlow(true);
         }
-        if (_inputManager->getTapPos().x != 0) {
-            /*CULog("x: %f, y: %f", _inputManager.getTapPos().x, _inputManager.getTapPos().x);
-            CULog("x: %f, y: %f", _level1StairDoor->getPos().x, _level1StairDoor->getPos().y);*/
-            //CULog("x: %f", abs(_player->getPos().x - _level1StairDoor->getPos().x));
-            //CULog("Is possessing: %d", _player->getPossess());
-            //CULog("Enemy position: %d",   _enemyController->getPossessed()->getPos().x);
-
-        }    //546 546
 
         Size  size = Application::get()->getDisplaySize();
         float scale = GAME_WIDTH / size.width;
@@ -309,7 +301,7 @@ void GameplayMode::update(float timestep) {
         }
 #ifdef CU_MOBILE
         // move joystick for visualization
-        _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition()/0.3f-_inputManager->getJoystickPosition());
+        _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition()/_joystickPanel->getSceneNode()->getScaleX()-_inputManager->getJoystickPosition()/2.0f);
 #endif
         // Enemy movement
         _enemyController->moveEnemies(_inputManager->getForward());
@@ -635,7 +627,7 @@ void GameplayMode::buildScene() {
 #ifdef CU_MOBILE
     // make joystick panel
     _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
-    _joystickPanel->getSceneNode()->setScale(0.3f);
+    _joystickPanel->getSceneNode()->setScale(1.0f);
     _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
     _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
     addChild(_joystickPanel->getSceneNode());
@@ -666,7 +658,7 @@ void GameplayMode::buildScene() {
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _menuButton->setTexture(_assets->get<Texture>("menuButton"));
     _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
-    _menuButton->getButton()->setScale(1.0f);
+    _menuButton->getButton()->setScale(0.75f);
     _menuButton->getButton()->setPosition(15.0f,size.height - 15.0f);
     _menuButton->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -989,8 +981,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 #ifdef CU_MOBILE
     // make joystick panel
     _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
-    _joystickPanel->getSceneNode()->setScale(0.3f);
-    _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth() * _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
+    _joystickPanel->getSceneNode()->setScale(1.0f);
+    _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
     _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
     addChild(_joystickPanel->getSceneNode());
 #endif
@@ -1021,7 +1013,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _menuButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _menuButton->setTexture(_assets->get<Texture>("menuButton"));
     _menuButton->getButton()->setAnchor(Vec2::ANCHOR_TOP_LEFT);
-    _menuButton->getButton()->setScale(1.0f);
+    _menuButton->getButton()->setScale(0.75f);
     _menuButton->getButton()->setPosition(15.0f, size.height - 15.0f);
     _menuButton->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released

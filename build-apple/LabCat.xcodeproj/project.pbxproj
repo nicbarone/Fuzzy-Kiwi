@@ -7,6 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D094D010263F9D1100712931 /* sound effect in Resources */ = {isa = PBXBuildFile; fileRef = D094D00A263F9D1000712931 /* sound effect */; };
+		D094D011263F9D1100712931 /* sound effect in Resources */ = {isa = PBXBuildFile; fileRef = D094D00A263F9D1000712931 /* sound effect */; };
+		D094D012263F9D1100712931 /* sound effect in Resources */ = {isa = PBXBuildFile; fileRef = D094D00A263F9D1000712931 /* sound effect */; };
+		D094D013263F9D1100712931 /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = D094D00B263F9D1100712931 /* bgm */; };
+		D094D014263F9D1100712931 /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = D094D00B263F9D1100712931 /* bgm */; };
+		D094D015263F9D1100712931 /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = D094D00B263F9D1100712931 /* bgm */; };
+		D094D016263F9D1100712931 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = D094D00C263F9D1100712931 /* fonts */; };
+		D094D017263F9D1100712931 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = D094D00C263F9D1100712931 /* fonts */; };
+		D094D018263F9D1100712931 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = D094D00C263F9D1100712931 /* fonts */; };
+		D094D019263F9D1100712931 /* json in Resources */ = {isa = PBXBuildFile; fileRef = D094D00D263F9D1100712931 /* json */; };
+		D094D01A263F9D1100712931 /* json in Resources */ = {isa = PBXBuildFile; fileRef = D094D00D263F9D1100712931 /* json */; };
+		D094D01B263F9D1100712931 /* json in Resources */ = {isa = PBXBuildFile; fileRef = D094D00D263F9D1100712931 /* json */; };
+		D094D01C263F9D1100712931 /* levels in Resources */ = {isa = PBXBuildFile; fileRef = D094D00E263F9D1100712931 /* levels */; };
+		D094D01D263F9D1100712931 /* levels in Resources */ = {isa = PBXBuildFile; fileRef = D094D00E263F9D1100712931 /* levels */; };
+		D094D01E263F9D1100712931 /* levels in Resources */ = {isa = PBXBuildFile; fileRef = D094D00E263F9D1100712931 /* levels */; };
+		D094D01F263F9D1100712931 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = D094D00F263F9D1100712931 /* textures */; };
+		D094D020263F9D1100712931 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = D094D00F263F9D1100712931 /* textures */; };
+		D094D021263F9D1100712931 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = D094D00F263F9D1100712931 /* textures */; };
 		D0E80E09262019B200C1B748 /* Wall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E80DDA262019AE00C1B748 /* Wall.cpp */; };
 		D0E80E0A262019B200C1B748 /* Wall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E80DDA262019AE00C1B748 /* Wall.cpp */; };
 		D0E80E0B262019B200C1B748 /* Wall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E80DDA262019AE00C1B748 /* Wall.cpp */; };
@@ -79,21 +97,6 @@
 		D0E80E4E262019B200C1B748 /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E80E06262019B200C1B748 /* Interactable.cpp */; };
 		D0E80E4F262019B200C1B748 /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E80E06262019B200C1B748 /* Interactable.cpp */; };
 		D0E80E50262019B200C1B748 /* Interactable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E80E06262019B200C1B748 /* Interactable.cpp */; };
-		D0E80F022620D74A00C1B748 /* json in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFD2620D74900C1B748 /* json */; };
-		D0E80F032620D74A00C1B748 /* json in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFD2620D74900C1B748 /* json */; };
-		D0E80F042620D74A00C1B748 /* json in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFD2620D74900C1B748 /* json */; };
-		D0E80F052620D74A00C1B748 /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFE2620D74900C1B748 /* bgm */; };
-		D0E80F062620D74A00C1B748 /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFE2620D74900C1B748 /* bgm */; };
-		D0E80F072620D74A00C1B748 /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFE2620D74900C1B748 /* bgm */; };
-		D0E80F082620D74A00C1B748 /* levels in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFF2620D74900C1B748 /* levels */; };
-		D0E80F092620D74A00C1B748 /* levels in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFF2620D74900C1B748 /* levels */; };
-		D0E80F0A2620D74A00C1B748 /* levels in Resources */ = {isa = PBXBuildFile; fileRef = D0E80EFF2620D74900C1B748 /* levels */; };
-		D0E80F0B2620D74A00C1B748 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = D0E80F002620D74900C1B748 /* textures */; };
-		D0E80F0C2620D74A00C1B748 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = D0E80F002620D74900C1B748 /* textures */; };
-		D0E80F0D2620D74A00C1B748 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = D0E80F002620D74900C1B748 /* textures */; };
-		D0E80F0E2620D74A00C1B748 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = D0E80F012620D74A00C1B748 /* fonts */; };
-		D0E80F0F2620D74A00C1B748 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = D0E80F012620D74A00C1B748 /* fonts */; };
-		D0E80F102620D74A00C1B748 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = D0E80F012620D74A00C1B748 /* fonts */; };
 		EB07CFB621EFF3F8000CB3A3 /* DeviceMargins.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */; };
 		EB22BDE025D0E00A002ACE41 /* libcugl-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB22BDC825D0DE75002ACE41 /* libcugl-mac.a */; };
 		EB22BDFC25D0E0E2002ACE41 /* libcugl-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB22BDCA25D0DE75002ACE41 /* libcugl-ios.a */; };
@@ -177,6 +180,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D094D00A263F9D1000712931 /* sound effect */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "sound effect"; sourceTree = "<group>"; };
+		D094D00B263F9D1100712931 /* bgm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bgm; sourceTree = "<group>"; };
+		D094D00C263F9D1100712931 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
+		D094D00D263F9D1100712931 /* json */ = {isa = PBXFileReference; lastKnownFileType = folder; path = json; sourceTree = "<group>"; };
+		D094D00E263F9D1100712931 /* levels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = levels; sourceTree = "<group>"; };
+		D094D00F263F9D1100712931 /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = textures; sourceTree = "<group>"; };
 		D0E80DDA262019AE00C1B748 /* Wall.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Wall.cpp; sourceTree = "<group>"; };
 		D0E80DDB262019AE00C1B748 /* LevelEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelEditor.h; sourceTree = "<group>"; };
 		D0E80DDC262019AE00C1B748 /* Floor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Floor.cpp; sourceTree = "<group>"; };
@@ -224,11 +233,6 @@
 		D0E80E06262019B200C1B748 /* Interactable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Interactable.cpp; sourceTree = "<group>"; };
 		D0E80E07262019B200C1B748 /* GameplayMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameplayMode.h; sourceTree = "<group>"; };
 		D0E80E08262019B200C1B748 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
-		D0E80EFD2620D74900C1B748 /* json */ = {isa = PBXFileReference; lastKnownFileType = folder; path = json; sourceTree = "<group>"; };
-		D0E80EFE2620D74900C1B748 /* bgm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bgm; sourceTree = "<group>"; };
-		D0E80EFF2620D74900C1B748 /* levels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = levels; sourceTree = "<group>"; };
-		D0E80F002620D74900C1B748 /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = textures; sourceTree = "<group>"; };
-		D0E80F012620D74A00C1B748 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DeviceMargins.plist; sourceTree = "<group>"; };
 		EB22BF5E25D0E8BC002ACE41 /* LabCat (Sim).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LabCat (Sim).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB2BE9BE1D749908002FE78B /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -356,11 +360,12 @@
 		EB2BE9B71D749870002FE78B /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				D0E80EFE2620D74900C1B748 /* bgm */,
-				D0E80F012620D74A00C1B748 /* fonts */,
-				D0E80EFD2620D74900C1B748 /* json */,
-				D0E80EFF2620D74900C1B748 /* levels */,
-				D0E80F002620D74900C1B748 /* textures */,
+				D094D00B263F9D1100712931 /* bgm */,
+				D094D00C263F9D1100712931 /* fonts */,
+				D094D00D263F9D1100712931 /* json */,
+				D094D00E263F9D1100712931 /* levels */,
+				D094D00A263F9D1000712931 /* sound effect */,
+				D094D00F263F9D1100712931 /* textures */,
 			);
 			name = Assets;
 			path = ../assets;
@@ -641,15 +646,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D094D012263F9D1100712931 /* sound effect in Resources */,
 				EB22BF9B25D0EA5C002ACE41 /* DeviceMargins.plist in Resources */,
-				D0E80F102620D74A00C1B748 /* fonts in Resources */,
-				D0E80F0A2620D74A00C1B748 /* levels in Resources */,
-				D0E80F0D2620D74A00C1B748 /* textures in Resources */,
 				EB22BF9025D0EA49002ACE41 /* iOS.xcassets in Resources */,
-				D0E80F072620D74A00C1B748 /* bgm in Resources */,
+				D094D015263F9D1100712931 /* bgm in Resources */,
+				D094D01B263F9D1100712931 /* json in Resources */,
+				D094D01E263F9D1100712931 /* levels in Resources */,
 				EB22BF9125D0EA49002ACE41 /* Landscape.storyboard in Resources */,
-				D0E80F042620D74A00C1B748 /* json in Resources */,
 				EB22BF9225D0EA49002ACE41 /* Portrait.storyboard in Resources */,
+				D094D018263F9D1100712931 /* fonts in Resources */,
+				D094D021263F9D1100712931 /* textures in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,15 +663,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D094D011263F9D1100712931 /* sound effect in Resources */,
 				EB7454AB1D74D846002FBAE6 /* iOS.xcassets in Resources */,
-				D0E80F0F2620D74A00C1B748 /* fonts in Resources */,
-				D0E80F092620D74A00C1B748 /* levels in Resources */,
-				D0E80F0C2620D74A00C1B748 /* textures in Resources */,
 				EB7454AC1D74D846002FBAE6 /* Landscape.storyboard in Resources */,
-				D0E80F062620D74A00C1B748 /* bgm in Resources */,
+				D094D014263F9D1100712931 /* bgm in Resources */,
+				D094D01A263F9D1100712931 /* json in Resources */,
+				D094D01D263F9D1100712931 /* levels in Resources */,
 				EB7454AD1D74D846002FBAE6 /* Portrait.storyboard in Resources */,
-				D0E80F032620D74A00C1B748 /* json in Resources */,
 				EB07CFB621EFF3F8000CB3A3 /* DeviceMargins.plist in Resources */,
+				D094D017263F9D1100712931 /* fonts in Resources */,
+				D094D020263F9D1100712931 /* textures in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -673,11 +680,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0E80F082620D74A00C1B748 /* levels in Resources */,
-				D0E80F0B2620D74A00C1B748 /* textures in Resources */,
-				D0E80F0E2620D74A00C1B748 /* fonts in Resources */,
-				D0E80F052620D74A00C1B748 /* bgm in Resources */,
-				D0E80F022620D74A00C1B748 /* json in Resources */,
+				D094D010263F9D1100712931 /* sound effect in Resources */,
+				D094D016263F9D1100712931 /* fonts in Resources */,
+				D094D013263F9D1100712931 /* bgm in Resources */,
+				D094D01C263F9D1100712931 /* levels in Resources */,
+				D094D01F263F9D1100712931 /* textures in Resources */,
+				D094D019263F9D1100712931 /* json in Resources */,
 				EBBF189B1D74904A008E2001 /* Mac.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -839,7 +847,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = U328PNRN96;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -862,7 +870,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = U328PNRN96;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
