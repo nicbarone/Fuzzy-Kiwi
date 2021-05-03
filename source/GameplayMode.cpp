@@ -533,6 +533,10 @@ void GameplayMode::buildScene() {
 
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
     std::shared_ptr<Texture> catDen = _assets->get<Texture>("catDen");
+    std::shared_ptr<Texture> catDenGreen = _assets->get<Texture>("catDenGreen");
+    std::shared_ptr<Texture> catDenPurple = _assets->get<Texture>("catDenPurple");
+    std::shared_ptr<Texture> catDenBlue = _assets->get<Texture>("catDenBlue");
+    std::shared_ptr<Texture> catDenGrey = _assets->get<Texture>("catDenGrey");
     std::shared_ptr<Texture> cats = _assets->get<Texture>("catPossessing");
 
     //caged animal
@@ -540,8 +544,8 @@ void GameplayMode::buildScene() {
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
     _level1Wall = Wall::alloc(550, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1,1, wall);
     _level2Wall = Wall::alloc(550, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, wall);
-    _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen);
-    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen);
+    _level1CatDenLeft = CatDen::alloc(800, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen, catDenGreen, catDenPurple, catDenBlue, catDenGrey);
+    _level1CatDenRight = CatDen::alloc(150, 0, Vec2(0.05, 0.05), 0, cugl::Color4::WHITE,1, 1, 1, catDen, catDenGreen, catDenPurple, catDenBlue, catDenGrey);
     _catDens = { _level1CatDenLeft,_level1CatDenRight };
     _level1Floor = Floor::alloc(555, 0, Vec2(s, s), 0, cugl::Color4::WHITE, 1, 1, floor);
     _level2Floor = Floor::alloc(555, 0, Vec2(s, s), 1, cugl::Color4::WHITE, 1, 1, floor);
@@ -805,6 +809,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> yellowStaircaseDoor = _assets->get<Texture>("staircaseDoorYellow");
     //Cat den texture creation
     std::shared_ptr<Texture> catden = _assets->get<Texture>("catDen");
+    std::shared_ptr<Texture> catDenGreen = _assets->get<Texture>("catDenGreen");
+    std::shared_ptr<Texture> catDenPurple = _assets->get<Texture>("catDenPurple");
+    std::shared_ptr<Texture> catDenBlue = _assets->get<Texture>("catDenBlue");
+    std::shared_ptr<Texture> catDenGrey = _assets->get<Texture>("catDenGrey");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
 
@@ -860,7 +868,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             objectTemp = staircaseDoorJSON->get(i);
             if (objectTemp->getBool("isDen")) {
                 _catDens.push_back(CatDen::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.05, 0.05), objectTemp->getInt("level"),
-                    cugl::Color4::WHITE, objectTemp->getInt("connection"), 1, 1, catden));
+                    cugl::Color4::WHITE, objectTemp->getInt("connection"), 1, 1, catden, catDenGreen, catDenPurple, catDenBlue, catDenGrey));
             }
             else {
                 _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),

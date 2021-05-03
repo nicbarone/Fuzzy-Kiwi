@@ -15,26 +15,30 @@ void CatDen::dispose() {
 	_connectedDens = 0;
 }
 
-bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int connectedDens, int rows, int columns, std::shared_ptr<Texture> texture)
+bool CatDen::init(int x, float ang, Vec2 scale, int level, Color4 color, int connectedDens, int rows, int columns, std::shared_ptr<Texture> texture,
+	std::shared_ptr<Texture> greenTexture, std::shared_ptr<Texture> purpleTexture, std::shared_ptr<Texture> blueTexture, std::shared_ptr<Texture> greyTexture)
 {
 	_connectedDens = connectedDens;
 	if (_connectedDens == 1)
 	{
 		setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	}
-	if (_connectedDens == 2)
+	else if (_connectedDens == 2)
 	{
-		setColor(cugl::Color4::BLUE);
+		setSceneNode(scene2::AnimationNode::alloc(greenTexture, rows, columns));
 	}
-	if (_connectedDens == 3)
+	else if (_connectedDens == 3)
 	{
-		setColor(cugl::Color4::GREEN);
+		setSceneNode(scene2::AnimationNode::alloc(purpleTexture, rows, columns));
 	}
-	if (_connectedDens == 4)
+	else if (_connectedDens == 4)
 	{
-		setColor(cugl::Color4::RED);
+		setSceneNode(scene2::AnimationNode::alloc(blueTexture, rows, columns));
 	}
-	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
+	else if (_connectedDens == 5)
+	{
+		setSceneNode(scene2::AnimationNode::alloc(greyTexture, rows, columns));
+	}
 	setTexture(texture);
 	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + CAT_DEN_OFFSET));
 	setAngle(ang);

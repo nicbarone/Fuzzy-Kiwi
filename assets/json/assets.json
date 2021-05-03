@@ -335,7 +335,6 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-
 		},
 		"catDenBlue": {
 			"file": "textures/GameObject/CatDen/CatDenBlue.png",
@@ -343,7 +342,6 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-
 		},
 		"catDenGrey": {
 			"file": "textures/GameObject/CatDen/CatDenGrey.png",
@@ -351,7 +349,6 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-
 		},
 		"catDenPurple": {
 			"file": "textures/GameObject/CatDen/CatDenPurple.png",
@@ -359,7 +356,13 @@
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-
+		},
+		"catDenGreen": {
+			"file": "textures/GameObject/CatDen/CatDenGreen.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
 		},
 		"catPossessing": {
 			"file": "textures/GameObject/Cat/CatPossessing.png",
@@ -461,27 +464,6 @@
 		},
 		"EnemyOpeningDoor": {
 			"file": "textures/GameObject/Enemy/EnemyOpeningDoor.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"joystick": {
-			"file": "textures/UI/Button/Joystick.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"joystickBorder": {
-			"file": "textures/UI/Button/JoystickBorder.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
-		"loadGame": {
-			"file": "textures/UI/Button/LoadGame.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
