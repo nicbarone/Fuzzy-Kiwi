@@ -55,7 +55,6 @@ void MenuMode::update(float progress) {
     //CULog("You are now in Menu Mode. Enjoy your stay");
     // If save file exists then show this button
     if (filetool::file_exists(Application::get()->getSaveDirectory() + "save.json")) {
-        CULog("save file exists!");
         _menuPanel->getChildButtons()[1]->getButton()->setVisible(true);
         _menuPanel->getChildButtons()[1]->getButton()->activate();
     }
