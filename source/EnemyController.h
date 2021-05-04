@@ -52,7 +52,10 @@ public:
 	}
 
 	/** returns true if the input point is currently being seen by this enemy and false otherwise*/
-	std::shared_ptr<cugl::scene2::AnimationNode> detectedPlayer(float x, int level, vector<Vec2> vision_blockers);
+	bool detectedPlayer(float x, int level, vector<Vec2> vision_blockers);
+
+	/** color detecting player*/
+	bool colorDetectingPlayer(float x, int level, vector<Vec2> vision_blockers);
 
 	/** removes the given enemy from the _enemies vector, used after an enemy has been unpossessed*/
 	void removeEnemy(std::shared_ptr<Enemy> enemy);
