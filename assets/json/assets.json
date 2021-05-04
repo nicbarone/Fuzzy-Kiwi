@@ -91,6 +91,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"leftRightHand": {
+			"file": "textures/UI/Tutorial/leftRightHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"winIcon": {
 			"file": "textures/UI/Icon/WinIcon.png",
 			"minfilter": "nearest",

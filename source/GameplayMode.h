@@ -126,8 +126,13 @@ protected:
     std::shared_ptr<Texture> tableTexture;
     std::shared_ptr<scene2::Label> _tutorialText;
     std::shared_ptr<scene2::Label> _tutorialText2;
+    std::shared_ptr<scene2::AnimationNode> _tutorialAnimation;
 
     int _showTutorialText;
+    int tutFrame = 0;
+    int tutFrameSwitch = 0;
+    bool frameDecreasing = false;
+    int tutMaxFrame = 0;
 
     enum class GameStatus {
         RUNNING,
