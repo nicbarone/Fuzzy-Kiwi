@@ -46,7 +46,7 @@ void EnemyController::findClosest(float pos, int level, vector<Vec2> vision_bloc
 		}
 	}
 	// enemies out of range will be reset
-	if (index == -1 && _closestEnemy != nullptr && !_closestEnemy->isPossessed()) {
+	if (_closestEnemy->isActive() && index == -1 && _closestEnemy != nullptr && !_closestEnemy->isPossessed()) {
 		_closestEnemy->setGlow(false);
 	}
 	_closestEnemy = index == -1 ? nullptr : _enemies[index];
