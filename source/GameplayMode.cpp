@@ -131,7 +131,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     _reset = false;
     _backToMenu = false;
 
-
+    Application::get()->setClearColor(Color4(0, 0, 0, 1));
 
     // Create an asset manager to load all assets
     _assets = assets;
@@ -234,6 +234,15 @@ void GameplayMode::update(float timestep) {
         if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen()) {
             _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
             _tutorialText->setPositionX(0);
+            if (tutFrameSwitch > 0) {
+                tutFrameSwitch--;
+            }
+            else {
+                tutFrameSwitch = 7;
+                tutFrame++;
+                tutFrame = tutFrame % tutMaxFrame;
+                _tutorialAnimation->setFrame(tutFrame);
+            }
         }
     }
     if (_showTutorialText == 2) {
