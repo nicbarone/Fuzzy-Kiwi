@@ -365,7 +365,13 @@
             "wrapS": "clamp",
             "wrapT": "clamp"
         },
-
+		"CagedCat": {
+			"file": "textures/GameObject/Cat/CagedCat.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"catPossessing": {
 			"file": "textures/GameObject/Cat/CatPossessing.png",
 			"minfilter": "nearest",

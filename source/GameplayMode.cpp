@@ -336,19 +336,80 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->getPossessed() != nullptr) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
         }
-        if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
+        if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors()) && _hasControl) {
+            CULog("hheee");
             if (_player->getSceneNode()->isVisible() ||
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
-                setGameStatus(GameStatus::LOSE);
-                _losePanel->setVisible(true);
-                _losePanel->getChildButtons()[0]->getButton()->activate();
-                _losePanel->getChildButtons()[1]->getButton()->activate();
-                if (_showTutorialText == 1) {
-                    _tutorialText->setText("Oh no! You got caught!");
-                    _tutorialText->setPosition(Vec2(100, 110));
-                    _tutorialText2->setVisible(false);
-                }
                 _hasControl = false;
+                std::shared_ptr<Texture> CagedCat = _assets->get<Texture>("CagedCat");
+                if (_enemyController->getPossessed() != nullptr) {
+                    _hasControl = false;
+                    _enemyController->getPossessed()->getSceneNode()->setVisible(false);
+                    _rootScene->removeChild(_player->getSceneNode());
+                    _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6, 
+                        CagedCat)->getSceneNode());
+                    _player->setLevel(_enemyController->getPossessed()->getLevel());
+                    _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+                    if (_enemyController->getPossessed()->getMovingRight()) {
+                        _player->getSceneNode()->setScale(0.06, 0.06);
+                    }
+                    else {
+                        _player->getSceneNode()->setScale(-0.06, 0.06);
+                    }
+                    _player->PossessAnimation(3);
+                    _rootScene->addChild(_player->getSceneNode());
+
+                    std::function<bool()> losing = [&]() {
+                        _player->getSceneNode()->setVisible(false);
+                        setGameStatus(GameStatus::LOSE);
+                        _losePanel->setVisible(true);
+                        _losePanel->getChildButtons()[0]->getButton()->activate();
+                        _losePanel->getChildButtons()[1]->getButton()->activate();
+                        if (_showTutorialText == 1) {
+                            _tutorialText->setText("Oh no! You got caught!");
+                            _tutorialText->setPosition(Vec2(100, 110));
+                            _tutorialText2->setVisible(false);
+                        }
+                        _hasControl = false;
+                        return false;
+                    };
+                    cugl::Application::get()->schedule(losing, 1500);
+                }
+                else {
+                    int level = _player->getLevel();
+                    int pos = _player->getPos();
+                    int movingRight = _player->getMovingRight();
+                    _rootScene->removeChild(_player->getSceneNode());
+                    _player->SetSceneNode(Player::alloc(pos, level, 0, 6, CagedCat)->getSceneNode());
+                    _player->setLevel(level);
+                    _player->getSceneNode()->setPosition(pos, level* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+                    if (movingRight) {
+                        _player->getSceneNode()->setScale(0.06, 0.06);
+                    }
+                    else {
+                        _player->getSceneNode()->setScale(-0.06, 0.06);
+                    }
+                    _player->PossessAnimation(3);
+                    _rootScene->addChild(_player->getSceneNode());
+
+                    std::function<bool()> losing = [&]() {
+                        _player->getSceneNode()->setVisible(false);
+                        setGameStatus(GameStatus::LOSE);
+                        _losePanel->setVisible(true);
+                        _losePanel->getChildButtons()[0]->getButton()->activate();
+                        _losePanel->getChildButtons()[1]->getButton()->activate();
+                        if (_showTutorialText == 1) {
+                            _tutorialText->setText("Oh no! You got caught!");
+                            _tutorialText->setPosition(Vec2(100, 110));
+                            _tutorialText2->setVisible(false);
+                        }
+                        _hasControl = false;
+                        return false;
+                    };
+                    cugl::Application::get()->schedule(losing, 2000);
+                }
+                
+       
             }
         }
         else {
@@ -960,7 +1021,7 @@ void GameplayMode::checkEnemyPossession() {
             if (abs(_player->getPos() - enemy->getSceneNode()->getWorldPosition().x) < 270.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - enemy->getSceneNode()->getWorldPosition().y+25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _player->getLevel() == enemy->getLevel() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 285.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 150.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 //AudioEngine::get()->play("doorOpen", _assets->get<Sound>("useDoor"), false, 1.0f, true);
                 if (attemptPossess()) {
                     AudioEngine::get()->play("possess", _assets->get<Sound>("possess"));
