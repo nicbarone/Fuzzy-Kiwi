@@ -407,6 +407,9 @@ void GameplayMode::update(float timestep) {
 
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
+                        if (_showTutorialText == 1) {
+                            _tutorialAnimation->setVisible(false);
+                        }
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()[0]->getButton()->activate();
                         _losePanel->getChildButtons()[1]->getButton()->activate();
