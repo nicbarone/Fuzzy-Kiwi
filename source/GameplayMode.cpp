@@ -452,7 +452,7 @@ void GameplayMode::update(float timestep) {
 
 bool GameplayMode::attemptPossess() {
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
-    if (enemy != nullptr) {
+    if (_hasControl && enemy != nullptr) {
         _hasControl = false;
         _player->setPossess(true);
         _player->set_possessEnemy(_enemyController->closestEnemy());
