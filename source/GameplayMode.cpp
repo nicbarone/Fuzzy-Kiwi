@@ -67,6 +67,16 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     else if (!Scene2::init(size)) {
         return false;
     }
+    // Create a scene graph the same size as the window
+    //_scene = Scene2::alloc(size.width, size.height);
+    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+    _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
+
+    _rootScene->setContentSize(size);
+    _reset = false;
+    _backToMenu = false;
+
+    // Create an asset manager to load all assets
     _assets = assets;
 
 
@@ -79,16 +89,6 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
     Input::activate<Keyboard>();
 #endif
-    // Create a scene graph the same size as the window
-    //_scene = Scene2::alloc(size.width, size.height);
-    _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
-    _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
-
-    _rootScene->setContentSize(size);
-    _reset = false;
-    _backToMenu = false;
-
-    // Create an asset manager to load all assets
 
     // Build the scene from these assets
 
@@ -130,7 +130,7 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     _rootScene->setContentSize(size);
     _reset = false;
     _backToMenu = false;
-    Application::get()->setClearColor(Color4(0, 0, 0, 1));
+
 
 
     // Create an asset manager to load all assets
@@ -235,27 +235,6 @@ void GameplayMode::update(float timestep) {
             _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
             _tutorialText->setPositionX(0);
         }
-        if (tutFrameSwitch > 0) {
-            tutFrameSwitch--;
-        }
-        else {
-            tutFrameSwitch = 7;
-            tutFrame++;
-            tutFrame = tutFrame % tutMaxFrame;
-            //if (!frameDecreasing) {
-            //    tutFrame++;
-            //}
-            //else {
-            //    tutFrame--;
-            //}
-            //if (tutFrame == tutMaxFrame) {
-            //    frameDecreasing = true;
-            //}
-            //else if (tutFrame == 0) {
-            //    frameDecreasing = false;
-            //}
-            _tutorialAnimation->setFrame(tutFrame);
-        }
     }
     if (_showTutorialText == 2) {
         if (_player->getLevel() == 0 && _player->getPos() > 950) {
@@ -307,7 +286,7 @@ void GameplayMode::update(float timestep) {
                 }
 
 
-                
+
             }
             else if (_showTutorialText == 2) {
                 _tutorialText2->setText("The paws on the top right indicate the number of possessions you have in a level. Use them wisely!");
@@ -386,7 +365,7 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->getPossessed() != nullptr) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
         }
-        if (_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors()) && _hasControl) {
+        if (_hasControl&&_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
             CULog("hheee");
             if (_player->getSceneNode()->isVisible() ||
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
@@ -396,7 +375,7 @@ void GameplayMode::update(float timestep) {
                     _hasControl = false;
                     _enemyController->getPossessed()->getSceneNode()->setVisible(false);
                     _rootScene->removeChild(_player->getSceneNode());
-                    _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6, 
+                    _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6,
                         CagedCat)->getSceneNode());
                     _player->setLevel(_enemyController->getPossessed()->getLevel());
                     _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
@@ -409,7 +388,13 @@ void GameplayMode::update(float timestep) {
                     _player->PossessAnimation(3);
                     _rootScene->addChild(_player->getSceneNode());
 
+
+                    std::function<bool()> color = [&]() {
+                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+                        return false;
+                    };
                     std::function<bool()> losing = [&]() {
+
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
                         _losePanel->setVisible(true);
@@ -423,9 +408,11 @@ void GameplayMode::update(float timestep) {
                         _hasControl = false;
                         return false;
                     };
+                    cugl::Application::get()->schedule(color, 500);
                     cugl::Application::get()->schedule(losing, 1500);
                 }
                 else {
+                    _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
                     int level = _player->getLevel();
                     int pos = _player->getPos();
                     int movingRight = _player->getMovingRight();
@@ -441,7 +428,10 @@ void GameplayMode::update(float timestep) {
                     }
                     _player->PossessAnimation(3);
                     _rootScene->addChild(_player->getSceneNode());
-
+                    std::function<bool()> color = [&]() {
+                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+                        return false;
+                    };
                     std::function<bool()> losing = [&]() {
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
@@ -456,10 +446,12 @@ void GameplayMode::update(float timestep) {
                         _hasControl = false;
                         return false;
                     };
-                    cugl::Application::get()->schedule(losing, 2000);
+                    cugl::Application::get()->schedule(color, 500);
+
+                    cugl::Application::get()->schedule(losing, 1500);
                 }
-                
-       
+
+
             }
         }
         else {
@@ -852,16 +844,14 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     tutMaxFrame = 12;
     addChild(_rootScene);
 
-    _tutorialAnimation->setPriority(10000);
-
-//#ifdef CU_MOBILE
+#ifdef CU_MOBILE
     // make joystick panel
     _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
     _joystickPanel->getSceneNode()->setScale(1.0f);
     _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
     _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
     addChild(_joystickPanel->getSceneNode());
-//#endif
+#endif
 
     // make possess panel
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
@@ -1008,8 +998,6 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         }
         });
     addChild(_losePanel->getSceneNode());
-    addChild(_tutorialAnimation);
-    _tutorialAnimation->setPriority(1000000000);
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));

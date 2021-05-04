@@ -401,11 +401,22 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
         if (diff.length() > 5.0f) {
             _camMoveDirection += Vec2(diff.x, -diff.y);
         }
-        //_camMoveDirection = Vec2::ZERO;
+    }
+    else if (!_prev2Pivots[0].empty()) {
+        // Previous center of two pivots
+        Vec2 prevCenter = _prev2Pivots[0].begin()->second / 2;
+        // If one of the pivots is the current event
+        if (_prev2Pivots[0].count(event.touch) != 0) {
+            _prev2Pivots[0][event.touch] = Vec2(event.position.x, event.position.y);
+        }
+        Vec2 curCenter = _prev2Pivots[0].begin()->second / 2;
+        Vec2 diff = curCenter - prevCenter;
+        if (diff.length() > 5.0f) {
+            _camMoveDirection += Vec2(diff.x, -diff.y);
+        }
     }
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         _rtouch.timestamp.mark();
-        //processRightSwipe(pos);
     }
 }
 
