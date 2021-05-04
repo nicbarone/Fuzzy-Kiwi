@@ -359,28 +359,39 @@
 
 		},
 		"catDenBlue": {
-			"file": "textures/GameObject/CatDen/CatDenBlue.png",
+            "file": "textures/GameObject/CatDen/CatDenBlue.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "catDenGrey": {
+            "file": "textures/GameObject/CatDen/CatDenGrey.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "catDenPurple": {
+            "file": "textures/GameObject/CatDen/CatDenPurple.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "catDenGreen": {
+            "file": "textures/GameObject/CatDen/CatDenGreen.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+		"CagedCat": {
+			"file": "textures/GameObject/Cat/CagedCat.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
-
-		},
-		"catDenGrey": {
-			"file": "textures/GameObject/CatDen/CatDenGrey.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-
-		},
-		"catDenPurple": {
-			"file": "textures/GameObject/CatDen/CatDenPurple.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-
 		},
 		"catPossessing": {
 			"file": "textures/GameObject/Cat/CatPossessing.png",
@@ -555,4 +566,3 @@
 		}
 	}
 }
-

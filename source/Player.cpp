@@ -143,6 +143,16 @@ void Player::PossessAnimation(int possessing) {
 		cugl::Application::get()->schedule(frame6, 0 + timeDiff * 7);
 		cugl::Application::get()->schedule(frame7, 0 + timeDiff * 8);
 	}
+	else if (possessing == 3) {
+		int timeDiff = 75;
+		CULog("h");
+		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 1);
+		cugl::Application::get()->schedule(frame1, 50 + timeDiff * 2);
+		cugl::Application::get()->schedule(frame2, 50 + timeDiff * 3);
+		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
+		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 5);
+		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 6);
+	}
 }
 
 	void Player::EnemyDying() {

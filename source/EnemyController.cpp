@@ -80,6 +80,7 @@ bool EnemyController::detectedPlayer(float x, int level, vector<Vec2> vision_blo
 						//if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > x && enemy->getPos() < x)
 						//	|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < x) && enemy->getPos() > x) {
 						CULog("detected");
+						enemy->getSceneNode()->setColor(Color4::RED);
 						return true;
 					}
 				}
@@ -94,6 +95,7 @@ bool EnemyController::detectedPlayer(float x, int level, vector<Vec2> vision_blo
 						//	|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < _possessedEnemy->getPos())
 						//	&& enemy->getPos() > _possessedEnemy->getPos() && !_possessedEnemy->facingRight()) {
 						CULog("detected");
+						enemy->getSceneNode()->setColor(Color4::RED);
 						return true;
 					}
 				}
