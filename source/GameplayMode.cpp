@@ -508,11 +508,12 @@ bool GameplayMode::attemptPossess() {
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
         _rootScene->removeChild(_player->getSceneNode());
         _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
-        _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
         if (_player->getMovingRight()) {
+            _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
             _player->getSceneNode()->setScale(0.15, 0.15);
         }
         else {
+            _player->getSceneNode()->setPosition(_player->getPos() - 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
             _player->getSceneNode()->setScale(-0.15, 0.15);
         }
 
