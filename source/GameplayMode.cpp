@@ -842,7 +842,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _tutorialText2->setPosition(Vec2(-200, 110));
     _tutorialText2->setVisible(_showTutorialText == 2);
     _rootScene->addChild(_tutorialText2);
-    std::shared_ptr<Texture> leftRightHand = _assets->get<Texture>("leftRightHand");
+    std::shared_ptr<Texture> leftRightHand = _assets->get<Texture>("lrHand");
     _tutorialAnimation = scene2::AnimationNode::alloc(leftRightHand, 1, 13);
     _tutorialAnimation->setPosition(Vec2(100, 175));
     _tutorialAnimation->setScale(0.25, -0.25);
@@ -853,14 +853,14 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     tutMaxFrame = 12;
     addChild(_rootScene);
 
-#ifdef CU_MOBILE
+//#ifdef CU_MOBILE
     // make joystick panel
     _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
     _joystickPanel->getSceneNode()->setScale(1.0f);
     _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
     _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
     addChild(_joystickPanel->getSceneNode());
-#endif
+//#endif
 
     // make possess panel
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
@@ -1010,6 +1010,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));
+    addChild(_tutorialAnimation);
 }
 
 
