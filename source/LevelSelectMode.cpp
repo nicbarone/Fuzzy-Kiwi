@@ -199,7 +199,8 @@ void LevelSelectMode::deactivateButtons() {
     _levelSelectPanel->getChildButtons()[1]->getButton()->deactivate();
     _levelSelectPanel->getChildButtons()[2]->getButton()->deactivate();
     _levelSelectPanel->getChildButtons()[3]->getButton()->deactivate();
-    //_levelSelectPanel->getChildButtons()[4]->getButton()->deactivate();
+    _levelSelectPanel->getChildButtons()[4]->getButton()->deactivate();
+    _levelSelectPanel->getChildButtons()[5]->getButton()->deactivate();
 
 }
 
@@ -209,5 +210,6 @@ void LevelSelectMode::activateButtons() {
     _levelSelectPanel->getChildButtons()[1]->getButton()->activate();
     _levelSelectPanel->getChildButtons()[2]->getButton()->activate();
     _levelSelectPanel->getChildButtons()[3]->getButton()->activate();
-    //_levelSelectPanel->getChildButtons()[4]->getButton()->activate();
+    _levelSelectPanel->getChildButtons()[4]->getButton()->activate();
+    _levelSelectPanel->getChildButtons()[5]->getButton()->activate();
 }
