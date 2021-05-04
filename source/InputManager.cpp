@@ -214,37 +214,6 @@ void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
     }
 }
 
-/**
- * Processes movement for the floating joystick.
- *
- * This will register movement as left or right (or neither).  It
- * will also move the joystick anchor if the touch position moves
- * too far.
- *
- * @param  pos  the current joystick position
- */
-void InputManager::processRightSwipe(const cugl::Vec2 pos) {
-    _rtouch.position = pos;
-    // nope
-    float diff = _rtouch.beginPos.y - _rtouch.position.y;
-    int timeDiff = Timestamp::ellapsedMillis(_rtouch.beginTimestamp, _rtouch.timestamp);
-    // valid swipe only if the the swipe is fast enough
-    if (timeDiff < SWIPE_TIME_THRESHOLD) {
-        // If distant enough, we recognize it as a valid swipe
-        if (diff > SWIPE_THRESHOLD) {
-            // Possess pressed
-            _possessPressed = true;
-            _rtouch.touchids.clear();
-        }
-        else if (diff < -SWIPE_THRESHOLD) {
-            // Unpossess pressed
-            _unpossessPressed = true;
-            _rtouch.touchids.clear();
-        }
-    }
-    
-}
-
 #pragma mark Touch and Mouse Callbacks
 /**
  * Callback for the beginning of a touch event
@@ -294,12 +263,40 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
             //}
         } // Otherwise all pivots are taken, no other pivots should be inserted
         // Only process if no touch in zone
+        
+        if (_rtouch.fstTapPos != Vec2::ZERO) {
+            cugl::Timestamp tmstp;
+            tmstp.mark();
+            if (Timestamp::ellapsedMillis(_rtouch.fstTapTime, tmstp) < 500.0f) {
+                if (_rtouch.fstTapPos.distance(event.position) < 20.0f) {
+                    // if player has no possessed enemy, then set possessPressed to true otherwise set unpossesPressed to true
+                    if (!_player->getPossess()) {
+                        _possessPressed = true;
+                    }
+                    else {
+                        _unpossessPressed = true;
+                    }
+                    _rtouch.fstTapPos = Vec2::ZERO;
+                }
+                else {
+                    _rtouch.fstTapTime.mark();
+                    _rtouch.fstTapPos = event.position;
+                }
+            }
+            else {
+                _rtouch.fstTapTime.mark();
+                _rtouch.fstTapPos = event.position;
+            }
+            
+        }
         if (_rtouch.touchids.empty()) {
             _rtouch.beginPos = event.position;
             _rtouch.position = event.position;
             _rtouch.beginTimestamp.mark();
             _rtouch.timestamp.mark();
             _rtouch.touchids.insert(event.touch);
+            _rtouch.fstTapTime.mark();
+            _rtouch.fstTapPos = event.position;
         }
         break;
     case Zone::MID:
@@ -408,7 +405,7 @@ void InputManager::touchesMovedCB(const TouchEvent& event, const Vec2& previous,
     }
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         _rtouch.timestamp.mark();
-        processRightSwipe(pos);
+        //processRightSwipe(pos);
     }
 }
 

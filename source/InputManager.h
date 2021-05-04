@@ -7,6 +7,8 @@
 #define LEFT_ZONE       0.35f
 /** The portion of the screen used for the right zone */
 #define RIGHT_ZONE      0.65f
+#define VALID_TAP_DIST 20.0f;
+#define VALID_TAP_TIME_DIFF 0.5f;
 class InputManager {
 private:
 
@@ -67,6 +69,8 @@ public:
         std::unordered_set<Uint64> touchids;
         /** Whether this touch is a valid single tap */
         std::unordered_map<Uint64, bool> isSingleTap;
+        cugl::Vec2 fstTapPos;
+        cugl::Timestamp fstTapTime;
     };
 
     /**
@@ -154,15 +158,6 @@ public:
      * @param  pos  the current joystick position
      */
     void processLeftJoystick(const cugl::Vec2 pos);
-
-    /**
-     * Processes movement for the floating joystick.
-     *
-     * This will register movement as left or right (or neither).  It
-     * will also move the joystick anchor if the touch position moves
-     * too far.
-     */
-    void processRightSwipe(const cugl::Vec2 pos);
 
 #pragma mark Touch and Mouse Callbacks
     /**
