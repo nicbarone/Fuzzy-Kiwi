@@ -125,12 +125,13 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     //_scene = Scene2::alloc(size.width, size.height);
     _rootScene = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::ASCEND);
     _rootScene->setAnchor(Vec2::ANCHOR_CENTER);
-
+    setName("gameplayMode");
+    _rootScene->setName("rootScene");
     _rootScene->setContentSize(size);
     _reset = false;
     _backToMenu = false;
 
-
+    Application::get()->setClearColor(Color4(0, 0, 0, 1));
 
     // Create an asset manager to load all assets
     _assets = assets;
@@ -214,6 +215,7 @@ void GameplayMode::update(float timestep) {
         reset();
     }
     if (getGameStatus() == GameStatus::PAUSED) {
+        _tutorialAnimation->setVisible(false);
         _menuPanel->setVisible(true);
         _menuPanel->getChildButtons()[0]->getButton()->activate();
         _menuPanel->getChildButtons()[1]->getButton()->activate();
@@ -232,6 +234,15 @@ void GameplayMode::update(float timestep) {
         if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen()) {
             _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
             _tutorialText->setPositionX(0);
+        }
+        if (tutFrameSwitch > 0) {
+            tutFrameSwitch--;
+        }
+        else {
+            tutFrameSwitch = 7;
+            tutFrame++;
+            tutFrame = tutFrame % tutMaxFrame;
+            _tutorialAnimation->setFrame(tutFrame);
         }
     }
     if (_showTutorialText == 2) {
@@ -256,9 +267,35 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
             _enemyController->closestEnemy()->setGlow(true);
             if (_showTutorialText == 1) {
-                _tutorialText->setText("When in range to possess, the enemy will be highlighted. Swipe up to possess!");
-                _tutorialText->setPositionX(0);
-                //TODO: ADD ANIMATED HAND
+                if (USE_TAP_POSSESS) {
+                    _tutorialText->setText("When in range to possess, the enemy will be highlighted. Double tap to possess!");
+                    _tutorialText->setPositionX(0);
+                }
+
+                if (!USE_TAP_POSSESS) {
+                    if (_tutorialAnimation->getPositionX() != 800) {
+                        std::shared_ptr<Texture> upDownHand = _assets->get<Texture>("upDownHand");
+                        _tutorialAnimation->setTexture(upDownHand);
+                        _tutorialAnimation->setPosition(800, 300);
+                    }
+                }
+                else {
+                    if (_rootScene->getChildByName("tutorialAnimation") == nullptr) {
+                        removeChild(_tutorialAnimation);
+                        std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
+                        _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
+                        _tutorialAnimation->setName("tutorialAnimation");
+                        _rootScene->addChild(_tutorialAnimation);
+                        _tutorialAnimation->setPosition(410, 200);
+                        _tutorialAnimation->setScale(0.25, 0.25);
+                        tutMaxFrame = 4;
+                        _tutorialAnimation->setPriority(10);
+                    }
+
+                }
+
+
+
             }
             else if (_showTutorialText == 2) {
                 _tutorialText2->setText("The paws on the top right indicate the number of possessions you have in a level. Use them wisely!");
@@ -287,6 +324,7 @@ void GameplayMode::update(float timestep) {
                     if (_showTutorialText == 1) {
                         _tutorialText->setText("You can open doors by clicking on them. You can only open doors while possessing an enemy and near the door.");
                         _tutorialText->setPosition(Vec2(100, 110));
+                        _tutorialAnimation->removeFromParent();
                     }
 
                 }
@@ -346,7 +384,7 @@ void GameplayMode::update(float timestep) {
                     _hasControl = false;
                     _enemyController->getPossessed()->getSceneNode()->setVisible(false);
                     _rootScene->removeChild(_player->getSceneNode());
-                    _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6, 
+                    _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6,
                         CagedCat)->getSceneNode());
                     _player->setLevel(_enemyController->getPossessed()->getLevel());
                     _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
@@ -365,9 +403,12 @@ void GameplayMode::update(float timestep) {
                         return false;
                     };
                     std::function<bool()> losing = [&]() {
-                       
+
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
+                        if (_showTutorialText == 1) {
+                            _tutorialAnimation->setVisible(false);
+                        }
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()[0]->getButton()->activate();
                         _losePanel->getChildButtons()[1]->getButton()->activate();
@@ -421,8 +462,8 @@ void GameplayMode::update(float timestep) {
 
                     cugl::Application::get()->schedule(losing, 1500);
                 }
-                
-       
+
+
             }
         }
         else {
@@ -792,7 +833,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
     std::shared_ptr<Font> font = _assets->get<Font>("futura");
-    _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move! Pinch in and out to change zoom levels and swipe with two fingers to pan.", font);
+    _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move! Pinch in and out to change zoom levels and swipe with one or two fingers to pan.", font);
     _tutorialText->setForeground(Color4::WHITE);
     _tutorialText->setScale(Vec2(0.5, 0.5));
     _tutorialText->setPosition(Vec2(-100, 110));
@@ -804,6 +845,15 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _tutorialText2->setPosition(Vec2(-200, 110));
     _tutorialText2->setVisible(_showTutorialText == 2);
     _rootScene->addChild(_tutorialText2);
+    std::shared_ptr<Texture> leftRightHand = _assets->get<Texture>("lrHand");
+    _tutorialAnimation = scene2::AnimationNode::alloc(leftRightHand, 1, 13);
+    _tutorialAnimation->setPosition(Vec2(100, 175));
+    _tutorialAnimation->setScale(0.25, -0.25);
+    _tutorialAnimation->setName("tutorialAnimation");
+
+    _tutorialAnimation->setVisible(_showTutorialText == 1);
+
+    tutMaxFrame = 12;
     addChild(_rootScene);
 
 #ifdef CU_MOBILE
@@ -866,6 +916,9 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
+            if (_showTutorialText == 1) {
+                _tutorialAnimation->setVisible(true);
+            }
             setGameStatus(GameStatus::RUNNING);
         }
     });
@@ -960,6 +1013,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));
+    addChild(_tutorialAnimation);
 }
 
 
@@ -1008,7 +1062,7 @@ void GameplayMode::checkDoors() {
                 if (!key_intersection.empty()) {
                     door->setDoor(!doorState);
                     if (_showTutorialText == 1) {
-                        _tutorialText->setText("Nice work! To complete the level, touch the caged animal in cat form. Swipe down to unpossess!");
+                        _tutorialText->setText("Nice work! To complete the level, touch the caged animal in cat form. Double tap to unpossess!");
                         _tutorialText->setPosition(Vec2(100, 110));
                     }
                     else if(_showTutorialText == 2){
@@ -1042,12 +1096,7 @@ void GameplayMode::checkEnemyPossession() {
                     for (int i = _player->get_nPossess(); i < _possessPanel->getChildPanels().size() / 2; i++) {
                         _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
                     }
-                    if (_showTutorialText) {
-                        _tutorialText->setText("You can open the door while possessing an enemy and can only be detected from the back");
-                        _tutorialText->setPosition(Vec2(100, 110));
-                        _tutorialText2->setText("Swipe downwards to unpossess, two fingers to move the camera.");
-                        _tutorialText2->setPosition(Vec2(100, 420));
-                    }
+
                 }
             }
         }
