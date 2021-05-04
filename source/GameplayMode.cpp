@@ -523,10 +523,15 @@ bool GameplayMode::attemptPossess() {
             _player->getSceneNode()->setVisible(false);
             _enemyController->closestEnemy()->setAsPossessed();
             _enemyController->closestEnemy()->getSceneNode()->removeAllChildren();
+            return false;
+        };
+        std::function<bool()> delay = [&]() {
             _hasControl = true;
             return false;
         };
         cugl::Application::get()->schedule(setPossessed, 500);
+
+        cugl::Application::get()->schedule(delay, 800);
         return true;
 
         //code used for cat jumping animation, incomplete and not activated in our release
@@ -595,7 +600,6 @@ void GameplayMode::unpossess() {
             _player->setLevel(level);
             _player->getSceneNode()->setScale(0.15, 0.15);
             _rootScene->addChild(_player->getSceneNode());
-            _hasControl = true;
             return false;
         };
         std::function<bool()> delayInputLeft = [&]() {
@@ -607,7 +611,6 @@ void GameplayMode::unpossess() {
             _player->setLevel(level);
             _player->getSceneNode()->setScale(-0.15, 0.15);
             _rootScene->addChild(_player->getSceneNode());
-            _hasControl = true;
             return false;
         };
         if (movingRight) {
@@ -616,6 +619,11 @@ void GameplayMode::unpossess() {
         else {
             cugl::Application::get()->schedule(delayInputLeft, 1100);
         }
+        std::function<bool()> delay = [&]() {
+            _hasControl = true;
+            return false;
+        };
+        cugl::Application::get()->schedule(delay, 2000);
     }
   
     //_player->getSceneNode()->setFrame(7);
