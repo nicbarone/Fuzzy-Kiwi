@@ -92,7 +92,21 @@
 			"wrapT": "clamp"
 		},
 		"leftRightHand": {
-			"file": "textures/UI/Tutorial/leftRightHand.png",
+			"file": "textures/UI/Tutorial/LeftRightHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"upDownHand": {
+			"file": "textures/UI/Tutorial/UpDownHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"tapHand": {
+			"file": "textures/UI/Tutorial/TapHand.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
