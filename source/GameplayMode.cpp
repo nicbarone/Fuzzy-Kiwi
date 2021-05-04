@@ -357,7 +357,8 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->getPossessed() != nullptr) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
         }
-        if (_hasControl&&_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
+        std::shared_ptr<cugl::scene2::AnimationNode> detectingEnemy = _enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+        if (_hasControl&& detectingEnemy !=nullptr) {
             CULog("hheee");
             if (_player->getSceneNode()->isVisible() ||
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
@@ -382,6 +383,8 @@ void GameplayMode::update(float timestep) {
 
                     std::function<bool()> losing = [&]() {
                         _player->getSceneNode()->setVisible(false);
+                        detectingEnemy->setColor(Color4::BLUE);
+
                         setGameStatus(GameStatus::LOSE);
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()[0]->getButton()->activate();
