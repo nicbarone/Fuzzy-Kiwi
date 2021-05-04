@@ -265,6 +265,7 @@ void GameplayMode::update(float timestep) {
     _inputManager->readInput();
     if (_hasControl) {
         if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
+            CULog("has control %d", _hasControl);
             _enemyController->closestEnemy()->setGlow(true);
             if (_showTutorialText == 1) {
                 if (USE_TAP_POSSESS) {
@@ -369,8 +370,11 @@ void GameplayMode::update(float timestep) {
 #endif
         // Enemy movement
         _enemyController->moveEnemies(_inputManager->getForward());
-        _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
+        if (_hasControl) {
+            _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
 
+        }
+        
         if (_enemyController->getPossessed() != nullptr) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
         }
