@@ -857,14 +857,14 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     tutMaxFrame = 12;
     addChild(_rootScene);
 
-//#ifdef CU_MOBILE
+#ifdef CU_MOBILE
     // make joystick panel
     _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
     _joystickPanel->getSceneNode()->setScale(1.0f);
     _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
     _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
     addChild(_joystickPanel->getSceneNode());
-//#endif
+#endif
 
     // make possess panel
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
