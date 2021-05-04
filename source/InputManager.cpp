@@ -225,6 +225,7 @@ void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
  */
 void InputManager::processRightSwipe(const cugl::Vec2 pos) {
     _rtouch.position = pos;
+    // nope
     float diff = _rtouch.beginPos.y - _rtouch.position.y;
     int timeDiff = Timestamp::ellapsedMillis(_rtouch.beginTimestamp, _rtouch.timestamp);
     // valid swipe only if the the swipe is fast enough
