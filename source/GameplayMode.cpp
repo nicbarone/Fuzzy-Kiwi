@@ -234,15 +234,16 @@ void GameplayMode::update(float timestep) {
         if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen()) {
             _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
             _tutorialText->setPositionX(0);
-            if (tutFrameSwitch > 0) {
-                tutFrameSwitch--;
-            }
-            else {
-                tutFrameSwitch = 7;
-                tutFrame++;
-                tutFrame = tutFrame % tutMaxFrame;
-                _tutorialAnimation->setFrame(tutFrame);
-            }
+        }
+        if (tutFrameSwitch > 0) {
+            tutFrameSwitch--;
+        }
+        else {
+            tutFrameSwitch = 7;
+            tutFrame++;
+            tutFrame = tutFrame % tutMaxFrame;
+            _tutorialAnimation->setFrame(tutFrame);
+            CULog("please");
         }
     }
     if (_showTutorialText == 2) {
