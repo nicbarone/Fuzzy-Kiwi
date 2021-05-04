@@ -14,3 +14,4 @@ const float GAME_WIDTH = 1024;
 const int MAX_LEVEL_NUM_PER_LOC = 4;
 const int ENEMY_TURNING_FRAMES = 30;
 const bool USE_LEVEL_EDITOR = false;
+const bool USE_TAP_POSSESS = true;

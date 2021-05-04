@@ -17,4 +17,5 @@ extern const float GAME_WIDTH;
 extern const int MAX_LEVEL_NUM_PER_LOC;
 extern const int ENEMY_TURNING_FRAMES;
 extern const bool USE_LEVEL_EDITOR;
+extern const bool USE_TAP_POSSESS;
 #endif
