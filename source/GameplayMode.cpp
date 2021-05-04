@@ -243,7 +243,6 @@ void GameplayMode::update(float timestep) {
             tutFrame++;
             tutFrame = tutFrame % tutMaxFrame;
             _tutorialAnimation->setFrame(tutFrame);
-            CULog("please");
         }
     }
     if (_showTutorialText == 2) {
