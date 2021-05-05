@@ -175,6 +175,7 @@ void App::update(float timestep) {
             CULog("si");
             _inMenu = false;
             _inLevelSelect = true;
+            _levelSelect.updateLevelIcon();
         }
         else if (_menu.getGameLoaded()) {
             _menu.setGameLoaded(false);
@@ -195,8 +196,10 @@ void App::update(float timestep) {
             _gameplay.setBackToMenu(false);
             _levelSelect.activateButtons();
             _levelSelect.setLevelSelected(false);
+            _levelSelect.setBackPressed(false);
             _inGameplay = false;
             _inLevelSelect = true;
+            _levelSelect.updateLevelIcon();
         }
         else if (_gameplay.getNextLevel()) {
             _gameplay.setNextlevel(false);
