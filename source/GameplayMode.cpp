@@ -351,6 +351,79 @@ void GameplayMode::update(float timestep) {
             _winPanel->getChildButtons()[0]->getButton()->activate();
             _winPanel->getChildButtons()[1]->getButton()->activate();
             _winPanel->getChildButtons()[2]->getButton()->activate();
+            // and save the update to level_completed.json
+            // first get all fields
+            shared_ptr<JsonReader> reader = JsonReader::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+            std::shared_ptr<JsonValue> json = reader->readJson();
+            shared_ptr<JsonValue> completed = json->get("completed");
+            shared_ptr<JsonValue> result = JsonValue::allocObject();
+            shared_ptr<JsonValue> r_complete = JsonValue::allocObject();
+            if (_levelIndex == 0) {
+                r_complete->appendValue("level1", true);
+            }
+            else {
+                r_complete->appendValue("level1", completed->getBool("level1"));
+            }
+            if (_levelIndex == 1) {
+                r_complete->appendValue("level2", true);
+            }
+            else {
+                r_complete->appendValue("level2", completed->getBool("level2"));
+            }
+            if (_levelIndex == 2) {
+                r_complete->appendValue("level3", true);
+            }
+            else {
+                r_complete->appendValue("level3", completed->getBool("level3"));
+            }
+            if (_levelIndex == 3) {
+                r_complete->appendValue("level4", true);
+            }
+            else {
+                r_complete->appendValue("level4", completed->getBool("level4"));
+            }
+            if (_levelIndex == 4) {
+                r_complete->appendValue("level5", true);
+            }
+            else {
+                r_complete->appendValue("level5", completed->getBool("level5"));
+            }
+            if (_levelIndex == 5) {
+                r_complete->appendValue("level6", true);
+            }
+            else {
+                r_complete->appendValue("level6", completed->getBool("level6"));
+            }
+            if (_levelIndex == 6) {
+                r_complete->appendValue("level7", true);
+            }
+            else {
+                r_complete->appendValue("level7", completed->getBool("level7"));
+            }
+            if (_levelIndex == 7) {
+                r_complete->appendValue("level8", true);
+            }
+            else {
+                r_complete->appendValue("level8", completed->getBool("level8"));
+            }
+            if (_levelIndex == 8) {
+                r_complete->appendValue("level9", true);
+            }
+            else {
+                r_complete->appendValue("level9", completed->getBool("level9"));
+            }
+            if (_levelIndex == 9) {
+                r_complete->appendValue("level10", true);
+            }
+            else {
+                r_complete->appendValue("level10", completed->getBool("level9"));
+            }
+            reader->close();
+            result->appendChild("completed", r_complete);
+            shared_ptr<JsonWriter> writer = JsonWriter::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+
+            writer->writeJson(result);
+            writer->close();
         }
         collisions::checkInBounds(_enemyController->getPossessed(),_player);
 
@@ -873,33 +946,33 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     tutMaxFrame = 12;
     addChild(_rootScene);
 
-//#ifdef CU_MOBILE
+#ifdef CU_MOBILE
     // make joystick panel
     _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
     _joystickPanel->getSceneNode()->setScale(1.0f);
     _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
     _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
     addChild(_joystickPanel->getSceneNode());
-//#endif
+#endif
 
     // make possess panel
     _possessPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("possessCounter"));
     _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
     _possessPanel->getSceneNode()->setScale(1.0f);
     _possessPanel->getSceneNode()->setPosition(size);
-    // TODO: get max possess number
+
     std::shared_ptr<Texture> possessUsed = _assets->get<Texture>("usedPossession");
     std::shared_ptr<Texture> possessAvailable = _assets->get<Texture>("availablePossession");
     for (int i = 0; i < _player->get_nPossess(); i++) {
         _possessPanel->createChildPanel(0, 0, 0, possessUsed);
         _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setScale(0.3f);
         _possessPanel->getChildPanels()[i * 2]->setPos(_possessPanel->getSceneNode()->getContentSize()
             * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[0]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
 
         _possessPanel->createChildPanel(0, 0, 0, possessAvailable);
         _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setScale(0.3f);
         _possessPanel->getChildPanels()[i * 2 + 1]->setPos(_possessPanel->getSceneNode()->getContentSize()
             * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[1]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
     }
