@@ -151,6 +151,8 @@ void App::update(float timestep) {
             _levelSelect.setBackPressed(false);
             _levelSelect.deactivateButtons();
             _menu.activateButtons();
+            _menu.setGameLoaded(false);
+            _menu.setPlayPressed(false);
             _inLevelSelect = false;
             _inMenu = true;
         }
