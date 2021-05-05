@@ -379,7 +379,6 @@ void GameplayMode::update(float timestep) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
         }
         if (_hasControl&&_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
-            CULog("hheee");
             if (_player->getSceneNode()->isVisible() ||
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
                 _hasControl = false;
