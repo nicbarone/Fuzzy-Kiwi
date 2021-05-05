@@ -1,0 +1,576 @@
+{
+	"textures": {
+		"logo": {
+			"file": "textures/logo.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"cat-walking": {
+			"file": "textures/GameObject/Cat/CatWalking.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"enemy": {
+			"file": "textures/GameObject/Enemy/Enemy-Walking.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"enemy-glow": {
+			"file": "textures/GameObject/Enemy/EnemyGlow.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"possessed-enemy": {
+			"file": "textures/GameObject/Enemy/PossessedEnemy.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"lab-table": {
+			"file": "textures/GameObject/Enemy/Lab-Table.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"floor": {
+			"file": "textures/GameObject/LevelComponent/LongFloor.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"staircaseDoorOrange": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorOrange.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"staircaseDoorPurple": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorPurple.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"staircaseDoorRed": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorRed.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"staircaseDoorYellow": {
+			"file": "textures/GameObject/StaircaseDoor/StaircaseDoorYellow.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"door": {
+			"file": "textures/GameObject/Door/Door.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"cagedAnimal": {
+			"file": "textures/GameObject/CagedAnimal/CagedAnimal.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"UnlockCagedAnimal": {
+			"file": "textures/GameObject/CagedAnimal/UnlockCagedAnimal.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		
+		"lrHand": {
+			"file": "textures/UI/LeftRightHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"upDownHand": {
+			"file": "textures/UI/Tutorial/UpDownHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"tapHand": {
+			"file": "textures/UI/Tutorial/TapHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"winIcon": {
+			"file": "textures/UI/Icon/WinIcon.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"levelCompleteBG": {
+			"file": "textures/UI/Background/LevelCompleteBG.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"levelFailedBG": {
+			"file": "textures/UI/Background/LevelFailedBG.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"winTitle": {
+			"file": "textures/UI/Icon/WinTitle.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"deadOrAlive": {
+			"file": "textures/UI/Icon/DeadOrAlive.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"retry": {
+			"file": "textures/UI/Button/Retry.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"exit": {
+			"file": "textures/UI/Button/Exit.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"menu": {
+			"file": "textures/UI/Button/Menu.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"tryAgain": {
+			"file": "textures/UI/Button/TryAgain.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"nextLevel": {
+			"file": "textures/UI/Button/NextLevel.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"levelWall": {
+			"file": "textures/GameObject/LevelComponent/levelWall.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"levelFloor": {
+			"file": "textures/GameObject/LevelComponent/LevelFloor.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"loseIcon": {
+			"file": "textures/UI/Icon/LoseIcon.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"loseTitle": {
+			"file": "textures/UI/Icon/LoseTitle.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"wasted": {
+			"file": "textures/UI/Icon/Wasted.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"teamIcon": {
+			"file": "textures/UI/Icon/FuzzyKiwiIcon1.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"menuBackground": {
+			"file": "textures/UI/Background/MenuBackground.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"playButton": {
+			"file": "textures/UI/Button/Play.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"settingsButton": {
+			"file": "textures/UI/Button/Settings.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"mapBackground": {
+			"file": "textures/UI/Background/MapBackground.jpg",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"smallLab": {
+			"file": "textures/UI/Button/SmallLab.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"backButton": {
+			"file": "textures/UI/Button/BackButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"levelSelectBG": {
+			"file": "textures/UI/Background/LevelSelectBackground.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level1": {
+			"file": "textures/UI/Button/Level1.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level2": {
+			"file": "textures/UI/Button/Level2.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level3": {
+			"file": "textures/UI/Button/Level3.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level4": {
+			"file": "textures/UI/Button/Level4.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level5": {
+			"file": "textures/UI/Button/Level5.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level6": {
+			"file": "textures/UI/Button/Level6.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level7": {
+			"file": "textures/UI/Button/Level7.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level8": {
+			"file": "textures/UI/Button/Level8.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level9": {
+			"file": "textures/UI/Button/Level9.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level10": {
+			"file": "textures/UI/Button/Level10.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"doorFrame": {
+			"file": "textures/GameObject/Door/DoorFrame.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"catDen": {
+			"file": "textures/GameObject/CatDen/CatDen.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+
+		},
+		"catDenBlue": {
+            "file": "textures/GameObject/CatDen/CatDenBlue.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "catDenGrey": {
+            "file": "textures/GameObject/CatDen/CatDenGrey.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "catDenPurple": {
+            "file": "textures/GameObject/CatDen/CatDenPurple.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "catDenGreen": {
+            "file": "textures/GameObject/CatDen/CatDenGreen.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+		"CagedCat": {
+			"file": "textures/GameObject/Cat/CagedCat.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"catPossessing": {
+			"file": "textures/GameObject/Cat/CatPossessing.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"paused": {
+			"file": "textures/UI/Icon/Paused.jpg",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"restartLevel": {
+			"file": "textures/UI/Button/RestartLevel.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"returnToMenu": {
+			"file": "textures/UI/Button/ReturnToMenu.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"resume": {
+			"file": "textures/UI/Button/Resume.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"menuButton": {
+			"file": "textures/UI/Button/MenuButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"possessCounter": {
+			"file": "textures/UI/Icon/PossessCounter.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"savegamePanel": {
+			"file": "textures/UI/Background/SaveGamePanel.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"yes": {
+			"file": "textures/UI/Button/YesButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"no": {
+			"file": "textures/UI/Button/NoButton.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"usedPossession": {
+			"file": "textures/UI/Icon/PossessionUsed.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"availablePossession": {
+			"file": "textures/UI/Icon/PossesionLeft.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"pausedBackground": {
+			"file": "textures/UI/Background/PauseBackground.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"EnemyDying": {
+			"file": "textures/GameObject/Enemy/EnemyDying.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"EnemyOpeningDoor": {
+			"file": "textures/GameObject/Enemy/EnemyOpeningDoor.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"joystick": {
+			"file": "textures/UI/Button/Joystick.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"joystickBorder": {
+			"file": "textures/UI/Button/JoystickBorder.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"loadGame": {
+			"file": "textures/UI/Button/LoadGame.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		}
+
+	},
+	"fonts": {
+		"felt": {
+			"file": "fonts/MarkerFelt.ttf",
+			"size": 48
+		},
+		"small-felt": {
+			"file": "fonts/MarkerFelt.ttf",
+			"size": 24
+		},
+		"futura": {
+			"file": "fonts/Futura-Regular.ttf",
+			"size": 48
+		},
+		"futura-bold": {
+			"file": "fonts/Futura-Bold.ttf",
+			"size": 24
+		}
+	},
+	"sounds": {
+		"menuBGM": {
+			"type": "sample",
+			"file": "bgm/MenuBGM.ogg"
+		},
+		"jumpOff": {
+			"type": "sample",
+			"file": "sound effect/jump_off.ogg"
+		},
+		"possess": {
+			"type": "sample",
+			"file": "sound effect/possess.ogg"
+		},
+		"useDoor": {
+			"type": "sample",
+			"file": "sound effect/use_door.ogg"
+		},
+		"useStaircase": {
+			"type": "sample",
+			"file": "sound effect/use_staircase.ogg"
+		},
+		"winCondition": {
+			"type": "sample",
+			"file": "sound effect/win_condition.ogg"
+		}
+	}
+}

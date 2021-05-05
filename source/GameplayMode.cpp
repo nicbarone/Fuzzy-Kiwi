@@ -345,30 +345,57 @@ void GameplayMode::update(float timestep) {
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (_hasControl && cageCollision != 0) {
+           /* CULog("HHH");
             _hasControl = false;
-            
-                    setGameStatus(GameStatus::WIN);
-                    AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
-                    // shows win Panel
-                    _winPanel->setVisible(true);
-                    _winPanel->getChildButtons()[0]->getButton()->activate();
-                    _winPanel->getChildButtons()[1]->getButton()->activate();
-                    _winPanel->getChildButtons()[2]->getButton()->activate();
-                  
-              
+            int level = _cagedAnimal->getLevel();
+            int pos = _cagedAnimal->getPos();
+            int movingRight = _cagedAnimal->getMovingRight();
+            _rootScene->removeChild(_cagedAnimal->getSceneNode());
+            std::shared_ptr<Texture> UnlockCagedAnimal = _assets->get<Texture>("UnlockCagedAnimal");
 
+            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 7, UnlockCagedAnimal)->getSceneNode());
+            _cagedAnimal->setLevel(level);
+            _cagedAnimal->getSceneNode()->setPosition(pos, level * FLOOR_HEIGHT + FLOOR_OFFSET - 50);
             
-            collisions::checkInBounds(_enemyController->getPossessed(), _player);
+            _cagedAnimal->PossessAnimation(4);
+            _rootScene->addChild(_cagedAnimal->getSceneNode());
+     
+            std::function<bool()> winning = [&]() {*/
+                //_cagedAnimal->getSceneNode()->setVisible(false);
+                //setGameStatus(GameStatus::WIN);
+                //AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
+                //// shows win Panel
+                //_winPanel->setVisible(true);
+                //_winPanel->getChildButtons()[0]->getButton()->activate();
+                //_winPanel->getChildButtons()[1]->getButton()->activate();
+                //_winPanel->getChildButtons()[2]->getButton()->activate();
+               /* _hasControl = true;
+                return false;
+            };
+            
 
-            /**possess code works a bit better when movement is processed last (scene node position is updated here)
-                else you get one frame of wrong position*/
-                // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
-            if (_player->getPossess()) {
-                _player->setPos(_player->get_possessEnemy()->getPos());
-            }
-            else if (_hasControl && _player->getSceneNode()->isVisible()) {
-                _player->move(_inputManager->getForward());
-            }
+            cugl::Application::get()->schedule(winning, 1500);
+        */
+          
+            setGameStatus(GameStatus::WIN);
+            AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
+            // shows win Panel
+            _winPanel->setVisible(true);
+            _winPanel->getChildButtons()[0]->getButton()->activate();
+            _winPanel->getChildButtons()[1]->getButton()->activate();
+            _winPanel->getChildButtons()[2]->getButton()->activate();
+        }
+        collisions::checkInBounds(_enemyController->getPossessed(), _player);
+
+        /**possess code works a bit better when movement is processed last (scene node position is updated here)
+            else you get one frame of wrong position*/
+            // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
+        if (_player->getPossess()) {
+            _player->setPos(_player->get_possessEnemy()->getPos());
+        }
+        else if (_hasControl && _player->getSceneNode()->isVisible()) {
+            _player->move(_inputManager->getForward());
+        }
 #ifdef CU_MOBILE
             // move joystick for visualization
             _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition() / _joystickPanel->getSceneNode()->getScaleX() - _inputManager->getJoystickPosition() / 2.0f);
