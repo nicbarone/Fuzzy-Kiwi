@@ -345,152 +345,173 @@ void GameplayMode::update(float timestep) {
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (_hasControl && cageCollision != 0) {
-            setGameStatus(GameStatus::WIN);
-            AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
-            // shows win Panel
-            _winPanel->setVisible(true);
-            _winPanel->getChildButtons()[0]->getButton()->activate();
-            _winPanel->getChildButtons()[1]->getButton()->activate();
-            _winPanel->getChildButtons()[2]->getButton()->activate();
-        }
-        collisions::checkInBounds(_enemyController->getPossessed(),_player);
-
-        /**possess code works a bit better when movement is processed last (scene node position is updated here)
-            else you get one frame of wrong position*/
-            // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
-        if (_player->getPossess()) {
-            _player->setPos(_player->get_possessEnemy()->getPos());
-        }
-        else if(_hasControl&& _player->getSceneNode()->isVisible() ) {
-            _player->move(_inputManager->getForward());
-        }
-#ifdef CU_MOBILE
-        // move joystick for visualization
-        _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition()/_joystickPanel->getSceneNode()->getScaleX()-_inputManager->getJoystickPosition()/2.0f);
-#endif
-        // Enemy movement
-        _enemyController->moveEnemies(_inputManager->getForward());
-        if (_hasControl) {
-            _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
-
-        }
-        
-        if (_enemyController->getPossessed() != nullptr) {
-            //CULog("%d", _enemyController->getPossessed()->facingRight());
-        }
-        if (_hasControl&&_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
-            if (_player->getSceneNode()->isVisible() ||
-                (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
-                _hasControl = false;
-                std::shared_ptr<Texture> CagedCat = _assets->get<Texture>("CagedCat");
-                if (_enemyController->getPossessed() != nullptr) {
-                    _hasControl = false;
-                    _enemyController->getPossessed()->getSceneNode()->setVisible(false);
-                    _rootScene->removeChild(_player->getSceneNode());
-                    _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6,
-                        CagedCat)->getSceneNode());
-                    _player->setLevel(_enemyController->getPossessed()->getLevel());
-                    _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
-                    if (_enemyController->getPossessed()->getMovingRight()) {
-                        _player->getSceneNode()->setScale(0.06, 0.06);
-                    }
-                    else {
-                        _player->getSceneNode()->setScale(-0.06, 0.06);
-                    }
-                    _player->PossessAnimation(3);
-                    _rootScene->addChild(_player->getSceneNode());
-
-
-                    std::function<bool()> color = [&]() {
-                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
-                        return false;
-                    };
-                    std::function<bool()> losing = [&]() {
-
-                        _player->getSceneNode()->setVisible(false);
-                        setGameStatus(GameStatus::LOSE);
-                        if (_showTutorialText == 1) {
-                            _tutorialAnimation->setVisible(false);
-                        }
-                        _losePanel->setVisible(true);
-                        _losePanel->getChildButtons()[0]->getButton()->activate();
-                        _losePanel->getChildButtons()[1]->getButton()->activate();
-                        if (_showTutorialText == 1) {
-                            _tutorialText->setText("Oh no! You got caught!");
-                            _tutorialText->setPosition(Vec2(100, 110));
-                            _tutorialText2->setVisible(false);
-                        }
-                        _hasControl = false;
-                        return false;
-                    };
-                    cugl::Application::get()->schedule(color, 500);
-                    cugl::Application::get()->schedule(losing, 1500);
-                }
-                else {
-                    _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
-                    int level = _player->getLevel();
-                    int pos = _player->getPos();
-                    int movingRight = _player->getMovingRight();
-                    _rootScene->removeChild(_player->getSceneNode());
-                    _player->SetSceneNode(Player::alloc(pos, level, 0, 6, CagedCat)->getSceneNode());
-                    _player->setLevel(level);
-                    _player->getSceneNode()->setPosition(pos, level* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
-                    if (movingRight) {
-                        _player->getSceneNode()->setScale(0.06, 0.06);
-                    }
-                    else {
-                        _player->getSceneNode()->setScale(-0.06, 0.06);
-                    }
-                    _player->PossessAnimation(3);
-                    _rootScene->addChild(_player->getSceneNode());
-                    std::function<bool()> color = [&]() {
-                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
-                        return false;
-                    };
-                    std::function<bool()> losing = [&]() {
-                        _player->getSceneNode()->setVisible(false);
-                        setGameStatus(GameStatus::LOSE);
-                        _losePanel->setVisible(true);
-                        _losePanel->getChildButtons()[0]->getButton()->activate();
-                        _losePanel->getChildButtons()[1]->getButton()->activate();
-                        if (_showTutorialText == 1) {
-                            _tutorialText->setText("Oh no! You got caught!");
-                            _tutorialText->setPosition(Vec2(100, 110));
-                            _tutorialText2->setVisible(false);
-                        }
-                        _hasControl = false;
-                        return false;
-                    };
-                    cugl::Application::get()->schedule(color, 500);
-
-                    cugl::Application::get()->schedule(losing, 1500);
-                }
-
-
-            }
-        }
-        else {
-            _player->getSceneNode()->setAngle(0);
+            _hasControl = false;
+            std::shared_ptr<Texture> CagedCat = _assets->get<Texture>("CagedCat");
             if (_enemyController->getPossessed() != nullptr) {
-                _enemyController->getPossessed()->getSceneNode()->setAngle(0);
+                _hasControl = false;
+                int level = _cagedAnimal->getLevel();
+                int pos = _cagedAnimal->getPos().x;
+                _cagedAnimal->getSceneNode()->setVisible(false);
+                _rootScene->removeChild(_cagedAnimal->getSceneNode());
+                _cagedAnimal->SetSceneNode(CagedAnimal::alloc(pos, 0, Vec2(1, 1), level, Color4::WHITE, {}, 1, 7, 7, CagedCat)->getSceneNode());
+                _cagedAnimal->setLevel(level);
+                _cagedAnimal->getSceneNode()->setPosition(pos, _cagedAnimal->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+                _cagedAnimal->Free();
+                _rootScene->addChild(_cagedAnimal->getSceneNode());
+
+                std::function<bool()> winning = [&]() {
+                    setGameStatus(GameStatus::WIN);
+                    AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
+                    // shows win Panel
+                    _winPanel->setVisible(true);
+                    _winPanel->getChildButtons()[0]->getButton()->activate();
+                    _winPanel->getChildButtons()[1]->getButton()->activate();
+                    _winPanel->getChildButtons()[2]->getButton()->activate();
+                    _hasControl = false;
+                    return false;
+                };
+                cugl::Application::get()->schedule(winning, 1500);
+
+            }
+            collisions::checkInBounds(_enemyController->getPossessed(), _player);
+
+            /**possess code works a bit better when movement is processed last (scene node position is updated here)
+                else you get one frame of wrong position*/
+                // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
+            if (_player->getPossess()) {
+                _player->setPos(_player->get_possessEnemy()->getPos());
+            }
+            else if (_hasControl && _player->getSceneNode()->isVisible()) {
+                _player->move(_inputManager->getForward());
+            }
+#ifdef CU_MOBILE
+            // move joystick for visualization
+            _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition() / _joystickPanel->getSceneNode()->getScaleX() - _inputManager->getJoystickPosition() / 2.0f);
+#endif
+            // Enemy movement
+            _enemyController->moveEnemies(_inputManager->getForward());
+            if (_hasControl) {
+                _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
+
+            }
+
+            if (_enemyController->getPossessed() != nullptr) {
+                //CULog("%d", _enemyController->getPossessed()->facingRight());
+            }
+            if (_hasControl && _enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
+                if (_player->getSceneNode()->isVisible() ||
+                    (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
+                    _hasControl = false;
+                    std::shared_ptr<Texture> CagedCat = _assets->get<Texture>("CagedCat");
+                    if (_enemyController->getPossessed() != nullptr) {
+                        _hasControl = false;
+                        _enemyController->getPossessed()->getSceneNode()->setVisible(false);
+                        _rootScene->removeChild(_player->getSceneNode());
+                        _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6,
+                            CagedCat)->getSceneNode());
+                        _player->setLevel(_enemyController->getPossessed()->getLevel());
+                        _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+                        if (_enemyController->getPossessed()->getMovingRight()) {
+                            _player->getSceneNode()->setScale(0.06, 0.06);
+                        }
+                        else {
+                            _player->getSceneNode()->setScale(-0.06, 0.06);
+                        }
+                        _player->PossessAnimation(3);
+                        _rootScene->addChild(_player->getSceneNode());
+
+
+                        std::function<bool()> color = [&]() {
+                            _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+                            return false;
+                        };
+                        std::function<bool()> losing = [&]() {
+
+                            _player->getSceneNode()->setVisible(false);
+                            setGameStatus(GameStatus::LOSE);
+                            if (_showTutorialText == 1) {
+                                _tutorialAnimation->setVisible(false);
+                            }
+                            _losePanel->setVisible(true);
+                            _losePanel->getChildButtons()[0]->getButton()->activate();
+                            _losePanel->getChildButtons()[1]->getButton()->activate();
+                            if (_showTutorialText == 1) {
+                                _tutorialText->setText("Oh no! You got caught!");
+                                _tutorialText->setPosition(Vec2(100, 110));
+                                _tutorialText2->setVisible(false);
+                            }
+                            _hasControl = false;
+                            return false;
+                        };
+                        cugl::Application::get()->schedule(color, 500);
+                        cugl::Application::get()->schedule(losing, 1500);
+                    }
+                    else {
+                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+                        int level = _player->getLevel();
+                        int pos = _player->getPos();
+                        int movingRight = _player->getMovingRight();
+                        _rootScene->removeChild(_player->getSceneNode());
+                        _player->SetSceneNode(Player::alloc(pos, level, 0, 6, CagedCat)->getSceneNode());
+                        _player->setLevel(level);
+                        _player->getSceneNode()->setPosition(pos, level * FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+                        if (movingRight) {
+                            _player->getSceneNode()->setScale(0.06, 0.06);
+                        }
+                        else {
+                            _player->getSceneNode()->setScale(-0.06, 0.06);
+                        }
+                        _player->PossessAnimation(3);
+                        _rootScene->addChild(_player->getSceneNode());
+                        std::function<bool()> color = [&]() {
+                            _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+                            return false;
+                        };
+                        std::function<bool()> losing = [&]() {
+                            _player->getSceneNode()->setVisible(false);
+                            setGameStatus(GameStatus::LOSE);
+                            _losePanel->setVisible(true);
+                            _losePanel->getChildButtons()[0]->getButton()->activate();
+                            _losePanel->getChildButtons()[1]->getButton()->activate();
+                            if (_showTutorialText == 1) {
+                                _tutorialText->setText("Oh no! You got caught!");
+                                _tutorialText->setPosition(Vec2(100, 110));
+                                _tutorialText2->setVisible(false);
+                            }
+                            _hasControl = false;
+                            return false;
+                        };
+                        cugl::Application::get()->schedule(color, 500);
+
+                        cugl::Application::get()->schedule(losing, 1500);
+                    }
+
+
+                }
+            }
+            else {
+                _player->getSceneNode()->setAngle(0);
+                if (_enemyController->getPossessed() != nullptr) {
+                    _enemyController->getPossessed()->getSceneNode()->setAngle(0);
+                }
+            }
+
+
+            //tutorial text trigger
+            if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
+                /*if (_showTutorialText) {
+                    _tutorialText->setText("Oh no! You are stuck! Use the top left pause button to retry");
+                    _tutorialText->setPosition(Vec2(100, 110));
+                    _tutorialText2->setText("The paw on the top right indicates the number of possessions you have remaining.");
+                    _tutorialText2->setPosition(Vec2(100, 420));
+                }*/
             }
         }
 
-
-        //tutorial text trigger
-        if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
-            /*if (_showTutorialText) {
-                _tutorialText->setText("Oh no! You are stuck! Use the top left pause button to retry");
-                _tutorialText->setPosition(Vec2(100, 110));
-                _tutorialText2->setText("The paw on the top right indicates the number of possessions you have remaining.");
-                _tutorialText2->setPosition(Vec2(100, 420));
-            }*/
+        //resetting
+        if (_inputManager->didReset()) {
+            reset();
         }
-    }
-
-    //resetting
-    if (_inputManager->didReset()) {
-        reset();
     }
 }
 
@@ -765,7 +786,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         for (int i = 0; i < decorationsJSON->size(); i++) {
             objectTemp = decorationsJSON->get(i);
             _cagedAnimal = CagedAnimal::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, { }, 1, 1, cagedAnimal);
+                cugl::Color4::WHITE, { }, 1, 1, 1, cagedAnimal);
 
         }
     }

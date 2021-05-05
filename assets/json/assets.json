@@ -91,6 +91,14 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"UnlockCagedAnimal": {
+			"file": "textures/GameObject/CagedAnimal/UnlockCagedAnimal.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		
 		"lrHand": {
 			"file": "textures/UI/LeftRightHand.png",
 			"minfilter": "nearest",
