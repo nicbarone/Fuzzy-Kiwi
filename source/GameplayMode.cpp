@@ -343,7 +343,7 @@ void GameplayMode::update(float timestep) {
         //checkEnemyPossession();
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
-        if (cageCollision != 0) {
+        if (cageCollision != 0 && _hasControl) {
             setGameStatus(GameStatus::WIN);
             AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
             // shows win Panel
