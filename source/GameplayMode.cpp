@@ -361,7 +361,7 @@ void GameplayMode::update(float timestep) {
         if (_player->getPossess()) {
             _player->setPos(_player->get_possessEnemy()->getPos());
         }
-        else if(_hasControl) {
+        else if(_hasControl&& _player->getSceneNode()->isVisible() ) {
             _player->move(_inputManager->getForward());
         }
 #ifdef CU_MOBILE
@@ -1237,6 +1237,7 @@ void GameplayMode::checkCatDens() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _player->getLevel() == catDen->getLevel() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setCurrentDen(catDen->getConnectedDens());
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
