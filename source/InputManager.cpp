@@ -192,11 +192,11 @@ void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
     Vec2 diff = _ltouch.position - pos;
 
     // Reset the anchor if we drifted too far
-    if (diff.lengthSquared() > JSTICK_RADIUS * JSTICK_RADIUS) {
+    /*if (diff.lengthSquared() > JSTICK_RADIUS * JSTICK_RADIUS) {
         diff.normalize();
         diff *= (JSTICK_RADIUS + JSTICK_XDIFF_MIN) / 2;
         _ltouch.position = pos + diff;
-    }
+    }*/
     _leftJoycenter = touch2Screen(_ltouch.position);
 
     if (std::abs(diff.x) > JSTICK_XDIFF_MIN) {
