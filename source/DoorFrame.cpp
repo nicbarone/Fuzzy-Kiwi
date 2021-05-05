@@ -23,7 +23,7 @@ bool DoorFrame::init(int x, float ang, Vec2 scale, int level, Color4 color, std:
 {
 	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
 	setTexture(texture);
-	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + DOOR_FRAME_OFFSET));
+	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + DOOR_FRAME_OFFSET-2));
 	setAngle(ang);
 	setScale(scale);
 	setLevel(level);

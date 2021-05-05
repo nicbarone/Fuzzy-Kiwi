@@ -358,10 +358,24 @@ void GameplayMode::update(float timestep) {
             else you get one frame of wrong position*/
             // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
         if (_player->getPossess()) {
+            float oldX = _player->getPos();
             _player->setPos(_player->get_possessEnemy()->getPos());
+            _player->getSceneNode()->setPositionX(_player->get_possessEnemy()->getPos());
+            float newX = _player->getPos();
+            float deltaX = newX - oldX;
+            _rootScene->setPositionX(_rootScene->getPositionX() - deltaX * _rootScene->getScale().x);
+            centerCamera();
+            
         }
         else if(_hasControl) {
+            //EXPERIMENTAL LOCKED CAMERA CODE
+            float oldX = _player->getSceneNode()->getPositionX();
             _player->move(_inputManager->getForward());
+            float newX = _player->getSceneNode()->getPositionX();
+            float deltaX = newX - oldX;
+            _rootScene->setPositionX(_rootScene->getPositionX()- deltaX* _rootScene->getScale().x);
+            centerCamera();
+
         }
 #ifdef CU_MOBILE
         // move joystick for visualization
@@ -520,6 +534,7 @@ bool GameplayMode::attemptPossess() {
             _enemyController->closestEnemy()->setAsPossessed();
             _enemyController->closestEnemy()->getSceneNode()->removeAllChildren();
             _hasControl = true;
+
             return false;
         };
         cugl::Application::get()->schedule(setPossessed, 500);
@@ -591,6 +606,7 @@ void GameplayMode::unpossess() {
         _player->getSceneNode()->setScale(0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
         _hasControl = true;
+
         return false;
     };
     std::function<bool()> delayInputLeft = [&]() {
@@ -603,6 +619,7 @@ void GameplayMode::unpossess() {
         _player->getSceneNode()->setScale(-0.15, 0.15);
         _rootScene->addChild(_player->getSceneNode());
         _hasControl = true;
+
         return false;
     };
     if (movingRight) {
@@ -1014,6 +1031,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));
     addChild(_tutorialAnimation);
+    centerCamera();
 }
 
 
@@ -1183,6 +1201,8 @@ void GameplayMode::checkStaircaseDoors() {
                 _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 9, EnemyOpeningDoor)->getSceneNode());
                 _player->setLevel(_enemyController->getPossessed()->getLevel());
                 _player->getSceneNode()->setPosition(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+                //TODO: BUGFIX
+                _rootScene->setPositionY(_rootScene->getHeight() + (576 - _rootScene->getHeight()) / 2 - _rootScene->getScaleY() * _player->getSceneNode()->getPositionY());
                 if (_enemyController->getPossessed()->getMovingRight()) {
                     _player->getSceneNode()->setScale(0.63, 0.63);
                 }
@@ -1197,8 +1217,10 @@ void GameplayMode::checkStaircaseDoors() {
                     _enemyController->getPossessed()->getSceneNode()->setVisible(true);
                     //_enemyController->getPossessed()->setPos(_enemyController->getPossessed()->getPos() + 130);
                     _hasControl = true;
+
                     return false;
                 };
+
                 cugl::Application::get()->schedule(openDoor, 500);
 
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
@@ -1242,7 +1264,9 @@ void GameplayMode::checkCatDens() {
                 _player->setCurrentDen(0);
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setPos(catDen->getPos().x);
+                _player->getSceneNode()->setPosition(catDen->getPos());
                 _player->setLevel(catDen->getLevel());
+
                 if (_showTutorialText == 1) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                     _tutorialText->setPosition(Vec2(200, 420));
@@ -1372,5 +1396,12 @@ void GameplayMode::toSaveJson() {
 
         writer->writeJson(result);
         writer->close();
+    }
+}
+
+void GameplayMode::centerCamera() {
+    if (!_inputManager->getPivot() && (_player->getCurrentDen() + _player->getCurrentDoor() == 0)) {
+        _rootScene->setPositionX(_rootScene->getWidth() + (1024 - _rootScene->getWidth()) / 2 - _rootScene->getScaleX() * _player->getSceneNode()->getPositionX());
+        _rootScene->setPositionY(_rootScene->getHeight() + (576 - _rootScene->getHeight()) / 2 - _rootScene->getScaleY() * _player->getSceneNode()->getPositionY());
     }
 }

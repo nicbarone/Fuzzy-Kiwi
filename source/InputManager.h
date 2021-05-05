@@ -7,7 +7,7 @@
 #define LEFT_ZONE       0.35f
 /** The portion of the screen used for the right zone */
 #define RIGHT_ZONE      0.65f
-#define VALID_TAP_DIST 20.0f;
+#define VALID_TAP_DIST 50.0f;
 #define VALID_TAP_TIME_DIFF 0.5f;
 class InputManager {
 private:
@@ -255,6 +255,14 @@ public:
      */
     void setRootSceneNode(std::shared_ptr<cugl::scene2::OrderedNode> rootNode) {
         _rootSceneNode = rootNode;
+    }
+
+    bool getPivot() {
+#ifdef CU_MOBILE
+        return !_prev2Pivots[0].empty();
+#else  
+        return _rightJoystick;
+#endif
     }
 
 private:

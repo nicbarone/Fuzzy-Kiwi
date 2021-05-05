@@ -290,6 +290,8 @@ public:
         _tutorialText->setVisible(value == 1);
         _tutorialText2->setVisible(value == 2);
     }
+
+    void centerCamera();
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

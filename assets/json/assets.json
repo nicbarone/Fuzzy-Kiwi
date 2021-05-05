@@ -92,7 +92,7 @@
 			"wrapT": "clamp"
 		},
 		"lrHand": {
-			"file": "textures/UI/Tutorial/LeftRightHand.png",
+			"file": "textures/UI/LeftRightHand.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
