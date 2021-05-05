@@ -81,16 +81,16 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 }
 
 int collisions::checkForCagedAnimalCollision(const std::shared_ptr<Player>& player,
-	const std::shared_ptr<CagedAnimal>& cagedAnimal) {
-	if (cagedAnimal->getPos().x - player->getPos() <= DOOR_WIDTH / 2 &&
-		cagedAnimal->getPos().x - player->getPos() >= 0 &&
+	const std::shared_ptr<Player>& cagedAnimal) {
+	if (cagedAnimal->getPos() - player->getPos() <= DOOR_WIDTH / 2 &&
+		cagedAnimal->getPos() - player->getPos() >= 0 &&
 		cagedAnimal->getLevel() == player->getLevel() && !player->getPossess()) {
 		return 1;
 
 	}
 	else if (cagedAnimal->getSceneNode()->isVisible() &&
-		player->getPos() - cagedAnimal->getPos().x <= DOOR_WIDTH / 2 &&
-		player->getPos() - cagedAnimal->getPos().x >= 0 &&
+		player->getPos() - cagedAnimal->getPos() <= DOOR_WIDTH / 2 &&
+		player->getPos() - cagedAnimal->getPos() >= 0 &&
 		cagedAnimal->getLevel() == player->getLevel() && !player->getPossess()) {
 		return 2;
 	}

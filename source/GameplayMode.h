@@ -101,7 +101,7 @@ protected:
     /** A reference to the level 2 door*/
     std::shared_ptr<Door> _level2Door;
     /** A reference to the cagedAnimal*/
-    std::shared_ptr<CagedAnimal> _cagedAnimal;
+    std::shared_ptr<Player> _cagedAnimal;
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
     std::vector<shared_ptr<DoorFrame>> _doorFrames;

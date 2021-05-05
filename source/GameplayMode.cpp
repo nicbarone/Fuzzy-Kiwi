@@ -346,20 +346,7 @@ void GameplayMode::update(float timestep) {
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (_hasControl && cageCollision != 0) {
             _hasControl = false;
-            std::shared_ptr<Texture> CagedCat = _assets->get<Texture>("CagedCat");
-            if (_enemyController->getPossessed() != nullptr) {
-                _hasControl = false;
-                int level = _cagedAnimal->getLevel();
-                int pos = _cagedAnimal->getPos().x;
-                _cagedAnimal->getSceneNode()->setVisible(false);
-                _rootScene->removeChild(_cagedAnimal->getSceneNode());
-                _cagedAnimal->SetSceneNode(CagedAnimal::alloc(pos, 0, Vec2(1, 1), level, Color4::WHITE, {}, 1, 7, 7, CagedCat)->getSceneNode());
-                _cagedAnimal->setLevel(level);
-                _cagedAnimal->getSceneNode()->setPosition(pos, _cagedAnimal->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
-                _cagedAnimal->Free();
-                _rootScene->addChild(_cagedAnimal->getSceneNode());
-
-                std::function<bool()> winning = [&]() {
+            
                     setGameStatus(GameStatus::WIN);
                     AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
                     // shows win Panel
@@ -367,12 +354,10 @@ void GameplayMode::update(float timestep) {
                     _winPanel->getChildButtons()[0]->getButton()->activate();
                     _winPanel->getChildButtons()[1]->getButton()->activate();
                     _winPanel->getChildButtons()[2]->getButton()->activate();
-                    _hasControl = false;
-                    return false;
-                };
-                cugl::Application::get()->schedule(winning, 1500);
+                  
+              
 
-            }
+            
             collisions::checkInBounds(_enemyController->getPossessed(), _player);
 
             /**possess code works a bit better when movement is processed last (scene node position is updated here)
@@ -785,8 +770,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     if (decorationsJSON != nullptr) {
         for (int i = 0; i < decorationsJSON->size(); i++) {
             objectTemp = decorationsJSON->get(i);
-            _cagedAnimal = CagedAnimal::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, { }, 1, 1, 1, cagedAnimal);
+            _cagedAnimal = Player::alloc(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 1, cagedAnimal);
+            _cagedAnimal->getSceneNode()->setScale(0.3, 0.3);
+
+            //_cagedAnimal = CagedAnimal::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"), cugl::Color4::WHITE, { }, 1, 1, 1, cagedAnimal);
 
         }
     }
@@ -1384,7 +1371,7 @@ void GameplayMode::toSaveJson() {
         }
         //TODO IF WE EVER GET MORE THAN 1 DECORATIONS
         shared_ptr<JsonValue> tempObject = JsonValue::allocObject();
-        tempObject->appendChild("x_pos", JsonValue::alloc((long)_cagedAnimal->getPos().x));
+        tempObject->appendChild("x_pos", JsonValue::alloc((long)_cagedAnimal->getPos()));
         tempObject->appendChild("level", JsonValue::alloc((long)_cagedAnimal->getLevel()));
         tempObject->appendChild("objective", JsonValue::alloc((long)1));
         tempObject->appendChild("texture", JsonValue::alloc("caged-animal"));
