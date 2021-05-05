@@ -267,7 +267,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
         if (_rtouch.fstTapPos != Vec2::ZERO) {
             cugl::Timestamp tmstp;
             tmstp.mark();
-            if (Timestamp::ellapsedMillis(_rtouch.fstTapTime, tmstp) < 500.0f) {
+            if (Timestamp::ellapsedMillis(_rtouch.fstTapTime, tmstp) < 300.0f) {
                 if (_rtouch.fstTapPos.distance(event.position) < 50.0f) {
                     // if player has no possessed enemy, then set possessPressed to true otherwise set unpossesPressed to true
                     if (!_player->getPossess()) {
