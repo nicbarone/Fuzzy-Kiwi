@@ -228,7 +228,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
     // general touch (for tap on screen)
-    if (_stouch.touchids.empty()) {
+    if (_stouch.touchids.empty() && zone == Zone::RIGHT) {
         _stouch.position = event.position;
         _stouch.timestamp.mark();
         _stouch.touchids.insert(event.touch);
