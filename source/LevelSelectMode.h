@@ -63,7 +63,7 @@ public:
      */
     void update(float timestep) override;
 
-
+    void updateLevelIcon();
 
     /**
      * The method called to draw the application to the screen.

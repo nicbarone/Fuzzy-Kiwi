@@ -56,11 +56,61 @@ void LevelSelectMode::update(float progress) {
     //CULog("You are now in Level Select Mode. Enjoy your stay");
 }
 
+void LevelSelectMode::updateLevelIcon() {
+    std::shared_ptr<JsonReader> reader = JsonReader::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+    if (reader == nullptr) {
+        // if file doesn't exist create a new one
+        shared_ptr<JsonValue> result = JsonValue::allocObject();
+        shared_ptr<JsonValue> r_complete = JsonValue::allocObject();
+        for (int i = 0; i < 10; i++) {
+            r_complete->appendValue("level" + to_string(i + 1), false);
+        }
+        result->appendChild("completed", r_complete);
+        shared_ptr<JsonWriter> writer = JsonWriter::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+        writer->writeJson(result);
+        writer->close();
+        reader = JsonReader::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+    }
+    std::shared_ptr<JsonValue> json = reader->readJson();
+    shared_ptr<JsonValue> completed = json->get("completed");
+    if (completed->getBool("level1")) {
+        _levelSelectPanel->getChildButtons()[0]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level2")) {
+        _levelSelectPanel->getChildButtons()[1]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level3")) {
+        _levelSelectPanel->getChildButtons()[2]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level4")) {
+        _levelSelectPanel->getChildButtons()[3]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level5")) {
+        _levelSelectPanel->getChildButtons()[4]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level6")) {
+        _levelSelectPanel->getChildButtons()[5]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level7")) {
+        _levelSelectPanel->getChildButtons()[6]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level8")) {
+        _levelSelectPanel->getChildButtons()[7]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level9")) {
+        _levelSelectPanel->getChildButtons()[8]->getButton()->setColor(Color4::GREEN);
+    }
+    if (completed->getBool("level10")) {
+        _levelSelectPanel->getChildButtons()[9]->getButton()->setColor(Color4::GREEN);
+    }
+    reader->close();
+}
+
 void LevelSelectMode::buildScene() {
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
     size *= scale;
-
+    
     _levelSelectPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelSelectBG"));
     _levelSelectPanel->getSceneNode()->setScale(min(size.width / _assets->get<Texture>("levelSelectBG")->getSize().width, size.height / _assets->get<Texture>("levelSelectBG")->getSize().height));
     _levelSelectPanel->createChildButton(-400, 40, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1"));
@@ -191,6 +241,7 @@ void LevelSelectMode::buildScene() {
     addChild(_levelSelectPanel->getSceneNode());
     addChild(_backButton->getButton());
     activateButtons();
+    updateLevelIcon();
 }
 
 void LevelSelectMode::deactivateButtons() {
