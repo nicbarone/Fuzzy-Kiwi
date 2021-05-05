@@ -227,8 +227,9 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
     }
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
+    bool pressed = false;
     // general touch (for tap on screen)
-    if (_stouch.touchids.empty()) {
+    if (_stouch.touchids.empty() && zone == Zone::RIGHT) {
         _stouch.position = event.position;
         _stouch.timestamp.mark();
         _stouch.touchids.insert(event.touch);
@@ -263,12 +264,11 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
             //}
         } // Otherwise all pivots are taken, no other pivots should be inserted
         // Only process if no touch in zone
-        
         if (_rtouch.fstTapPos != Vec2::ZERO) {
             cugl::Timestamp tmstp;
             tmstp.mark();
-            if (Timestamp::ellapsedMillis(_rtouch.fstTapTime, tmstp) < 500.0f) {
-                if (_rtouch.fstTapPos.distance(event.position) < 20.0f) {
+            if (Timestamp::ellapsedMillis(_rtouch.fstTapTime, tmstp) < 300.0f) {
+                if (_rtouch.fstTapPos.distance(event.position) < 50.0f) {
                     // if player has no possessed enemy, then set possessPressed to true otherwise set unpossesPressed to true
                     if (!_player->getPossess()) {
                         _possessPressed = true;
@@ -276,6 +276,7 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
                     else {
                         _unpossessPressed = true;
                     }
+                    pressed = true;
                     _rtouch.fstTapPos = Vec2::ZERO;
                 }
                 else {
@@ -295,8 +296,10 @@ void InputManager::touchBeganCB(const TouchEvent& event, bool focus) {
             _rtouch.beginTimestamp.mark();
             _rtouch.timestamp.mark();
             _rtouch.touchids.insert(event.touch);
-            _rtouch.fstTapTime.mark();
-            _rtouch.fstTapPos = event.position;
+            if (!pressed) {
+                _rtouch.fstTapTime.mark();
+                _rtouch.fstTapPos = event.position;
+            }
         }
         break;
     case Zone::MID:
