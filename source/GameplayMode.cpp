@@ -371,47 +371,53 @@ void GameplayMode::update(float timestep) {
             else {
                 r_complete->appendValue("level2", completed->getBool("level2"));
             }
-            if (_levelIndex == 3) {
+            if (_levelIndex == 2) {
                 r_complete->appendValue("level3", true);
             }
             else {
                 r_complete->appendValue("level3", completed->getBool("level3"));
             }
-            if (_levelIndex == 4) {
+            if (_levelIndex == 3) {
                 r_complete->appendValue("level4", true);
             }
             else {
                 r_complete->appendValue("level4", completed->getBool("level4"));
             }
-            if (_levelIndex == 5) {
+            if (_levelIndex == 4) {
                 r_complete->appendValue("level5", true);
             }
             else {
                 r_complete->appendValue("level5", completed->getBool("level5"));
             }
-            if (_levelIndex == 6) {
+            if (_levelIndex == 5) {
                 r_complete->appendValue("level6", true);
             }
             else {
                 r_complete->appendValue("level6", completed->getBool("level6"));
             }
-            if (_levelIndex == 7) {
+            if (_levelIndex == 6) {
                 r_complete->appendValue("level7", true);
             }
             else {
                 r_complete->appendValue("level7", completed->getBool("level7"));
             }
-            if (_levelIndex == 8) {
+            if (_levelIndex == 7) {
                 r_complete->appendValue("level8", true);
             }
             else {
                 r_complete->appendValue("level8", completed->getBool("level8"));
             }
-            if (_levelIndex == 9) {
+            if (_levelIndex == 8) {
                 r_complete->appendValue("level9", true);
             }
             else {
                 r_complete->appendValue("level9", completed->getBool("level9"));
+            }
+            if (_levelIndex == 9) {
+                r_complete->appendValue("level10", true);
+            }
+            else {
+                r_complete->appendValue("level10", completed->getBool("level9"));
             }
             reader->close();
             result->appendChild("completed", r_complete);
@@ -945,7 +951,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
     _possessPanel->getSceneNode()->setScale(1.0f);
     _possessPanel->getSceneNode()->setPosition(size);
-    // TODO: get max possess number
+
     std::shared_ptr<Texture> possessUsed = _assets->get<Texture>("usedPossession");
     std::shared_ptr<Texture> possessAvailable = _assets->get<Texture>("availablePossession");
     for (int i = 0; i < _player->get_nPossess(); i++) {

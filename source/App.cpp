@@ -206,6 +206,9 @@ void App::update(float timestep) {
             std::string level = _gameplay.getNextLevelID();
             if (level == "Location Cleared") {
                 _levelSelect.activateButtons();
+                _levelSelect.setBackPressed(false);
+                _levelSelect.setLevelSelected(false);
+                _levelSelect.updateLevelIcon();
                 _inLevelSelect = true;
                 _inGameplay = false;
             }
