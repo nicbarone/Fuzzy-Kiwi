@@ -211,6 +211,10 @@ public:
         }
     }
 
+    void clearDoubleTapReg() {
+        _rtouch.fstTapPos = Vec2::ZERO;
+    }
+
     /**
      * Getter for the possess pressed, and set it back to false;
      */
