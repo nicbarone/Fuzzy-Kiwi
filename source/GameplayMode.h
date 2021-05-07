@@ -133,6 +133,7 @@ protected:
     int tutFrameSwitch = 0;
     bool frameDecreasing = false;
     int tutMaxFrame = 0;
+    int FRAME_SWITCH = 7;
 
     enum class GameStatus {
         RUNNING,

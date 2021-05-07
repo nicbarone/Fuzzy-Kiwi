@@ -112,6 +112,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"arrow": {
+			"file": "textures/UI/Tutorial/Arrow.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"winIcon": {
 			"file": "textures/UI/Icon/WinIcon.png",
 			"minfilter": "nearest",

@@ -231,15 +231,38 @@ void GameplayMode::update(float timestep) {
         return;
     }
     if (_showTutorialText == 1) {
-        if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen()) {
+        if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen() 
+            && _player->getPos() < 662 && _tutorialAnimation->getAngle() == 0) {
             _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
-            _tutorialText->setPositionX(0);
+            _tutorialAnimation->removeFromParent();
+            std::shared_ptr<Texture> arrow = _assets->get<Texture>("arrow");
+            _tutorialAnimation = scene2::AnimationNode::alloc(arrow, 1, 2);
+            _tutorialAnimation->setName("tutorialAnimation");
+            _tutorialAnimation->setPosition(135, 425);
+            _tutorialAnimation->setScale(0.25, 0.25);
+            _tutorialAnimation->setAngle(3*0.785398);
+            addChild(_tutorialAnimation);
+            tutMaxFrame = 2;
+            FRAME_SWITCH = 14;
+            _tutorialAnimation->setPriority(10);
+        }
+        else if (!_player->getPossess() && _player->getPos() > 662 && tutMaxFrame != 2) {
+            removeChild(_tutorialAnimation);
+            std::shared_ptr<Texture> arrow = _assets->get<Texture>("arrow");
+            _tutorialAnimation = scene2::AnimationNode::alloc(arrow, 1, 2);
+            _tutorialAnimation->setName("tutorialAnimation");
+            _tutorialAnimation->setPosition(1075, 250);
+            _tutorialAnimation->setScale(0.25, 0.25);
+            _rootScene->addChild(_tutorialAnimation);
+            tutMaxFrame = 2;
+            FRAME_SWITCH = 14;
+            _tutorialAnimation->setPriority(10);
         }
         if (tutFrameSwitch > 0) {
             tutFrameSwitch--;
         }
         else {
-            tutFrameSwitch = 7;
+            tutFrameSwitch = FRAME_SWITCH;
             tutFrame++;
             tutFrame = tutFrame % tutMaxFrame;
             _tutorialAnimation->setFrame(tutFrame);
@@ -268,8 +291,8 @@ void GameplayMode::update(float timestep) {
             _enemyController->closestEnemy()->setGlow(true);
             if (_showTutorialText == 1) {
                 if (USE_TAP_POSSESS) {
-                    _tutorialText->setText("When in range to possess, the enemy will be highlighted. Double tap to possess!");
-                    _tutorialText->setPositionX(0);
+                    _tutorialText->setText("When in range to possess, the enemy will be highlighted. Double tap anywhere to possess!");
+                    _tutorialText->setPositionX(25);
                 }
 
                 if (!USE_TAP_POSSESS) {
@@ -280,13 +303,13 @@ void GameplayMode::update(float timestep) {
                     }
                 }
                 else {
-                    if (_rootScene->getChildByName("tutorialAnimation") == nullptr) {
+                    if (_tutorialAnimation->getPositionX() != 850) {
                         removeChild(_tutorialAnimation);
                         std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
                         _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
                         _tutorialAnimation->setName("tutorialAnimation");
-                        _rootScene->addChild(_tutorialAnimation);
-                        _tutorialAnimation->setPosition(410, 200);
+                        addChild(_tutorialAnimation);
+                        _tutorialAnimation->setPosition(850, 300);
                         _tutorialAnimation->setScale(0.25, 0.25);
                         tutMaxFrame = 4;
                         _tutorialAnimation->setPriority(10);
@@ -322,9 +345,13 @@ void GameplayMode::update(float timestep) {
                         _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
                     }
                     if (_showTutorialText == 1) {
-                        _tutorialText->setText("You can open doors by clicking on them. You can only open doors while possessing an enemy and near the door.");
-                        _tutorialText->setPosition(Vec2(100, 110));
-                        _tutorialAnimation->removeFromParent();
+                        if (_tutorialAnimation->getPositionX() != 662) {
+                            _tutorialText->setText("You can open doors by clicking on them while possessing an enemy.");
+                            _tutorialText->setPositionX(150);
+                            removeChild(_tutorialAnimation);
+                            _rootScene->addChild(_tutorialAnimation);
+                            _tutorialAnimation->setPosition(Vec2(662, 220));
+                        }
                     }
 
                 }
@@ -923,24 +950,23 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
     std::shared_ptr<Font> font = _assets->get<Font>("futura");
-    _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move! Pinch in and out to change zoom levels and swipe with one or two fingers to pan.", font);
+    _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move!", font);
     _tutorialText->setForeground(Color4::WHITE);
     _tutorialText->setScale(Vec2(0.5, 0.5));
-    _tutorialText->setPosition(Vec2(-100, 110));
+    _tutorialText->setPosition(Vec2(350, 20));
     _tutorialText->setVisible(_showTutorialText == 1);
-    _rootScene->addChild(_tutorialText);
+    addChild(_tutorialText);
     _tutorialText2 = scene2::Label::alloc("The holes in the wall are cat dens and can be used to travel to different cat dens while in cat form. Simply click on them to enter and leave!", font);
     _tutorialText2->setForeground(Color4::WHITE);
     _tutorialText2->setScale(Vec2(0.5, 0.5));
-    _tutorialText2->setPosition(Vec2(-200, 110));
+    _tutorialText2->setPosition(Vec2(200, 50));
     _tutorialText2->setVisible(_showTutorialText == 2);
-    _rootScene->addChild(_tutorialText2);
+    addChild(_tutorialText2);
     std::shared_ptr<Texture> leftRightHand = _assets->get<Texture>("lrHand");
     _tutorialAnimation = scene2::AnimationNode::alloc(leftRightHand, 1, 13);
     _tutorialAnimation->setPosition(Vec2(100, 175));
     _tutorialAnimation->setScale(0.25, -0.25);
     _tutorialAnimation->setName("tutorialAnimation");
-
     _tutorialAnimation->setVisible(_showTutorialText == 1);
 
     tutMaxFrame = 12;
@@ -1153,8 +1179,13 @@ void GameplayMode::checkDoors() {
                 if (!key_intersection.empty()) {
                     door->setDoor(!doorState);
                     if (_showTutorialText == 1) {
-                        _tutorialText->setText("Nice work! To complete the level, touch the caged animal in cat form. Double tap to unpossess!");
-                        _tutorialText->setPosition(Vec2(100, 110));
+                        _tutorialText->setText("Nice work! Touch the caged animal in cat form to win. Double tap anywhere to unpossess!");
+                        _tutorialText->setPositionX(35);
+                        if (_tutorialAnimation->getPositionX() != 800) {
+                            _rootScene->removeChild(_tutorialAnimation);
+                            addChild(_tutorialAnimation);
+                            _tutorialAnimation->setPosition(800, 300);
+                        }
                     }
                     else if(_showTutorialText == 2){
                         _tutorialText2->setText("Time your movement to reach the staircase door! The enemy ahead can only detect you when you are possessing if he sees your back.");
