@@ -108,6 +108,7 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
 bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::OrderedNode> rootNode, cugl::Rect bounds) {
     _possessPressed = false;
     _unpossessPressed = false;
+    _possessCounter = 2.0f;
     _forward = 0;
     _keyForward = 0;
     _player = player;
