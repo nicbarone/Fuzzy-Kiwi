@@ -131,7 +131,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_sceneNode->addChild(_visionNode);
 	_frame = 0;
 	getSceneNode()->setPriority(level + 0.2f);
-	_visionNode->setVisible(false);
+	//_visionNode->setVisible(false);
 	return true;
 }
 

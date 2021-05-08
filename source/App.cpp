@@ -127,7 +127,7 @@ void App::update(float timestep) {
         _menu.init(_assets);
         _levelSelect.init(_assets);
         _loading.update(0.01f);
-        counter=0;
+        counter = 0;
         if (USE_LEVEL_EDITOR) {
             CULog("si");
             _inEditor = true;
@@ -138,12 +138,12 @@ void App::update(float timestep) {
     else if (_inEditor) {
         _levelEditor.update(timestep);
     }
-    else if (!_loaded && !_inEditor){
+    else if (!_loaded && !_inEditor) {
         _loading.dispose(); // Disables the input listeners in this mode
-        
+
         _loaded = true;
         _inMenu = true;
-        
+
     }
     else if (_inLevelSelect) {
         _levelSelect.update(timestep);
@@ -151,6 +151,8 @@ void App::update(float timestep) {
             _levelSelect.setBackPressed(false);
             _levelSelect.deactivateButtons();
             _menu.activateButtons();
+            _menu.setGameLoaded(false);
+            _menu.setPlayPressed(false);
             _inLevelSelect = false;
             _inMenu = true;
         }
@@ -166,7 +168,7 @@ void App::update(float timestep) {
             _levelSelect.deactivateButtons();
         }
     }
-    else if (_inMenu){
+    else if (_inMenu) {
         _menu.update(timestep);
         if (_menu.getPlayPressed()) {
             _menu.setPlayPressed(false);
@@ -175,6 +177,7 @@ void App::update(float timestep) {
             CULog("si");
             _inMenu = false;
             _inLevelSelect = true;
+            _levelSelect.updateLevelIcon();
         }
         else if (_menu.getGameLoaded()) {
             _menu.setGameLoaded(false);
@@ -195,19 +198,24 @@ void App::update(float timestep) {
             _gameplay.setBackToMenu(false);
             _levelSelect.activateButtons();
             _levelSelect.setLevelSelected(false);
+            _levelSelect.setBackPressed(false);
             _inGameplay = false;
             _inLevelSelect = true;
+            _levelSelect.updateLevelIcon();
         }
         else if (_gameplay.getNextLevel()) {
             _gameplay.setNextlevel(false);
             std::string level = _gameplay.getNextLevelID();
             if (level == "Location Cleared") {
                 _levelSelect.activateButtons();
+                _levelSelect.setBackPressed(false);
+                _levelSelect.setLevelSelected(false);
+                _levelSelect.updateLevelIcon();
                 _inLevelSelect = true;
                 _inGameplay = false;
             }
             else {
-                _gameplay = _menu.getGameScene(_gameplay.getNextLevelID(),_inputManager);
+                _gameplay = _menu.getGameScene(_gameplay.getNextLevelID(), _inputManager);
                 _gameplay.reset();
             }
         }

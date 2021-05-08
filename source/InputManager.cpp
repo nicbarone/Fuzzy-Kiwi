@@ -108,6 +108,7 @@ void InputManager::clearTouchInstance(TouchInstance& touchInstance) {
 bool InputManager::init(std::shared_ptr<Player> player, std::shared_ptr<cugl::scene2::OrderedNode> rootNode, cugl::Rect bounds) {
     _possessPressed = false;
     _unpossessPressed = false;
+    _possessCounter = 2.0f;
     _forward = 0;
     _keyForward = 0;
     _player = player;
@@ -189,15 +190,15 @@ Vec2 InputManager::screen2World(const cugl::Vec2 pos) const {
  * @param  pos  the current joystick position
  */
 void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
-    Vec2 diff = _ltouch.position - pos;
+    Vec2 diff = _ltouch.beginPos - pos;
 
     // Reset the anchor if we drifted too far
-    if (diff.lengthSquared() > JSTICK_RADIUS * JSTICK_RADIUS) {
+    /*if (diff.lengthSquared() > JSTICK_RADIUS * JSTICK_RADIUS) {
         diff.normalize();
         diff *= (JSTICK_RADIUS + JSTICK_XDIFF_MIN) / 2;
         _ltouch.position = pos + diff;
-    }
-    _leftJoycenter = touch2Screen(_ltouch.position);
+    }*/
+    _leftJoycenter = touch2Screen(_ltouch.beginPos);
 
     if (std::abs(diff.x) > JSTICK_XDIFF_MIN) {
         _leftJoystick = true;
@@ -212,6 +213,7 @@ void InputManager::processLeftJoystick(const cugl::Vec2 pos) {
         _leftJoystick = false;
         _keyForward = 0;
     }
+    _ltouch.position = pos;
 }
 
 #pragma mark Touch and Mouse Callbacks

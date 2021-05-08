@@ -231,15 +231,38 @@ void GameplayMode::update(float timestep) {
         return;
     }
     if (_showTutorialText == 1) {
-        if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen()) {
+        if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen() 
+            && _player->getPos() < 662 && _tutorialAnimation->getAngle() == 0) {
             _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
-            _tutorialText->setPositionX(0);
+            _tutorialAnimation->removeFromParent();
+            std::shared_ptr<Texture> arrow = _assets->get<Texture>("arrow");
+            _tutorialAnimation = scene2::AnimationNode::alloc(arrow, 1, 2);
+            _tutorialAnimation->setName("tutorialAnimation");
+            _tutorialAnimation->setPosition(135, 425);
+            _tutorialAnimation->setScale(0.25, 0.25);
+            _tutorialAnimation->setAngle(3*0.785398);
+            addChild(_tutorialAnimation);
+            tutMaxFrame = 2;
+            FRAME_SWITCH = 14;
+            _tutorialAnimation->setPriority(10);
+        }
+        else if (!_player->getPossess() && _player->getPos() > 662 && tutMaxFrame != 2) {
+            removeChild(_tutorialAnimation);
+            std::shared_ptr<Texture> arrow = _assets->get<Texture>("arrow");
+            _tutorialAnimation = scene2::AnimationNode::alloc(arrow, 1, 2);
+            _tutorialAnimation->setName("tutorialAnimation");
+            _tutorialAnimation->setPosition(1075, 250);
+            _tutorialAnimation->setScale(0.25, 0.25);
+            _rootScene->addChild(_tutorialAnimation);
+            tutMaxFrame = 2;
+            FRAME_SWITCH = 14;
+            _tutorialAnimation->setPriority(10);
         }
         if (tutFrameSwitch > 0) {
             tutFrameSwitch--;
         }
         else {
-            tutFrameSwitch = 7;
+            tutFrameSwitch = FRAME_SWITCH;
             tutFrame++;
             tutFrame = tutFrame % tutMaxFrame;
             _tutorialAnimation->setFrame(tutFrame);
@@ -263,14 +286,16 @@ void GameplayMode::update(float timestep) {
     }
     // Read input controller input
     _inputManager->readInput();
+#ifdef CU_MOBILE
+    _inputManager->updatePossessCoolDown(timestep);
+#endif
     if (_hasControl) {
         if (_enemyController->closestEnemy() != nullptr && _player->canPossess()) {
-            CULog("has control %d", _hasControl);
             _enemyController->closestEnemy()->setGlow(true);
             if (_showTutorialText == 1) {
                 if (USE_TAP_POSSESS) {
-                    _tutorialText->setText("When in range to possess, the enemy will be highlighted. Double tap to possess!");
-                    _tutorialText->setPositionX(0);
+                    _tutorialText->setText("When in range to possess, the enemy will be highlighted. Double tap anywhere to possess!");
+                    _tutorialText->setPositionX(25);
                 }
 
                 if (!USE_TAP_POSSESS) {
@@ -281,13 +306,13 @@ void GameplayMode::update(float timestep) {
                     }
                 }
                 else {
-                    if (_rootScene->getChildByName("tutorialAnimation") == nullptr) {
+                    if (_tutorialAnimation->getPositionX() != 850) {
                         removeChild(_tutorialAnimation);
                         std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
                         _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
                         _tutorialAnimation->setName("tutorialAnimation");
-                        _rootScene->addChild(_tutorialAnimation);
-                        _tutorialAnimation->setPosition(410, 200);
+                        addChild(_tutorialAnimation);
+                        _tutorialAnimation->setPosition(850, 300);
                         _tutorialAnimation->setScale(0.25, 0.25);
                         tutMaxFrame = 4;
                         _tutorialAnimation->setPriority(10);
@@ -323,9 +348,13 @@ void GameplayMode::update(float timestep) {
                         _possessPanel->getChildPanels()[i * 2 + 1]->setVisible(false);
                     }
                     if (_showTutorialText == 1) {
-                        _tutorialText->setText("You can open doors by clicking on them. You can only open doors while possessing an enemy and near the door.");
-                        _tutorialText->setPosition(Vec2(100, 110));
-                        _tutorialAnimation->removeFromParent();
+                        if (_tutorialAnimation->getPositionX() != 662) {
+                            _tutorialText->setText("You can open doors by clicking on them while possessing an enemy.");
+                            _tutorialText->setPositionX(150);
+                            removeChild(_tutorialAnimation);
+                            _rootScene->addChild(_tutorialAnimation);
+                            _tutorialAnimation->setPosition(Vec2(662, 220));
+                        }
                     }
 
                 }
@@ -438,25 +467,51 @@ void GameplayMode::update(float timestep) {
             float newX = _player->getPos();
             float deltaX = newX - oldX;
             _rootScene->setPositionX(_rootScene->getPositionX() - deltaX * _rootScene->getScale().x);
-
+            centerCamera();
+            
         }
-        else if (_hasControl) {
+        else if(_hasControl) {
             //EXPERIMENTAL LOCKED CAMERA CODE
             float oldX = _player->getSceneNode()->getPositionX();
             _player->move(_inputManager->getForward());
             float newX = _player->getSceneNode()->getPositionX();
             float deltaX = newX - oldX;
-            _rootScene->setPositionX(_rootScene->getPositionX() - deltaX * _rootScene->getScale().x);
+            _rootScene->setPositionX(_rootScene->getPositionX()- deltaX* _rootScene->getScale().x);
+            centerCamera();
 
         }
 #ifdef CU_MOBILE
             // move joystick for visualization
             _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition() / _joystickPanel->getSceneNode()->getScaleX() - _inputManager->getJoystickPosition() / 2.0f);
 #endif
-            // Enemy movement
-            _enemyController->moveEnemies(_inputManager->getForward());
-            if (_hasControl) {
-                _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
+        // Enemy movement
+        _enemyController->moveEnemies(_inputManager->getForward());
+        _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
+
+        if (_enemyController->getPossessed() != nullptr) {
+            //CULog("%d", _enemyController->getPossessed()->facingRight());
+        }
+        if (_hasControl&&_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
+            if (_player->getSceneNode()->isVisible() ||
+                (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
+                _hasControl = false;
+                std::shared_ptr<Texture> CagedCat = _assets->get<Texture>("CagedCat");
+                if (_enemyController->getPossessed() != nullptr) {
+                    _hasControl = false;
+                    _enemyController->getPossessed()->getSceneNode()->setVisible(false);
+                    _rootScene->removeChild(_player->getSceneNode());
+                    _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6,
+                        CagedCat)->getSceneNode());
+                    _player->setLevel(_enemyController->getPossessed()->getLevel());
+                    _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+                    if (_enemyController->getPossessed()->getMovingRight()) {
+                        _player->getSceneNode()->setScale(0.06, 0.06);
+                    }
+                    else {
+                        _player->getSceneNode()->setScale(-0.06, 0.06);
+                    }
+                    _player->PossessAnimation(3);
+                    _rootScene->addChild(_player->getSceneNode());
 
             }
 
@@ -581,8 +636,11 @@ void GameplayMode::update(float timestep) {
 }
 
 bool GameplayMode::attemptPossess() {
+#ifdef CU_MOBILE
+    if (_inputManager->isInCoolDown()) return false;
+#endif
     std::shared_ptr<Enemy> enemy = _enemyController->closestEnemy();
-    if (_hasControl && enemy != nullptr) {
+    if (enemy != nullptr) {
         _hasControl = false;
         _player->setPossess(true);
         _player->set_possessEnemy(_enemyController->closestEnemy());
@@ -592,13 +650,12 @@ bool GameplayMode::attemptPossess() {
 
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
         _rootScene->removeChild(_player->getSceneNode());
-        _player->SetSceneNode(Player::alloc(0, 0, 0, 8, catJump)->getSceneNode());
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
+        _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
         if (_player->getMovingRight()) {
-            _player->getSceneNode()->setPosition(_player->getPos()+70, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
             _player->getSceneNode()->setScale(0.15, 0.15);
         }
         else {
-            _player->getSceneNode()->setPosition(_player->getPos()-70, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
             _player->getSceneNode()->setScale(-0.15, 0.15);
         }
 
@@ -610,9 +667,13 @@ bool GameplayMode::attemptPossess() {
             _enemyController->closestEnemy()->setAsPossessed();
             _enemyController->closestEnemy()->getSceneNode()->removeAllChildren();
             _hasControl = true;
+
             return false;
         };
         cugl::Application::get()->schedule(setPossessed, 500);
+#ifdef CU_MOBILE
+        _inputManager->resetPossessCoolDown();
+#endif
         return true;
 
         //code used for cat jumping animation, incomplete and not activated in our release
@@ -621,91 +682,95 @@ bool GameplayMode::attemptPossess() {
 }
 
 void GameplayMode::unpossess() {
-    if (_hasControl) {
-        std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
-        if (enemy == nullptr) return;
-        _hasControl = false;
-        AudioEngine::get()->play("unpossess", _assets->get<Sound>("jumpOff"));
-        _player->setLevel(enemy->getLevel());
-        _player->getSceneNode()->setVisible(true);
-        
-        int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
-        if (cageCollision != 0) {
-            return;
-        }
-        /*std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("EnemyDying");
-        int enemyPos = enemy->getPos();
-        int enemyLevel = enemy->getLevel();
-        _rootScene->removeChild(enemy->getSceneNode());
-        enemy->SetSceneNode(Enemy::alloc(enemyPos, enemyLevel, 0, {}, 0, 0, 9,EnemyDying,
-            EnemyDying, EnemyDying)->getSceneNode());*/
-            //enemy->enemyDyingAnimation();
-        int level = _player->getLevel();
-        std::shared_ptr<Texture> enemyDying = _assets->get<Texture>("EnemyDying");
-        _rootScene->removeChild(_player->getSceneNode());
-        bool movingRight = enemy->getMovingRight();
-        if (enemy->getMovingRight()) {
-            _player->SetSceneNode(Player::alloc(150, 0, 270, 9, enemyDying)->getSceneNode());
-            _player->getSceneNode()->setScale(Vec2(1, -1));
-            _player->getSceneNode()->setScale(0.3, 0.3);
-        }
-        else {
-            _player->SetSceneNode(Player::alloc(150, 0, 270, 9, enemyDying)->getSceneNode());
-            _player->getSceneNode()->setScale(Vec2(1, -1));
-            _player->getSceneNode()->setScale(-0.3, 0.3);
-        }
-        _player->setLevel(level);
-        //_player->getSceneNode()->setPositionY(_player->getSceneNode()->getPositionY() + 50);
-
-        _rootScene->addChild(_player->getSceneNode());
-
-        _player->EnemyDying();
-        _player->setPossess(false);
-        //_player->setPos((enemy->getPos()));
-
-
-       /*int level = enemy->getLevel();
-       int pos = enemy->getPos();*/
-        enemy->getSceneNode()->setVisible(false);
-        enemy->dispose();
-        _enemyController->removeEnemy(enemy);
-        _enemyController->updatePossessed(nullptr);
-        _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET + 50);
-
-
-        std::function<bool()> delayInputRight = [&]() {
-            int level = _player->getLevel();
-            std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
-            _rootScene->removeChild(_player->getSceneNode());
-            _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
-            _player->setPos(_player->getPos() + 55);
-            _player->setLevel(level);
-            _player->getSceneNode()->setScale(0.15, 0.15);
-            _rootScene->addChild(_player->getSceneNode());
-            _hasControl = true;
-            return false;
-        };
-        std::function<bool()> delayInputLeft = [&]() {
-            int level = _player->getLevel();
-            std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
-            _rootScene->removeChild(_player->getSceneNode());
-            _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
-            _player->setPos(_player->getPos() - 55);
-            _player->setLevel(level);
-            _player->getSceneNode()->setScale(-0.15, 0.15);
-            _rootScene->addChild(_player->getSceneNode());
-            _hasControl = true;
-            return false;
-        };
-        if (movingRight) {
-            cugl::Application::get()->schedule(delayInputRight, 1100);
-        }
-        else {
-            cugl::Application::get()->schedule(delayInputLeft, 1100);
-        }
+#ifdef CU_MOBILE
+    if (_inputManager->isInCoolDown()) return;
+#endif
+    std::shared_ptr<Enemy> enemy = _enemyController->getPossessed();
+    if (enemy == nullptr) return;
+    _hasControl = false;
+    AudioEngine::get()->play("unpossess", _assets->get<Sound>("jumpOff"));
+    _player->setLevel(enemy->getLevel());
+    _player->getSceneNode()->setVisible(true);
+    int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+    if (cageCollision != 0) {
+        return;
     }
-  
+    /*std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("EnemyDying");
+    int enemyPos = enemy->getPos();
+    int enemyLevel = enemy->getLevel();
+    _rootScene->removeChild(enemy->getSceneNode());
+    enemy->SetSceneNode(Enemy::alloc(enemyPos, enemyLevel, 0, {}, 0, 0, 9,EnemyDying,
+        EnemyDying, EnemyDying)->getSceneNode());*/
+    //enemy->enemyDyingAnimation();
+    int level = _player->getLevel();
+    std::shared_ptr<Texture> enemyDying = _assets->get<Texture>("EnemyDying");
+    _rootScene->removeChild(_player->getSceneNode());
+    bool movingRight = enemy->getMovingRight();
+    if (enemy->getMovingRight()) {
+        _player->SetSceneNode(Player::alloc(150, 0, 270, 9, enemyDying)->getSceneNode());
+        _player->getSceneNode()->setScale(Vec2(1, -1));
+        _player->getSceneNode()->setScale(0.3, 0.3);
+    }
+    else {
+        _player->SetSceneNode(Player::alloc(150, 0, 270, 9, enemyDying)->getSceneNode());
+        _player->getSceneNode()->setScale(Vec2(1, -1));
+        _player->getSceneNode()->setScale(-0.3, 0.3);
+    }
+    _player->setLevel(level);
+    //_player->getSceneNode()->setPositionY(_player->getSceneNode()->getPositionY() + 50);
+
+    _rootScene->addChild(_player->getSceneNode());
+
+    _player->EnemyDying();
+    _player->setPossess(false);
+    //_player->setPos((enemy->getPos()));
+
+
+   /*int level = enemy->getLevel();
+   int pos = enemy->getPos();*/
+   enemy->getSceneNode()->setVisible(false);
+    enemy->dispose();
+    _enemyController->removeEnemy(enemy);
+    _enemyController->updatePossessed(nullptr);
+    _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET + 50);
+
+
+    std::function<bool()> delayInputRight = [&]() {
+        int level = _player->getLevel();
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
+        _rootScene->removeChild(_player->getSceneNode());
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
+        _player->setPos(_player->getPos() + 55);
+        _player->setLevel(level);
+        _player->getSceneNode()->setScale(0.15, 0.15);
+        _rootScene->addChild(_player->getSceneNode());
+        _hasControl = true;
+
+        return false;
+    };
+    std::function<bool()> delayInputLeft = [&]() {
+        int level = _player->getLevel();
+        std::shared_ptr<Texture> catJump = _assets->get<Texture>("cat-walking");
+        _rootScene->removeChild(_player->getSceneNode());
+        _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catJump)->getSceneNode());
+        _player->setPos(_player->getPos() - 55);
+        _player->setLevel(level);
+        _player->getSceneNode()->setScale(-0.15, 0.15);
+        _rootScene->addChild(_player->getSceneNode());
+        _hasControl = true;
+
+        return false;
+    };
+    if (movingRight) {
+        cugl::Application::get()->schedule(delayInputRight, 1100);
+    }
+    else {
+        cugl::Application::get()->schedule(delayInputLeft, 1100);
+    }
     //_player->getSceneNode()->setFrame(7);
+#ifdef CU_MOBILE
+    _inputManager->resetPossessCoolDown();
+#endif
 }
 
 /**
@@ -929,24 +994,23 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
     std::shared_ptr<Font> font = _assets->get<Font>("futura");
-    _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move! Pinch in and out to change zoom levels and swipe with one or two fingers to pan.", font);
+    _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move!", font);
     _tutorialText->setForeground(Color4::WHITE);
     _tutorialText->setScale(Vec2(0.5, 0.5));
-    _tutorialText->setPosition(Vec2(-100, 110));
+    _tutorialText->setPosition(Vec2(350, 20));
     _tutorialText->setVisible(_showTutorialText == 1);
-    _rootScene->addChild(_tutorialText);
+    addChild(_tutorialText);
     _tutorialText2 = scene2::Label::alloc("The holes in the wall are cat dens and can be used to travel to different cat dens while in cat form. Simply click on them to enter and leave!", font);
     _tutorialText2->setForeground(Color4::WHITE);
     _tutorialText2->setScale(Vec2(0.5, 0.5));
-    _tutorialText2->setPosition(Vec2(-200, 110));
+    _tutorialText2->setPosition(Vec2(200, 50));
     _tutorialText2->setVisible(_showTutorialText == 2);
-    _rootScene->addChild(_tutorialText2);
+    addChild(_tutorialText2);
     std::shared_ptr<Texture> leftRightHand = _assets->get<Texture>("lrHand");
     _tutorialAnimation = scene2::AnimationNode::alloc(leftRightHand, 1, 13);
     _tutorialAnimation->setPosition(Vec2(100, 175));
     _tutorialAnimation->setScale(0.25, -0.25);
     _tutorialAnimation->setName("tutorialAnimation");
-
     _tutorialAnimation->setVisible(_showTutorialText == 1);
 
     tutMaxFrame = 12;
@@ -966,19 +1030,19 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _possessPanel->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
     _possessPanel->getSceneNode()->setScale(1.0f);
     _possessPanel->getSceneNode()->setPosition(size);
-    // TODO: get max possess number
+
     std::shared_ptr<Texture> possessUsed = _assets->get<Texture>("usedPossession");
     std::shared_ptr<Texture> possessAvailable = _assets->get<Texture>("availablePossession");
     for (int i = 0; i < _player->get_nPossess(); i++) {
         _possessPanel->createChildPanel(0, 0, 0, possessUsed);
         _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[i * 2]->getSceneNode()->setScale(0.3f);
         _possessPanel->getChildPanels()[i * 2]->setPos(_possessPanel->getSceneNode()->getContentSize()
             * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[0]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
 
         _possessPanel->createChildPanel(0, 0, 0, possessAvailable);
         _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setAnchor(Vec2::ANCHOR_TOP_RIGHT);
-        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setScale(0.5f);
+        _possessPanel->getChildPanels()[i * 2 + 1]->getSceneNode()->setScale(0.3f);
         _possessPanel->getChildPanels()[i * 2 + 1]->setPos(_possessPanel->getSceneNode()->getContentSize()
             * _possessPanel->getSceneNode()->getScaleX() - Vec2(i * (possessAvailable->getSize().width + 20.0f) * _possessPanel->getChildPanels()[1]->getSceneNode()->getScaleX() + 20.0f, 20.0f));
     }
@@ -1110,12 +1174,19 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));
     addChild(_tutorialAnimation);
+    centerCamera();
 }
 
 
 void GameplayMode::checkDoors() {
     for (shared_ptr<Door> door : _doors) {
         bool doorState = door->getIsOpen();
+#ifdef CU_MOBILE
+        if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+            abs(screenToWorldCoords(_inputManager->getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+            _inputManager->clearDoubleTapReg();
+        }
+#endif
         if (_enemyController->getPossessed() != nullptr) {
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
@@ -1158,8 +1229,13 @@ void GameplayMode::checkDoors() {
                 if (!key_intersection.empty()) {
                     door->setDoor(!doorState);
                     if (_showTutorialText == 1) {
-                        _tutorialText->setText("Nice work! To complete the level, touch the caged animal in cat form. Double tap to unpossess!");
-                        _tutorialText->setPosition(Vec2(100, 110));
+                        _tutorialText->setText("Nice work! Touch the caged animal in cat form to win. Double tap anywhere to unpossess!");
+                        _tutorialText->setPositionX(35);
+                        if (_tutorialAnimation->getPositionX() != 800) {
+                            _rootScene->removeChild(_tutorialAnimation);
+                            addChild(_tutorialAnimation);
+                            _tutorialAnimation->setPosition(800, 300);
+                        }
                     }
                     else if(_showTutorialText == 2){
                         _tutorialText2->setText("Time your movement to reach the staircase door! The enemy ahead can only detect you when you are possessing if he sees your back.");
@@ -1213,6 +1289,12 @@ void GameplayMode::checkStaircaseDoors() {
     if (_enemyController->getPossessed() != nullptr) {
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
         for (shared_ptr<StaircaseDoor> staircaseDoor : _staircaseDoors) {
+#ifdef CU_MOBILE
+            if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                _inputManager->clearDoubleTapReg();
+            }
+#endif
             std::vector<int> intersect;
             std::vector<int> v1 = _enemyController->getPossessed()->getKeys();
             std::vector<int> v2 = staircaseDoor->getKeys();
@@ -1226,10 +1308,10 @@ void GameplayMode::checkStaircaseDoors() {
                 std::back_inserter(key_intersection));
             bool StaircasedoorState = staircaseDoor->getIsOpen();
             if (visibility && abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y-20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
 
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()&&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 !key_intersection.empty()) {
                 _hasControl = false;
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
@@ -1263,9 +1345,9 @@ void GameplayMode::checkStaircaseDoors() {
             }
 
             else if (!visibility &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y-20) < 170.0f * _inputManager->getRootSceneNode()->getScaleY() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()&&
-                staircaseDoor->getConnectedDoors()== _player->getCurrentDoor()) {
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 170.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
+                staircaseDoor->getConnectedDoors() == _player->getCurrentDoor()) {
                 _player->setCurrentDoor(0);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
@@ -1279,6 +1361,8 @@ void GameplayMode::checkStaircaseDoors() {
                 _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 9, EnemyOpeningDoor)->getSceneNode());
                 _player->setLevel(_enemyController->getPossessed()->getLevel());
                 _player->getSceneNode()->setPosition(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+                //TODO: BUGFIX
+                _rootScene->setPositionY(_rootScene->getHeight() + (576 - _rootScene->getHeight()) / 2 - _rootScene->getScaleY() * _player->getSceneNode()->getPositionY());
                 if (_enemyController->getPossessed()->getMovingRight()) {
                     _player->getSceneNode()->setScale(0.63, 0.63);
                 }
@@ -1293,8 +1377,10 @@ void GameplayMode::checkStaircaseDoors() {
                     _enemyController->getPossessed()->getSceneNode()->setVisible(true);
                     //_enemyController->getPossessed()->setPos(_enemyController->getPossessed()->getPos() + 130);
                     _hasControl = true;
+
                     return false;
                 };
+
                 cugl::Application::get()->schedule(openDoor, 500);
 
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
@@ -1320,12 +1406,17 @@ void GameplayMode::checkCatDens() {
     if (_enemyController->getPossessed() == nullptr) {
         visibility = _player->getSceneNode()->isVisible();
         for (shared_ptr<CatDen> catDen : _catDens) {
+#ifdef CU_MOBILE
+            if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
+                _inputManager->clearDoubleTapReg();
+            }
+#endif
             bool StaircasedoorState = catDen->getIsOpen();
             if (visibility && abs(_player->getSceneNode()->getWorldPosition().x - catDen->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _player->getLevel() == catDen->getLevel() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
-
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setCurrentDen(catDen->getConnectedDens());
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
@@ -1339,7 +1430,9 @@ void GameplayMode::checkCatDens() {
                 _player->setCurrentDen(0);
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setPos(catDen->getPos().x);
+                _player->getSceneNode()->setPosition(catDen->getPos());
                 _player->setLevel(catDen->getLevel());
+
                 if (_showTutorialText == 1) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                     _tutorialText->setPosition(Vec2(200, 420));
@@ -1469,5 +1562,12 @@ void GameplayMode::toSaveJson() {
 
         writer->writeJson(result);
         writer->close();
+    }
+}
+
+void GameplayMode::centerCamera() {
+    if (!_inputManager->getPivot() && (_player->getCurrentDen() + _player->getCurrentDoor() == 0)) {
+        _rootScene->setPositionX(_rootScene->getWidth() + (1024 - _rootScene->getWidth()) / 2 - _rootScene->getScaleX() * _player->getSceneNode()->getPositionX());
+        _rootScene->setPositionY(_rootScene->getHeight() + (576 - _rootScene->getHeight()) / 2 - _rootScene->getScaleY() * _player->getSceneNode()->getPositionY());
     }
 }

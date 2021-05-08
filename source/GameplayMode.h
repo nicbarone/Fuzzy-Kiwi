@@ -133,6 +133,7 @@ protected:
     int tutFrameSwitch = 0;
     bool frameDecreasing = false;
     int tutMaxFrame = 0;
+    int FRAME_SWITCH = 7;
 
     enum class GameStatus {
         RUNNING,
@@ -290,6 +291,8 @@ public:
         _tutorialText->setVisible(value == 1);
         _tutorialText2->setVisible(value == 2);
     }
+
+    void centerCamera();
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */

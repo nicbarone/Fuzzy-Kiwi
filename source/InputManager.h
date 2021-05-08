@@ -9,12 +9,14 @@
 #define RIGHT_ZONE      0.65f
 #define VALID_TAP_DIST 50.0f;
 #define VALID_TAP_TIME_DIFF 0.5f;
+#define POSSESS_COUNT_DOWN 2.0f;
 class InputManager {
 private:
 
     /** If go right, 1; if go left, -1; if stationary, 0 */
     int  _forward;
     int _keyForward;
+    float _possessCounter;
     bool _possessPressed;
     bool _unpossessPressed;
     bool _reset = false;
@@ -211,6 +213,10 @@ public:
         }
     }
 
+    void clearDoubleTapReg() {
+        _rtouch.fstTapPos = Vec2::ZERO;
+    }
+
     /**
      * Getter for the possess pressed, and set it back to false;
      */
@@ -255,6 +261,29 @@ public:
      */
     void setRootSceneNode(std::shared_ptr<cugl::scene2::OrderedNode> rootNode) {
         _rootSceneNode = rootNode;
+    }
+
+    bool getPivot() {
+#ifdef CU_MOBILE
+        return !_prev2Pivots[0].empty();
+#else  
+        return _rightJoystick;
+#endif
+    }
+
+    void updatePossessCoolDown(float delta) {
+        if (_possessCounter < 2.0f) {
+            _possessCounter += delta;
+            CULog("possess counter: %f", _possessCounter);
+        }
+    }
+
+    bool isInCoolDown() {
+        return _possessCounter < POSSESS_COUNT_DOWN;
+    }
+
+    void resetPossessCoolDown() {
+        _possessCounter = 0;
     }
 
 private:
