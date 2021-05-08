@@ -1280,8 +1280,10 @@ void GameplayMode::checkStaircaseDoors() {
     if (_enemyController->getPossessed() != nullptr && _inputManager->getTapPos() != Vec2::ZERO) {
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
         for (shared_ptr<StaircaseDoor> staircaseDoor : _staircaseDoors) {
+            
 #ifdef CU_MOBILE
-            if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+            if (staircaseDoor->getLevel() == _player->getLevel() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 _inputManager->clearDoubleTapReg();
             }
