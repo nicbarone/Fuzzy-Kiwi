@@ -42,7 +42,7 @@ public:
 	/** moves active enemies*/
 	void moveEnemies(float direction);
 
-	/** setter for _possessedEnemy*/
+	/** setter for _possessedEnemyd*/
 	void updatePossessed(std::shared_ptr<Enemy> enemy) {
 		_possessedEnemy = enemy;
 	}

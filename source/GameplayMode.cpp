@@ -344,39 +344,7 @@ void GameplayMode::update(float timestep) {
         //checkEnemyPossession();
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
-        if (_hasControl && cageCollision != 0) {
-           /* CULog("HHH");
-            _hasControl = false;
-            int level = _cagedAnimal->getLevel();
-            int pos = _cagedAnimal->getPos();
-            int movingRight = _cagedAnimal->getMovingRight();
-            _rootScene->removeChild(_cagedAnimal->getSceneNode());
-            std::shared_ptr<Texture> UnlockCagedAnimal = _assets->get<Texture>("UnlockCagedAnimal");
-
-            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 7, UnlockCagedAnimal)->getSceneNode());
-            _cagedAnimal->setLevel(level);
-            _cagedAnimal->getSceneNode()->setPosition(pos, level * FLOOR_HEIGHT + FLOOR_OFFSET - 50);
-            
-            _cagedAnimal->PossessAnimation(4);
-            _rootScene->addChild(_cagedAnimal->getSceneNode());
-     
-            std::function<bool()> winning = [&]() {*/
-                //_cagedAnimal->getSceneNode()->setVisible(false);
-                //setGameStatus(GameStatus::WIN);
-                //AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
-                //// shows win Panel
-                //_winPanel->setVisible(true);
-                //_winPanel->getChildButtons()[0]->getButton()->activate();
-                //_winPanel->getChildButtons()[1]->getButton()->activate();
-                //_winPanel->getChildButtons()[2]->getButton()->activate();
-               /* _hasControl = true;
-                return false;
-            };
-            
-
-            cugl::Application::get()->schedule(winning, 1500);
-        */
-          
+        if (cageCollision != 0 && _hasControl) {
             setGameStatus(GameStatus::WIN);
             AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
             // shows win Panel
@@ -384,6 +352,79 @@ void GameplayMode::update(float timestep) {
             _winPanel->getChildButtons()[0]->getButton()->activate();
             _winPanel->getChildButtons()[1]->getButton()->activate();
             _winPanel->getChildButtons()[2]->getButton()->activate();
+            // and save the update to level_completed.json
+            // first get all fields
+            shared_ptr<JsonReader> reader = JsonReader::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+            std::shared_ptr<JsonValue> json = reader->readJson();
+            shared_ptr<JsonValue> completed = json->get("completed");
+            shared_ptr<JsonValue> result = JsonValue::allocObject();
+            shared_ptr<JsonValue> r_complete = JsonValue::allocObject();
+            if (_levelIndex == 0) {
+                r_complete->appendValue("level1", true);
+            }
+            else {
+                r_complete->appendValue("level1", completed->getBool("level1"));
+            }
+            if (_levelIndex == 1) {
+                r_complete->appendValue("level2", true);
+            }
+            else {
+                r_complete->appendValue("level2", completed->getBool("level2"));
+            }
+            if (_levelIndex == 2) {
+                r_complete->appendValue("level3", true);
+            }
+            else {
+                r_complete->appendValue("level3", completed->getBool("level3"));
+            }
+            if (_levelIndex == 3) {
+                r_complete->appendValue("level4", true);
+            }
+            else {
+                r_complete->appendValue("level4", completed->getBool("level4"));
+            }
+            if (_levelIndex == 4) {
+                r_complete->appendValue("level5", true);
+            }
+            else {
+                r_complete->appendValue("level5", completed->getBool("level5"));
+            }
+            if (_levelIndex == 5) {
+                r_complete->appendValue("level6", true);
+            }
+            else {
+                r_complete->appendValue("level6", completed->getBool("level6"));
+            }
+            if (_levelIndex == 6) {
+                r_complete->appendValue("level7", true);
+            }
+            else {
+                r_complete->appendValue("level7", completed->getBool("level7"));
+            }
+            if (_levelIndex == 7) {
+                r_complete->appendValue("level8", true);
+            }
+            else {
+                r_complete->appendValue("level8", completed->getBool("level8"));
+            }
+            if (_levelIndex == 8) {
+                r_complete->appendValue("level9", true);
+            }
+            else {
+                r_complete->appendValue("level9", completed->getBool("level9"));
+            }
+            if (_levelIndex == 9) {
+                r_complete->appendValue("level10", true);
+            }
+            else {
+                r_complete->appendValue("level10", completed->getBool("level9"));
+            }
+            reader->close();
+            result->appendChild("completed", r_complete);
+            shared_ptr<JsonWriter> writer = JsonWriter::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+
+            writer->writeJson(result);
+            writer->close();
         }
         collisions::checkInBounds(_enemyController->getPossessed(), _player);
 
@@ -391,10 +432,22 @@ void GameplayMode::update(float timestep) {
             else you get one frame of wrong position*/
             // For now, if possessing, disable cat movement, put it to the same location as the possessed enemy
         if (_player->getPossess()) {
+            float oldX = _player->getPos();
             _player->setPos(_player->get_possessEnemy()->getPos());
+            _player->getSceneNode()->setPositionX(_player->get_possessEnemy()->getPos());
+            float newX = _player->getPos();
+            float deltaX = newX - oldX;
+            _rootScene->setPositionX(_rootScene->getPositionX() - deltaX * _rootScene->getScale().x);
+
         }
-        else if (_hasControl && _player->getSceneNode()->isVisible()) {
+        else if (_hasControl) {
+            //EXPERIMENTAL LOCKED CAMERA CODE
+            float oldX = _player->getSceneNode()->getPositionX();
             _player->move(_inputManager->getForward());
+            float newX = _player->getSceneNode()->getPositionX();
+            float deltaX = newX - oldX;
+            _rootScene->setPositionX(_rootScene->getPositionX() - deltaX * _rootScene->getScale().x);
+
         }
 #ifdef CU_MOBILE
             // move joystick for visualization

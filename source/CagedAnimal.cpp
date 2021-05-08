@@ -20,7 +20,7 @@ void CagedAnimal::dispose() {
 bool CagedAnimal::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns, int num_frames, std::shared_ptr<Texture> texture)
 {
 	//setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
-	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, num_frames);
+	_sceneNode = scene2::AnimationNode::alloc(texture, 1, num_frames);
 	setTexture(texture);
 	_texture = texture;
 	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + CAGED_ANIMAL_OFFSET));
