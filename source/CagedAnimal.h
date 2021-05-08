@@ -33,7 +33,7 @@ public:
 		return (result->init(x, ang, scale, level, color, keys, rows, columns,  num_frames, texture) ? result : nullptr);
 	}
 
-	void CagedAnimal::Free();
+	void Free();
 	
 	void SetSceneNode(std::shared_ptr<scene2::AnimationNode> newNode) {
 		_sceneNode = newNode;

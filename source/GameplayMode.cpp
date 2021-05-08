@@ -169,14 +169,14 @@ void GameplayMode::reset() {
     setGameStatus(GameStatus::RUNNING);
     //_scene = nullptr;
     Size size = Application::get()->getDisplaySize();
-    _winPanel->getChildButtons()[0]->getButton()->deactivate();
-    _winPanel->getChildButtons()[1]->getButton()->deactivate();
-    _winPanel->getChildButtons()[2]->getButton()->deactivate();
-    _losePanel->getChildButtons()[0]->getButton()->deactivate();
-    _losePanel->getChildButtons()[1]->getButton()->deactivate();
-    _menuPanel->getChildButtons()[0]->getButton()->deactivate();
-    _menuPanel->getChildButtons()[1]->getButton()->deactivate();
-    _menuPanel->getChildButtons()[2]->getButton()->deactivate();
+    _winPanel->getChildButtons()["next"]->getButton()->deactivate();
+    _winPanel->getChildButtons()["retry"]->getButton()->deactivate();
+    _winPanel->getChildButtons()["toMenu"]->getButton()->deactivate();
+    _losePanel->getChildButtons()["retry"]->getButton()->deactivate();
+    _losePanel->getChildButtons()["toMenu"]->getButton()->deactivate();
+    _menuPanel->getChildButtons()["resume"]->getButton()->deactivate();
+    _menuPanel->getChildButtons()["restart"]->getButton()->deactivate();
+    _menuPanel->getChildButtons()["exit"]->getButton()->deactivate();
     size *= GAME_WIDTH / size.width;
     removeAllChildren();
 
@@ -215,15 +215,15 @@ void GameplayMode::update(float timestep) {
     if (getGameStatus() == GameStatus::PAUSED) {
         _tutorialAnimation->setVisible(false);
         _menuPanel->setVisible(true);
-        _menuPanel->getChildButtons()[0]->getButton()->activate();
-        _menuPanel->getChildButtons()[1]->getButton()->activate();
-        _menuPanel->getChildButtons()[2]->getButton()->activate();
+        _menuPanel->getChildButtons()["resume"]->getButton()->activate();
+        _menuPanel->getChildButtons()["restart"]->getButton()->activate();
+        _menuPanel->getChildButtons()["exit"]->getButton()->activate();
     }
     else {
         _menuPanel->setVisible(false);
-        _menuPanel->getChildButtons()[0]->getButton()->deactivate();
-        _menuPanel->getChildButtons()[1]->getButton()->deactivate();
-        _menuPanel->getChildButtons()[2]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["resume"]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["restart"]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["exit"]->getButton()->deactivate();
     }
     if (getGameStatus() != GameStatus::RUNNING) {
         return;
@@ -389,9 +389,9 @@ void GameplayMode::update(float timestep) {
                 AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
                 // shows win Panel
                 _winPanel->setVisible(true);
-                _winPanel->getChildButtons()[0]->getButton()->activate();
-                _winPanel->getChildButtons()[1]->getButton()->activate();
-                _winPanel->getChildButtons()[2]->getButton()->activate();
+                _winPanel->getChildButtons()["next"]->getButton()->activate();
+                _winPanel->getChildButtons()["retry"]->getButton()->activate();
+                _winPanel->getChildButtons()["toMenu"]->getButton()->activate();
                 // and save the update to level_completed.json
                 // first get all fields
                 shared_ptr<JsonReader> reader = JsonReader::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
@@ -546,8 +546,8 @@ void GameplayMode::update(float timestep) {
                             _tutorialAnimation->setVisible(false);
                         }
                         _losePanel->setVisible(true);
-                        _losePanel->getChildButtons()[0]->getButton()->activate();
-                        _losePanel->getChildButtons()[1]->getButton()->activate();
+                        _losePanel->getChildButtons()["retry"]->getButton()->activate();
+                        _losePanel->getChildButtons()["toMenu"]->getButton()->activate();
                         if (_showTutorialText == 1) {
                             _tutorialText->setText("Oh no! You got caught!");
                             _tutorialText->setPosition(Vec2(100, 110));
@@ -584,8 +584,8 @@ void GameplayMode::update(float timestep) {
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
                         _losePanel->setVisible(true);
-                        _losePanel->getChildButtons()[0]->getButton()->activate();
-                        _losePanel->getChildButtons()[1]->getButton()->activate();
+                        _losePanel->getChildButtons()["retry"]->getButton()->activate();
+                        _losePanel->getChildButtons()["toMenu"]->getButton()->activate();
                         if (_showTutorialText == 1) {
                             _tutorialText->setText("Oh no! You got caught!");
                             _tutorialText->setPosition(Vec2(100, 110));
@@ -1060,9 +1060,9 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, pausedBackground);
     _menuPanel->getSceneNode()->setScale(max(size.width / pausedBackground->getSize().width, size.height / pausedBackground->getSize().height));
     _menuPanel->setVisible(false);
-    _menuPanel->createChildButton(0, 60, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[0]->getButton()->setName("resume");
-    _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+    _menuPanel->createChildButton(0, 60, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("resume"), Color4f::WHITE,"resume");
+    _menuPanel->getChildButtons()["resume"]->getButton()->setName("resume");
+    _menuPanel->getChildButtons()["resume"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             //CULog("Clicking on possess button!");
@@ -1073,9 +1073,9 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             setGameStatus(GameStatus::RUNNING);
         }
         });
-    _menuPanel->createChildButton(0, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[1]->getButton()->setName("restartLevel");
-    _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+    _menuPanel->createChildButton(0, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE,"restart");
+    _menuPanel->getChildButtons()["restart"]->getButton()->setName("restart");
+    _menuPanel->getChildButtons()["restart"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             //CULog("Clicking on possess button!");
@@ -1083,9 +1083,9 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _reset = true;
         }
         });
-    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("exit"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[2]->getButton()->setName("returnToMenu");
-    _menuPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
+    _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("exit"), Color4f::WHITE,"exit");
+    _menuPanel->getChildButtons()["exit"]->getButton()->setName("exit");
+    _menuPanel->getChildButtons()["exit"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             //CULog("Clicking on possess button!");
@@ -1100,10 +1100,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
     _winPanel->getSceneNode()->setScale(max(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
     _winPanel->setVisible(false);
-    _winPanel->createChildButton(1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE);
-    _winPanel->getChildButtons()[0]->getButton()->setScale(1.5f);
-    _winPanel->getChildButtons()[0]->getButton()->setName("nextLevel");
-    _winPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+    _winPanel->createChildButton(1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE,"next");
+    _winPanel->getChildButtons()["next"]->getButton()->setScale(1.5f);
+    _winPanel->getChildButtons()["next"]->getButton()->setName("next");
+    _winPanel->getChildButtons()["next"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             //CULog("Clicking on possess button!");
@@ -1111,10 +1111,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _nextLevel = true;
         }
         });
-    _winPanel->createChildButton(-1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("tryAgain"), Color4f::WHITE);
-    _winPanel->getChildButtons()[1]->getButton()->setScale(1.5f);
-    _winPanel->getChildButtons()[1]->getButton()->setName("retry");
-    _winPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+    _winPanel->createChildButton(-1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("tryAgain"), Color4f::WHITE,"retry");
+    _winPanel->getChildButtons()["retry"]->getButton()->setScale(1.5f);
+    _winPanel->getChildButtons()["retry"]->getButton()->setName("retry");
+    _winPanel->getChildButtons()["retry"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             //CULog("Clicking on possess button!");
@@ -1122,10 +1122,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _reset = true;
         }
         });
-    _winPanel->createChildButton(-1700, 1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE);
-    _winPanel->getChildButtons()[2]->getButton()->setScale(1.5f);
-    _winPanel->getChildButtons()[2]->getButton()->setName("menu");
-    _winPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
+    _winPanel->createChildButton(-1700, 1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE,"toMenu");
+    _winPanel->getChildButtons()["toMenu"]->getButton()->setScale(1.5f);
+    _winPanel->getChildButtons()["toMenu"]->getButton()->setName("toMenu");
+    _winPanel->getChildButtons()["toMenu"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             //CULog("Clicking on possess button!");
@@ -1140,9 +1140,9 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _losePanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, losePanel);
     _losePanel->getSceneNode()->setScale(max(size.width / losePanel->getSize().width, size.height / losePanel->getSize().height));
     _losePanel->setVisible(false);
-    _losePanel->createChildButton(230, -350, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE);
-    _losePanel->getChildButtons()[0]->getButton()->setName("retry");
-    _losePanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+    _losePanel->createChildButton(230, -350, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("retry"), Color4f::WHITE,"retry");
+    _losePanel->getChildButtons()["retry"]->getButton()->setName("retry");
+    _losePanel->getChildButtons()["retry"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             //CULog("Clicking on possess button!");
@@ -1150,9 +1150,9 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _reset = true;
         }
         });
-    _losePanel->createChildButton(230, -850, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE);
-    _losePanel->getChildButtons()[1]->getButton()->setName("menu");
-    _losePanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+    _losePanel->createChildButton(230, -850, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("menu"), Color4f::WHITE,"toMenu");
+    _losePanel->getChildButtons()["toMenu"]->getButton()->setName("toMenu");
+    _losePanel->getChildButtons()["toMenu"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             //CULog("Clicking on possess button!");

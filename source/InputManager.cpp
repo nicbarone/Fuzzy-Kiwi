@@ -334,7 +334,7 @@ void InputManager::touchEndedCB(const TouchEvent& event, bool focus) {
     if (_stouch.touchids.find(event.touch) != _stouch.touchids.end()) {
         if (_stouch.isSingleTap[event.touch]) {
             _tap_pos = _stouch.position;
-            CULog("tap pos %f, %f",_stouch.position.x, _stouch.position.y);
+            //CULog("tap pos %f, %f",_stouch.position.x, _stouch.position.y);
             _valid_tap = true;
         }
         _stouch.isSingleTap.erase(event.touch);

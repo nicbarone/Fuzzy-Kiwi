@@ -274,7 +274,6 @@ public:
     void updatePossessCoolDown(float delta) {
         if (_possessCounter < 2.0f) {
             _possessCounter += delta;
-            CULog("possess counter: %f", _possessCounter);
         }
     }
 
