@@ -1178,7 +1178,7 @@ void GameplayMode::checkDoors() {
             _inputManager->clearDoubleTapReg();
         }
 #endif
-        if (_enemyController->getPossessed() != nullptr) {
+        if (_enemyController->getPossessed() != nullptr && _inputManager->getTapPos() != Vec2::ZERO) {
             if (abs(_enemyController->getPossessed()->getSceneNode()->getWorldPosition().x - door->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == door->getLevel() &&
@@ -1277,7 +1277,7 @@ void GameplayMode::checkStaircaseDoors() {
 
     bool visibility;
 
-    if (_enemyController->getPossessed() != nullptr) {
+    if (_enemyController->getPossessed() != nullptr && _inputManager->getTapPos() != Vec2::ZERO) {
         visibility = _enemyController->getPossessed()->getSceneNode()->isVisible();
         for (shared_ptr<StaircaseDoor> staircaseDoor : _staircaseDoors) {
 #ifdef CU_MOBILE
@@ -1394,7 +1394,7 @@ void GameplayMode::checkCatDens() {
 
     bool visibility;
 
-    if (_enemyController->getPossessed() == nullptr) {
+    if (_enemyController->getPossessed() == nullptr && _inputManager->getTapPos() != Vec2::ZERO) {
         visibility = _player->getSceneNode()->isVisible();
         for (shared_ptr<CatDen> catDen : _catDens) {
 #ifdef CU_MOBILE
