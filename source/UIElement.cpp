@@ -90,12 +90,12 @@ bool ui::PanelElement::init(float x, float y, float ang, std::shared_ptr<Texture
 	return true;
 }
 
-bool ui::PanelElement::createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture) {
+bool ui::PanelElement::createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture, std::string name) {
 	std::shared_ptr<ButtonElement> result = std::make_shared<ButtonElement>();
 	if (result->init(0, 0, width, height, buttonState)) {
 		result->setTexture(panelTexture);
-		_sceneNode->addChild(result->getButton());
-		_childButtons.push_back(result);
+		_sceneNode->addChildWithName(result->getButton(),name);
+		_childButtons[name] = result;
 		result->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
 		result->getButton()->setPosition(_sceneNode->getContentWidth() / 2 + x, _sceneNode->getContentHeight() / 2 + y);
 		return true;
@@ -105,12 +105,28 @@ bool ui::PanelElement::createChildButton(float x, float y, float width, float he
 	}
 }
 
-bool ui::PanelElement::createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture, Color4f down) {
+bool ui::PanelElement::createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture, Color4f down, std::string name) {
 	std::shared_ptr<ButtonElement> result = std::make_shared<ButtonElement>();
 	if (result->init(0, 0, width, height, buttonState)) {
 		result->setTexture(panelTexture, down);
-		_sceneNode->addChild(result->getButton());
-		_childButtons.push_back(result);
+		_sceneNode->addChildWithName(result->getButton(), name);
+		_childButtons[name] = result;
+		result->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
+		result->getButton()->setPosition(_sceneNode->getContentWidth() / 2 + x, _sceneNode->getContentHeight() / 2 + y);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool ui::PanelElement::createChildButtonTextureWithName(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture, std::string name) {
+	std::shared_ptr<ButtonElement> result = std::make_shared<ButtonElement>();
+	if (result->init(0, 0, width, height, buttonState)) {
+		result->setTexture(panelTexture);
+		_sceneNode->removeChildByName(name);
+		_sceneNode->addChildWithName(result->getButton(), name);
+		_childButtons[name] = result;
 		result->getButton()->setAnchor(Vec2::ANCHOR_CENTER);
 		result->getButton()->setPosition(_sceneNode->getContentWidth() / 2 + x, _sceneNode->getContentHeight() / 2 + y);
 		return true;

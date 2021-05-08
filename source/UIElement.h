@@ -97,7 +97,7 @@ namespace ui {
 	private:
 		std::shared_ptr<scene2::AnimationNode> _sceneNode;
 		std::shared_ptr<Texture> _texture;
-		std::vector<std::shared_ptr<ButtonElement>> _childButtons;
+		std::unordered_map<std::string, std::shared_ptr<ButtonElement>> _childButtons;
 		std::vector<std::shared_ptr<PanelElement>> _childPanels;
 		std::vector<std::shared_ptr<TextElement>> _childTexts;
 		bool _visible;
@@ -122,16 +122,17 @@ namespace ui {
 			return _sceneNode;
 		}
 
-		bool createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture);
+		bool createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture, std::string name);
 
-		bool createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture, Color4f down);
+		bool createChildButton(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> panelTexture, Color4f down, std::string name);
 
+		bool createChildButtonTextureWithName(float x, float y, float width, float height, ButtonState buttonState, std::shared_ptr<Texture> texture, std::string name);
 
 		bool createChildPanel(float x, int y, float ang, const std::shared_ptr<Texture> panelTexture);
 		
 		bool createChildText(float x, float y, float width, float height, std::string message, const std::shared_ptr<Font> font);
 
-		std::vector<std::shared_ptr<ButtonElement>> getChildButtons() {
+		std::unordered_map<std::string, std::shared_ptr<ButtonElement>> getChildButtons() {
 			return _childButtons;
 		}
 

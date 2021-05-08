@@ -55,12 +55,12 @@ void MenuMode::update(float progress) {
     //CULog("You are now in Menu Mode. Enjoy your stay");
     // If save file exists then show this button
     if (filetool::file_exists(Application::get()->getSaveDirectory() + "save.json")) {
-        _menuPanel->getChildButtons()[1]->getButton()->setVisible(true);
-        _menuPanel->getChildButtons()[1]->getButton()->activate();
+        _menuPanel->getChildButtons()["loadButton"]->getButton()->setVisible(true);
+        _menuPanel->getChildButtons()["loadButton"]->getButton()->activate();
     }
     else {
-        _menuPanel->getChildButtons()[1]->getButton()->setVisible(false);
-        _menuPanel->getChildButtons()[1]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["loadButton"]->getButton()->setVisible(false);
+        _menuPanel->getChildButtons()["loadButton"]->getButton()->deactivate();
     }
 }
 
@@ -92,9 +92,13 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
         _gameplay.init(_assets, 4, reader->readJson(), inputManager);
         return _gameplay;
     }
-    //else if (id == "5") {  
-    else {
+    else if (id == "5") {  
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level6.json");
+        _gameplay.init(_assets, 5, reader->readJson(), inputManager);
+        return _gameplay;
+    }
+    else {
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level7.json");
         _gameplay.init(_assets, 5, reader->readJson(), inputManager);
         return _gameplay;
     }
@@ -117,33 +121,33 @@ void MenuMode::buildScene() {
     menuPanel = _assets->get<Texture>("menuBackground");
     _menuPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, menuPanel);
     _menuPanel->getSceneNode()->setScale(max(size.width / menuPanel->getSize().width, size.height / menuPanel->getSize().height));
-    _menuPanel->createChildButton(1000, 325, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("playButton"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[0]->getButton()->setName("playButton");
-    _menuPanel->getChildButtons()[0]->getButton()->addListener([=](const std::string& name, bool down) {
+    _menuPanel->createChildButton(1000, 325, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("playButton"), Color4f::WHITE,"play");
+    _menuPanel->getChildButtons()["play"]->getButton()->setName("play");
+    _menuPanel->getChildButtons()["play"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             _playPressed = true;
         }
     });
-    _menuPanel->getChildButtons()[0]->getButton()->activate();
-    _menuPanel->createChildButton(950, -700, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("loadGame"), Color4f::WHITE);
-    _menuPanel->getChildButtons()[1]->getButton()->setScale(Vec2(1.2f, 1.2f));
-    _menuPanel->getChildButtons()[1]->getButton()->setName("loadButton");
-    _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
+    _menuPanel->getChildButtons()["play"]->getButton()->activate();
+    _menuPanel->createChildButton(950, -700, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("loadGame"), Color4f::WHITE, "loadButton");
+    _menuPanel->getChildButtons()["loadButton"]->getButton()->setScale(Vec2(1.2f, 1.2f));
+    _menuPanel->getChildButtons()["loadButton"]->getButton()->setName("loadButton");
+    _menuPanel->getChildButtons()["loadButton"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
         if (!down) {
             _gameLoaded = true;
         }
         });
-    _menuPanel->getChildButtons()[1]->getButton()->setVisible(false);
-    _menuPanel->getChildButtons()[1]->getButton()->activate();
+    _menuPanel->getChildButtons()["loadButton"]->getButton()->setVisible(false);
+    _menuPanel->getChildButtons()["loadButton"]->getButton()->activate();
     addChild(_menuPanel->getSceneNode());
 }
 
 void MenuMode::deactivateButtons() {
-    _menuPanel->getChildButtons()[0]->getButton()->deactivate();
+    _menuPanel->getChildButtons()["play"]->getButton()->deactivate();
 }
 
 void MenuMode::activateButtons() {
-    _menuPanel->getChildButtons()[0]->getButton()->activate();
+    _menuPanel->getChildButtons()["play"]->getButton()->activate();
 }
