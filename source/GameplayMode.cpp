@@ -213,7 +213,9 @@ void GameplayMode::update(float timestep) {
         reset();
     }
     if (getGameStatus() == GameStatus::PAUSED) {
-        _tutorialAnimation->setVisible(false);
+        if (_tutorialAnimation != nullptr) {
+            _tutorialAnimation->setVisible(false);
+        }
         _menuPanel->setVisible(true);
         _menuPanel->getChildButtons()[0]->getButton()->activate();
         _menuPanel->getChildButtons()[1]->getButton()->activate();
@@ -232,7 +234,7 @@ void GameplayMode::update(float timestep) {
         if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen()
             && _player->getPos() < 662 && _tutorialAnimation->getAngle() == 0) {
             _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
-            _tutorialAnimation->removeFromParent();
+            removeFromParentByName("tutorialAnimation");
             std::shared_ptr<Texture> arrow = _assets->get<Texture>("arrow");
             _tutorialAnimation = scene2::AnimationNode::alloc(arrow, 1, 2);
             _tutorialAnimation->setName("tutorialAnimation");
@@ -245,17 +247,66 @@ void GameplayMode::update(float timestep) {
             _tutorialAnimation->setPriority(10);
         }
         else if (!_player->getPossess() && _player->getPos() > 662 && tutMaxFrame != 2) {
-            removeChild(_tutorialAnimation);
+            removeFromParentByName("tutorialAnimation");
             std::shared_ptr<Texture> arrow = _assets->get<Texture>("arrow");
             _tutorialAnimation = scene2::AnimationNode::alloc(arrow, 1, 2);
             _tutorialAnimation->setName("tutorialAnimation");
-            _tutorialAnimation->setPosition(1075, 250);
+            _tutorialAnimation->setPosition(1075, 200);
             _tutorialAnimation->setScale(0.25, 0.25);
             _rootScene->addChild(_tutorialAnimation);
             tutMaxFrame = 2;
             FRAME_SWITCH = 14;
             _tutorialAnimation->setPriority(10);
         }
+    }
+    if (_showTutorialText == 2) {
+        if (_player->getCurrentDen() > 0 && _rootScene->getPositionX() < 700 && _tutorialAnimation->getPositionX() != 760) {
+            _tutorialText2->setText("Now tap on the other cat den to leave!");
+            _tutorialText2->setPositionX(300);
+            removeFromParentByName("tutorialAnimation");
+            std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
+            _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
+            _tutorialAnimation->setName("tutorialAnimation");
+            _tutorialAnimation->setPosition(760, 175);
+            _tutorialAnimation->setScale(0.25, 0.25);
+            _rootScene->addChild(_tutorialAnimation);
+            tutMaxFrame = 4;
+        }
+        if (_player->getCurrentDoor() > 0 && (_rootScene->getScaleX() == 0.1f  || _rootScene->getScaleX() == 1.0f) 
+            && _tutorialAnimation->getPositionX() != -50) {
+            _tutorialText2->setText("Now tap on the other staircase door to leave!");
+            _tutorialText2->setPositionX(250);
+            removeFromParentByName("tutorialAnimation");
+            std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
+            _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
+            _tutorialAnimation->setName("tutorialAnimation");
+            _tutorialAnimation->setPosition(-50, 400);
+            _tutorialAnimation->setScale(0.25, 0.25);
+            _rootScene->addChild(_tutorialAnimation);
+            tutMaxFrame = 4;
+        }
+        if (_player->getLevel() == 1) {
+            removeFromParentByName("tutorialAnimation");
+            _tutorialText2->setText("Nice work! Touch the cage in the cat form to complete the level.");
+            _tutorialText2->setPositionX(250);
+        }
+        if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
+            _tutorialText2->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
+            _tutorialText2->setPositionX(100);
+            removeFromParentByName("tutorialAnimation");
+            std::shared_ptr<Texture> arrow = _assets->get<Texture>("arrow");
+            _tutorialAnimation = scene2::AnimationNode::alloc(arrow, 1, 2);
+            _tutorialAnimation->setName("tutorialAnimation");
+            _tutorialAnimation->setPosition(135, 425);
+            _tutorialAnimation->setScale(0.25, 0.25);
+            _tutorialAnimation->setAngle(3 * 0.785398);
+            addChild(_tutorialAnimation);
+            tutMaxFrame = 2;
+            FRAME_SWITCH = 14;
+            _tutorialAnimation->setPriority(10);
+        }
+    }
+    if (_showTutorialText > 0) {
         if (tutFrameSwitch > 0) {
             tutFrameSwitch--;
         }
@@ -264,22 +315,6 @@ void GameplayMode::update(float timestep) {
             tutFrame++;
             tutFrame = tutFrame % tutMaxFrame;
             _tutorialAnimation->setFrame(tutFrame);
-        }
-    }
-    if (_showTutorialText == 2) {
-        if (_player->getLevel() == 0 && _player->getPos() > 950) {
-            _tutorialText2->setText("Staircase doors work similarly to cat dens but can only be used while possessing. Tap on them to enter and leave!");
-            _tutorialText2->setPositionX(0);
-        }
-
-        if (_player->getLevel() == 1) {
-            _tutorialText2->setText("Nice work! Touch the cage in the cat form to complete the level.");
-            _tutorialText2->setPosition(Vec2(100, 420));
-            _tutorialText2->setPriority(3);
-        }
-        if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
-            _tutorialText2->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
-            _tutorialText2->setPositionX(0);
         }
     }
     // Read input controller input
@@ -297,15 +332,15 @@ void GameplayMode::update(float timestep) {
                 }
 
                 if (!USE_TAP_POSSESS) {
-                    if (_tutorialAnimation->getPositionX() != 800) {
+                    if (_tutorialAnimation->getPositionX() != 800 && _showTutorialText == 1) {
                         std::shared_ptr<Texture> upDownHand = _assets->get<Texture>("upDownHand");
                         _tutorialAnimation->setTexture(upDownHand);
                         _tutorialAnimation->setPosition(800, 300);
                     }
                 }
                 else {
-                    if (_tutorialAnimation->getPositionX() != 850) {
-                        removeChild(_tutorialAnimation);
+                    if (_tutorialAnimation->getPositionX() != 850 && _showTutorialText == 1) {
+                        removeFromParentByName("tutorialAnimation");
                         std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
                         _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
                         _tutorialAnimation->setName("tutorialAnimation");
@@ -321,10 +356,7 @@ void GameplayMode::update(float timestep) {
 
 
             }
-            else if (_showTutorialText == 2) {
-                _tutorialText2->setText("The paws on the top right indicate the number of possessions you have in a level. Use them wisely!");
-                _tutorialText2->setPositionX(0);
-            }
+
         }
 
         Size  size = Application::get()->getDisplaySize();
@@ -349,7 +381,7 @@ void GameplayMode::update(float timestep) {
                         if (_tutorialAnimation->getPositionX() != 662) {
                             _tutorialText->setText("You can open doors by clicking on them while possessing an enemy.");
                             _tutorialText->setPositionX(150);
-                            removeChild(_tutorialAnimation);
+                            removeFromParentByName("tutorialAnimation");
                             _rootScene->addChild(_tutorialAnimation);
                             _tutorialAnimation->setPosition(Vec2(662, 220));
                         }
@@ -542,7 +574,7 @@ void GameplayMode::update(float timestep) {
 
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
-                        if (_showTutorialText == 1) {
+                        if (_showTutorialText > 0) {
                             _tutorialAnimation->setVisible(false);
                         }
                         _losePanel->setVisible(true);
@@ -583,6 +615,9 @@ void GameplayMode::update(float timestep) {
                     std::function<bool()> losing = [&]() {
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
+                        if (_showTutorialText > 0) {
+                            _tutorialAnimation->setVisible(false);
+                        }
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()[0]->getButton()->activate();
                         _losePanel->getChildButtons()[1]->getButton()->activate();
@@ -990,23 +1025,32 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _tutorialText->setScale(Vec2(0.5, 0.5));
     _tutorialText->setPosition(Vec2(350, 20));
     _tutorialText->setVisible(_showTutorialText == 1);
-    addChild(_tutorialText);
-    _tutorialText2 = scene2::Label::alloc("The holes in the wall are cat dens and can be used to travel to different cat dens while in cat form. Simply click on them to enter and leave!", font);
+
+    _tutorialText2 = scene2::Label::alloc("Tap on the holes in the walls in cat form to enter cat dens!", font);
     _tutorialText2->setForeground(Color4::WHITE);
     _tutorialText2->setScale(Vec2(0.5, 0.5));
-    _tutorialText2->setPosition(Vec2(200, 50));
+    _tutorialText2->setPosition(Vec2(200, 20));
     _tutorialText2->setVisible(_showTutorialText == 2);
-    addChild(_tutorialText2);
-    std::shared_ptr<Texture> leftRightHand = _assets->get<Texture>("lrHand");
-    _tutorialAnimation = scene2::AnimationNode::alloc(leftRightHand, 1, 13);
-    _tutorialAnimation->setPosition(Vec2(100, 175));
-    _tutorialAnimation->setScale(0.25, -0.25);
-    _tutorialAnimation->setName("tutorialAnimation");
-    _tutorialAnimation->setVisible(_showTutorialText == 1);
 
-    tutMaxFrame = 12;
+    if (_showTutorialText == 1) {
+        std::shared_ptr<Texture> leftRightHand = _assets->get<Texture>("lrHand");
+        _tutorialAnimation = scene2::AnimationNode::alloc(leftRightHand, 1, 13);
+        _tutorialAnimation->setPosition(Vec2(100, 175));
+        _tutorialAnimation->setScale(0.25, -0.25);
+        _tutorialAnimation->setName("tutorialAnimation");
+        tutMaxFrame = 12;
+    }
+    else if (_showTutorialText == 2) {
+        std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
+        _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
+        _tutorialAnimation->setName("tutorialAnimation");
+        _tutorialAnimation->setPosition(Vec2(-190, 175));
+        _tutorialAnimation->setScale(0.25, 0.25);
+        tutMaxFrame = 5;
+    }
     addChild(_rootScene);
-
+    addChild(_tutorialText);
+    addChild(_tutorialText2);
 #ifdef CU_MOBILE
     // make joystick panel
     _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
@@ -1067,7 +1111,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
-            if (_showTutorialText == 1) {
+            if (_showTutorialText > 0) {
                 _tutorialAnimation->setVisible(true);
             }
             setGameStatus(GameStatus::RUNNING);
@@ -1164,7 +1208,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));
-    addChild(_tutorialAnimation);
+
+    if (_showTutorialText == 1) {
+        addChild(_tutorialAnimation);
+    }
+    else if (_showTutorialText == 2) {
+        _rootScene->addChild(_tutorialAnimation);
+    }
     centerCamera();
 }
 
@@ -1222,15 +1272,23 @@ void GameplayMode::checkDoors() {
                     if (_showTutorialText == 1) {
                         _tutorialText->setText("Nice work! Touch the caged animal in cat form to win. Double tap anywhere to unpossess!");
                         _tutorialText->setPositionX(35);
-                        if (_tutorialAnimation->getPositionX() != 800) {
-                            _rootScene->removeChild(_tutorialAnimation);
+                        if (_tutorialAnimation->getPositionX() != 800 && _showTutorialText == 1) {
+                            removeFromParentByName("tutorialAnimation");
                             addChild(_tutorialAnimation);
                             _tutorialAnimation->setPosition(800, 300);
                         }
                     }
-                    else if (_showTutorialText == 2) {
-                        _tutorialText2->setText("Time your movement to reach the staircase door! The enemy ahead can only detect you when you are possessing if he sees your back.");
-                        _tutorialText2->setPosition(Vec2(-200, 110));
+                    else if (_showTutorialText == 2 && _tutorialAnimation->getPositionX() != 1175) {
+                        _tutorialText2->setText("The staircase door is similar to the cat den but can only be used while possessing.");
+                        _tutorialText2->setPositionX(100);
+                        removeFromParentByName("tutorialAnimation");
+                        std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
+                        _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
+                        _tutorialAnimation->setName("tutorialAnimation");
+                        _tutorialAnimation->setPosition(1175, 250);
+                        _tutorialAnimation->setScale(0.25, 0.25);
+                        _rootScene->addChild(_tutorialAnimation);
+                        tutMaxFrame = 4;
                     }
                 }
                 cugl::Application::get()->schedule(openDoor, 500);
@@ -1304,6 +1362,12 @@ void GameplayMode::checkStaircaseDoors() {
 
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 !key_intersection.empty()) {
+                if (_showTutorialText == 2) {
+                    _tutorialText2->setText("Pinch to zoom in or out and get a better view of the level.");
+                    _tutorialText2->setPositionX(250);
+                    removeFromParentByName("tutorialAnimation");
+
+                }
                 _hasControl = false;
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
                 _enemyController->getPossessed()->getSceneNode()->setVisible(false);
@@ -1375,15 +1439,7 @@ void GameplayMode::checkStaircaseDoors() {
                 cugl::Application::get()->schedule(openDoor, 500);
 
                 staircaseDoor->setDoor(!staircaseDoor->getIsOpen());
-                if (_showTutorialText == 2) {
-                    _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
-                    _tutorialText->setPosition(Vec2(200, 420));
-                }
 
-                if (_showTutorialText == 2) {
-                    _tutorialText2->setText("Congrats, you did it!");
-                    _tutorialText2->setPosition(Vec2(300, 420));
-                }
                 break;
             }
         }
@@ -1410,6 +1466,18 @@ void GameplayMode::checkCatDens() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setCurrentDen(catDen->getConnectedDens());
+                if (_showTutorialText == 2 && _player->getPos() < 300) {
+                    _tutorialText2->setText("Swipe to pan the camera. The camera will snap back if you are on the screen. Swipe left!");
+                    _tutorialText2->setPositionX(50);
+                    removeFromParentByName("tutorialAnimation");
+                    std::shared_ptr<Texture> leftRightHand = _assets->get<Texture>("lrHand");
+                    _tutorialAnimation = scene2::AnimationNode::alloc(leftRightHand, 1, 13);
+                    _tutorialAnimation->setPosition(Vec2(850, 200));
+                    _tutorialAnimation->setScale(0.25, 0.25);
+                    _tutorialAnimation->setName("tutorialAnimation");
+                    tutMaxFrame = 12;
+                    addChild(_tutorialAnimation);
+                }
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }
@@ -1418,6 +1486,21 @@ void GameplayMode::checkCatDens() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 _player->getCurrentDen() == catDen->getConnectedDens()) {
+                if (_showTutorialText == 2){
+                    _tutorialText2->setText("The paws on the top right indicate the number of possessions you have in a level.");
+                    _tutorialText2->setPositionX(100);
+                    removeFromParentByName("tutorialAnimation");
+                    std::shared_ptr<Texture> arrow = _assets->get<Texture>("arrow");
+                    _tutorialAnimation = scene2::AnimationNode::alloc(arrow, 1, 2);
+                    _tutorialAnimation->setName("tutorialAnimation");
+                    _tutorialAnimation->setPosition(900, 425);
+                    _tutorialAnimation->setScale(0.25, 0.25);
+                    _tutorialAnimation->setAngle(0.785398);
+                    addChild(_tutorialAnimation);
+                    tutMaxFrame = 2;
+                    FRAME_SWITCH = 14;
+                    _tutorialAnimation->setPriority(10);
+                }
                 _player->setCurrentDen(0);
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setPos(catDen->getPos().x);
@@ -1560,5 +1643,14 @@ void GameplayMode::centerCamera() {
     if (!_inputManager->getPivot() && (_player->getCurrentDen() + _player->getCurrentDoor() == 0)) {
         _rootScene->setPositionX(_rootScene->getWidth() + (1024 - _rootScene->getWidth()) / 2 - _rootScene->getScaleX() * _player->getSceneNode()->getPositionX());
         _rootScene->setPositionY(_rootScene->getHeight() + (576 - _rootScene->getHeight()) / 2 - _rootScene->getScaleY() * _player->getSceneNode()->getPositionY());
+    }
+}
+
+void GameplayMode::removeFromParentByName(string name) {
+    if (_rootScene->getChildByName(name) != nullptr) {
+        _rootScene->removeChild(_rootScene->getChildByName(name));
+    }
+    else if (getChildByName(name) != nullptr) {
+        removeChild(getChildByName(name));
     }
 }

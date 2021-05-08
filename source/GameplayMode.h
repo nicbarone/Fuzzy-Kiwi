@@ -293,6 +293,8 @@ public:
     }
 
     void centerCamera();
+
+    void removeFromParentByName(string name);
 };
 
 #endif /* __GAMEPLAY_MODE_H__ */
