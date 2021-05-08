@@ -1,5 +1,3 @@
-//
-//  HelloApp.cpp
 //  Cornell University Game Library (CUGL)
 //
 //  This is the implementation file for the custom application. This is the
@@ -194,7 +192,7 @@ void GameplayMode::reset() {
 
     if (_json->getLong("level", -1L) != -1) {
         _levelIndex = _json->getLong("level", -1L);
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level" + std::to_string(_levelIndex+1) + ".json");
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level" + std::to_string(_levelIndex + 1) + ".json");
         _json = reader->readJson();
     }
 }
@@ -231,7 +229,7 @@ void GameplayMode::update(float timestep) {
         return;
     }
     if (_showTutorialText == 1) {
-        if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen() 
+        if (!_player->canPossess() && !_player->getPossess() && !_doors.at(0)->getIsOpen()
             && _player->getPos() < 662 && _tutorialAnimation->getAngle() == 0) {
             _tutorialText->setText("Oh no! You are stuck! Use the pause button on the top left to retry this level.");
             _tutorialAnimation->removeFromParent();
@@ -240,7 +238,7 @@ void GameplayMode::update(float timestep) {
             _tutorialAnimation->setName("tutorialAnimation");
             _tutorialAnimation->setPosition(135, 425);
             _tutorialAnimation->setScale(0.25, 0.25);
-            _tutorialAnimation->setAngle(3*0.785398);
+            _tutorialAnimation->setAngle(3 * 0.785398);
             addChild(_tutorialAnimation);
             tutMaxFrame = 2;
             FRAME_SWITCH = 14;
@@ -374,86 +372,108 @@ void GameplayMode::update(float timestep) {
         collisions::checkForDoorCollision(_enemyController->getPossessed(), _enemyController->getEnemies(), _player, _doors);
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (cageCollision != 0 && _hasControl) {
-            setGameStatus(GameStatus::WIN);
-            AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
-            // shows win Panel
-            _winPanel->setVisible(true);
-            _winPanel->getChildButtons()[0]->getButton()->activate();
-            _winPanel->getChildButtons()[1]->getButton()->activate();
-            _winPanel->getChildButtons()[2]->getButton()->activate();
-            // and save the update to level_completed.json
-            // first get all fields
-            shared_ptr<JsonReader> reader = JsonReader::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
-            std::shared_ptr<JsonValue> json = reader->readJson();
-            shared_ptr<JsonValue> completed = json->get("completed");
-            shared_ptr<JsonValue> result = JsonValue::allocObject();
-            shared_ptr<JsonValue> r_complete = JsonValue::allocObject();
-            if (_levelIndex == 0) {
-                r_complete->appendValue("level1", true);
-            }
-            else {
-                r_complete->appendValue("level1", completed->getBool("level1"));
-            }
-            if (_levelIndex == 1) {
-                r_complete->appendValue("level2", true);
-            }
-            else {
-                r_complete->appendValue("level2", completed->getBool("level2"));
-            }
-            if (_levelIndex == 2) {
-                r_complete->appendValue("level3", true);
-            }
-            else {
-                r_complete->appendValue("level3", completed->getBool("level3"));
-            }
-            if (_levelIndex == 3) {
-                r_complete->appendValue("level4", true);
-            }
-            else {
-                r_complete->appendValue("level4", completed->getBool("level4"));
-            }
-            if (_levelIndex == 4) {
-                r_complete->appendValue("level5", true);
-            }
-            else {
-                r_complete->appendValue("level5", completed->getBool("level5"));
-            }
-            if (_levelIndex == 5) {
-                r_complete->appendValue("level6", true);
-            }
-            else {
-                r_complete->appendValue("level6", completed->getBool("level6"));
-            }
-            if (_levelIndex == 6) {
-                r_complete->appendValue("level7", true);
-            }
-            else {
-                r_complete->appendValue("level7", completed->getBool("level7"));
-            }
-            if (_levelIndex == 7) {
-                r_complete->appendValue("level8", true);
-            }
-            else {
-                r_complete->appendValue("level8", completed->getBool("level8"));
-            }
-            if (_levelIndex == 8) {
-                r_complete->appendValue("level9", true);
-            }
-            else {
-                r_complete->appendValue("level9", completed->getBool("level9"));
-            }
-            if (_levelIndex == 9) {
-                r_complete->appendValue("level10", true);
-            }
-            else {
-                r_complete->appendValue("level10", completed->getBool("level9"));
-            }
-            reader->close();
-            result->appendChild("completed", r_complete);
-            shared_ptr<JsonWriter> writer = JsonWriter::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+            _hasControl = false;
+            std::shared_ptr<Texture> UnlockCagedAnimal = _assets->get<Texture>("UnlockCagedAnimal");
+            int level = _cagedAnimal->getLevel();
+            int pos = _cagedAnimal->getPos();
+            int movingRight = _cagedAnimal->getMovingRight();
+            _rootScene->removeChild(_cagedAnimal->getSceneNode());
+            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 7, UnlockCagedAnimal)->getSceneNode());
+            _cagedAnimal->setLevel(level);
+            _cagedAnimal->getSceneNode()->setPosition(pos, level* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+            _cagedAnimal->PossessAnimation(4);
+            _rootScene->addChild(_cagedAnimal->getSceneNode());
+            std::function<bool()> winning = [&]() {
+                _cagedAnimal->getSceneNode()->setVisible(false);
+                setGameStatus(GameStatus::WIN);
+                AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
+                // shows win Panel
+                _winPanel->setVisible(true);
+                _winPanel->getChildButtons()[0]->getButton()->activate();
+                _winPanel->getChildButtons()[1]->getButton()->activate();
+                _winPanel->getChildButtons()[2]->getButton()->activate();
+                // and save the update to level_completed.json
+                // first get all fields
+                shared_ptr<JsonReader> reader = JsonReader::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
+                std::shared_ptr<JsonValue> json = reader->readJson();
+                shared_ptr<JsonValue> completed = json->get("completed");
+                shared_ptr<JsonValue> result = JsonValue::allocObject();
+                shared_ptr<JsonValue> r_complete = JsonValue::allocObject();
+                if (_levelIndex == 0) {
+                    r_complete->appendValue("level1", true);
+                }
+                else {
+                    r_complete->appendValue("level1", completed->getBool("level1"));
+                }
+                if (_levelIndex == 1) {
+                    r_complete->appendValue("level2", true);
+                }
+                else {
+                    r_complete->appendValue("level2", completed->getBool("level2"));
+                }
+                if (_levelIndex == 2) {
+                    r_complete->appendValue("level3", true);
+                }
+                else {
+                    r_complete->appendValue("level3", completed->getBool("level3"));
+                }
+                if (_levelIndex == 3) {
+                    r_complete->appendValue("level4", true);
+                }
+                else {
+                    r_complete->appendValue("level4", completed->getBool("level4"));
+                }
+                if (_levelIndex == 4) {
+                    r_complete->appendValue("level5", true);
+                }
+                else {
+                    r_complete->appendValue("level5", completed->getBool("level5"));
+                }
+                if (_levelIndex == 5) {
+                    r_complete->appendValue("level6", true);
+                }
+                else {
+                    r_complete->appendValue("level6", completed->getBool("level6"));
+                }
+                if (_levelIndex == 6) {
+                    r_complete->appendValue("level7", true);
+                }
+                else {
+                    r_complete->appendValue("level7", completed->getBool("level7"));
+                }
+                if (_levelIndex == 7) {
+                    r_complete->appendValue("level8", true);
+                }
+                else {
+                    r_complete->appendValue("level8", completed->getBool("level8"));
+                }
+                if (_levelIndex == 8) {
+                    r_complete->appendValue("level9", true);
+                }
+                else {
+                    r_complete->appendValue("level9", completed->getBool("level9"));
+                }
+                if (_levelIndex == 9) {
+                    r_complete->appendValue("level10", true);
+                }
+                else {
+                    r_complete->appendValue("level10", completed->getBool("level9"));
+                }
+                reader->close();
+                result->appendChild("completed", r_complete);
+                shared_ptr<JsonWriter> writer = JsonWriter::alloc(Application::get()->getSaveDirectory() + "completed_levels.json");
 
-            writer->writeJson(result);
-            writer->close();
+                writer->writeJson(result);
+                writer->close();
+                _hasControl = false;
+                return false;
+            };
+
+            cugl::Application::get()->schedule(winning, 1500);
+            
+            
+            
+          
         }
         collisions::checkInBounds(_enemyController->getPossessed(), _player);
 
@@ -468,21 +488,21 @@ void GameplayMode::update(float timestep) {
             float deltaX = newX - oldX;
             _rootScene->setPositionX(_rootScene->getPositionX() - deltaX * _rootScene->getScale().x);
             centerCamera();
-            
+
         }
-        else if(_hasControl) {
+        else if (_hasControl) {
             //EXPERIMENTAL LOCKED CAMERA CODE
             float oldX = _player->getSceneNode()->getPositionX();
             _player->move(_inputManager->getForward());
             float newX = _player->getSceneNode()->getPositionX();
             float deltaX = newX - oldX;
-            _rootScene->setPositionX(_rootScene->getPositionX()- deltaX* _rootScene->getScale().x);
+            _rootScene->setPositionX(_rootScene->getPositionX() - deltaX * _rootScene->getScale().x);
             centerCamera();
 
         }
 #ifdef CU_MOBILE
-            // move joystick for visualization
-            _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition() / _joystickPanel->getSceneNode()->getScaleX() - _inputManager->getJoystickPosition() / 2.0f);
+        // move joystick for visualization
+        _joystickPanel->getChildPanels()[0]->setPos(_joystickPanel->getSceneNode()->getPosition() / _joystickPanel->getSceneNode()->getScaleX() - _inputManager->getJoystickPosition() / 2.0f);
 #endif
         // Enemy movement
         _enemyController->moveEnemies(_inputManager->getForward());
@@ -491,7 +511,7 @@ void GameplayMode::update(float timestep) {
         if (_enemyController->getPossessed() != nullptr) {
             //CULog("%d", _enemyController->getPossessed()->facingRight());
         }
-        if (_hasControl&&_enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
+        if (_hasControl && _enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
             if (_player->getSceneNode()->isVisible() ||
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
                 _hasControl = false;
@@ -503,7 +523,7 @@ void GameplayMode::update(float timestep) {
                     _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6,
                         CagedCat)->getSceneNode());
                     _player->setLevel(_enemyController->getPossessed()->getLevel());
-                    _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+                    _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET - 50);
                     if (_enemyController->getPossessed()->getMovingRight()) {
                         _player->getSceneNode()->setScale(0.06, 0.06);
                     }
@@ -513,125 +533,97 @@ void GameplayMode::update(float timestep) {
                     _player->PossessAnimation(3);
                     _rootScene->addChild(_player->getSceneNode());
 
-            }
 
-            if (_enemyController->getPossessed() != nullptr) {
-                //CULog("%d", _enemyController->getPossessed()->facingRight());
-            }
-            if (_hasControl && _enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
-                if (_player->getSceneNode()->isVisible() ||
-                    (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
-                    _hasControl = false;
-                    std::shared_ptr<Texture> CagedCat = _assets->get<Texture>("CagedCat");
-                    if (_enemyController->getPossessed() != nullptr) {
+                    std::function<bool()> color = [&]() {
+                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+                        return false;
+                    };
+                    std::function<bool()> losing = [&]() {
+
+                        _player->getSceneNode()->setVisible(false);
+                        setGameStatus(GameStatus::LOSE);
+                        if (_showTutorialText == 1) {
+                            _tutorialAnimation->setVisible(false);
+                        }
+                        _losePanel->setVisible(true);
+                        _losePanel->getChildButtons()[0]->getButton()->activate();
+                        _losePanel->getChildButtons()[1]->getButton()->activate();
+                        if (_showTutorialText == 1) {
+                            _tutorialText->setText("Oh no! You got caught!");
+                            _tutorialText->setPosition(Vec2(100, 110));
+                            _tutorialText2->setVisible(false);
+                        }
                         _hasControl = false;
-                        _enemyController->getPossessed()->getSceneNode()->setVisible(false);
-                        _rootScene->removeChild(_player->getSceneNode());
-                        _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 6,
-                            CagedCat)->getSceneNode());
-                        _player->setLevel(_enemyController->getPossessed()->getLevel());
-                        _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET - 50);
-                        if (_enemyController->getPossessed()->getMovingRight()) {
-                            _player->getSceneNode()->setScale(0.06, 0.06);
-                        }
-                        else {
-                            _player->getSceneNode()->setScale(-0.06, 0.06);
-                        }
-                        _player->PossessAnimation(3);
-                        _rootScene->addChild(_player->getSceneNode());
-
-
-                        std::function<bool()> color = [&]() {
-                            _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
-                            return false;
-                        };
-                        std::function<bool()> losing = [&]() {
-
-                            _player->getSceneNode()->setVisible(false);
-                            setGameStatus(GameStatus::LOSE);
-                            if (_showTutorialText == 1) {
-                                _tutorialAnimation->setVisible(false);
-                            }
-                            _losePanel->setVisible(true);
-                            _losePanel->getChildButtons()[0]->getButton()->activate();
-                            _losePanel->getChildButtons()[1]->getButton()->activate();
-                            if (_showTutorialText == 1) {
-                                _tutorialText->setText("Oh no! You got caught!");
-                                _tutorialText->setPosition(Vec2(100, 110));
-                                _tutorialText2->setVisible(false);
-                            }
-                            _hasControl = false;
-                            return false;
-                        };
-                        cugl::Application::get()->schedule(color, 500);
-                        cugl::Application::get()->schedule(losing, 1500);
+                        return false;
+                    };
+                    cugl::Application::get()->schedule(color, 500);
+                    cugl::Application::get()->schedule(losing, 1500);
+                }
+                else {
+                    _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+                    int level = _player->getLevel();
+                    int pos = _player->getPos();
+                    int movingRight = _player->getMovingRight();
+                    _rootScene->removeChild(_player->getSceneNode());
+                    _player->SetSceneNode(Player::alloc(pos, level, 0, 6, CagedCat)->getSceneNode());
+                    _player->setLevel(level);
+                    _player->getSceneNode()->setPosition(pos, level * FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+                    if (movingRight) {
+                        _player->getSceneNode()->setScale(0.06, 0.06);
                     }
                     else {
-                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
-                        int level = _player->getLevel();
-                        int pos = _player->getPos();
-                        int movingRight = _player->getMovingRight();
-                        _rootScene->removeChild(_player->getSceneNode());
-                        _player->SetSceneNode(Player::alloc(pos, level, 0, 6, CagedCat)->getSceneNode());
-                        _player->setLevel(level);
-                        _player->getSceneNode()->setPosition(pos, level * FLOOR_HEIGHT + FLOOR_OFFSET - 50);
-                        if (movingRight) {
-                            _player->getSceneNode()->setScale(0.06, 0.06);
-                        }
-                        else {
-                            _player->getSceneNode()->setScale(-0.06, 0.06);
-                        }
-                        _player->PossessAnimation(3);
-                        _rootScene->addChild(_player->getSceneNode());
-                        std::function<bool()> color = [&]() {
-                            _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
-                            return false;
-                        };
-                        std::function<bool()> losing = [&]() {
-                            _player->getSceneNode()->setVisible(false);
-                            setGameStatus(GameStatus::LOSE);
-                            _losePanel->setVisible(true);
-                            _losePanel->getChildButtons()[0]->getButton()->activate();
-                            _losePanel->getChildButtons()[1]->getButton()->activate();
-                            if (_showTutorialText == 1) {
-                                _tutorialText->setText("Oh no! You got caught!");
-                                _tutorialText->setPosition(Vec2(100, 110));
-                                _tutorialText2->setVisible(false);
-                            }
-                            _hasControl = false;
-                            return false;
-                        };
-                        cugl::Application::get()->schedule(color, 500);
-
-                        cugl::Application::get()->schedule(losing, 1500);
+                        _player->getSceneNode()->setScale(-0.06, 0.06);
                     }
+                    _player->PossessAnimation(3);
+                    _rootScene->addChild(_player->getSceneNode());
+                    std::function<bool()> color = [&]() {
+                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
+                        return false;
+                    };
+                    std::function<bool()> losing = [&]() {
+                        _player->getSceneNode()->setVisible(false);
+                        setGameStatus(GameStatus::LOSE);
+                        _losePanel->setVisible(true);
+                        _losePanel->getChildButtons()[0]->getButton()->activate();
+                        _losePanel->getChildButtons()[1]->getButton()->activate();
+                        if (_showTutorialText == 1) {
+                            _tutorialText->setText("Oh no! You got caught!");
+                            _tutorialText->setPosition(Vec2(100, 110));
+                            _tutorialText2->setVisible(false);
+                        }
+                        _hasControl = false;
+                        return false;
+                    };
+                    cugl::Application::get()->schedule(color, 500);
 
-
+                    cugl::Application::get()->schedule(losing, 1500);
                 }
-            }
-            else {
-                _player->getSceneNode()->setAngle(0);
-                if (_enemyController->getPossessed() != nullptr) {
-                    _enemyController->getPossessed()->getSceneNode()->setAngle(0);
-                }
-            }
 
 
-            //tutorial text trigger
-            if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
-                /*if (_showTutorialText) {
-                    _tutorialText->setText("Oh no! You are stuck! Use the top left pause button to retry");
-                    _tutorialText->setPosition(Vec2(100, 110));
-                    _tutorialText2->setText("The paw on the top right indicates the number of possessions you have remaining.");
-                    _tutorialText2->setPosition(Vec2(100, 420));
-                }*/
+            }
+        }
+        else {
+            _player->getSceneNode()->setAngle(0);
+            if (_enemyController->getPossessed() != nullptr) {
+                _enemyController->getPossessed()->getSceneNode()->setAngle(0);
             }
         }
 
-        //resetting
-        if (_inputManager->didReset()) {
-            reset();
+
+        //tutorial text trigger
+        if (!_player->canPossess() && !_player->getPossess() && _player->getLevel() == 0) {
+            /*if (_showTutorialText) {
+                _tutorialText->setText("Oh no! You are stuck! Use the top left pause button to retry");
+                _tutorialText->setPosition(Vec2(100, 110));
+                _tutorialText2->setText("The paw on the top right indicates the number of possessions you have remaining.");
+                _tutorialText2->setPosition(Vec2(100, 420));
+            }*/
         }
+    }
+
+    //resetting
+    if (_inputManager->didReset()) {
+        reset();
     }
 }
 
@@ -645,7 +637,7 @@ bool GameplayMode::attemptPossess() {
         _player->setPossess(true);
         _player->set_possessEnemy(_enemyController->closestEnemy());
         _enemyController->updatePossessed(_enemyController->closestEnemy());
-//        _rootScene->removeChild(_enemyController->closestEnemy()->getPatrolNode());
+        //        _rootScene->removeChild(_enemyController->closestEnemy()->getPatrolNode());
         _enemyController->closestEnemy()->setGlow(false);
 
         std::shared_ptr<Texture> catJump = _assets->get<Texture>("catPossessing");
@@ -701,7 +693,7 @@ void GameplayMode::unpossess() {
     _rootScene->removeChild(enemy->getSceneNode());
     enemy->SetSceneNode(Enemy::alloc(enemyPos, enemyLevel, 0, {}, 0, 0, 9,EnemyDying,
         EnemyDying, EnemyDying)->getSceneNode());*/
-    //enemy->enemyDyingAnimation();
+        //enemy->enemyDyingAnimation();
     int level = _player->getLevel();
     std::shared_ptr<Texture> enemyDying = _assets->get<Texture>("EnemyDying");
     _rootScene->removeChild(_player->getSceneNode());
@@ -728,11 +720,11 @@ void GameplayMode::unpossess() {
 
    /*int level = enemy->getLevel();
    int pos = enemy->getPos();*/
-   enemy->getSceneNode()->setVisible(false);
+    enemy->getSceneNode()->setVisible(false);
     enemy->dispose();
     _enemyController->removeEnemy(enemy);
     _enemyController->updatePossessed(nullptr);
-    _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel()* FLOOR_HEIGHT + FLOOR_OFFSET + 50);
+    _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET + 50);
 
 
     std::function<bool()> delayInputRight = [&]() {
@@ -869,7 +861,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0,
-                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"),5, enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
+                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), 5, enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
             if (objectTemp->getBool("possessed")) {
                 _player->setPos(objectTemp->getFloat("x_pos"));
                 _player->setLevel(objectTemp->getInt("level"));
@@ -892,7 +884,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             else {
                 _staircaseDoors.push_back(StaircaseDoor::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
                     cugl::Color4::WHITE, { 1 }, objectTemp->getInt("connection"), 1, 8, orangeStaircaseDoor,
-                     redStaircaseDoor, purpleStaircaseDoor, yellowStaircaseDoor, orangeStaircaseDoor));
+                    redStaircaseDoor, purpleStaircaseDoor, yellowStaircaseDoor, orangeStaircaseDoor));
             }
 
         }
@@ -908,17 +900,16 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, {1}, 1, 8, door));
-            _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos")-77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
+                cugl::Color4::WHITE, { 1 }, 1, 8, door));
+            _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos") - 77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
         }
     }
     if (decorationsJSON != nullptr) {
         for (int i = 0; i < decorationsJSON->size(); i++) {
             objectTemp = decorationsJSON->get(i);
-            _cagedAnimal = Player::alloc(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 1, cagedAnimal);
-            _cagedAnimal->getSceneNode()->setScale(0.3, 0.3);
-
-            //_cagedAnimal = CagedAnimal::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(0.3, 0.3), objectTemp->getInt("level"), cugl::Color4::WHITE, { }, 1, 1, 1, cagedAnimal);
+            _cagedAnimal = Player::alloc(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 1,
+                 cagedAnimal);
+            _cagedAnimal->getSceneNode()->setScale(Vec2(0.3, 0.3));
 
         }
     }
@@ -1020,7 +1011,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     // make joystick panel
     _joystickPanel = ui::PanelElement::alloc(0, 0, 0, _assets->get<Texture>("joystickBorder"));
     _joystickPanel->getSceneNode()->setScale(1.0f);
-    _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth()* _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight()* _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
+    _joystickPanel->getSceneNode()->setPosition(_assets->get<Texture>("joystickBorder")->getWidth() * _joystickPanel->getSceneNode()->getScaleX() / 2.0f, _assets->get<Texture>("joystickBorder")->getHeight() * _joystickPanel->getSceneNode()->getScaleY() / 2.0f);
     _joystickPanel->createChildPanel(0, 0, 0, _assets->get<Texture>("joystick"));
     addChild(_joystickPanel->getSceneNode());
 #endif
@@ -1081,7 +1072,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             }
             setGameStatus(GameStatus::RUNNING);
         }
-    });
+        });
     _menuPanel->createChildButton(0, -45, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("restartLevel"), Color4f::WHITE);
     _menuPanel->getChildButtons()[1]->getButton()->setName("restartLevel");
     _menuPanel->getChildButtons()[1]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -1091,7 +1082,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             // Mark this button as clicked, proper handle will take place in update()
             _reset = true;
         }
-    });
+        });
     _menuPanel->createChildButton(0, -150, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("exit"), Color4f::WHITE);
     _menuPanel->getChildButtons()[2]->getButton()->setName("returnToMenu");
     _menuPanel->getChildButtons()[2]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -1101,7 +1092,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             // Mark this button as clicked, proper handle will take place in update()
             _backToMenu = true;
         }
-    });
+        });
     addChild(_menuPanel->getSceneNode());
 
     // Create Win Panel
@@ -1237,7 +1228,7 @@ void GameplayMode::checkDoors() {
                             _tutorialAnimation->setPosition(800, 300);
                         }
                     }
-                    else if(_showTutorialText == 2){
+                    else if (_showTutorialText == 2) {
                         _tutorialText2->setText("Time your movement to reach the staircase door! The enemy ahead can only detect you when you are possessing if he sees your back.");
                         _tutorialText2->setPosition(Vec2(-200, 110));
                     }
@@ -1258,7 +1249,7 @@ void GameplayMode::checkEnemyPossession() {
             CULog("player position: %f", enemy->getSceneNode()->getWorldPosition().x);
             //CULog("Whether it is true %d", abs(_player->getPos() - enemy->getSceneNode()->getWorldPosition().x) < 170.0f * _inputManager->getRootSceneNode()->getScaleX());
             if (abs(_player->getPos() - enemy->getSceneNode()->getWorldPosition().x) < 270.0f * _inputManager->getRootSceneNode()->getScaleX() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).y - enemy->getSceneNode()->getWorldPosition().y+25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+                abs(screenToWorldCoords(_inputManager->getTapPos()).y - enemy->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _player->getLevel() == enemy->getLevel() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - enemy->getSceneNode()->getWorldPosition().x) < 150.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 //AudioEngine::get()->play("doorOpen", _assets->get<Sound>("useDoor"), false, 1.0f, true);
@@ -1425,8 +1416,8 @@ void GameplayMode::checkCatDens() {
 
             else if (!visibility &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()&&
-                _player->getCurrentDen() == catDen->getConnectedDens()){
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
+                _player->getCurrentDen() == catDen->getConnectedDens()) {
                 _player->setCurrentDen(0);
                 _player->getSceneNode()->setVisible(!visibility);
                 _player->setPos(catDen->getPos().x);
