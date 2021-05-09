@@ -283,6 +283,7 @@ void GameplayMode::update(float timestep) {
             _tutorialAnimation->setPosition(366, 600);
             _tutorialAnimation->setScale(0.25, 0.25);
             _tutorialAnimation->setPriority(1000);
+            //FRAME_SWITCH = 14;
             _rootScene->addChild(_tutorialAnimation);
             tutMaxFrame = 4;
         }
@@ -1228,6 +1229,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     }
     else if (_showTutorialText == 2) {
         _rootScene->addChild(_tutorialAnimation);
+        _tutorialAnimation->setPriority(100);
     }
     centerCamera();
 }
@@ -1383,6 +1385,14 @@ void GameplayMode::checkStaircaseDoors() {
                     _tutorialText2->setPositionX(250);
                     removeFromParentByName("tutorialAnimation");
                     //TODO pinching animation
+                    std::shared_ptr<Texture> pinchHand = _assets->get<Texture>("pinchHand");
+                    _tutorialAnimation = scene2::AnimationNode::alloc(pinchHand, 1, 6);
+                    _tutorialAnimation->setPosition(Vec2(850, 200));
+                    _tutorialAnimation->setScale(0.25, 0.25);
+                    _tutorialAnimation->setName("tutorialAnimation");
+                    FRAME_SWITCH = 7;
+                    tutMaxFrame = 6;
+                    addChild(_tutorialAnimation);
                 }
                 else if (_showTutorialText == 3) {
                     _tutorialText->setText("While possessing, enemies can only detect you from the back.");

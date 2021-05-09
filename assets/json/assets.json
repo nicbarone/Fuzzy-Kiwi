@@ -127,6 +127,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"pinchHand": {
+			"file": "textures/UI/Tutorial/PinchHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"arrow": {
 			"file": "textures/UI/Tutorial/Arrow.png",
 			"minfilter": "nearest",
