@@ -308,8 +308,8 @@ void GameplayMode::update(float timestep) {
         }
     }
     else if (_showTutorialText == 3 && _player->getLevel() == 1){
-        _tutorialText->setText("Patrolling enemies can be blocked by closed doors in their paths.");
-        _tutorialText->setPositionX(200);
+        _tutorialText->setText("Patrolling enemies can be blocked by closed doors in their paths. Vision will also be blocked.");
+        _tutorialText->setPositionX(25);
     }
     if (_showTutorialText == 1 || _showTutorialText == 2) {
         if (tutFrameSwitch > 0) {
@@ -875,6 +875,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> altTexture = _assets->get<Texture>("possessed-enemy");
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
     tableTexture = _assets->get<Texture>("lab-table");
+    std::shared_ptr<Texture> visionTexture = _assets->get<Texture>("vision-cone");
 
     //JSON PROCESSING
     shared_ptr<JsonValue> playerJSON = json->get("player");
@@ -900,7 +901,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0,
-                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), 5, enemyTexture, altTexture, enemyHighlightTexture, tableTexture);
+                key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), 5, 
+                enemyTexture, altTexture, enemyHighlightTexture, tableTexture, visionTexture);
             if (objectTemp->getBool("possessed")) {
                 _player->setPos(objectTemp->getFloat("x_pos"));
                 _player->setLevel(objectTemp->getInt("level"));

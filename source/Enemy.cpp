@@ -87,7 +87,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 }
 
 bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
-	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table) {
+	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
 	Entity::setLevel(level);
@@ -121,17 +121,22 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	}
 	if (_movingRight) {
 		_visionNode = scene2::WireNode::alloc(Rect(0, 0, DEFAULT_VISION+ SCIENTIST_WIDTH, 2));
+		_visionCone = scene2::PolygonNode::allocWithTexture(vision);
 	}
 	else {
 		_visionNode = scene2::WireNode::alloc(Rect(0, 0, -DEFAULT_VISION- SCIENTIST_WIDTH, 2));
+		_visionCone = scene2::PolygonNode::allocWithTexture(vision);
 	}
 	_visionNode->setColor(Color4::RED);
 	_visionNode->setPosition(_sceneNode->getContentWidth() + SCIENTIST_WIDTH, VISION_HEIGHT);
 	_visionNode->setPriority(level + 0.4f);
 	_sceneNode->addChild(_visionNode);
+	_sceneNode->addChild(_visionCone);
+	_visionCone->setPosition(360, 110);
+	_visionCone->setPriority(level + 0.4f);
 	_frame = 0;
 	getSceneNode()->setPriority(level + 0.2f);
-	//_visionNode->setVisible(false);
+	_visionNode->setVisible(false);
 	return true;
 }
 

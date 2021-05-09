@@ -49,6 +49,7 @@ private:
 	std::shared_ptr<scene2::PolygonNode> _startTableNode;
 	std::shared_ptr<scene2::PolygonNode> _endTableNode;
 	std::shared_ptr<scene2::WireNode> _visionNode;
+	std::shared_ptr<scene2::PolygonNode> _visionCone;
 
 
 public:
@@ -62,7 +63,7 @@ public:
 	bool init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow);
 	
 	bool init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
-		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table);
+		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision);
 
 	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames, std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
@@ -70,9 +71,9 @@ public:
 	}
 
 	static std::shared_ptr<Enemy> alloc(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
-		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table) {
+		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision) {
 		std::shared_ptr<Enemy> result = std::make_shared<Enemy>();
-		return (result->init(x, level, ang, keys, patrolStart, patrolEnd, num_frames, enemy, alt, glow, table) ? result : nullptr);
+		return (result->init(x, level, ang, keys, patrolStart, patrolEnd, num_frames, enemy, alt, glow, table, vision) ? result : nullptr);
 	}
 
 	/** returns the AnimationNode associated with the player*/
