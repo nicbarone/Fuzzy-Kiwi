@@ -259,7 +259,7 @@ void GameplayMode::update(float timestep) {
             _tutorialAnimation->setPriority(10);
         }
     }
-    if (_showTutorialText == 2) {
+    else if (_showTutorialText == 2) {
         if (_player->getCurrentDen() > 0 && _rootScene->getPositionX() < 700 && _tutorialAnimation->getPositionX() != 760) {
             _tutorialText2->setText("Now tap on the other cat den to leave!");
             _tutorialText2->setPositionX(300);
@@ -272,16 +272,17 @@ void GameplayMode::update(float timestep) {
             _rootScene->addChild(_tutorialAnimation);
             tutMaxFrame = 4;
         }
-        if (_player->getCurrentDoor() > 0 && (_rootScene->getScaleX() == 0.1f  || _rootScene->getScaleX() == 1.0f) 
+        if (_player->getCurrentDoor() > 0 && (_rootScene->getScaleX() < 0.31f  || _rootScene->getScaleX() == 1.0f) 
             && _tutorialAnimation->getPositionX() != -50) {
             _tutorialText2->setText("Now tap on the other staircase door to leave!");
-            _tutorialText2->setPositionX(250);
+            _tutorialText2->setPositionX(300);
             removeFromParentByName("tutorialAnimation");
             std::shared_ptr<Texture> tapHand = _assets->get<Texture>("tapHand");
             _tutorialAnimation = scene2::AnimationNode::alloc(tapHand, 1, 5);
             _tutorialAnimation->setName("tutorialAnimation");
-            _tutorialAnimation->setPosition(-50, 400);
+            _tutorialAnimation->setPosition(366, 600);
             _tutorialAnimation->setScale(0.25, 0.25);
+            _tutorialAnimation->setPriority(1000);
             _rootScene->addChild(_tutorialAnimation);
             tutMaxFrame = 4;
         }
@@ -306,7 +307,11 @@ void GameplayMode::update(float timestep) {
             _tutorialAnimation->setPriority(10);
         }
     }
-    if (_showTutorialText > 0) {
+    else if (_showTutorialText == 3 && _player->getLevel() == 1){
+        _tutorialText->setText("Patrolling enemies can be blocked by closed doors in their paths.");
+        _tutorialText->setPositionX(200);
+    }
+    if (_showTutorialText == 1 || _showTutorialText == 2) {
         if (tutFrameSwitch > 0) {
             tutFrameSwitch--;
         }
@@ -391,9 +396,8 @@ void GameplayMode::update(float timestep) {
             }
         }
         else if (_inputManager->getAndResetUnpossessPressed()) {
-            if (_player->get_possessEnemy() != nullptr) {
+            if (_player->get_possessEnemy() != nullptr && _player->getCurrentDen() + _player->getCurrentDoor() == 0) {
                 unpossess();
-
             }
         }
 
@@ -522,7 +526,7 @@ void GameplayMode::update(float timestep) {
             centerCamera();
 
         }
-        else if (_hasControl) {
+        else if (_hasControl && _player->getCurrentDen() + _player->getCurrentDoor() == 0) {
             //EXPERIMENTAL LOCKED CAMERA CODE
             float oldX = _player->getSceneNode()->getPositionX();
             _player->move(_inputManager->getForward());
@@ -943,7 +947,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         for (int i = 0; i < decorationsJSON->size(); i++) {
             objectTemp = decorationsJSON->get(i);
             _cagedAnimal = Player::alloc(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 1,
-                 cagedAnimal);
+                cagedAnimal);
             _cagedAnimal->getSceneNode()->setScale(Vec2(0.3, 0.3));
 
         }
@@ -1020,11 +1024,19 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
     std::shared_ptr<Font> font = _assets->get<Font>("futura");
-    _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move!", font);
-    _tutorialText->setForeground(Color4::WHITE);
-    _tutorialText->setScale(Vec2(0.5, 0.5));
-    _tutorialText->setPosition(Vec2(350, 20));
-    _tutorialText->setVisible(_showTutorialText == 1);
+    if (_showTutorialText == 3) {
+        _tutorialText = scene2::Label::alloc("Patrolling enemies move between their tables.", font);
+        _tutorialText->setForeground(Color4::WHITE);
+        _tutorialText->setScale(Vec2(0.5, 0.5));
+        _tutorialText->setPosition(Vec2(325, 20));
+    }
+    else {
+        _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move!", font);
+        _tutorialText->setForeground(Color4::WHITE);
+        _tutorialText->setScale(Vec2(0.5, 0.5));
+        _tutorialText->setPosition(Vec2(350, 20));
+        _tutorialText->setVisible(_showTutorialText == 1);
+    }
 
     _tutorialText2 = scene2::Label::alloc("Tap on the holes in the walls in cat form to enter cat dens!", font);
     _tutorialText2->setForeground(Color4::WHITE);
@@ -1368,7 +1380,11 @@ void GameplayMode::checkStaircaseDoors() {
                     _tutorialText2->setText("Pinch to zoom in or out and get a better view of the level.");
                     _tutorialText2->setPositionX(250);
                     removeFromParentByName("tutorialAnimation");
-
+                    //TODO pinching animation
+                }
+                else if (_showTutorialText == 3) {
+                    _tutorialText->setText("While possessing, enemies can only detect you from the back.");
+                    _tutorialText->setPositionX(250);
                 }
                 _hasControl = false;
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");

@@ -20,7 +20,7 @@
 	"staircase-door":	[],
 	"door":	[{
 			"x_pos":	662.081360,
-			"level":	0.205128,
+			"level":	0,
 			"keyInt":	[1]
 		}],
 	"floor":	1
