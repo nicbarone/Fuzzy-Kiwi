@@ -415,9 +415,10 @@ void GameplayMode::update(float timestep) {
             int pos = _cagedAnimal->getPos();
             int movingRight = _cagedAnimal->getMovingRight();
             _rootScene->removeChild(_cagedAnimal->getSceneNode());
-            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 7, UnlockCagedAnimal)->getSceneNode());
+            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 21, UnlockCagedAnimal)->getSceneNode());
+            _cagedAnimal->getSceneNode()->setScale(-0.105, 0.105);
             _cagedAnimal->setLevel(level);
-            _cagedAnimal->getSceneNode()->setPosition(pos, level* FLOOR_HEIGHT + FLOOR_OFFSET - 50);
+            _cagedAnimal->getSceneNode()->setPosition(pos+30, level* FLOOR_HEIGHT + FLOOR_OFFSET-59);
             _cagedAnimal->PossessAnimation(4);
             _rootScene->addChild(_cagedAnimal->getSceneNode());
             std::function<bool()> winning = [&]() {
@@ -727,13 +728,6 @@ void GameplayMode::unpossess() {
     if (cageCollision != 0) {
         return;
     }
-    /*std::shared_ptr<Texture> EnemyDying = _assets->get<Texture>("EnemyDying");
-    int enemyPos = enemy->getPos();
-    int enemyLevel = enemy->getLevel();
-    _rootScene->removeChild(enemy->getSceneNode());
-    enemy->SetSceneNode(Enemy::alloc(enemyPos, enemyLevel, 0, {}, 0, 0, 9,EnemyDying,
-        EnemyDying, EnemyDying)->getSceneNode());*/
-        //enemy->enemyDyingAnimation();
     int level = _player->getLevel();
     std::shared_ptr<Texture> enemyDying = _assets->get<Texture>("EnemyDying");
     _rootScene->removeChild(_player->getSceneNode());
@@ -951,7 +945,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             objectTemp = decorationsJSON->get(i);
             _cagedAnimal = Player::alloc(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0, 1,
                 cagedAnimal);
-            _cagedAnimal->getSceneNode()->setScale(Vec2(0.3, 0.3));
+            _cagedAnimal->getSceneNode()->setScale(Vec2(-0.3, 0.3));
 
         }
     }
@@ -1494,8 +1488,33 @@ void GameplayMode::checkCatDens() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _player->getLevel() == catDen->getLevel() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
-                _player->getSceneNode()->setVisible(!visibility);
-                _player->setCurrentDen(catDen->getConnectedDens());
+                _hasControl = false;
+                std::shared_ptr<Texture> CatJumpCatDen = _assets->get<Texture>("CatJumpCatDen");
+                _rootScene->removeChild(_player->getSceneNode());
+                _player->SetSceneNode(Player::alloc(150, 0, 0, 8, CatJumpCatDen)->getSceneNode());
+                _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+                if (_player->getMovingRight()) {
+                    /*if (_player->getPos() - catDen->getPos().x <=0) {*/
+                    _player->getSceneNode()->setScale(0.15, 0.15);
+                }
+                else {
+                    _player->getSceneNode()->setScale(-0.15, 0.15);
+                }
+
+                _rootScene->addChild(_player->getSceneNode());
+                _player->PossessAnimation(0);
+
+                std::function<bool()> setPossessed = [&]() {
+                    _player->getSceneNode()->setVisible(false);
+                    _player->setCurrentDen(catDen->getConnectedDens());
+                    _hasControl = true;
+                    return false;
+                };
+                cugl::Application::get()->schedule(setPossessed, 500);
+                
+                
+                //_player->getSceneNode()->setVisible(!visibility);
+                
                 if (_showTutorialText == 2 && _player->getPos() < 300) {
                     _tutorialText2->setText("Swipe to pan the camera. The camera will snap back if you are on the screen. Swipe left!");
                     _tutorialText2->setPositionX(50);
@@ -1516,6 +1535,37 @@ void GameplayMode::checkCatDens() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 _player->getCurrentDen() == catDen->getConnectedDens()) {
+                _hasControl = false;
+                //AudioEngine::get()->play("unpossess", _assets->get<Sound>("jumpOff"));
+                _player->setLevel(catDen->getLevel());
+                _player->getSceneNode()->setVisible(true);
+                int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+                if (cageCollision != 0) {
+                    return;
+                }
+                _player->setCurrentDen(0);
+                _player->setPos(catDen->getPos().x);
+                //_player->getSceneNode()->setPosition(catDen->getPos());
+                _player->getSceneNode()->setPosition(_player->getPos(), _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET );
+                _player->PossessAnimation(2);
+                std::function<bool()> delayJump = [&]() {
+                    int level = _player->getLevel();
+                    std::shared_ptr<Texture> catWalking = _assets->get<Texture>("cat-walking");
+                    _rootScene->removeChild(_player->getSceneNode());
+                    _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catWalking)->getSceneNode());
+                    _player->setPos(_player->getPos() + 55);
+                    _player->setLevel(level);
+                    _player->getSceneNode()->setScale(0.15, 0.15);
+                    _rootScene->addChild(_player->getSceneNode());
+                    _hasControl = true;
+
+                    return false;
+                };
+
+                 cugl::Application::get()->schedule(delayJump, 600);
+
+               
+
                 if (_showTutorialText == 2){
                     _tutorialText2->setText("The paws on the top right indicate the number of possessions you have in a level.");
                     _tutorialText2->setPositionX(100);
@@ -1531,12 +1581,7 @@ void GameplayMode::checkCatDens() {
                     FRAME_SWITCH = 14;
                     _tutorialAnimation->setPriority(10);
                 }
-                _player->setCurrentDen(0);
-                _player->getSceneNode()->setVisible(!visibility);
-                _player->setPos(catDen->getPos().x);
-                _player->getSceneNode()->setPosition(catDen->getPos());
-                _player->setLevel(catDen->getLevel());
-
+               
                 if (_showTutorialText == 1) {
                     _tutorialText->setText("Touch the cage in cat form to release the animals and complete the level");
                     _tutorialText->setPosition(Vec2(200, 420));

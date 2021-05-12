@@ -14,6 +14,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"vision-cone": {
+			"file": "textures/GameObject/Enemy/VisionCone.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"enemy": {
 			"file": "textures/GameObject/Enemy/Enemy-Walking.png",
 			"minfilter": "nearest",
@@ -98,7 +105,7 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		
+
 		"lrHand": {
 			"file": "textures/UI/LeftRightHand.png",
 			"minfilter": "nearest",
@@ -115,6 +122,20 @@
 		},
 		"tapHand": {
 			"file": "textures/UI/Tutorial/TapHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"pinchHand": {
+			"file": "textures/UI/Tutorial/PinchHand.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"arrow": {
+			"file": "textures/UI/Tutorial/Arrow.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -351,6 +372,76 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"level1Complete": {
+			"file": "textures/UI/Button/Level1-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level2Complete": {
+			"file": "textures/UI/Button/Level2-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level3Complete": {
+			"file": "textures/UI/Button/Level3-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level4Complete": {
+			"file": "textures/UI/Button/Level4-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level5Complete": {
+			"file": "textures/UI/Button/Level5-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level6Complete": {
+			"file": "textures/UI/Button/Level6-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level7Complete": {
+			"file": "textures/UI/Button/Level7-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level8Complete": {
+			"file": "textures/UI/Button/Level8-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level9Complete": {
+			"file": "textures/UI/Button/Level9-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level10Complete": {
+			"file": "textures/UI/Button/Level10-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"doorFrame": {
 			"file": "textures/GameObject/Door/DoorFrame.png",
 			"minfilter": "nearest",
@@ -367,33 +458,33 @@
 
 		},
 		"catDenBlue": {
-            "file": "textures/GameObject/CatDen/CatDenBlue.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "catDenGrey": {
-            "file": "textures/GameObject/CatDen/CatDenGrey.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "catDenPurple": {
-            "file": "textures/GameObject/CatDen/CatDenPurple.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "catDenGreen": {
-            "file": "textures/GameObject/CatDen/CatDenGreen.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
+			"file": "textures/GameObject/CatDen/CatDenBlue.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"catDenGrey": {
+			"file": "textures/GameObject/CatDen/CatDenGrey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"catDenPurple": {
+			"file": "textures/GameObject/CatDen/CatDenPurple.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"catDenGreen": {
+			"file": "textures/GameObject/CatDen/CatDenGreen.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"CagedCat": {
 			"file": "textures/GameObject/Cat/CagedCat.png",
 			"minfilter": "nearest",

@@ -12,7 +12,7 @@
 			"keyInt":	[1]
 		}],
 	"decorations":	[{
-			"x_pos":	1400.698730,
+			"x_pos":	1200.698730,
 			"level":	0,
 			"objective":	0,
 			"texture":	"caged-animal"
@@ -20,7 +20,7 @@
 	"staircase-door":	[],
 	"door":	[{
 			"x_pos":	662.081360,
-			"level":	0.205128,
+			"level":	0,
 			"keyInt":	[1]
 		}],
 	"floor":	1

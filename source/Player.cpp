@@ -116,6 +116,58 @@ void Player::PossessAnimation(int possessing) {
 		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(7);
 		return false;
 	};
+	std::function<bool()> frame8 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(8);
+		return false;
+	};
+	std::function<bool()> frame9 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(9);
+		return false;
+	};
+	std::function<bool()> frame10 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(10);
+		return false;
+	};
+	std::function<bool()> frame11 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(11);
+		return false;
+	};
+	std::function<bool()> frame12 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(12);
+		return false;
+	};
+	std::function<bool()> frame13 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(13);
+		return false;
+	};
+	std::function<bool()> frame14 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(14);
+		return false;
+	};
+	std::function<bool()> frame15 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(15);
+		return false;
+	};
+	std::function<bool()> frame16 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(16);
+		return false;
+	};
+	std::function<bool()> frame17 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(17);
+		return false;
+	};
+	std::function<bool()> frame18 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(18);
+		return false;
+	};
+	std::function<bool()> frame19 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(19);
+		return false;
+	};
+	std::function<bool()> frame20 = [&]() {
+		std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(20);
+		return false;
+	};
 	if (possessing==0) {
 		int timeDiff = 75;
 		CULog("h");
@@ -163,6 +215,21 @@ void Player::PossessAnimation(int possessing) {
 		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 5);
 		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 6);
 		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 7);
+		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 8);
+		cugl::Application::get()->schedule(frame8, 50 + timeDiff * 9);
+		cugl::Application::get()->schedule(frame9, 50 + timeDiff * 10);
+		cugl::Application::get()->schedule(frame10, 50 + timeDiff * 11);
+		cugl::Application::get()->schedule(frame11, 50 + timeDiff * 12);
+		cugl::Application::get()->schedule(frame12, 50 + timeDiff * 13);
+		cugl::Application::get()->schedule(frame13, 50 + timeDiff * 14);
+		cugl::Application::get()->schedule(frame14, 50 + timeDiff * 15);
+		cugl::Application::get()->schedule(frame15, 50 + timeDiff * 16);
+		cugl::Application::get()->schedule(frame16, 50 + timeDiff * 17);
+		cugl::Application::get()->schedule(frame17, 50 + timeDiff * 18);
+		cugl::Application::get()->schedule(frame18, 50 + timeDiff * 19);
+		cugl::Application::get()->schedule(frame19, 50 + timeDiff * 20);
+		cugl::Application::get()->schedule(frame20, 50 + timeDiff * 21);
+
 	}
 }
 

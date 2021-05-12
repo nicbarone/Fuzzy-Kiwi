@@ -499,6 +499,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"CatJumpCatDen": {
+			"file": "textures/GameObject/Cat/CatJumpCatDen.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"paused": {
 			"file": "textures/UI/Icon/Paused.jpg",
 			"minfilter": "nearest",
