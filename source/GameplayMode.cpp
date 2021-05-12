@@ -1494,13 +1494,15 @@ void GameplayMode::checkCatDens() {
                 std::shared_ptr<Texture> CatJumpCatDen = _assets->get<Texture>("CatJumpCatDen");
                 _rootScene->removeChild(_player->getSceneNode());
                 _player->SetSceneNode(Player::alloc(150, 0, 0, 8, CatJumpCatDen)->getSceneNode());
-                _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
+                
                 if (_player->getMovingRight()) {
                     /*if (_player->getPos() - catDen->getPos().x <=0) {*/
                     _player->getSceneNode()->setScale(0.15, 0.15);
+                    _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
                 }
                 else {
                     _player->getSceneNode()->setScale(-0.15, 0.15);
+                    _player->getSceneNode()->setPosition(_player->getPos() -50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
                 }
 
                 _rootScene->addChild(_player->getSceneNode());
@@ -1512,7 +1514,7 @@ void GameplayMode::checkCatDens() {
                     _hasControl = true;
                     return false;
                 };
-                cugl::Application::get()->schedule(setPossessed, 500);
+                cugl::Application::get()->schedule(setPossessed, 300);
                 
                 
                 //_player->getSceneNode()->setVisible(!visibility);
@@ -1564,7 +1566,7 @@ void GameplayMode::checkCatDens() {
                     return false;
                 };
 
-                 cugl::Application::get()->schedule(delayJump, 600);
+                 cugl::Application::get()->schedule(delayJump, 300);
 
                
 

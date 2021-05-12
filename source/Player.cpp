@@ -8,7 +8,7 @@ Player::Player() :
 	_nPossessions(1),
 	_isPossessing(false),
 	_isHidden(false),
-	_movingRight(false),
+	_movingRight(true),
 	_frame(0),
 	_frameCounter(12),
 	_currentDoor(0)
