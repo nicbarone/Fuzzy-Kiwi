@@ -621,7 +621,9 @@ void GameplayMode::update(float timestep) {
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
                         if (_showTutorialText > 0) {
-                            _tutorialAnimation->setVisible(false);
+                            if (_tutorialAnimation != nullptr) {
+                                _tutorialAnimation->setVisible(false);
+                            }
                         }
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()["retry"]->getButton()->activate();
@@ -1672,7 +1674,7 @@ void GameplayMode::toSaveJson() {
 void GameplayMode::centerCamera() {
     if (!_inputManager->getPivot() && (_player->getCurrentDen() + _player->getCurrentDoor() == 0)) {
         _rootScene->setPositionX(_rootScene->getWidth() + (1024 - _rootScene->getWidth()) / 2 - _rootScene->getScaleX() * _player->getSceneNode()->getPositionX());
-        _rootScene->setPositionY(_rootScene->getHeight() + (576 - _rootScene->getHeight()) / 2 - _rootScene->getScaleY() * _player->getSceneNode()->getPositionY());
+        _rootScene->setPositionY(_rootScene->getHeight() + (576 - _rootScene->getHeight()) / 2 - _rootScene->getScaleY() * _player->getLevel()*FLOOR_HEIGHT + CAMERA_OFFSET);
     }
 }
 
