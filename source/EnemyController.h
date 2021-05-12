@@ -13,6 +13,8 @@ private:
 	vector<std::shared_ptr<Enemy>> _enemies;
 	/** reference to the closest enemy to the player*/
 	std::shared_ptr<Enemy> _closestEnemy;
+	/** reference to the enemy that detected the player*/
+	std::shared_ptr<scene2::AnimationNode> _detectingEnemy;
 	/** reference to the currently possessed enemy*/
 	std::shared_ptr<Enemy> _possessedEnemy;
 
@@ -41,6 +43,10 @@ public:
 
 	/** moves active enemies*/
 	void moveEnemies(float direction);
+
+	std::shared_ptr<scene2::AnimationNode> getDetectingEnemy() {
+		return _detectingEnemy;
+	}
 
 	/** setter for _possessedEnemyd*/
 	void updatePossessed(std::shared_ptr<Enemy> enemy) {

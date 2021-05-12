@@ -545,16 +545,15 @@ void GameplayMode::update(float timestep) {
         // Enemy movement
         _enemyController->moveEnemies(_inputManager->getForward());
         _enemyController->findClosest(_player->getPos(), _player->getLevel(), closedDoors());
-
-        if (_enemyController->getPossessed() != nullptr) {
-            //CULog("%d", _enemyController->getPossessed()->facingRight());
-        }
         if (_hasControl && _enemyController->detectedPlayer(_player->getPos(), _player->getLevel(), closedDoors())) {
             if (_player->getSceneNode()->isVisible() ||
                 (_enemyController->getPossessed() != nullptr && _enemyController->getPossessed()->getSceneNode()->isVisible())) {
                 _hasControl = false;
                 std::shared_ptr<Texture> CagedCat = _assets->get<Texture>("CagedCat");
                 if (_enemyController->getPossessed() != nullptr) {
+                    std::shared_ptr<Texture> DetectingEnemy = _assets->get<Texture>("DetectingEnemy");
+                    _enemyController->getDetectingEnemy()->setTexture(DetectingEnemy);
+                    _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
                     _hasControl = false;
                     _enemyController->getPossessed()->getSceneNode()->setVisible(false);
                     _rootScene->removeChild(_player->getSceneNode());
@@ -570,12 +569,6 @@ void GameplayMode::update(float timestep) {
                     }
                     _player->PossessAnimation(3);
                     _rootScene->addChild(_player->getSceneNode());
-
-
-                    std::function<bool()> color = [&]() {
-                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
-                        return false;
-                    };
                     std::function<bool()> losing = [&]() {
 
                         _player->getSceneNode()->setVisible(false);
@@ -594,10 +587,11 @@ void GameplayMode::update(float timestep) {
                         _hasControl = false;
                         return false;
                     };
-                    cugl::Application::get()->schedule(color, 500);
                     cugl::Application::get()->schedule(losing, 1500);
                 }
                 else {
+                    std::shared_ptr<Texture> DetectingEnemy = _assets->get<Texture>("DetectingEnemy");
+                    _enemyController->getDetectingEnemy()->setTexture(DetectingEnemy);
                     _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
                     int level = _player->getLevel();
                     int pos = _player->getPos();
@@ -614,10 +608,7 @@ void GameplayMode::update(float timestep) {
                     }
                     _player->PossessAnimation(3);
                     _rootScene->addChild(_player->getSceneNode());
-                    std::function<bool()> color = [&]() {
-                        _enemyController->colorDetectingPlayer(_player->getPos(), _player->getLevel(), closedDoors());
-                        return false;
-                    };
+                 
                     std::function<bool()> losing = [&]() {
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
@@ -637,7 +628,7 @@ void GameplayMode::update(float timestep) {
                         _hasControl = false;
                         return false;
                     };
-                    cugl::Application::get()->schedule(color, 500);
+                   
 
                     cugl::Application::get()->schedule(losing, 1500);
                 }
@@ -1494,8 +1485,7 @@ void GameplayMode::checkCatDens() {
                 std::shared_ptr<Texture> CatJumpCatDen = _assets->get<Texture>("CatJumpCatDen");
                 _rootScene->removeChild(_player->getSceneNode());
                 _player->SetSceneNode(Player::alloc(150, 0, 0, 8, CatJumpCatDen)->getSceneNode());
-                
-                if (_player->getMovingRight()) {
+                if (_player->getPos() - catDen->getPos().x <=0) {
                     /*if (_player->getPos() - catDen->getPos().x <=0) {*/
                     _player->getSceneNode()->setScale(0.15, 0.15);
                     _player->getSceneNode()->setPosition(_player->getPos() + 50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
@@ -1504,10 +1494,8 @@ void GameplayMode::checkCatDens() {
                     _player->getSceneNode()->setScale(-0.15, 0.15);
                     _player->getSceneNode()->setPosition(_player->getPos() -50, _player->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
                 }
-
                 _rootScene->addChild(_player->getSceneNode());
                 _player->PossessAnimation(0);
-
                 std::function<bool()> setPossessed = [&]() {
                     _player->getSceneNode()->setVisible(false);
                     _player->setCurrentDen(catDen->getConnectedDens());
@@ -1515,10 +1503,7 @@ void GameplayMode::checkCatDens() {
                     return false;
                 };
                 cugl::Application::get()->schedule(setPossessed, 300);
-                
-                
-                //_player->getSceneNode()->setVisible(!visibility);
-                
+                //_player->getSceneNode()->setVisible(!visibility); 
                 if (_showTutorialText == 2 && _player->getPos() < 300) {
                     _tutorialText2->setText("Swipe to pan the camera. The camera will snap back if you are on the screen. Swipe left!");
                     _tutorialText2->setPositionX(50);
@@ -1534,7 +1519,6 @@ void GameplayMode::checkCatDens() {
                 //std::dynamic_pointer_cast<scene2::AnimationNode>(staircaseDoor->getSceneNode())->setFrame(4);
                 break;
             }
-
             else if (!visibility &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - catDen->getSceneNode()->getWorldPosition().y) < 120.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - catDen->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
@@ -1557,12 +1541,17 @@ void GameplayMode::checkCatDens() {
                     std::shared_ptr<Texture> catWalking = _assets->get<Texture>("cat-walking");
                     _rootScene->removeChild(_player->getSceneNode());
                     _player->SetSceneNode(Player::alloc(150, 0, 0, 8, catWalking)->getSceneNode());
-                    _player->setPos(_player->getPos() + 55);
+                    if (_player->getMovingRight()) {
+                        _player->setPos(_player->getPos() + 55);
+                        _player->getSceneNode()->setScale(0.15, 0.15);
+                    }
+                    else {
+                        _player->setPos(_player->getPos() - 55);
+                        _player->getSceneNode()->setScale(-0.15, 0.15);
+                    }   
                     _player->setLevel(level);
-                    _player->getSceneNode()->setScale(0.15, 0.15);
                     _rootScene->addChild(_player->getSceneNode());
                     _hasControl = true;
-
                     return false;
                 };
 
