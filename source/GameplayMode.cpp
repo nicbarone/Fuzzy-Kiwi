@@ -1356,7 +1356,7 @@ void GameplayMode::checkStaircaseDoors() {
         for (shared_ptr<StaircaseDoor> staircaseDoor : _staircaseDoors) {
             
 #ifdef CU_MOBILE
-            if (staircaseDoor->getLevel() == _player->getLevel() &&
+            if ((staircaseDoor->getLevel() == _player->getLevel() || _player->getCurrentDen() + _player->getCurrentDoor() >= 1) &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 _inputManager->clearDoubleTapReg();
