@@ -632,6 +632,34 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"BlueKey": {
+			"file": "textures/GameObject/Enemy/BlueKey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"RedKey": {
+			"file": "textures/GameObject/Enemy/RedKey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"GreenKey": {
+			"file": "textures/GameObject/Enemy/GreenKey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"PinkKey": {
+			"file": "textures/GameObject/Enemy/PinkKey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"joystick": {
 			"file": "textures/UI/Button/Joystick.png",
 			"minfilter": "nearest",

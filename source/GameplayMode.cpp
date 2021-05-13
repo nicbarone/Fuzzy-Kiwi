@@ -864,6 +864,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     enemyHighlightTexture = _assets->get<Texture>("enemy-glow");
     tableTexture = _assets->get<Texture>("lab-table");
     std::shared_ptr<Texture> visionTexture = _assets->get<Texture>("vision-cone");
+    std::shared_ptr<Texture> RedKey = _assets->get<Texture>("RedKey");
+    std::shared_ptr<Texture> GreenKey = _assets->get<Texture>("GreenKey");
+    std::shared_ptr<Texture> PinkKey = _assets->get<Texture>("PinkKey");
+    std::shared_ptr<Texture> BlueKey = _assets->get<Texture>("BlueKey");
 
     //JSON PROCESSING
     shared_ptr<JsonValue> playerJSON = json->get("player");
@@ -890,7 +894,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0,
                 key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), 5, 
-                enemyTexture, altTexture, enemyHighlightTexture, tableTexture, visionTexture);
+                enemyTexture, altTexture, enemyHighlightTexture, tableTexture, visionTexture, RedKey, BlueKey, PinkKey, GreenKey);
             if (objectTemp->getBool("possessed")) {
                 _player->setPos(objectTemp->getFloat("x_pos"));
                 _player->setLevel(objectTemp->getInt("level"));

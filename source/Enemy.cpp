@@ -30,6 +30,7 @@ Enemy::Enemy() :
 	_glowTexture = nullptr;
 	_patrolNode = nullptr;
 	_visionNode = nullptr;
+	_keyCircle = nullptr;
 }
 
 
@@ -48,6 +49,7 @@ void Enemy::dispose() {
 	_glowTexture = nullptr;
 	_patrolNode = nullptr;
 	_visionNode = nullptr;
+	_keyCircle = nullptr;
 	_frame = 0;
 	_keys = { 0 };
 	_frameCounter = 0;
@@ -87,7 +89,8 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 }
 
 bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
-	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision) {
+	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision,
+	std::shared_ptr<Texture> redKey, std::shared_ptr<Texture> blueKey, std::shared_ptr<Texture> pinkKey, std::shared_ptr<Texture> greenKey) {
 	Entity::setPos(x);
 	Entity::setAngle(0);
 	Entity::setLevel(level);
@@ -127,11 +130,34 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 		_visionNode = scene2::WireNode::alloc(Rect(0, 0, -DEFAULT_VISION- SCIENTIST_WIDTH, 2));
 		_visionCone = scene2::PolygonNode::allocWithTexture(vision);
 	}
+	if (keys[0] == 1) {
+	_keyCircle = scene2::PolygonNode::allocWithTexture(redKey);
+	}
+	else if (keys[0] == 2)
+	{
+		_keyCircle = scene2::PolygonNode::allocWithTexture(blueKey);
+	}
+	else if (keys[0] == 3)
+	{
+		_keyCircle = scene2::PolygonNode::allocWithTexture(pinkKey);
+	}
+	else if (keys[0] == 4)
+	{
+		_keyCircle = scene2::PolygonNode::allocWithTexture(greenKey);
+	}
+	else {
+		_keyCircle = scene2::PolygonNode::allocWithTexture(redKey);
+	}
+	_keyCircle->setPosition(140, 0);
+	_keyCircle->setPriority(level + 0.1f);
+
+
 	_visionNode->setColor(Color4::RED);
 	_visionNode->setPosition(_sceneNode->getContentWidth() + SCIENTIST_WIDTH, VISION_HEIGHT);
 	_visionNode->setPriority(level + 0.4f);
 	_sceneNode->addChild(_visionNode);
 	_sceneNode->addChild(_visionCone);
+	_sceneNode->addChild(_keyCircle);
 	_visionCone->setPosition(350, 122);
 	_visionCone->setPriority(level + 0.4f);
 	_frame = 0;
