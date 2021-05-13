@@ -10,12 +10,6 @@
 			"patrol_start":	50,
 			"patrol_end":	50,
 			"keyInt":	[1]
-		}, {
-			"x_pos":	657.630310,
-			"level":	0,
-			"patrol_start":	684,
-			"patrol_end":	995,
-			"keyInt":	[1]
 		}],
 	"decorations":	[{
 			"x_pos":	889.808167,
@@ -29,7 +23,7 @@
 			"connection":	1,
 			"isDen":	true
 		}, {
-			"x_pos":	200.362061,
+			"x_pos":	750.362061,
 			"level":	0,
 			"connection":	1,
 			"isDen":	true
@@ -45,7 +39,7 @@
 			"isDen":	false
 		}],
 	"door":	[{
-			"x_pos":	400.310303,
+			"x_pos":	900.310303,
 			"level":	0,
 			"keyInt":	[1]
 		}, {

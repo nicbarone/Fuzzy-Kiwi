@@ -8,12 +8,14 @@ EnemyController::EnemyController()
 	_enemies = {};
 	_closestEnemy = nullptr;
 	_possessedEnemy = nullptr;
+	_detectingEnemy = nullptr;
 }
 
 void EnemyController::dispose() {
 	_enemies = {};
 	_closestEnemy = nullptr;
 	_possessedEnemy = nullptr;
+	_detectingEnemy = nullptr;
 }
 
 void EnemyController::addEnemy(float x, int level, float ang, vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
@@ -79,6 +81,7 @@ bool EnemyController::detectedPlayer(float x, int level, vector<Vec2> vision_blo
 					if (min < x && x < max) {
 						//if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > x && enemy->getPos() < x)
 						//	|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < x) && enemy->getPos() > x) {
+						_detectingEnemy = enemy->getSceneNode();
 						CULog("detected");
 						return true;
 					}
@@ -94,6 +97,7 @@ bool EnemyController::detectedPlayer(float x, int level, vector<Vec2> vision_blo
 						//	|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < _possessedEnemy->getPos())
 						//	&& enemy->getPos() > _possessedEnemy->getPos() && !_possessedEnemy->facingRight()) {
 						CULog("detected");
+						_detectingEnemy = enemy->getSceneNode();
 						return true;
 					}
 				}
@@ -125,7 +129,7 @@ bool EnemyController::colorDetectingPlayer(float x, int level, vector<Vec2> visi
 					//if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > x && enemy->getPos() < x)
 					//	|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < x) && enemy->getPos() > x) {
 					CULog("detected");
-					enemy->getSceneNode()->setColor(Color4::YELLOW);
+					enemy->getSceneNode()->setColor(Color4::YELLOW );
 					return true;
 				}
 			}

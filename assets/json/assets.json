@@ -42,6 +42,34 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"DetectingEnemy": {
+			"file": "textures/GameObject/Enemy/DetectingEnemy.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"PinkEnemy": {
+			"file": "textures/GameObject/Enemy/PinkKey/PinkEnemy.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"PinkEnemyGlow": {
+			"file": "textures/GameObject/Enemy/PinkKey/PinkEnemyGlow.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"PinkEnemyPossession": {
+			"file": "textures/GameObject/Enemy/PinkKey/PinkEnemyPossession.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"lab-table": {
 			"file": "textures/GameObject/Enemy/Lab-Table.png",
 			"minfilter": "nearest",
@@ -494,6 +522,13 @@
 		},
 		"catPossessing": {
 			"file": "textures/GameObject/Cat/CatPossessing.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"CatJumpCatDen": {
+			"file": "textures/GameObject/Cat/CatJumpCatDen.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
