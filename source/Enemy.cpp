@@ -132,7 +132,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	_visionNode->setPriority(level + 0.4f);
 	_sceneNode->addChild(_visionNode);
 	_sceneNode->addChild(_visionCone);
-	_visionCone->setPosition(360, 110);
+	_visionCone->setPosition(350, 122);
 	_visionCone->setPriority(level + 0.4f);
 	_frame = 0;
 	getSceneNode()->setPriority(level + 0.2f);
