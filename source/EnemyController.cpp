@@ -131,7 +131,7 @@ bool EnemyController::colorDetectingPlayer(float x, int level, vector<Vec2> visi
 					//if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > x && enemy->getPos() < x)
 					//	|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < x) && enemy->getPos() > x) {
 					CULog("detected");
-					enemy->getSceneNode()->setColor(Color4::YELLOW );
+					enemy->getSceneNode()->setColor(Color4(243, 222, 138, 255));
 					return true;
 				}
 			}

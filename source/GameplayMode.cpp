@@ -691,7 +691,9 @@ bool GameplayMode::attemptPossess() {
         std::function<bool()> setPossessed = [&]() {
             _player->getSceneNode()->setVisible(false);
             _enemyController->closestEnemy()->setAsPossessed();
+            std::shared_ptr<scene2::PolygonNode> keyCircle = _enemyController->closestEnemy()->getKeyCircle();
             _enemyController->closestEnemy()->getSceneNode()->removeAllChildren();
+            _enemyController->closestEnemy()->getSceneNode()->addChild(keyCircle);
             _hasControl = true;
 
             return false;
@@ -1117,7 +1119,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
-            if (_showTutorialText > 0) {
+            if (_showTutorialText > 0&& _showTutorialText!=3) {
                 _tutorialAnimation->setVisible(true);
             }
             setGameStatus(GameStatus::RUNNING);
@@ -1427,6 +1429,7 @@ void GameplayMode::checkStaircaseDoors() {
                 _player->setCurrentDoor(0);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
+                _enemyController->getPossessed()->getKeyCircle()->setPriority(staircaseDoor->getLevel() + 0.1f);
                 AudioEngine::get()->play("staircaseClose", _assets->get<Sound>("useDoor"), false, 1.0f, true);
                 //ChangeDrawOrder();
                 //ChangeDrawOrder();

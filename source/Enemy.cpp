@@ -148,7 +148,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	else {
 		_keyCircle = scene2::PolygonNode::allocWithTexture(redKey);
 	}
-	_keyCircle->setPosition(140, 0);
+	_keyCircle->setPosition(140, 15);
 	_keyCircle->setPriority(level + 0.1f);
 
 

@@ -10,7 +10,7 @@ using namespace cugl;
 *  @param player    Player in candidate collision
 *  @param entity    Entity in candidate collision
 */
-#define DOOR_WIDTH 167
+#define DOOR_WIDTH 220
 #define DOOR_OFFSET 20
 #define LEFT_LEVEL_BOUND -300
 #define RIGHT_LEVEL_BOUND 1440

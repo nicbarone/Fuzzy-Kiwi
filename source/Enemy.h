@@ -189,6 +189,10 @@ public:
 	bool getMovingRight() {
 		return _movingRight;
 	}
+
+	std::shared_ptr<scene2::PolygonNode> getKeyCircle() {
+		return _keyCircle;
+	}
 };
 
 
