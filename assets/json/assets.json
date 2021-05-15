@@ -127,7 +127,7 @@
 			"wrapT": "clamp"
 		},
 		"UnlockCagedAnimal": {
-			"file": "textures/GameObject/CagedAnimal/UnlockCagedAnimal.png",
+			"file": "textures/GameObject/Cat/UnlockCagedAnimal.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
