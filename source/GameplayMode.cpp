@@ -212,6 +212,22 @@ void GameplayMode::update(float timestep) {
     if (_reset) {
         reset();
     }
+    std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+
+    if (_gameMuted) {
+        audioQueue->setVolume(0);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+    }
+    else {
+        audioQueue->setVolume(1.0f);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    }
     if (getGameStatus() == GameStatus::PAUSED) {
         if (_tutorialAnimation != nullptr) {
             _tutorialAnimation->setVisible(false);
@@ -415,13 +431,17 @@ void GameplayMode::update(float timestep) {
             int pos = _cagedAnimal->getPos();
             int movingRight = _cagedAnimal->getMovingRight();
             _rootScene->removeChild(_cagedAnimal->getSceneNode());
-            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 21, unlockCagedAnimal)->getSceneNode());
+            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 7, unlockCagedAnimal)->getSceneNode());
             _cagedAnimal->getSceneNode()->setScale(-0.105, 0.105);
             _cagedAnimal->setLevel(level);
             _cagedAnimal->getSceneNode()->setPosition(pos+30, level* FLOOR_HEIGHT + FLOOR_OFFSET-59);
             _cagedAnimal->PossessAnimation(4);
             _rootScene->addChild(_cagedAnimal->getSceneNode());
+            
             std::function<bool()> winning = [&]() {
+                // Mute BGM
+                std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+                audioQueue->setVolume(0);
                 _cagedAnimal->getSceneNode()->setVisible(false);
                 setGameStatus(GameStatus::WIN);
                 AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
@@ -1145,6 +1165,28 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             _backToMenu = true;
         }
         });
+    _menuPanel->createChildButton((size.width - 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("unmute"), Color4f::WHITE, "muteButton");
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setName("muteButton");
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameMuted = true;
+        }
+        });
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    _menuPanel->createChildButton((size.width - 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("mute"), Color4f::WHITE, "unmuteButton");
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setName("unmuteButton");
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameMuted = false;
+        }
+        });
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
     addChild(_menuPanel->getSceneNode());
 
     // Create Win Panel
@@ -1152,7 +1194,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _winPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, winPanel);
     _winPanel->getSceneNode()->setScale(max(size.width / winPanel->getSize().width, size.height / winPanel->getSize().height));
     _winPanel->setVisible(false);
-    _winPanel->createChildButton(1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE,"next");
+    _winPanel->createChildButton((size.width - 300) / 2.0f / _winPanel->getSceneNode()->getScaleX(), (-size.height + 150) / 2.0f / _winPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("nextLevel"), Color4f::WHITE,"next");
     _winPanel->getChildButtons()["next"]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()["next"]->getButton()->setName("next");
     _winPanel->getChildButtons()["next"]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -1161,9 +1203,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
             _nextLevel = true;
+            if (!_gameMuted) {
+                std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+                audioQueue->setVolume(1.0f);
+            }
         }
         });
-    _winPanel->createChildButton(-1700, -1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("tryAgain"), Color4f::WHITE,"retry");
+    _winPanel->createChildButton((-size.width + 300) / 2.0f / _winPanel->getSceneNode()->getScaleX(), (-size.height + 150) / 2.0f / _winPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("tryAgain"), Color4f::WHITE,"retry");
     _winPanel->getChildButtons()["retry"]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()["retry"]->getButton()->setName("retry");
     _winPanel->getChildButtons()["retry"]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -1172,9 +1218,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
             _reset = true;
+            if (!_gameMuted) {
+                std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+                audioQueue->setVolume(1.0f);
+            }
         }
         });
-    _winPanel->createChildButton(-1700, 1000, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE,"toMenu");
+    _winPanel->createChildButton((-size.width + 300) / 2.0f / _winPanel->getSceneNode()->getScaleX(), (size.height - 150) / 2.0f / _winPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("returnToMenu"), Color4f::WHITE,"toMenu");
     _winPanel->getChildButtons()["toMenu"]->getButton()->setScale(1.5f);
     _winPanel->getChildButtons()["toMenu"]->getButton()->setName("toMenu");
     _winPanel->getChildButtons()["toMenu"]->getButton()->addListener([=](const std::string& name, bool down) {
@@ -1183,6 +1233,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
             _backToMenu = true;
+            if (!_gameMuted) {
+                std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+                audioQueue->setVolume(1.0f);
+            }
         }
         });
     addChild(_winPanel->getSceneNode());
@@ -1505,12 +1559,13 @@ void GameplayMode::checkCatDens() {
                 _player->PossessAnimation(0);
                 std::function<bool()> setPossessed = [&]() {
                     _player->getSceneNode()->setVisible(false);
-                    _player->setCurrentDen(catDen->getConnectedDens());
+                    
                     _hasControl = true;
                     return false;
                 };
                 cugl::Application::get()->schedule(setPossessed, 300);
                 //_player->getSceneNode()->setVisible(!visibility); 
+                _player->setCurrentDen(catDen->getConnectedDens());
                 if (_showTutorialText == 2 && _player->getPos() < 300) {
                     _tutorialText2->setText("Swipe to pan the camera. The camera will snap back if you are on the screen. Swipe left!");
                     _tutorialText2->setPositionX(50);

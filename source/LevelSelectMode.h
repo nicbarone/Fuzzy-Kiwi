@@ -9,6 +9,7 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     bool _levelSelected = false;
     bool _backButtonPressed = false;
+    bool _gameMuted = false;
     std::string _levelID = "";
     GameplayMode _gameplay;
     std::shared_ptr<ui::PanelElement> _levelSelectPanel;
@@ -62,6 +63,32 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep) override;
+
+    void updateAudio() {
+        std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+        if (audioQueue->getVolume() < 0.5f) {
+            // Game is muted
+            _gameMuted = true;
+        }
+        else {
+            // Game is unmuted
+            _gameMuted = false;
+        }
+        if (_gameMuted) {
+            audioQueue->setVolume(0);
+            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
+            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+        }
+        else {
+            audioQueue->setVolume(1.0f);
+            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->activate();
+        }
+    }
 
     void updateLevelIcon();
 

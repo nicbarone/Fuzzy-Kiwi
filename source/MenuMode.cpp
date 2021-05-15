@@ -62,6 +62,21 @@ void MenuMode::update(float progress) {
         _menuPanel->getChildButtons()["loadButton"]->getButton()->setVisible(false);
         _menuPanel->getChildButtons()["loadButton"]->getButton()->deactivate();
     }
+    std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+    if (_gameMuted) {
+        audioQueue->setVolume(0);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+    }
+    else {
+        audioQueue->setVolume(1.0f);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    }
 }
 
 GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager) {
@@ -113,7 +128,7 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
 void MenuMode::buildScene() {
     std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
     std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
-    //audioQueue->play(menuBGM, true, 1.0f); //This line of code is the devil
+    audioQueue->play(menuBGM, true, 1.0f);
 
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
@@ -142,6 +157,28 @@ void MenuMode::buildScene() {
         });
     _menuPanel->getChildButtons()["loadButton"]->getButton()->setVisible(false);
     _menuPanel->getChildButtons()["loadButton"]->getButton()->activate();
+    _menuPanel->createChildButton((-size.width + 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("unmute"), Color4f::WHITE, "muteButton");
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setScale(Vec2(3.0f, 3.0f));
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setName("muteButton");
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameMuted = true;
+        }
+        });
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    _menuPanel->createChildButton((-size.width + 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("mute"), Color4f::WHITE, "unmuteButton");
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setScale(Vec2(3.0f, 3.0f));
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setName("unmuteButton");
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameMuted = false;
+        }
+        });
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
     addChild(_menuPanel->getSceneNode());
 }
 

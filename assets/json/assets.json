@@ -127,7 +127,7 @@
 			"wrapT": "clamp"
 		},
 		"UnlockCagedAnimal": {
-			"file": "textures/GameObject/Cat/UnlockCagedAnimal.png",
+			"file": "textures/GameObject/CagedAnimal/UnlockCagedAnimal v1.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -213,6 +213,20 @@
 		},
 		"exit": {
 			"file": "textures/UI/Button/Exit.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"mute": {
+			"file": "textures/UI/Button/Mute.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"unmute": {
+			"file": "textures/UI/Button/Unmute.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

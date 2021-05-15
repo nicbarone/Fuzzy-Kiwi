@@ -54,6 +54,22 @@ bool LevelSelectMode::init(const std::shared_ptr<AssetManager>& assets) {
  */
 void LevelSelectMode::update(float progress) {
     //CULog("You are now in Level Select Mode. Enjoy your stay");
+    std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+    
+    if (_gameMuted) {
+        audioQueue->setVolume(0);
+        _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
+        _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+        _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+        _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+    }
+    else {
+        audioQueue->setVolume(1.0f);
+        _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+        _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+        _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+        _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    }
 }
 
 void LevelSelectMode::updateLevelIcon() {
@@ -324,6 +340,28 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
+    _levelSelectPanel->createChildButton((size.width - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("unmute"), Color4f::WHITE, "muteButton");
+    _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
+    _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setName("muteButton");
+    _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameMuted = true;
+        }
+        });
+    _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+    _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    _levelSelectPanel->createChildButton((size.width - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("mute"), Color4f::WHITE, "unmuteButton");
+    _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
+    _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setName("unmuteButton");
+    _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameMuted = false;
+        }
+        });
+    _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+    _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
     // Common outside buttons
     _backButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _backButton->setTexture(_assets->get<Texture>("backButton"));
