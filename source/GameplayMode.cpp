@@ -410,12 +410,12 @@ void GameplayMode::update(float timestep) {
         int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
         if (cageCollision != 0 && _hasControl) {
             _hasControl = false;
-            std::shared_ptr<Texture> UnlockCagedAnimal = _assets->get<Texture>("UnlockCagedAnimal");
+            std::shared_ptr<Texture> unlockCagedAnimal = _assets->get<Texture>("UnlockCagedAnimal");
             int level = _cagedAnimal->getLevel();
             int pos = _cagedAnimal->getPos();
             int movingRight = _cagedAnimal->getMovingRight();
             _rootScene->removeChild(_cagedAnimal->getSceneNode());
-            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 21, UnlockCagedAnimal)->getSceneNode());
+            _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 21, unlockCagedAnimal)->getSceneNode());
             _cagedAnimal->getSceneNode()->setScale(-0.105, 0.105);
             _cagedAnimal->setLevel(level);
             _cagedAnimal->getSceneNode()->setPosition(pos+30, level* FLOOR_HEIGHT + FLOOR_OFFSET-59);

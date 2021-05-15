@@ -74,7 +74,7 @@ void LevelSelectMode::updateLevelIcon() {
     std::shared_ptr<JsonValue> json = reader->readJson();
     shared_ptr<JsonValue> completed = json->get("completed");
     if (completed->getBool("level1")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-400, 40, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1Complete"), "level1");
+        _levelSelectPanel->createChildButtonTextureWithName(-380, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1Complete"), "level1");
         _levelSelectPanel->getChildButtons()["level1"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level1"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -87,7 +87,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level2")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-220, 40, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level2Complete"), "level2");
+        _levelSelectPanel->createChildButtonTextureWithName(-220, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level2Complete"), "level2");
         _levelSelectPanel->getChildButtons()["level2"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level2"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -100,7 +100,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level3")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-50, 42, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level3Complete"), "level3");
+        _levelSelectPanel->createChildButtonTextureWithName(-55, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level3Complete"), "level3");
         _levelSelectPanel->getChildButtons()["level3"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level3"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -113,7 +113,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level4")) {
-        _levelSelectPanel->createChildButtonTextureWithName(110, 50, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level4Complete"), "level4");
+        _levelSelectPanel->createChildButtonTextureWithName(105, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level4Complete"), "level4");
         _levelSelectPanel->getChildButtons()["level4"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level4"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -126,7 +126,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level5")) {
-        _levelSelectPanel->createChildButtonTextureWithName(260, 63, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level5Complete"), "level5");
+        _levelSelectPanel->createChildButtonTextureWithName(265, 55, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level5Complete"), "level5");
         _levelSelectPanel->getChildButtons()["level5"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level5"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -139,7 +139,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level6")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-390, -130, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level6Complete"), "level6");
+        _levelSelectPanel->createChildButtonTextureWithName(-380, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level6Complete"), "level6");
         _levelSelectPanel->getChildButtons()["level6"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level6"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -152,7 +152,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level7")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-230, -123, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level7Complete"), "level7");
+        _levelSelectPanel->createChildButtonTextureWithName(-220, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level7Complete"), "level7");
         _levelSelectPanel->getChildButtons()["level7"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level7"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -165,7 +165,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level8")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-52, -140, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level8Complete"), "level8");
+        _levelSelectPanel->createChildButtonTextureWithName(-55, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level8Complete"), "level8");
         _levelSelectPanel->getChildButtons()["level8"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level8"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -178,7 +178,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level9")) {
-        _levelSelectPanel->createChildButtonTextureWithName(120, -135, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level9Complete"), "level9");
+        _levelSelectPanel->createChildButtonTextureWithName(110, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level9Complete"), "level9");
         _levelSelectPanel->getChildButtons()["level9"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level9"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -191,7 +191,7 @@ void LevelSelectMode::updateLevelIcon() {
             });
     }
     if (completed->getBool("level10")) {
-        _levelSelectPanel->createChildButtonTextureWithName(285, -135, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level10Complete"), "level10");
+        _levelSelectPanel->createChildButtonTextureWithName(275, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level10Complete"), "level10");
         _levelSelectPanel->getChildButtons()["level10"]->getButton()->setScale(1.0f);
         _levelSelectPanel->getChildButtons()["level10"]->getButton()->addListener([=](const std::string& name, bool down) {
             // Only quit when the button is released
@@ -214,7 +214,7 @@ void LevelSelectMode::buildScene() {
     
     _levelSelectPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelSelectBG"));
     _levelSelectPanel->getSceneNode()->setScale(min(size.width / _assets->get<Texture>("levelSelectBG")->getSize().width, size.height / _assets->get<Texture>("levelSelectBG")->getSize().height));
-    _levelSelectPanel->createChildButton(-400, 40, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1"), "level1");
+    _levelSelectPanel->createChildButton(-380, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1"), "level1");
     _levelSelectPanel->getChildButtons()["level1"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level1"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -225,7 +225,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
     });
-    _levelSelectPanel->createChildButton(-220, 40, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level2"), "level2");
+    _levelSelectPanel->createChildButton(-220, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level2"), "level2");
     _levelSelectPanel->getChildButtons()["level2"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level2"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -236,7 +236,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(-50, 42, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level3"), "level3");
+    _levelSelectPanel->createChildButton(-55, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level3"), "level3");
     _levelSelectPanel->getChildButtons()["level3"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level3"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -247,7 +247,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(110, 50, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level4"), "level4");
+    _levelSelectPanel->createChildButton(105, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level4"), "level4");
     _levelSelectPanel->getChildButtons()["level4"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level4"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -258,7 +258,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(260, 63, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level5"), "level5");
+    _levelSelectPanel->createChildButton(265, 55, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level5"), "level5");
     _levelSelectPanel->getChildButtons()["level5"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level5"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -269,7 +269,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(-390, -130, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level6"), "level6");
+    _levelSelectPanel->createChildButton(-380, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level6"), "level6");
     _levelSelectPanel->getChildButtons()["level6"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level6"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -280,7 +280,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(-230, -123, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level7"), "level7");
+    _levelSelectPanel->createChildButton(-220, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level7"), "level7");
     _levelSelectPanel->getChildButtons()["level7"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level7"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -291,7 +291,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(-52, -140, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level8"), "level8");
+    _levelSelectPanel->createChildButton(-55, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level8"), "level8");
     _levelSelectPanel->getChildButtons()["level8"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level8"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -302,7 +302,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(120, -135, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level9"), "level9");
+    _levelSelectPanel->createChildButton(110, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level9"), "level9");
     _levelSelectPanel->getChildButtons()["level9"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level9"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
@@ -313,7 +313,7 @@ void LevelSelectMode::buildScene() {
             _levelSelected = true;
         }
         });
-    _levelSelectPanel->createChildButton(285, -135, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level10"), "level10");
+    _levelSelectPanel->createChildButton(275, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level10"), "level10");
     _levelSelectPanel->getChildButtons()["level10"]->getButton()->setScale(1.0f);
     _levelSelectPanel->getChildButtons()["level10"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
