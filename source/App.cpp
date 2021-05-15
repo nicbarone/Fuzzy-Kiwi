@@ -160,7 +160,7 @@ void App::update(float timestep) {
         else if (_levelSelect.getLevelSelected()) {
             // Load the level
             std::string level = _levelSelect.getLevelSelectID();
-            _gameplay = _menu.getGameScene(level, _inputManager);
+            _gameplay = _menu.getGameScene(level, _inputManager, _levelSelect.getMuted());
             _gameplay.reset();
             _inLevelSelect = false;
             _inGameplay = true;
@@ -188,7 +188,7 @@ void App::update(float timestep) {
             _levelSelect.setLevelSelected(false);
             CULog(Application::getSaveDirectory().c_str());
             shared_ptr<JsonReader> reader = JsonReader::alloc(Application::getSaveDirectory() + "save.json");
-            _gameplay.init(_assets, 1, reader->readJson(), _inputManager);
+            _gameplay.init(_assets, 1, reader->readJson(), _inputManager,_menu.getMuted());
             _gameplay.reset();
             _inMenu = false;
             _inGameplay = true;
@@ -221,7 +221,7 @@ void App::update(float timestep) {
                 _inGameplay = false;
             }
             else {
-                _gameplay = _menu.getGameScene(_gameplay.getNextLevelID(), _inputManager);
+                _gameplay = _menu.getGameScene(_gameplay.getNextLevelID(), _inputManager, _gameplay.getMuted());
                 _gameplay.reset();
             }
         }

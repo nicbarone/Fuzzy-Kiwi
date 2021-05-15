@@ -92,6 +92,10 @@ public:
 
     void updateLevelIcon();
 
+    bool getMuted() {
+        return _gameMuted;
+    }
+
     /**
      * The method called to draw the application to the screen.
      *

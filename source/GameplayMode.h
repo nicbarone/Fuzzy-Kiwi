@@ -51,7 +51,7 @@ protected:
     bool _nextLevel;
     bool _gameMuted;
     int _levelIndex;
-
+    bool _victoryPage;
     int _numFloors;
     /** a reference to the json with which this instance of GameplayMode is created*/
     std::shared_ptr<cugl::JsonValue> _json;
@@ -190,9 +190,12 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager);
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager, bool muted);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager, bool muted);
 
+    bool getMuted() {
+        return _gameMuted;
+    }
 
     /** used to reset the level*/
     void reset();

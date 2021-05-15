@@ -121,8 +121,12 @@ public:
         _gameLoaded = loaded;
     }
 
+    bool getMuted() {
+        return _gameMuted;
+    }
+
     /** returns a GameplayMode constructed from the chosen level's json*/
-    GameplayMode getGameScene(std::string id, std::shared_ptr<InputManager> inputManager);
+    GameplayMode getGameScene(std::string id, std::shared_ptr<InputManager> inputManager, bool muted);
 
     /**
      * Internal helper to build the scene graph.

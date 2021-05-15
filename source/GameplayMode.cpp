@@ -52,10 +52,12 @@ using namespace cugl;
  * causing the application to run.
  */
 
-bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager) {
+bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager, bool muted) {
     setGameStatus(GameStatus::RUNNING);
+    _victoryPage = false;
     _inputManager = inputManager;
     _levelIndex = level;
+    _gameMuted = muted;
     Size size = Application::get()->getDisplaySize();
 
     size *= GAME_WIDTH / size.width;
@@ -106,10 +108,12 @@ bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int l
     return true;
 }
 
-bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager) {
+bool GameplayMode::init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager, bool muted) {
     _showTutorialText = false;
     _inputManager = inputManager;
     _levelIndex = level;
+    _gameMuted = muted;
+    _victoryPage = false;
     Size size = Application::get()->getDisplaySize();
     _json = json;
     size *= GAME_WIDTH / size.width;
@@ -213,20 +217,24 @@ void GameplayMode::update(float timestep) {
         reset();
     }
     std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
-
-    if (_gameMuted) {
+    if (_victoryPage) {
         audioQueue->setVolume(0);
-        _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
-        _menuPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
-        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
-        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
     }
     else {
-        audioQueue->setVolume(1.0f);
-        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
-        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
-        _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
-        _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+        if (_gameMuted) {
+            audioQueue->setVolume(0);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+        }
+        else {
+            audioQueue->setVolume(1.0f);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+        }
     }
     if (getGameStatus() == GameStatus::PAUSED) {
         if (_tutorialAnimation != nullptr) {
@@ -439,12 +447,10 @@ void GameplayMode::update(float timestep) {
             _rootScene->addChild(_cagedAnimal->getSceneNode());
             
             std::function<bool()> winning = [&]() {
-                // Mute BGM
-                std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
-                audioQueue->setVolume(0);
                 _cagedAnimal->getSceneNode()->setVisible(false);
                 setGameStatus(GameStatus::WIN);
                 AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
+                _victoryPage = true;
                 // shows win Panel
                 _winPanel->setVisible(true);
                 _winPanel->getChildButtons()["next"]->getButton()->activate();
@@ -1203,6 +1209,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
             _nextLevel = true;
+            _victoryPage = false;
             if (!_gameMuted) {
                 std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
                 audioQueue->setVolume(1.0f);
@@ -1218,6 +1225,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
             _reset = true;
+            _victoryPage = false;
             if (!_gameMuted) {
                 std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
                 audioQueue->setVolume(1.0f);
@@ -1233,6 +1241,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
             _backToMenu = true;
+            _victoryPage = false;
             if (!_gameMuted) {
                 std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
                 audioQueue->setVolume(1.0f);
