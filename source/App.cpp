@@ -212,7 +212,6 @@ void App::update(float timestep) {
             _gameplay.setNextlevel(false);
             std::string level = _gameplay.getNextLevelID();
             if (level == "Location Cleared") {
-                //_levelSelect.updateAudio();
                 _levelSelect.activateButtons();
                 _levelSelect.setBackPressed(false);
                 _levelSelect.setLevelSelected(false);

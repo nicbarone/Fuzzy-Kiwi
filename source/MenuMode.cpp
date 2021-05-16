@@ -113,9 +113,24 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
         _gameplay.init(_assets, 5, reader->readJson(), inputManager, muted);
         return _gameplay;
     }
-    else {
+    else if (id == "6") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level7.json");
         _gameplay.init(_assets, 6, reader->readJson(), inputManager, muted);
+        return _gameplay;
+    }
+    else if (id == "7") {
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level8.json");
+        _gameplay.init(_assets, 7, reader->readJson(), inputManager, muted);
+        return _gameplay;
+    }
+    else if (id == "8") {
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level9.json");
+        _gameplay.init(_assets, 8, reader->readJson(), inputManager, muted);
+        return _gameplay;
+    }
+    else {
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level10.json");
+        _gameplay.init(_assets, 9, reader->readJson(), inputManager, muted);
         return _gameplay;
     }
     /*else {
