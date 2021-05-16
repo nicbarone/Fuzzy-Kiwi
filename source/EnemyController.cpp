@@ -19,8 +19,10 @@ void EnemyController::dispose() {
 }
 
 void EnemyController::addEnemy(float x, int level, float ang, vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
-	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision) {
-	_enemies.push_back(Enemy::alloc(x, level, ang, keys, patrolStart, patrolEnd, num_frames, enemy, alt, glow, table, vision));
+	std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision,
+	std::shared_ptr<Texture> redKey, std::shared_ptr<Texture> blueKey,std::shared_ptr<Texture> pinkKey, std::shared_ptr<Texture> greenKey) {
+	_enemies.push_back(Enemy::alloc(x, level, ang, keys, patrolStart, patrolEnd, num_frames, enemy, alt, glow, table, vision, redKey, blueKey,
+			pinkKey, greenKey));
 }
 
 std::shared_ptr<Enemy> EnemyController::closestEnemy() {
@@ -129,7 +131,7 @@ bool EnemyController::colorDetectingPlayer(float x, int level, vector<Vec2> visi
 					//if ((enemy->facingRight() && enemy->getPos() + enemy->getVision() > x && enemy->getPos() < x)
 					//	|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < x) && enemy->getPos() > x) {
 					CULog("detected");
-					enemy->getSceneNode()->setColor(Color4::YELLOW );
+					enemy->getSceneNode()->setColor(Color4(243, 222, 138, 255));
 					return true;
 				}
 			}
@@ -144,7 +146,7 @@ bool EnemyController::colorDetectingPlayer(float x, int level, vector<Vec2> visi
 					//	|| (!enemy->facingRight() && enemy->getPos() - enemy->getVision() < _possessedEnemy->getPos())
 					//	&& enemy->getPos() > _possessedEnemy->getPos() && !_possessedEnemy->facingRight()) {
 					CULog("detected");
-					enemy->getSceneNode()->setColor(Color4::RED);
+					enemy->getSceneNode()->setColor(Color4(243, 222, 138, 255));
 					return true;
 				}
 			}

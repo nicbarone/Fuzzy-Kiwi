@@ -28,7 +28,8 @@ public:
 
 	/** creates and adds an enemy to this controller*/
 	void addEnemy(float x, int level, float ang, vector<int> keys, float patrolStart, float patrolEnd, int num_frames,
-		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision);
+		std::shared_ptr<Texture> enemy, std::shared_ptr<Texture> alt, std::shared_ptr<Texture> glow, std::shared_ptr<Texture> table, std::shared_ptr<Texture> vision,
+		std::shared_ptr<Texture> redKey, std::shared_ptr<Texture> blueKey,std::shared_ptr<Texture> pinkKey, std::shared_ptr<Texture> greenKey);
 
 	/** returns the vector of enemies managed by this controller*/
 	vector<std::shared_ptr<Enemy>> getEnemies() {

@@ -62,45 +62,75 @@ void MenuMode::update(float progress) {
         _menuPanel->getChildButtons()["loadButton"]->getButton()->setVisible(false);
         _menuPanel->getChildButtons()["loadButton"]->getButton()->deactivate();
     }
+    std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+    if (_gameMuted) {
+        audioQueue->setVolume(0);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+    }
+    else {
+        audioQueue->setVolume(1.0f);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+        _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+        _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    }
 }
 
-GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager) {
+GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager, bool muted) {
     if (id == "0") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level1.json");
-        _gameplay.init(_assets, 0, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 0, reader->readJson(), inputManager, muted);
         _gameplay.setShowTutorial(1);
         return _gameplay;
     }
     else if (id == "1") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level2.json");
-        _gameplay.init(_assets, 1, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 1, reader->readJson(), inputManager, muted);
         _gameplay.setShowTutorial(2);
         return _gameplay;
     }
     else if (id == "2") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level3.json");
-        _gameplay.init(_assets, 2, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 2, reader->readJson(), inputManager, muted);
         _gameplay.setShowTutorial(3);
         return _gameplay;
     }
     else if (id == "3") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level4.json");
-        _gameplay.init(_assets, 3, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 3, reader->readJson(), inputManager, muted);
         return _gameplay;
     }
     else if (id == "4") {
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level5.json");
-        _gameplay.init(_assets, 4, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 4, reader->readJson(), inputManager, muted);
         return _gameplay;
     }
     else if (id == "5") {  
         shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level6.json");
-        _gameplay.init(_assets, 5, reader->readJson(), inputManager);
+        _gameplay.init(_assets, 5, reader->readJson(), inputManager, muted);
+        return _gameplay;
+    }
+    else if (id == "6") {
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level7.json");
+        _gameplay.init(_assets, 6, reader->readJson(), inputManager, muted);
+        return _gameplay;
+    }
+    else if (id == "7") {
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level8.json");
+        _gameplay.init(_assets, 7, reader->readJson(), inputManager, muted);
+        return _gameplay;
+    }
+    else if (id == "8") {
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level9.json");
+        _gameplay.init(_assets, 8, reader->readJson(), inputManager, muted);
         return _gameplay;
     }
     else {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level7.json");
-        _gameplay.init(_assets, 6, reader->readJson(), inputManager);
+        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level10.json");
+        _gameplay.init(_assets, 9, reader->readJson(), inputManager, muted);
         return _gameplay;
     }
     /*else {
@@ -113,7 +143,7 @@ GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager
 void MenuMode::buildScene() {
     std::shared_ptr<Sound> menuBGM = _assets->get<Sound>("menuBGM");
     std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
-    //audioQueue->play(menuBGM, true, 1.0f); //This line of code is the devil
+    audioQueue->play(menuBGM, true, 1.0f);
 
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
@@ -142,6 +172,28 @@ void MenuMode::buildScene() {
         });
     _menuPanel->getChildButtons()["loadButton"]->getButton()->setVisible(false);
     _menuPanel->getChildButtons()["loadButton"]->getButton()->activate();
+    _menuPanel->createChildButton((-size.width + 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("unmute"), Color4f::WHITE, "muteButton");
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setScale(Vec2(3.0f, 3.0f));
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setName("muteButton");
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameMuted = true;
+        }
+        });
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+    _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    _menuPanel->createChildButton((-size.width + 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _menuPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("mute"), Color4f::WHITE, "unmuteButton");
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setScale(Vec2(3.0f, 3.0f));
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setName("unmuteButton");
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _gameMuted = false;
+        }
+        });
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+    _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
     addChild(_menuPanel->getSceneNode());
 }
 

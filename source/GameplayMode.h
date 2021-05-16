@@ -49,8 +49,9 @@ protected:
     bool _reset;
     bool _backToMenu;
     bool _nextLevel;
+    bool _gameMuted;
     int _levelIndex;
-
+    bool _victoryPage;
     int _numFloors;
     /** a reference to the json with which this instance of GameplayMode is created*/
     std::shared_ptr<cugl::JsonValue> _json;
@@ -189,9 +190,12 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager);
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<InputManager> inputManager, bool muted);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, int level, std::shared_ptr<JsonValue> json, std::shared_ptr<InputManager> inputManager, bool muted);
 
+    bool getMuted() {
+        return _gameMuted;
+    }
 
     /** used to reset the level*/
     void reset();
@@ -208,6 +212,32 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep) override;
+
+    void updateAudio() {
+        std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+        if (audioQueue->getVolume() < 0.5f) {
+            // Game is muted
+            _gameMuted = true;
+        }
+        else {
+            // Game is unmuted
+            _gameMuted = false;
+        }
+        if (_gameMuted) {
+            audioQueue->setVolume(0);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+        }
+        else {
+            audioQueue->setVolume(1.0f);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+        }
+    }
 
     /** Used to check if there exists current possessable enemy in range */
     bool enemyInPossessRange();

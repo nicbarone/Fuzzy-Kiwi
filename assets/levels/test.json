@@ -1,0 +1,24 @@
+{
+	"player":	{
+	},
+	"enemy":	[],
+	"decorations":	[],
+	"staircase-door":	[{
+			"x_pos":	194.406433,
+			"level":	0,
+			"connection":	0,
+			"isDen":	true
+		}, {
+			"x_pos":	211.055847,
+			"level":	1,
+			"connection":	0,
+			"isDen":	true
+		}, {
+			"x_pos":	237.405396,
+			"level":	2,
+			"connection":	0,
+			"isDen":	true
+		}],
+	"door":	[],
+	"floor":	2
+}

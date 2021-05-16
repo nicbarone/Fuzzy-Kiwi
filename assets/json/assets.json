@@ -127,7 +127,7 @@
 			"wrapT": "clamp"
 		},
 		"UnlockCagedAnimal": {
-			"file": "textures/GameObject/CagedAnimal/UnlockCagedAnimal.png",
+			"file": "textures/GameObject/CagedAnimal/UnlockCagedAnimal v1.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -213,6 +213,20 @@
 		},
 		"exit": {
 			"file": "textures/UI/Button/Exit.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"mute": {
+			"file": "textures/UI/Button/Mute.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"unmute": {
+			"file": "textures/UI/Button/Unmute.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -627,6 +641,34 @@
 		},
 		"EnemyOpeningDoor": {
 			"file": "textures/GameObject/Enemy/EnemyOpeningDoor.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"BlueKey": {
+			"file": "textures/GameObject/Enemy/BlueKey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"RedKey": {
+			"file": "textures/GameObject/Enemy/RedKey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"GreenKey": {
+			"file": "textures/GameObject/Enemy/GreenKey.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"PinkKey": {
+			"file": "textures/GameObject/Enemy/PinkKey.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

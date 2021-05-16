@@ -10,6 +10,7 @@ protected:
     bool _levelSelected = false;
     bool _playPressed = false;
     bool _gameLoaded = false;
+    bool _gameMuted = false;
     GameplayMode _gameplay;
     std::shared_ptr<Texture> menuPanel;
     std::shared_ptr<ui::PanelElement> _menuPanel;
@@ -63,7 +64,31 @@ public:
      */
     void update(float timestep) override;
 
-
+    void updateAudio() {
+        std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
+        if (audioQueue->getVolume() < 0.5f) {
+            // Game is muted
+            _gameMuted = true;
+        }
+        else {
+            // Game is unmuted
+            _gameMuted = false;
+        }
+        if (_gameMuted) {
+            audioQueue->setVolume(0);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(false);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+        }
+        else {
+            audioQueue->setVolume(1.0f);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(false);
+            _menuPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+            _menuPanel->getChildButtons()["muteButton"]->getButton()->activate();
+        }
+    }
 
     /**
      * The method called to draw the application to the screen.
@@ -96,8 +121,12 @@ public:
         _gameLoaded = loaded;
     }
 
+    bool getMuted() {
+        return _gameMuted;
+    }
+
     /** returns a GameplayMode constructed from the chosen level's json*/
-    GameplayMode getGameScene(std::string id, std::shared_ptr<InputManager> inputManager);
+    GameplayMode getGameScene(std::string id, std::shared_ptr<InputManager> inputManager, bool muted);
 
     /**
      * Internal helper to build the scene graph.

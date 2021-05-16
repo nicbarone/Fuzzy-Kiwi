@@ -214,7 +214,7 @@ void Player::PossessAnimation(int possessing) {
 		cugl::Application::get()->schedule(frame3, 50 + timeDiff * 4);
 		cugl::Application::get()->schedule(frame4, 50 + timeDiff * 5);
 		cugl::Application::get()->schedule(frame5, 50 + timeDiff * 6);
-		cugl::Application::get()->schedule(frame6, 50 + timeDiff * 7);
+		/*cugl::Application::get()->schedule(frame6, 50 + timeDiff * 7);
 		cugl::Application::get()->schedule(frame7, 50 + timeDiff * 8);
 		cugl::Application::get()->schedule(frame8, 50 + timeDiff * 9);
 		cugl::Application::get()->schedule(frame9, 50 + timeDiff * 10);
@@ -228,7 +228,7 @@ void Player::PossessAnimation(int possessing) {
 		cugl::Application::get()->schedule(frame17, 50 + timeDiff * 18);
 		cugl::Application::get()->schedule(frame18, 50 + timeDiff * 19);
 		cugl::Application::get()->schedule(frame19, 50 + timeDiff * 20);
-		cugl::Application::get()->schedule(frame20, 50 + timeDiff * 21);
+		cugl::Application::get()->schedule(frame20, 50 + timeDiff * 21);*/
 
 	}
 }
