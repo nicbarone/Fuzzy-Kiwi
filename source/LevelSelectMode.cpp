@@ -108,7 +108,7 @@ void LevelSelectMode::updateLevelIcon() {
         // if file doesn't exist create a new one
         shared_ptr<JsonValue> result = JsonValue::allocObject();
         shared_ptr<JsonValue> r_complete = JsonValue::allocObject();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 12; i++) {
             r_complete->appendValue("level" + to_string(i + 1), false);
         }
         result->appendChild("completed", r_complete);
