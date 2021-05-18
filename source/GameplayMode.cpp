@@ -440,9 +440,9 @@ void GameplayMode::update(float timestep) {
             int movingRight = _cagedAnimal->getMovingRight();
             _rootScene->removeChild(_cagedAnimal->getSceneNode());
             _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 7, unlockCagedAnimal)->getSceneNode());
-            _cagedAnimal->getSceneNode()->setScale(-0.105, 0.105);
+            _cagedAnimal->getSceneNode()->setScale(-0.1605, 0.165);
             _cagedAnimal->setLevel(level);
-            _cagedAnimal->getSceneNode()->setPosition(pos+30, level* FLOOR_HEIGHT + FLOOR_OFFSET-59);
+            _cagedAnimal->getSceneNode()->setPosition(pos, level* FLOOR_HEIGHT + FLOOR_OFFSET-59);
             _cagedAnimal->PossessAnimation(4);
             _rootScene->addChild(_cagedAnimal->getSceneNode());
             
@@ -1440,8 +1440,9 @@ void GameplayMode::checkStaircaseDoors() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 _enemyController->getPossessed()->getLevel() == staircaseDoor->getLevel() &&
 
-                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
-                !key_intersection.empty()) {
+                abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() 
+                ) {
+                //!key_intersection.empty()
                 if (_showTutorialText == 2) {
                     _tutorialText2->setText("Pinch to zoom in or out and get a better view of the level.");
                     _tutorialText2->setPositionX(250);
@@ -1464,6 +1465,7 @@ void GameplayMode::checkStaircaseDoors() {
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
                 _enemyController->getPossessed()->getSceneNode()->setVisible(false);
                 _rootScene->removeChild(_player->getSceneNode());
+                _player->setPos(staircaseDoor->getPos().x);
                 _player->SetSceneNode(Player::alloc(_enemyController->getPossessed()->getPos(), _enemyController->getPossessed()->getLevel(), 0, 9, EnemyOpeningDoor)->getSceneNode());
                 _player->setLevel(_enemyController->getPossessed()->getLevel());
                 _player->getSceneNode()->setPosition(_player->getPos(), _enemyController->getPossessed()->getLevel() * FLOOR_HEIGHT + FLOOR_OFFSET);
@@ -1496,6 +1498,7 @@ void GameplayMode::checkStaircaseDoors() {
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 staircaseDoor->getConnectedDoors() == _player->getCurrentDoor()) {
                 _player->setCurrentDoor(0);
+                _player->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setPos(staircaseDoor->getPos().x);
                 _enemyController->getPossessed()->setLevel(staircaseDoor->getLevel());
                 _enemyController->getPossessed()->getKeyCircle()->setPriority(staircaseDoor->getLevel() + 0.1f);

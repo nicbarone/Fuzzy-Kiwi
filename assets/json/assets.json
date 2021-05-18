@@ -667,6 +667,13 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"EnemyOpeningDoor": {
+			"file": "textures/GameObject/Enemy/EnemyOpeningDoor.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"GreenLockedDoor": {
 			"file": "textures/GameObject/Door/GreenLockedDoor.png",
 			"minfilter": "nearest",
@@ -675,21 +682,21 @@
 			"wrapT": "clamp"
 		},
 		"PinkLockedDoor": {
-			"file": "textures/GameObject/Enemy/PinkLockedDoor.png",
+			"file": "textures/GameObject/Door/PinkLockedDoor.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"RedLockedDoor": {
-			"file": "textures/GameObject/Enemy/RedLockedDoor.png",
+			"file": "textures/GameObject/Door/RedLockedDoor.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"BlueLockedDoor": {
-			"file": "textures/GameObject/Enemy/BlueLockedDoor.png",
+			"file": "textures/GameObject/Door/BlueLockedDoor.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
