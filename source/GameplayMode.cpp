@@ -881,6 +881,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> catDenGrey = _assets->get<Texture>("catDenGrey");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
+    std::shared_ptr<Texture> BlueLockedDoor = _assets->get<Texture>("BlueLockedDoor");
+    std::shared_ptr<Texture> RedLockedDoor = _assets->get<Texture>("RedLockedDoor");
+    std::shared_ptr<Texture> PinkLockedDoor = _assets->get<Texture>("PinkLockedDoor");
+    std::shared_ptr<Texture> GreenLockedDoor = _assets->get<Texture>("GreenLockedDoor");
 
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
     //caged animal
@@ -896,6 +900,8 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> GreenKey = _assets->get<Texture>("GreenKey");
     std::shared_ptr<Texture> PinkKey = _assets->get<Texture>("PinkKey");
     std::shared_ptr<Texture> BlueKey = _assets->get<Texture>("BlueKey");
+
+
 
     //JSON PROCESSING
     shared_ptr<JsonValue> playerJSON = json->get("player");
@@ -961,7 +967,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, { 1 }, 1, 8, door));
+                cugl::Color4::WHITE, { 1 }, 1, 8, door, GreenLockedDoor,PinkLockedDoor, RedLockedDoor, BlueLockedDoor));
             _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos") - 77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
         }
     }

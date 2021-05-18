@@ -19,10 +19,31 @@ void Door::dispose() {
 	_keys = { 0 };
 }
 
-bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns, std::shared_ptr<Texture> texture)
+bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns, std::shared_ptr<Texture> unlockedDoor, 
+	std::shared_ptr<Texture> greenLockedDoor, std::shared_ptr<Texture> pinkLockedDoor, std::shared_ptr<Texture> redLockedDoor, std::shared_ptr<Texture> blueLockedDoor)
 {
-	setSceneNode(scene2::AnimationNode::alloc(texture, rows, columns));
-	setTexture(texture);
+	if (keys[0] == 1) {
+		setSceneNode(scene2::AnimationNode::alloc(greenLockedDoor, rows, columns));
+
+	}
+	else if (keys[0] == 2)
+	{
+		setSceneNode(scene2::AnimationNode::alloc(pinkLockedDoor, rows, columns));
+
+	}
+	else if (keys[0] == 3)
+	{
+		setSceneNode(scene2::AnimationNode::alloc(redLockedDoor, rows, columns));
+
+	}
+	else if (keys[0] == 4)
+	{
+		setSceneNode(scene2::AnimationNode::alloc(blueLockedDoor, rows, columns));
+
+	}
+	else {
+		setSceneNode(scene2::AnimationNode::alloc(unlockedDoor, rows, columns));
+	}
 	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + DOOR_OFFSET));
 	setAngle(ang);
 	setScale(scale);
@@ -33,6 +54,7 @@ bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vect
 	_blockedEnemy = nullptr;
 	_isOpen = false;
 	getSceneNode()->setPriority(level + 0.1f);
+	
 	return true;
 }
 
