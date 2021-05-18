@@ -23,22 +23,22 @@ bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vect
 	std::shared_ptr<Texture> greenLockedDoor, std::shared_ptr<Texture> pinkLockedDoor, std::shared_ptr<Texture> redLockedDoor, std::shared_ptr<Texture> blueLockedDoor)
 {
 	if (keys[0] == 1) {
-		setSceneNode(scene2::AnimationNode::alloc(greenLockedDoor, rows, columns));
+		setSceneNode(scene2::AnimationNode::alloc(redLockedDoor, rows, columns));
 
 	}
 	else if (keys[0] == 2)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(pinkLockedDoor, rows, columns));
+		setSceneNode(scene2::AnimationNode::alloc(blueLockedDoor, rows, columns));
 
 	}
 	else if (keys[0] == 3)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(redLockedDoor, rows, columns));
+		setSceneNode(scene2::AnimationNode::alloc(pinkLockedDoor, rows, columns));
 
 	}
 	else if (keys[0] == 4)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(blueLockedDoor, rows, columns));
+		setSceneNode(scene2::AnimationNode::alloc(greenLockedDoor, rows, columns));
 
 	}
 	else {

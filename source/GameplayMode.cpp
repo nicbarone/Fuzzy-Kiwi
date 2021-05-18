@@ -967,7 +967,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, { 1 }, 1, 8, door, GreenLockedDoor,PinkLockedDoor, RedLockedDoor, BlueLockedDoor));
+                cugl::Color4::WHITE, { 1 }, 1, 8, door, GreenLockedDoor,PinkLockedDoor, PinkLockedDoor, BlueLockedDoor));
             _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos") - 77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
         }
     }

@@ -130,7 +130,12 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 		_visionNode = scene2::WireNode::alloc(Rect(0, 0, -DEFAULT_VISION- SCIENTIST_WIDTH, 2));
 		_visionCone = scene2::PolygonNode::allocWithTexture(vision);
 	}
-	if (keys[0] == 1) {
+
+	if (keys.size() == 0) {
+		_keyCircle = scene2::PolygonNode::allocWithTexture(redKey);
+		_keyCircle->setScale(0.001, 0.0001);
+	}
+	else if (keys[0] == 1) {
 	_keyCircle = scene2::PolygonNode::allocWithTexture(redKey);
 	}
 	else if (keys[0] == 2)
@@ -145,9 +150,7 @@ bool Enemy::init(float x, int level, float ang, std::vector<int> keys, float pat
 	{
 		_keyCircle = scene2::PolygonNode::allocWithTexture(greenKey);
 	}
-	else {
-		_keyCircle = scene2::PolygonNode::allocWithTexture(redKey);
-	}
+	
 	_keyCircle->setPosition(140, 15);
 	_keyCircle->setPriority(level + 0.1f);
 
