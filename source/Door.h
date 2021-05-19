@@ -13,6 +13,7 @@ private:
 	int _frame;
 	int _frameCounter;
 	bool _isOpen;
+	bool _unlocked;
 	/*list of keys that the door.*/
 	std::vector<int> _keys;
 public:
@@ -65,6 +66,15 @@ public:
 		node->setFrame(frame);
 
 	}*/
+
+	bool getUnlocked() {
+		return _unlocked;
+	}
+	void setUnlocked(bool unlocked) {
+		_unlocked = unlocked;
+	}
+
+
 
 	void doorOpenAnimation();
 };
