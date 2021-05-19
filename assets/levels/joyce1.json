@@ -33,13 +33,13 @@
 			"level":	2,
 			"patrol_start":	200,
 			"patrol_end":	550,
-			"keyInt":	[1]
+			"keyInt":	[]
 		}, {
 			"x_pos":	1119.939331,
 			"level":	2,
 			"patrol_start":	881,
 			"patrol_end":	881,
-			"keyInt":	[]
+			"keyInt":	[1]
 		}],
 	"decorations":	[{
 			"x_pos":	540.911377,
