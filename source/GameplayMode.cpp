@@ -967,7 +967,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE, { 1 }, 1, 8, door, GreenLockedDoor,PinkLockedDoor, PinkLockedDoor, BlueLockedDoor));
+                cugl::Color4::WHITE,  key , 1, 8, door, GreenLockedDoor,PinkLockedDoor, PinkLockedDoor, BlueLockedDoor));
             _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos") - 77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
         }
     }
@@ -1345,7 +1345,8 @@ void GameplayMode::checkDoors() {
                 std::set_intersection(v1.begin(), v1.end(),
                     v2.begin(), v2.end(),
                     std::back_inserter(key_intersection));
-                if (!key_intersection.empty()) {
+                if (!key_intersection.empty()|| v2.size() ==0 || door->getUnlocked()) {
+                    door->setUnlocked(true);
                     door->setDoor(!doorState);
                     if (_showTutorialText == 1) {
                         _tutorialText->setText("Nice work! Touch the caged animal in cat form to win. Double tap anywhere to unpossess!");
