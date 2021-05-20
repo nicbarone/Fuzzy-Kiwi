@@ -53,10 +53,12 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				door->getPos().x - enemy->getPos() >= 0 &&
 				door->getLevel() == enemy->getLevel() &&
 				enemy->isActive()) {
-				if (door->getBlockedEnemy() == nullptr) {
+				if (!(std::count(door->getBlockedEnemy().begin(), door->getBlockedEnemy().end(), enemy))) {
+				}
+				else{
 					enemy->setOldPatrol(enemy->getPatrol());
 					enemy->setPatrol(enemy->getPatrol().x, door->getPos().x - DOOR_WIDTH / 2);
-					door->setBlockedEnemy(enemy);
+					door->addBlockedEnemy(enemy);
 				}
 				
 			}
@@ -65,10 +67,12 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				enemy->getPos() - door->getPos().x >= 0 &&
 				door->getLevel() == enemy->getLevel()&&
 				enemy->isActive()) {
-				if (door->getBlockedEnemy() == nullptr) {
+				if (!(std::count(door->getBlockedEnemy().begin(), door->getBlockedEnemy().end(), enemy))) {
+				}
+				else {
 					enemy->setOldPatrol(enemy->getPatrol());
 					enemy->setPatrol(door->getPos().x + DOOR_WIDTH / 2, enemy->getPatrol().y);
-					door->setBlockedEnemy(enemy);
+					door->addBlockedEnemy(enemy);
 					
 				}
 			}

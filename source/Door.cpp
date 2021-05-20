@@ -6,8 +6,8 @@ Door::Door() :
 	_frame(0),
 	_frameCounter(8)
 {
-	_keys = { }; 
-	_blockedEnemy = nullptr;
+	_keys = {}; 
+	_blockedEnemy = {};
 	_isOpen = false;
 	_unlocked = false;
 
@@ -15,10 +15,10 @@ Door::Door() :
 
 void Door::dispose() {
 	ConstructionElement::dispose();
-	_blockedEnemy = nullptr;
+	_blockedEnemy = {};
 	_isOpen = false;
 	_unlocked = false;
-	_keys = { 0 };
+	_keys = {  };
 }
 
 bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns, std::shared_ptr<Texture> unlockedDoor, 
@@ -55,7 +55,7 @@ bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vect
 	setColor(color);
 	_keys = keys;
 	_frame = 0;
-	_blockedEnemy = nullptr;
+	_blockedEnemy = {};
 	_isOpen = false;
 	getSceneNode()->setPriority(level + 0.1f);
 	
@@ -122,16 +122,19 @@ void Door::setDoor(bool open) {
 		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 7);
 	}
 	//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frame);
-	if (_blockedEnemy != nullptr) {
-		CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
-		Vec2 temp = Vec2(_blockedEnemy->getPatrol().x, _blockedEnemy->getPatrol().y);
-		if (_blockedEnemy->isActive() ) {
-			_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
-			_blockedEnemy->setOldPatrol(temp);
+	if (_blockedEnemy.size() != 0) {
+		for (shared_ptr<Enemy> blockedEnemy : _blockedEnemy)
+		{
+			Vec2 temp = Vec2(blockedEnemy->getPatrol().x, blockedEnemy->getPatrol().y);
+			if (blockedEnemy->isActive()) {
+				blockedEnemy->setPatrol(blockedEnemy->getOldPatrol().x, blockedEnemy->getOldPatrol().y);
+				blockedEnemy->setOldPatrol(temp);
+			}
+			_blockedEnemy = {};
+			//CULog("%d", _blockedEnemy == nullptr);
 		}
-		_blockedEnemy = nullptr;
-		setBlockedEnemy(nullptr);
-		CULog("%d", _blockedEnemy == nullptr);
+		_blockedEnemy = {};
+		
 
 	}
 	
