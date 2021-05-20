@@ -240,6 +240,7 @@ void GameplayMode::update(float timestep) {
         if (_tutorialAnimation != nullptr) {
             _tutorialAnimation->setVisible(false);
         }
+        _levelBoardPanel->setVisible(false);
         _menuPanel->setVisible(true);
         _menuPanel->getChildButtons()["resume"]->getButton()->activate();
         _menuPanel->getChildButtons()["restart"]->getButton()->activate();
@@ -1160,6 +1161,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             if (_showTutorialText > 0&& _tutorialAnimation != nullptr) {
                 _tutorialAnimation->setVisible(true);
             }
+            _levelBoardPanel->setVisible(true);
             setGameStatus(GameStatus::RUNNING);
         }
         });
@@ -1288,6 +1290,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         }
         });
     addChild(_losePanel->getSceneNode());
+
+    // create the level indicator panel
+    _levelBoardPanel = ui::PanelElement::alloc(size.width - 130.0f, 50.0f, 0, _assets->get<Texture>("levelBoard"));
+    _levelBoardPanel->getSceneNode()->setScale(1.0f);
+    _levelBoardPanel->createChildPanel(0,0,0, _assets->get<Texture>("level"+to_string(_levelIndex + 1)+"Board"));
+    _levelBoardPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    addChild(_levelBoardPanel->getSceneNode());
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));
