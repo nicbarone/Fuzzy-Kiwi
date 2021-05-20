@@ -428,6 +428,62 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"level13": {
+			"file": "textures/UI/Button/Level13.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level14": {
+			"file": "textures/UI/Button/Level14.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level15": {
+			"file": "textures/UI/Button/Level15.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level16": {
+			"file": "textures/UI/Button/Level16.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level17": {
+			"file": "textures/UI/Button/Level17.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level18": {
+			"file": "textures/UI/Button/Level18.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level19": {
+			"file": "textures/UI/Button/Level19.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level20": {
+			"file": "textures/UI/Button/Level20.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"level1Complete": {
 			"file": "textures/UI/Button/Level1-Complete.png",
 			"minfilter": "nearest",
@@ -507,6 +563,62 @@
 		},
 		"level12Complete": {
 			"file": "textures/UI/Button/Level12-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level13Complete": {
+			"file": "textures/UI/Button/Level13-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level14Complete": {
+			"file": "textures/UI/Button/Level14-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level15Complete": {
+			"file": "textures/UI/Button/Level15-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level16Complete": {
+			"file": "textures/UI/Button/Level16-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level17Complete": {
+			"file": "textures/UI/Button/Level17-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level18Complete": {
+			"file": "textures/UI/Button/Level18-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level19Complete": {
+			"file": "textures/UI/Button/Level19-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level20Complete": {
+			"file": "textures/UI/Button/Level20-Complete.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -837,6 +949,20 @@
 		},
 		"level12Board": {
 			"file": "textures/UI/Icon/Level12Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"arrowNextPage": {
+			"file": "textures/UI/Button/ArrowRight.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"arrowPrevPage": {
+			"file": "textures/UI/Button/ArrowLeft.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

@@ -453,6 +453,7 @@ void GameplayMode::update(float timestep) {
                 AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
                 _victoryPage = true;
                 // shows win Panel
+                _levelBoardPanel->setVisible(false);
                 _winPanel->setVisible(true);
                 _winPanel->getChildButtons()["next"]->getButton()->activate();
                 _winPanel->getChildButtons()["retry"]->getButton()->activate();
@@ -464,65 +465,13 @@ void GameplayMode::update(float timestep) {
                 shared_ptr<JsonValue> completed = json->get("completed");
                 shared_ptr<JsonValue> result = JsonValue::allocObject();
                 shared_ptr<JsonValue> r_complete = JsonValue::allocObject();
-                if (_levelIndex == 0) {
-                    r_complete->appendValue("level1", true);
-                }
-                else {
-                    r_complete->appendValue("level1", completed->getBool("level1"));
-                }
-                if (_levelIndex == 1) {
-                    r_complete->appendValue("level2", true);
-                }
-                else {
-                    r_complete->appendValue("level2", completed->getBool("level2"));
-                }
-                if (_levelIndex == 2) {
-                    r_complete->appendValue("level3", true);
-                }
-                else {
-                    r_complete->appendValue("level3", completed->getBool("level3"));
-                }
-                if (_levelIndex == 3) {
-                    r_complete->appendValue("level4", true);
-                }
-                else {
-                    r_complete->appendValue("level4", completed->getBool("level4"));
-                }
-                if (_levelIndex == 4) {
-                    r_complete->appendValue("level5", true);
-                }
-                else {
-                    r_complete->appendValue("level5", completed->getBool("level5"));
-                }
-                if (_levelIndex == 5) {
-                    r_complete->appendValue("level6", true);
-                }
-                else {
-                    r_complete->appendValue("level6", completed->getBool("level6"));
-                }
-                if (_levelIndex == 6) {
-                    r_complete->appendValue("level7", true);
-                }
-                else {
-                    r_complete->appendValue("level7", completed->getBool("level7"));
-                }
-                if (_levelIndex == 7) {
-                    r_complete->appendValue("level8", true);
-                }
-                else {
-                    r_complete->appendValue("level8", completed->getBool("level8"));
-                }
-                if (_levelIndex == 8) {
-                    r_complete->appendValue("level9", true);
-                }
-                else {
-                    r_complete->appendValue("level9", completed->getBool("level9"));
-                }
-                if (_levelIndex == 9) {
-                    r_complete->appendValue("level10", true);
-                }
-                else {
-                    r_complete->appendValue("level10", completed->getBool("level9"));
+                for (int i = 0; i < MAX_LEVEL_PAGE * 10; i++) {
+                    if (_levelIndex == i) {
+                        r_complete->appendValue("level" + to_string(i + 1), true);
+                    }
+                    else {
+                        r_complete->appendValue("level" + to_string(i + 1), completed->getBool("level" + to_string(i + 1)));
+                    }
                 }
                 reader->close();
                 result->appendChild("completed", r_complete);
@@ -603,6 +552,7 @@ void GameplayMode::update(float timestep) {
                         if (_showTutorialText > 0 && _tutorialAnimation != nullptr) {
                             _tutorialAnimation->setVisible(false);
                         }
+                        _levelBoardPanel->setVisible(false);
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()["retry"]->getButton()->activate();
                         _losePanel->getChildButtons()["toMenu"]->getButton()->activate();
@@ -644,6 +594,7 @@ void GameplayMode::update(float timestep) {
                                 _tutorialAnimation->setVisible(false);
                             }
                         }
+                        _levelBoardPanel->setVisible(false);
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()["retry"]->getButton()->activate();
                         _losePanel->getChildButtons()["toMenu"]->getButton()->activate();
