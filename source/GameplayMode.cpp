@@ -441,6 +441,7 @@ void GameplayMode::update(float timestep) {
             int movingRight = _cagedAnimal->getMovingRight();
             _rootScene->removeChild(_cagedAnimal->getSceneNode());
             _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 7, unlockCagedAnimal)->getSceneNode());
+            _player->getSceneNode()->setPositionX(_cagedAnimal->getPos() - 70);
             _cagedAnimal->getSceneNode()->setScale(-0.1605, 0.165);
             _cagedAnimal->setLevel(level);
             _cagedAnimal->getSceneNode()->setPosition(pos, level* FLOOR_HEIGHT + FLOOR_OFFSET-59);

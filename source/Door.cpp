@@ -25,7 +25,7 @@ bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vect
 	std::shared_ptr<Texture> greenLockedDoor, std::shared_ptr<Texture> pinkLockedDoor, std::shared_ptr<Texture> redLockedDoor, std::shared_ptr<Texture> blueLockedDoor)
 {
 
-	if(keys.size()==0){
+	if(keys.size()==0|| keys[0] == 5){
 		setSceneNode(scene2::AnimationNode::alloc(unlockedDoor, rows, columns));
 	}
 	else if (keys[0] == 1) {

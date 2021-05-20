@@ -53,7 +53,8 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				door->getPos().x - enemy->getPos() >= 0 &&
 				door->getLevel() == enemy->getLevel() &&
 				enemy->isActive()) {
-				if (!(std::count(door->getBlockedEnemy().begin(), door->getBlockedEnemy().end(), enemy))) {
+				vector <shared_ptr<Enemy>> temp = door->getBlockedEnemy();
+				if (std::count(temp.begin(), temp.end(), enemy) >= 1) {
 				}
 				else{
 					enemy->setOldPatrol(enemy->getPatrol());
@@ -67,7 +68,8 @@ void collisions::checkForDoorCollision(const std::shared_ptr<Enemy>& possessedEn
 				enemy->getPos() - door->getPos().x >= 0 &&
 				door->getLevel() == enemy->getLevel()&&
 				enemy->isActive()) {
-				if (!(std::count(door->getBlockedEnemy().begin(), door->getBlockedEnemy().end(), enemy))) {
+				vector <shared_ptr<Enemy>> temp = door->getBlockedEnemy();
+				if (std::count(temp.begin(), temp.end(), enemy) >= 1) {
 				}
 				else {
 					enemy->setOldPatrol(enemy->getPatrol());
