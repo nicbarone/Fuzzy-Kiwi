@@ -240,6 +240,7 @@ void GameplayMode::update(float timestep) {
         if (_tutorialAnimation != nullptr) {
             _tutorialAnimation->setVisible(false);
         }
+        _levelBoardPanel->setVisible(false);
         _menuPanel->setVisible(true);
         _menuPanel->getChildButtons()["resume"]->getButton()->activate();
         _menuPanel->getChildButtons()["restart"]->getButton()->activate();
@@ -599,7 +600,7 @@ void GameplayMode::update(float timestep) {
 
                         _player->getSceneNode()->setVisible(false);
                         setGameStatus(GameStatus::LOSE);
-                        if (_showTutorialText > 0) {
+                        if (_showTutorialText > 0 && _tutorialAnimation != nullptr) {
                             _tutorialAnimation->setVisible(false);
                         }
                         _losePanel->setVisible(true);
@@ -1058,6 +1059,12 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         _tutorialText->setScale(Vec2(0.5, 0.5));
         _tutorialText->setPosition(Vec2(325, 20));
     }
+    else if (_showTutorialText == 4) {
+        _tutorialText = scene2::Label::alloc("Some doors are locked. Circles beneath enemies represent a key of the corresponding color.", font);
+        _tutorialText->setForeground(Color4::WHITE);
+        _tutorialText->setScale(Vec2(0.5, 0.5));
+        _tutorialText->setPosition(Vec2(25, 20));
+    }
     else {
         _tutorialText = scene2::Label::alloc("Use the bottom left joystick to move!", font);
         _tutorialText->setForeground(Color4::WHITE);
@@ -1151,9 +1158,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         if (!down) {
             //CULog("Clicking on possess button!");
             // Mark this button as clicked, proper handle will take place in update()
-            if (_showTutorialText > 0&& _showTutorialText!=3) {
+            if (_showTutorialText > 0&& _tutorialAnimation != nullptr) {
                 _tutorialAnimation->setVisible(true);
             }
+            _levelBoardPanel->setVisible(true);
             setGameStatus(GameStatus::RUNNING);
         }
         });
@@ -1282,6 +1290,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         }
         });
     addChild(_losePanel->getSceneNode());
+
+    // create the level indicator panel
+    _levelBoardPanel = ui::PanelElement::alloc(size.width - 130.0f, 50.0f, 0, _assets->get<Texture>("levelBoard"));
+    _levelBoardPanel->getSceneNode()->setScale(1.0f);
+    _levelBoardPanel->createChildPanel(0,0,0, _assets->get<Texture>("level"+to_string(_levelIndex + 1)+"Board"));
+    _levelBoardPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    addChild(_levelBoardPanel->getSceneNode());
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));
@@ -1368,6 +1383,10 @@ void GameplayMode::checkDoors() {
                         _tutorialAnimation->setScale(0.25, 0.25);
                         _rootScene->addChild(_tutorialAnimation);
                         tutMaxFrame = 4;
+                    }
+                    else if (_showTutorialText == 4) {
+                        _tutorialText->setText("Locked doors will become unlocked and stay unlocked once opened.");
+                        _tutorialText->setPosition(Vec2(150, 20));
                     }
                 }
                 cugl::Application::get()->schedule(openDoor, 500);
@@ -1462,6 +1481,7 @@ void GameplayMode::checkStaircaseDoors() {
                     _tutorialText->setText("While possessing, enemies can only detect you from the back.");
                     _tutorialText->setPositionX(250);
                 }
+
                 _hasControl = false;
                 std::shared_ptr<Texture> EnemyOpeningDoor = _assets->get<Texture>("EnemyOpeningDoor");
                 _enemyController->getPossessed()->getSceneNode()->setVisible(false);

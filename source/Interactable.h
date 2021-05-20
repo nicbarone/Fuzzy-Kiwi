@@ -82,7 +82,7 @@ public:
 	/** sets the floor level of the construction element*/
 	void setLevel(int level) {
 		_level = level;
-		getSceneNode()->setPriority(level);
+		getSceneNode()->setPriority(level + 0.05f);
 	}
 
 	/** returns an int representing the floor level of the construction element*/
@@ -98,6 +98,7 @@ public:
 	/** sets the SceneNode associated with the construction element*/
 	void setSceneNode(shared_ptr<scene2::AnimationNode>sceneNode) {
 		_sceneNode = sceneNode;
+		_sceneNode->setPriority(_level + 0.05f);
 	}
 
 };
