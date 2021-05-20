@@ -954,6 +954,27 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"level13Board": {
+			"file": "textures/UI/Icon/Level13Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level14Board": {
+			"file": "textures/UI/Icon/Level14Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level15Board": {
+			"file": "textures/UI/Icon/Level15Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"arrowNextPage": {
 			"file": "textures/UI/Button/ArrowRight.png",
 			"minfilter": "nearest",

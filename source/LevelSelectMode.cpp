@@ -505,6 +505,7 @@ void LevelSelectMode::activateButtons() {
     _backButton->getButton()->activate();
     for (int i = 0; i < MAX_LEVEL_PAGE; i++) {
         for (int j = 1; j <= 10; j++) {
+            if (10 * i + j > MAX_LEVEL_NUM_PER_LOC) continue;
             _levelSelectPanel[i]->getChildButtons()["level" + to_string(10 * i + j)]->getButton()->activate();
         }
     }
