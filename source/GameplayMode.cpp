@@ -1629,10 +1629,10 @@ void GameplayMode::checkCatDens() {
                 //AudioEngine::get()->play("unpossess", _assets->get<Sound>("jumpOff"));
                 _player->setLevel(catDen->getLevel());
                 _player->getSceneNode()->setVisible(true);
-                int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+                /*int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
                 if (cageCollision != 0) {
                     return;
-                }
+                }*/
                 _player->setCurrentDen(0);
                 _player->setPos(catDen->getPos().x);
                 //_player->getSceneNode()->setPosition(catDen->getPos());
