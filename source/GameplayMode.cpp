@@ -1294,7 +1294,6 @@ void GameplayMode::checkDoors() {
                     _player->getSceneNode()->setScale(-0.63, 0.63);
                 }
                 _player->PossessAnimation(2);
-                door->getDoorLock()->setVisible(false);
 
                 std::function<bool()> openDoor = [&]() {
                     _player->getSceneNode()->setVisible(false);
@@ -1314,6 +1313,7 @@ void GameplayMode::checkDoors() {
                     v2.begin(), v2.end(),
                     std::back_inserter(key_intersection));
                 if (!key_intersection.empty()|| v2.size() ==0 || door->getUnlocked()) {
+                    door->getDoorLock()->setVisible(false);
                     door->setUnlocked(true);
                     door->setDoor(!doorState);
                     if (_showTutorialText == 1) {
