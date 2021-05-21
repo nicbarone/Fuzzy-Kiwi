@@ -119,6 +119,34 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"RedDoorlock": {
+			"file": "textures/GameObject/Door/RedDoorlock.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"BlueDoorLock": {
+			"file": "textures/GameObject/Door/BlueDoorLock.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"GreenDoorlock": {
+			"file": "textures/GameObject/Door/GreenDoorlock.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"PinkDoorLock": {
+			"file": "textures/GameObject/Door/PinkDoorlock.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"cagedAnimal": {
 			"file": "textures/GameObject/CagedAnimal/CagedAnimal.png",
 			"minfilter": "nearest",

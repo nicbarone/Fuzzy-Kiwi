@@ -16,6 +16,7 @@ private:
 	bool _unlocked;
 	/*list of keys that the door.*/
 	std::vector<int> _keys;
+	std::shared_ptr<scene2::PolygonNode> _doorLock;
 public:
 
 	Door();
@@ -72,6 +73,10 @@ public:
 	}
 	void setUnlocked(bool unlocked) {
 		_unlocked = unlocked;
+	}
+
+	std::shared_ptr<scene2::PolygonNode> getDoorLock() {
+		return _doorLock;
 	}
 
 
