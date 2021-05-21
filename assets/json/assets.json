@@ -891,13 +891,6 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"levelBoard": {
-			"file": "textures/UI/Icon/LevelInfoPanel.png",
-			"minfilter": "nearest",
-			"magfilter": "linear",
-			"wrapS": "clamp",
-			"wrapT": "clamp"
-		},
 		"level1Board": {
 			"file": "textures/UI/Icon/Level1Board.png",
 			"minfilter": "nearest",
@@ -998,6 +991,41 @@
 		},
 		"level15Board": {
 			"file": "textures/UI/Icon/Level15Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level16Board": {
+			"file": "textures/UI/Icon/Level16Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level17Board": {
+			"file": "textures/UI/Icon/Level17Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level18Board": {
+			"file": "textures/UI/Icon/Level18Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level19Board": {
+			"file": "textures/UI/Icon/Level19Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level20Board": {
+			"file": "textures/UI/Icon/Level20Board.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
