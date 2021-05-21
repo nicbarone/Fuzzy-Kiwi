@@ -17,7 +17,13 @@ using namespace cugl;
  */
 bool LevelSelectMode::init(const std::shared_ptr<AssetManager>& assets) {
     _levelID = "";
+    _curPage = 0;
     _backButtonPressed = false;
+    _pageChange = 0;
+    _levelSelectPanel = std::vector<std::shared_ptr<ui::PanelElement>>();
+    for (int i = 0; i < MAX_LEVEL_PAGE; i++) {
+        _levelSelectPanel.push_back(nullptr);
+    }
     _levelSelected = false;
     _toUpdateVolume = false;
     // Initialize the scene to a locked width
@@ -59,45 +65,48 @@ void LevelSelectMode::update(float progress) {
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
     size *= scale;
+    if (_pageChange != 0) {
+        updatePage();
+    }
     if (_toUpdateVolume) {
         _toUpdateVolume = false;
-        if (_levelSelectPanel->getChildButtons()["muteButton"] != nullptr) {
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
-            _levelSelectPanel->getSceneNode()->removeChildByName("muteButton");
+        if (_uiPanel->getChildButtons()["muteButton"] != nullptr) {
+            _uiPanel->getChildButtons()["muteButton"]->getButton()->deactivate();
+            _uiPanel->getSceneNode()->removeChildByName("muteButton");
         }
-        if (_levelSelectPanel->getChildButtons()["unmuteButton"] != nullptr) {
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
-            _levelSelectPanel->getSceneNode()->removeChildByName("unmuteButton");
+        if (_uiPanel->getChildButtons()["unmuteButton"] != nullptr) {
+            _uiPanel->getChildButtons()["unmuteButton"]->getButton()->deactivate();
+            _uiPanel->getSceneNode()->removeChildByName("unmuteButton");
         }
         if (_gameMuted) {
             audioQueue->setVolume(0);
-            _levelSelectPanel->createChildButton((size.width - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("mute"), Color4f::WHITE, "unmuteButton");
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setName("unmuteButton");
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+            _uiPanel->createChildButton((size.width - 100.0f) / 2.0f, (size.height - 100.0f) / 2.0f, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("mute"), Color4f::WHITE, "unmuteButton");
+            _uiPanel->getChildButtons()["unmuteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
+            _uiPanel->getChildButtons()["unmuteButton"]->getButton()->setName("unmuteButton");
+            _uiPanel->getChildButtons()["unmuteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
                 // Only quit when the button is released
                 if (!down) {
                     _gameMuted = false;
                     _toUpdateVolume = true;
                 }
                 });
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+            _uiPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+            _uiPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
         }
         else {
             audioQueue->setVolume(1.0f);
-            _levelSelectPanel->createChildButton((size.width - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("unmute"), Color4f::WHITE, "muteButton");
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setName("muteButton");
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+            _uiPanel->createChildButton((size.width - 100.0f) / 2.0f, (size.height - 100.0f) / 2.0f, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("unmute"), Color4f::WHITE, "muteButton");
+            _uiPanel->getChildButtons()["muteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
+            _uiPanel->getChildButtons()["muteButton"]->getButton()->setName("muteButton");
+            _uiPanel->getChildButtons()["muteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
                 // Only quit when the button is released
                 if (!down) {
                     _gameMuted = true;
                     _toUpdateVolume = true;
                 }
                 });
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->activate();
+            _uiPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+            _uiPanel->getChildButtons()["muteButton"]->getButton()->activate();
         }
     }
 }
@@ -119,162 +128,149 @@ void LevelSelectMode::updateLevelIcon() {
     }
     std::shared_ptr<JsonValue> json = reader->readJson();
     shared_ptr<JsonValue> completed = json->get("completed");
-    if (completed->getBool("level1")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-400, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1Complete"), "level1");
-        _levelSelectPanel->getChildButtons()["level1"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level1"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "0";
-                _levelSelected = true;
-            }
-            });
+    for (int i = 0; i < MAX_LEVEL_PAGE; i++) {
+        if (completed->getBool("level" + to_string(i * 10 + 1))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(-380, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 1) + "Complete"), "level" + to_string(i * 10 + 1));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 1)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 1)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 0);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 2))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(-220, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 2) + "Complete"), "level" + to_string(i * 10 + 2));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 2)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 2)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 1);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 3))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(-55, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 3) + "Complete"), "level" + to_string(i * 10 + 3));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 3)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 3)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 2);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 4))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(105, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 4) + "Complete"), "level" + to_string(i * 10 + 4));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 4)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 4)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 3);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 5))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(265, 55, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 5) + "Complete"), "level" + to_string(i * 10 + 5));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 5)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 5)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 4);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 6))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(-380, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 6) + "Complete"), "level" + to_string(i * 10 + 6));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 6)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 6)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 5);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 7))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(-220, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 7) + "Complete"), "level" + to_string(i * 10 + 7));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 7)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 7)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 6);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 8))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(-55, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 8) + "Complete"), "level" + to_string(i * 10 + 8));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 8)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 8)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 7);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 9))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(110, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level"+ to_string(i * 10 + 9) +"Complete"), "level" + to_string(i * 10 + 9));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 9)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 9)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 8);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
+        if (completed->getBool("level" + to_string(i * 10 + 10))) {
+            _levelSelectPanel[i]->createChildButtonTextureWithName(275, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level"+ to_string(i * 10 + 10) +"Complete"), "level" + to_string(i * 10 + 10));
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 10)]->getButton()->setScale(1.0f);
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 10)]->getButton()->addListener([=](const std::string& name, bool down) {
+                // Only quit when the button is released
+                if (!down) {
+                    //CULog("Clicking on possess button!");
+                    // Mark this button as clicked, proper handle will take place in update()
+                    _levelID = to_string(i * 10 + 9);
+                    CULog("Invisible button?");
+                    _levelSelected = true;
+                }
+                });
+        }
     }
-    if (completed->getBool("level2")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-260, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level2Complete"), "level2");
-        _levelSelectPanel->getChildButtons()["level2"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level2"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "1";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level3")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-120, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level3Complete"), "level3");
-        _levelSelectPanel->getChildButtons()["level3"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level3"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "2";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level4")) {
-        _levelSelectPanel->createChildButtonTextureWithName(20, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level4Complete"), "level4");
-        _levelSelectPanel->getChildButtons()["level4"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level4"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "3";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level5")) {
-        _levelSelectPanel->createChildButtonTextureWithName(160, 55, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level5Complete"), "level5");
-        _levelSelectPanel->getChildButtons()["level5"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level5"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "4";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level6")) {
-        _levelSelectPanel->createChildButtonTextureWithName(300, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level6Complete"), "level6");
-        _levelSelectPanel->getChildButtons()["level6"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level6"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "5";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level7")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-400, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level7Complete"), "level7");
-        _levelSelectPanel->getChildButtons()["level7"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level7"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "6";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level8")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-260, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level8Complete"), "level8");
-        _levelSelectPanel->getChildButtons()["level8"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level8"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "7";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level9")) {
-        _levelSelectPanel->createChildButtonTextureWithName(-120, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level9Complete"), "level9");
-        _levelSelectPanel->getChildButtons()["level9"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level9"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "8";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level10")) {
-        _levelSelectPanel->createChildButtonTextureWithName(20, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level10Complete"), "level10");
-        _levelSelectPanel->getChildButtons()["level10"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level10"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "9";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level11")) {
-        _levelSelectPanel->createChildButtonTextureWithName(160, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level11Complete"), "level11");
-        _levelSelectPanel->getChildButtons()["level11"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level11"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "10";
-                _levelSelected = true;
-            }
-            });
-    }
-    if (completed->getBool("level12")) {
-        _levelSelectPanel->createChildButtonTextureWithName(300, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level12Complete"), "level12");
-        _levelSelectPanel->getChildButtons()["level12"]->getButton()->setScale(0.8f);
-        _levelSelectPanel->getChildButtons()["level12"]->getButton()->addListener([=](const std::string& name, bool down) {
-            // Only quit when the button is released
-            if (!down) {
-                //CULog("Clicking on possess button!");
-                // Mark this button as clicked, proper handle will take place in update()
-                _levelID = "11";
-                _levelSelected = true;
-            }
-            });
-    }
+    
     activateButtons();
     reader->close();
 }
@@ -283,141 +279,135 @@ void LevelSelectMode::buildScene() {
     Size  size = Application::get()->getDisplaySize();
     float scale = GAME_WIDTH / size.width;
     size *= scale;
-    
-    _levelSelectPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, _assets->get<Texture>("levelSelectBG"));
-    _levelSelectPanel->getSceneNode()->setScale(min(size.width / _assets->get<Texture>("levelSelectBG")->getSize().width, size.height / _assets->get<Texture>("levelSelectBG")->getSize().height));
-    _levelSelectPanel->createChildButton(-400, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level1"), "level1");
-    _levelSelectPanel->getChildButtons()["level1"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level1"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "0";
-            _levelSelected = true;
-        }
-    });
-    _levelSelectPanel->createChildButton(-260, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level2"), "level2");
-    _levelSelectPanel->getChildButtons()["level2"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level2"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "1";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(-120, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level3"), "level3");
-    _levelSelectPanel->getChildButtons()["level3"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level3"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "2";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(20, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level4"), "level4");
-    _levelSelectPanel->getChildButtons()["level4"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level4"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "3";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(160, 55, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level5"), "level5");
-    _levelSelectPanel->getChildButtons()["level5"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level5"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "4";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(300, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level6"), "level6");
-    _levelSelectPanel->getChildButtons()["level6"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level6"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "5";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(-400, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level7"), "level7");
-    _levelSelectPanel->getChildButtons()["level7"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level7"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "6";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(-260, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level8"), "level8");
-    _levelSelectPanel->getChildButtons()["level8"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level8"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "7";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(-120, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level9"), "level9");
-    _levelSelectPanel->getChildButtons()["level9"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level9"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "8";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(20, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level10"), "level10");
-    _levelSelectPanel->getChildButtons()["level10"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level10"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "9";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(160, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level11"), "level11");
-    _levelSelectPanel->getChildButtons()["level11"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level11"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "10";
-            _levelSelected = true;
-        }
-        });
-    _levelSelectPanel->createChildButton(300, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level12"), "level12");
-    _levelSelectPanel->getChildButtons()["level12"]->getButton()->setScale(0.8f);
-    _levelSelectPanel->getChildButtons()["level12"]->getButton()->addListener([=](const std::string& name, bool down) {
-        // Only quit when the button is released
-        if (!down) {
-            //CULog("Clicking on possess button!");
-            // Mark this button as clicked, proper handle will take place in update()
-            _levelID = "11";
-            _levelSelected = true;
-        }
-        });
+    _levelSelectRootNode = scene2::SceneNode::alloc();
+    _levelSelectRootNode->setAnchor(Vec2::ANCHOR_CENTER);
+    _levelSelectRootNode->setPosition(0, 0);
+    for (int i = 0; i < MAX_LEVEL_PAGE; i++) {
+        _levelSelectPanel[i] = ui::PanelElement::alloc((i + 0.5f) * size.width, 0.5f * size.height, 0, _assets->get<Texture>("levelSelectBG"));
+        _levelSelectPanel[i]->getSceneNode()->setScale(min(size.width / _assets->get<Texture>("levelSelectBG")->getSize().width, size.height / _assets->get<Texture>("levelSelectBG")->getSize().height));
+        _levelSelectRootNode->addChild(_levelSelectPanel[i]->getSceneNode());
+        _levelSelectPanel[i]->createChildButton(-380, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level"+to_string(i * 10 + 1)), "level" + to_string(i * 10 + 1));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 1)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 1)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 0);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(-220, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 2)), "level" + to_string(i * 10 + 2));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 2)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 2)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 1);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(-55, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 3)), "level" + to_string(i * 10 + 3));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 3)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 3)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 2);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(105, 60, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 4)), "level" + to_string(i * 10 + 4));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 4)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 4)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 3);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(265, 55, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 5)), "level" + to_string(i * 10 + 5));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 5)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 5)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 4);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(-380, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 6)), "level" + to_string(i * 10 + 6));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 6)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 6)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 5);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(-220, -110, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 7)), "level" + to_string(i * 10 + 7));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 7)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 7)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 6);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(-55, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 8)), "level" + to_string(i * 10 + 8));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 8)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 8)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 7);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(110, -115, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 9)), "level" + to_string(i * 10 + 9));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 9)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 9)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 8);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+        _levelSelectPanel[i]->createChildButton(275, -120, 20, 20, ui::ButtonState::AVAILABLE, _assets->get<Texture>("level" + to_string(i * 10 + 10)), "level" + to_string(i * 10 + 10));
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 10)]->getButton()->setScale(1.0f);
+        _levelSelectPanel[i]->getChildButtons()["level" + to_string(i * 10 + 10)]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                //CULog("Clicking on possess button!");
+                // Mark this button as clicked, proper handle will take place in update()
+                _levelID = to_string(i * 10 + 9);
+                CULog("Invisible button?");
+                _levelSelected = true;
+            }
+            });
+    }
+  
     std::shared_ptr<AudioQueue> audioQueue = AudioEngine::get()->getMusicQueue();
     if (audioQueue->getVolume() < 0.5f) {
         // Game is muted
@@ -427,38 +417,59 @@ void LevelSelectMode::buildScene() {
         // Game is unmuted
         _gameMuted = false;
     }
+    _uiPanel = ui::PanelElement::alloc(size.width / 2.0f, size.height / 2.0f, 0, nullptr);
     if (_gameMuted) {
-            audioQueue->setVolume(0);
-            _levelSelectPanel->getSceneNode()->removeChildByName("muteButton");
-            _levelSelectPanel->createChildButton((size.width - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("mute"), Color4f::WHITE, "unmuteButton");
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setName("unmuteButton");
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
-                // Only quit when the button is released
-                if (!down) {
-                    _gameMuted = false;
-                    _toUpdateVolume = true;
-                }
-                });
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
-            _levelSelectPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+        audioQueue->setVolume(0);
+        _uiPanel->getSceneNode()->removeChildByName("muteButton");
+        _uiPanel->createChildButton((size.width - 100.0f) / 2.0f, (size.height - 100.0f) / 2.0f, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("mute"), Color4f::WHITE, "unmuteButton");
+        _uiPanel->getChildButtons()["unmuteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
+        _uiPanel->getChildButtons()["unmuteButton"]->getButton()->setName("unmuteButton");
+        _uiPanel->getChildButtons()["unmuteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                _gameMuted = false;
+                _toUpdateVolume = true;
+            }
+            });
+        _uiPanel->getChildButtons()["unmuteButton"]->getButton()->setVisible(true);
+        _uiPanel->getChildButtons()["unmuteButton"]->getButton()->activate();
+    }
+    else {
+        audioQueue->setVolume(1.0f);
+        _uiPanel->getSceneNode()->removeChildByName("unmuteButton");
+        _uiPanel->createChildButton((size.width - 100.0f) / 2.0f, (size.height - 100.0f) / 2.0f, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("unmute"), Color4f::WHITE, "muteButton");
+        _uiPanel->getChildButtons()["muteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
+        _uiPanel->getChildButtons()["muteButton"]->getButton()->setName("muteButton");
+        _uiPanel->getChildButtons()["muteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
+            // Only quit when the button is released
+            if (!down) {
+                _gameMuted = true;
+                _toUpdateVolume = true;
+            }
+            });
+        _uiPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
+        _uiPanel->getChildButtons()["muteButton"]->getButton()->activate();
+    }
+    // Add the page flip buttons
+    _uiPanel->createChildButton((size.width - 150.0f) / 2.0f, (size.height - 350.0f) / 2.0f, 50, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("arrowNextPage"), Color4f::WHITE, "nextPage");
+    _uiPanel->getChildButtons()["nextPage"]->getButton()->setScale(Vec2(0.5f, 0.5f));
+    _uiPanel->getChildButtons()["nextPage"]->getButton()->setName("nextPage");
+    _uiPanel->getChildButtons()["nextPage"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _pageChange = 1;
         }
-        else {
-            audioQueue->setVolume(1.0f);
-            _levelSelectPanel->getSceneNode()->removeChildByName("unmuteButton");
-            _levelSelectPanel->createChildButton((size.width - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleX(), (size.height - 100.0f) / 2.0f / _levelSelectPanel->getSceneNode()->getScaleY(), 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("unmute"), Color4f::WHITE, "muteButton");
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setScale(Vec2(0.8f, 0.8f));
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setName("muteButton");
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->addListener([=](const std::string& name, bool down) {
-                // Only quit when the button is released
-                if (!down) {
-                    _gameMuted = true;
-                    _toUpdateVolume = true;
-                }
-                });
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->setVisible(true);
-            _levelSelectPanel->getChildButtons()["muteButton"]->getButton()->activate();
+        });
+    _uiPanel->createChildButton((size.width - 150.0f) / 2.0f, (size.height - 525.0f) / 2.0f, 50, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("arrowPrevPage"), Color4f::WHITE, "prevPage");
+    _uiPanel->getChildButtons()["prevPage"]->getButton()->setScale(Vec2(0.5f, 0.5f));
+    _uiPanel->getChildButtons()["prevPage"]->getButton()->setName("prevPage");
+    _uiPanel->getChildButtons()["prevPage"]->getButton()->addListener([=](const std::string& name, bool down) {
+        // Only quit when the button is released
+        if (!down) {
+            _pageChange = -1;
         }
+        });
+    updatePage();
     // Common outside buttons
     _backButton = ui::ButtonElement::alloc(0, 0, 0, 0, ui::ButtonState::AVAILABLE);
     _backButton->setTexture(_assets->get<Texture>("backButton"));
@@ -474,7 +485,8 @@ void LevelSelectMode::buildScene() {
             _backButtonPressed = true;
         }
     });
-    addChild(_levelSelectPanel->getSceneNode());
+    addChild(_levelSelectRootNode);
+    addChild(_uiPanel->getSceneNode());
     addChild(_backButton->getButton());
     activateButtons();
     updateLevelIcon();
@@ -482,32 +494,19 @@ void LevelSelectMode::buildScene() {
 
 void LevelSelectMode::deactivateButtons() {
     _backButton->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level1"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level2"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level3"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level4"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level5"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level6"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level7"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level8"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level9"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level10"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level11"]->getButton()->deactivate();
-    _levelSelectPanel->getChildButtons()["level12"]->getButton()->deactivate();
+    for (int i = 0; i < MAX_LEVEL_PAGE; i++) {
+        for (int j = 1; j <= 10; j++) {
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(10 * i + j)]->getButton()->deactivate();
+        }
+    }
 }
 
 void LevelSelectMode::activateButtons() {
     _backButton->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level1"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level2"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level3"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level4"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level5"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level6"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level7"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level8"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level9"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level10"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level11"]->getButton()->activate();
-    _levelSelectPanel->getChildButtons()["level12"]->getButton()->activate();
+    for (int i = 0; i < MAX_LEVEL_PAGE; i++) {
+        for (int j = 1; j <= 10; j++) {
+            if (10 * i + j > MAX_LEVEL_NUM_PER_LOC) continue;
+            _levelSelectPanel[i]->getChildButtons()["level" + to_string(10 * i + j)]->getButton()->activate();
+        }
+    }
 }

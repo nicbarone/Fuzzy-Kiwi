@@ -282,6 +282,10 @@ public:
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
 
+    int getCurrentLevel() {
+        return _levelIndex;
+    }
+
     bool getBackToMenu() {
         return _backToMenu;
     }

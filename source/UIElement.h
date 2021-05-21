@@ -95,7 +95,7 @@ namespace ui {
 #pragma panel
 	class PanelElement : public Entity {
 	private:
-		std::shared_ptr<scene2::AnimationNode> _sceneNode;
+		std::shared_ptr<scene2::SceneNode> _sceneNode;
 		std::shared_ptr<Texture> _texture;
 		std::unordered_map<std::string, std::shared_ptr<ButtonElement>> _childButtons;
 		std::vector<std::shared_ptr<PanelElement>> _childPanels;
@@ -118,7 +118,7 @@ namespace ui {
 			return (result->init(x, y, ang, panelTexture) ? result : nullptr);
 		}
 		/** returns the AnimationNode associated with the panel*/
-		std::shared_ptr<scene2::AnimationNode> getSceneNode() {
+		std::shared_ptr<scene2::SceneNode> getSceneNode() {
 			return _sceneNode;
 		}
 
