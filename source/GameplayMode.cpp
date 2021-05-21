@@ -834,10 +834,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> catDenGrey = _assets->get<Texture>("catDenGrey");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
-    std::shared_ptr<Texture> BlueLockedDoor = _assets->get<Texture>("BlueLockedDoor");
-    std::shared_ptr<Texture> RedLockedDoor = _assets->get<Texture>("RedLockedDoor");
-    std::shared_ptr<Texture> PinkLockedDoor = _assets->get<Texture>("PinkLockedDoor");
-    std::shared_ptr<Texture> GreenLockedDoor = _assets->get<Texture>("GreenLockedDoor");
+    std::shared_ptr<Texture> BlueLockedDoor = _assets->get<Texture>("BlueDoorLock");
+    std::shared_ptr<Texture> RedLockedDoor = _assets->get<Texture>("RedDoorLock");
+    std::shared_ptr<Texture> PinkLockedDoor = _assets->get<Texture>("PinkDoorLock");
+    std::shared_ptr<Texture> GreenLockedDoor = _assets->get<Texture>("GreenDoorLock");
 
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
     //caged animal
@@ -1294,6 +1294,7 @@ void GameplayMode::checkDoors() {
                     _player->getSceneNode()->setScale(-0.63, 0.63);
                 }
                 _player->PossessAnimation(2);
+                door->getDoorLock()->setVisible(false);
 
                 std::function<bool()> openDoor = [&]() {
                     _player->getSceneNode()->setVisible(false);

@@ -10,6 +10,7 @@ Door::Door() :
 	_blockedEnemy = {};
 	_isOpen = false;
 	_unlocked = false;
+	_doorLock = nullptr;
 
 }
 
@@ -19,35 +20,44 @@ void Door::dispose() {
 	_isOpen = false;
 	_unlocked = false;
 	_keys = {  };
+	_doorLock = nullptr;
 }
 
 bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns, std::shared_ptr<Texture> unlockedDoor, 
 	std::shared_ptr<Texture> greenLockedDoor, std::shared_ptr<Texture> pinkLockedDoor, std::shared_ptr<Texture> redLockedDoor, std::shared_ptr<Texture> blueLockedDoor)
 {
-
+	setSceneNode(scene2::AnimationNode::alloc(unlockedDoor, rows, columns));
 	if(keys.size()==0|| keys[0] == 5){
-		setSceneNode(scene2::AnimationNode::alloc(unlockedDoor, rows, columns));
+		_doorLock = scene2::PolygonNode::allocWithTexture(redLockedDoor);
+		_doorLock->setScale(0.0025, 0.0025);
 	}
 	else if (keys[0] == 1) {
-		setSceneNode(scene2::AnimationNode::alloc(redLockedDoor, rows, columns));
-
+		_doorLock = scene2::PolygonNode::allocWithTexture(redLockedDoor);
+		_doorLock->setScale(0.25, 0.25);
 	}
 	else if (keys[0] == 2)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(blueLockedDoor, rows, columns));
+		_doorLock = scene2::PolygonNode::allocWithTexture(blueLockedDoor);
+		_doorLock->setScale(0.25, 0.25);
 
 	}
 	else if (keys[0] == 3)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(pinkLockedDoor, rows, columns));
+		_doorLock = scene2::PolygonNode::allocWithTexture(pinkLockedDoor);
+		_doorLock->setScale(0.25, 0.25);
 
 	}
 	else if (keys[0] == 4)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(greenLockedDoor, rows, columns));
+		_doorLock = scene2::PolygonNode::allocWithTexture(greenLockedDoor);
+		_doorLock->setScale(0.25, 0.25);
 
 	}
+	_doorLock->setPosition(240, 205);
 	
+	_doorLock->setPriority(level + 0.6f);
+	getSceneNode()->addChild(_doorLock);
+
 	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + DOOR_OFFSET));
 	setAngle(ang);
 	setScale(scale);
