@@ -1244,7 +1244,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     addChild(_losePanel->getSceneNode());
 
     // create the level indicator panel
-    _levelBoardPanel = ui::PanelElement::alloc(size.width - 130.0f, 50.0f, 0, _assets->get<Texture>("levelBoard"));
+    _levelBoardPanel = ui::PanelElement::alloc(size.width - 90.0f, 30.0f, 0, nullptr);
     _levelBoardPanel->getSceneNode()->setScale(1.0f);
     _levelBoardPanel->createChildPanel(0,0,0, _assets->get<Texture>("level"+to_string(_levelIndex + 1)+"Board"));
     _levelBoardPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
