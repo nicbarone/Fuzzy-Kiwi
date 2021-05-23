@@ -240,7 +240,7 @@ void GameplayMode::update(float timestep) {
         if (_tutorialAnimation != nullptr) {
             _tutorialAnimation->setVisible(false);
         }
-        _levelBoardPanel->setVisible(false);
+        _levelBoardPanel->getChildPanels()[0]->setVisible(true);
         _menuPanel->setVisible(true);
         _menuPanel->getChildButtons()["resume"]->getButton()->activate();
         _menuPanel->getChildButtons()["restart"]->getButton()->activate();
@@ -454,7 +454,7 @@ void GameplayMode::update(float timestep) {
                 AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
                 _victoryPage = true;
                 // shows win Panel
-                _levelBoardPanel->setVisible(false);
+                _levelBoardPanel->getChildTexts()[0]->getLabel()->setVisible(true);
                 _winPanel->setVisible(true);
                 _winPanel->getChildButtons()["next"]->getButton()->activate();
                 _winPanel->getChildButtons()["retry"]->getButton()->activate();
@@ -553,7 +553,7 @@ void GameplayMode::update(float timestep) {
                         if (_showTutorialText > 0 && _tutorialAnimation != nullptr) {
                             _tutorialAnimation->setVisible(false);
                         }
-                        _levelBoardPanel->setVisible(false);
+                        _levelBoardPanel->getChildPanels()[1]->setVisible(true);
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()["retry"]->getButton()->activate();
                         _losePanel->getChildButtons()["toMenu"]->getButton()->activate();
@@ -595,7 +595,7 @@ void GameplayMode::update(float timestep) {
                                 _tutorialAnimation->setVisible(false);
                             }
                         }
-                        _levelBoardPanel->setVisible(false);
+                        _levelBoardPanel->getChildPanels()[1]->setVisible(true);
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()["retry"]->getButton()->activate();
                         _losePanel->getChildButtons()["toMenu"]->getButton()->activate();
@@ -1113,7 +1113,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             if (_showTutorialText > 0&& _tutorialAnimation != nullptr) {
                 _tutorialAnimation->setVisible(true);
             }
-            _levelBoardPanel->setVisible(true);
+            _levelBoardPanel->getChildPanels()[0]->setVisible(false);
             setGameStatus(GameStatus::RUNNING);
         }
         });
@@ -1244,10 +1244,17 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     addChild(_losePanel->getSceneNode());
 
     // create the level indicator panel
-    _levelBoardPanel = ui::PanelElement::alloc(size.width - 90.0f, 30.0f, 0, nullptr);
+    _levelBoardPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, nullptr);
     _levelBoardPanel->getSceneNode()->setScale(1.0f);
-    _levelBoardPanel->createChildPanel(0,0,0, _assets->get<Texture>("level"+to_string(_levelIndex + 1)+"Board"));
+    _levelBoardPanel->createChildPanel(0, size.height / 2.0f - 50.0f,0, _assets->get<Texture>("level"+to_string(_levelIndex + 1)+"Board"));
     _levelBoardPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    _levelBoardPanel->getChildPanels()[0]->setVisible(false);
+    _levelBoardPanel->createChildPanel(50.0f, size.height / 2.0f - 100.0f, 0, _assets->get<Texture>("level" + to_string(_levelIndex + 1) + "Board"));
+    _levelBoardPanel->getChildPanels()[1]->getSceneNode()->setScale(1.0f);
+    _levelBoardPanel->getChildPanels()[1]->setVisible(false);
+    _levelBoardPanel->createChildText(0, size.height / 2.0f - 100.0f, 100, 50, "Level " + to_string(_levelIndex + 1), _assets->get<Font>("futura"));
+    _levelBoardPanel->getChildTexts()[0]->getLabel()->setVisible(false);
+    _levelBoardPanel->getChildTexts()[0]->getLabel()->setScale(0.9f);
     addChild(_levelBoardPanel->getSceneNode());
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
