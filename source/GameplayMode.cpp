@@ -240,6 +240,7 @@ void GameplayMode::update(float timestep) {
         if (_tutorialAnimation != nullptr) {
             _tutorialAnimation->setVisible(false);
         }
+        _levelBoardPanel->getChildPanels()[0]->setVisible(true);
         _menuPanel->setVisible(true);
         _menuPanel->getChildButtons()["resume"]->getButton()->activate();
         _menuPanel->getChildButtons()["restart"]->getButton()->activate();
@@ -440,6 +441,7 @@ void GameplayMode::update(float timestep) {
             int movingRight = _cagedAnimal->getMovingRight();
             _rootScene->removeChild(_cagedAnimal->getSceneNode());
             _cagedAnimal->SetSceneNode(Player::alloc(pos, level, 0, 7, unlockCagedAnimal)->getSceneNode());
+            _player->getSceneNode()->setPositionX(_cagedAnimal->getPos() - 70);
             _cagedAnimal->getSceneNode()->setScale(-0.1605, 0.165);
             _cagedAnimal->setLevel(level);
             _cagedAnimal->getSceneNode()->setPosition(pos, level* FLOOR_HEIGHT + FLOOR_OFFSET-59);
@@ -452,6 +454,7 @@ void GameplayMode::update(float timestep) {
                 AudioEngine::get()->play("win", _assets->get<Sound>("winCondition"));
                 _victoryPage = true;
                 // shows win Panel
+                _levelBoardPanel->getChildTexts()[0]->getLabel()->setVisible(true);
                 _winPanel->setVisible(true);
                 _winPanel->getChildButtons()["next"]->getButton()->activate();
                 _winPanel->getChildButtons()["retry"]->getButton()->activate();
@@ -463,65 +466,13 @@ void GameplayMode::update(float timestep) {
                 shared_ptr<JsonValue> completed = json->get("completed");
                 shared_ptr<JsonValue> result = JsonValue::allocObject();
                 shared_ptr<JsonValue> r_complete = JsonValue::allocObject();
-                if (_levelIndex == 0) {
-                    r_complete->appendValue("level1", true);
-                }
-                else {
-                    r_complete->appendValue("level1", completed->getBool("level1"));
-                }
-                if (_levelIndex == 1) {
-                    r_complete->appendValue("level2", true);
-                }
-                else {
-                    r_complete->appendValue("level2", completed->getBool("level2"));
-                }
-                if (_levelIndex == 2) {
-                    r_complete->appendValue("level3", true);
-                }
-                else {
-                    r_complete->appendValue("level3", completed->getBool("level3"));
-                }
-                if (_levelIndex == 3) {
-                    r_complete->appendValue("level4", true);
-                }
-                else {
-                    r_complete->appendValue("level4", completed->getBool("level4"));
-                }
-                if (_levelIndex == 4) {
-                    r_complete->appendValue("level5", true);
-                }
-                else {
-                    r_complete->appendValue("level5", completed->getBool("level5"));
-                }
-                if (_levelIndex == 5) {
-                    r_complete->appendValue("level6", true);
-                }
-                else {
-                    r_complete->appendValue("level6", completed->getBool("level6"));
-                }
-                if (_levelIndex == 6) {
-                    r_complete->appendValue("level7", true);
-                }
-                else {
-                    r_complete->appendValue("level7", completed->getBool("level7"));
-                }
-                if (_levelIndex == 7) {
-                    r_complete->appendValue("level8", true);
-                }
-                else {
-                    r_complete->appendValue("level8", completed->getBool("level8"));
-                }
-                if (_levelIndex == 8) {
-                    r_complete->appendValue("level9", true);
-                }
-                else {
-                    r_complete->appendValue("level9", completed->getBool("level9"));
-                }
-                if (_levelIndex == 9) {
-                    r_complete->appendValue("level10", true);
-                }
-                else {
-                    r_complete->appendValue("level10", completed->getBool("level9"));
+                for (int i = 0; i < MAX_LEVEL_PAGE * 10; i++) {
+                    if (_levelIndex == i) {
+                        r_complete->appendValue("level" + to_string(i + 1), true);
+                    }
+                    else {
+                        r_complete->appendValue("level" + to_string(i + 1), completed->getBool("level" + to_string(i + 1)));
+                    }
                 }
                 reader->close();
                 result->appendChild("completed", r_complete);
@@ -602,6 +553,7 @@ void GameplayMode::update(float timestep) {
                         if (_showTutorialText > 0 && _tutorialAnimation != nullptr) {
                             _tutorialAnimation->setVisible(false);
                         }
+                        _levelBoardPanel->getChildPanels()[1]->setVisible(true);
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()["retry"]->getButton()->activate();
                         _losePanel->getChildButtons()["toMenu"]->getButton()->activate();
@@ -643,6 +595,7 @@ void GameplayMode::update(float timestep) {
                                 _tutorialAnimation->setVisible(false);
                             }
                         }
+                        _levelBoardPanel->getChildPanels()[1]->setVisible(true);
                         _losePanel->setVisible(true);
                         _losePanel->getChildButtons()["retry"]->getButton()->activate();
                         _losePanel->getChildButtons()["toMenu"]->getButton()->activate();
@@ -881,10 +834,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> catDenGrey = _assets->get<Texture>("catDenGrey");
     //Door texture creation
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
-    std::shared_ptr<Texture> BlueLockedDoor = _assets->get<Texture>("BlueLockedDoor");
-    std::shared_ptr<Texture> RedLockedDoor = _assets->get<Texture>("RedLockedDoor");
-    std::shared_ptr<Texture> PinkLockedDoor = _assets->get<Texture>("PinkLockedDoor");
-    std::shared_ptr<Texture> GreenLockedDoor = _assets->get<Texture>("GreenLockedDoor");
+    std::shared_ptr<Texture> BlueLockedDoor = _assets->get<Texture>("BlueDoorLock");
+    std::shared_ptr<Texture> RedLockedDoor = _assets->get<Texture>("RedDoorLock");
+    std::shared_ptr<Texture> YellowLockedDoor = _assets->get<Texture>("YellowDoorLock");
+    std::shared_ptr<Texture> GreenLockedDoor = _assets->get<Texture>("GreenDoorLock");
 
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
     //caged animal
@@ -898,7 +851,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> visionTexture = _assets->get<Texture>("vision-cone");
     std::shared_ptr<Texture> RedKey = _assets->get<Texture>("RedKey");
     std::shared_ptr<Texture> GreenKey = _assets->get<Texture>("GreenKey");
-    std::shared_ptr<Texture> PinkKey = _assets->get<Texture>("PinkKey");
+    std::shared_ptr<Texture> YellowKey = _assets->get<Texture>("YellowKey");
     std::shared_ptr<Texture> BlueKey = _assets->get<Texture>("BlueKey");
 
 
@@ -928,7 +881,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0,
                 key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), 5, 
-                enemyTexture, altTexture, enemyHighlightTexture, tableTexture, visionTexture, RedKey, BlueKey, PinkKey, GreenKey);
+                enemyTexture, altTexture, enemyHighlightTexture, tableTexture, visionTexture, RedKey, BlueKey, YellowKey, GreenKey);
             if (objectTemp->getBool("possessed")) {
                 _player->setPos(objectTemp->getFloat("x_pos"));
                 _player->setLevel(objectTemp->getInt("level"));
@@ -967,7 +920,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE,  key , 1, 8, door, GreenLockedDoor,PinkLockedDoor, PinkLockedDoor, BlueLockedDoor));
+                cugl::Color4::WHITE,  key , 1, 8, door, GreenLockedDoor, YellowLockedDoor, RedLockedDoor, BlueLockedDoor));
             _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos") - 77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
         }
     }
@@ -1160,6 +1113,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             if (_showTutorialText > 0&& _tutorialAnimation != nullptr) {
                 _tutorialAnimation->setVisible(true);
             }
+            _levelBoardPanel->getChildPanels()[0]->setVisible(false);
             setGameStatus(GameStatus::RUNNING);
         }
         });
@@ -1288,6 +1242,20 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
         }
         });
     addChild(_losePanel->getSceneNode());
+
+    // create the level indicator panel
+    _levelBoardPanel = ui::PanelElement::alloc(size.width / 2, size.height / 2, 0, nullptr);
+    _levelBoardPanel->getSceneNode()->setScale(1.0f);
+    _levelBoardPanel->createChildPanel(0, size.height / 2.0f - 50.0f,0, _assets->get<Texture>("level"+to_string(_levelIndex + 1)+"Board"));
+    _levelBoardPanel->getChildPanels()[0]->getSceneNode()->setScale(0.8f);
+    _levelBoardPanel->getChildPanels()[0]->setVisible(false);
+    _levelBoardPanel->createChildPanel(50.0f, size.height / 2.0f - 100.0f, 0, _assets->get<Texture>("level" + to_string(_levelIndex + 1) + "Board"));
+    _levelBoardPanel->getChildPanels()[1]->getSceneNode()->setScale(1.0f);
+    _levelBoardPanel->getChildPanels()[1]->setVisible(false);
+    _levelBoardPanel->createChildText(0, size.height / 2.0f - 100.0f, 100, 50, "Level " + to_string(_levelIndex + 1), _assets->get<Font>("futura"));
+    _levelBoardPanel->getChildTexts()[0]->getLabel()->setVisible(false);
+    _levelBoardPanel->getChildTexts()[0]->getLabel()->setScale(0.9f);
+    addChild(_levelBoardPanel->getSceneNode());
     // Initialize input manager
     _inputManager->init(_player, _rootScene, getBounds());
     _rootScene->setScale(Vec2(0.6f, 0.6f));
@@ -1304,10 +1272,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
 void GameplayMode::checkDoors() {
+//CULog("player pos %f",_player->getSceneNode()->getWorldPosition().y);
     for (shared_ptr<Door> door : _doors) {
         bool doorState = door->getIsOpen();
 #ifdef CU_MOBILE
-        if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+        if ((door->getLevel() == _player->getLevel() || _player->getCurrentDen() + _player->getCurrentDoor() >= 1) &&
+            abs(_player->getSceneNode()->getWorldPosition().x - screenToWorldCoords(_inputManager->getTapPos()).x + 25) < 350.0f * _inputManager->getRootSceneNode()->getScaleX() &&
+            abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
             abs(screenToWorldCoords(_inputManager->getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
             _inputManager->clearDoubleTapReg();
         }
@@ -1352,6 +1323,7 @@ void GameplayMode::checkDoors() {
                     v2.begin(), v2.end(),
                     std::back_inserter(key_intersection));
                 if (!key_intersection.empty()|| v2.size() ==0 || door->getUnlocked()) {
+                    door->getDoorLock()->setVisible(false);
                     door->setUnlocked(true);
                     door->setDoor(!doorState);
                     if (_showTutorialText == 1) {
@@ -1430,6 +1402,7 @@ void GameplayMode::checkStaircaseDoors() {
             
 #ifdef CU_MOBILE
             if ((staircaseDoor->getLevel() == _player->getLevel() || _player->getCurrentDen() + _player->getCurrentDoor() >= 1) &&
+            abs(_player->getSceneNode()->getWorldPosition().x - screenToWorldCoords(_inputManager->getTapPos()).x + 25) < 350.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 _inputManager->clearDoubleTapReg();
@@ -1619,10 +1592,10 @@ void GameplayMode::checkCatDens() {
                 //AudioEngine::get()->play("unpossess", _assets->get<Sound>("jumpOff"));
                 _player->setLevel(catDen->getLevel());
                 _player->getSceneNode()->setVisible(true);
-                int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
+                /*int cageCollision = collisions::checkForCagedAnimalCollision(_player, _cagedAnimal);
                 if (cageCollision != 0) {
                     return;
-                }
+                }*/
                 _player->setCurrentDen(0);
                 _player->setPos(catDen->getPos().x);
                 //_player->getSceneNode()->setPosition(catDen->getPos());

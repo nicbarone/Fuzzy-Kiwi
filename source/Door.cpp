@@ -6,48 +6,58 @@ Door::Door() :
 	_frame(0),
 	_frameCounter(8)
 {
-	_keys = { }; 
-	_blockedEnemy = nullptr;
+	_keys = {}; 
+	_blockedEnemy = {};
 	_isOpen = false;
 	_unlocked = false;
+	_doorLock = nullptr;
 
 }
 
 void Door::dispose() {
 	ConstructionElement::dispose();
-	_blockedEnemy = nullptr;
+	_blockedEnemy = {};
 	_isOpen = false;
 	_unlocked = false;
-	_keys = { 0 };
+	_keys = {  };
+	_doorLock = nullptr;
 }
 
 bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vector<int> keys, int rows, int columns, std::shared_ptr<Texture> unlockedDoor, 
 	std::shared_ptr<Texture> greenLockedDoor, std::shared_ptr<Texture> pinkLockedDoor, std::shared_ptr<Texture> redLockedDoor, std::shared_ptr<Texture> blueLockedDoor)
 {
-
-	if(keys.size()==0){
-		setSceneNode(scene2::AnimationNode::alloc(unlockedDoor, rows, columns));
+	setSceneNode(scene2::AnimationNode::alloc(unlockedDoor, rows, columns));
+	if(keys.size()==0|| keys[0] == 5){
+		_doorLock = scene2::PolygonNode::allocWithTexture(redLockedDoor);
+		_doorLock->setScale(0.0025, 0.0025);
 	}
 	else if (keys[0] == 1) {
-		setSceneNode(scene2::AnimationNode::alloc(redLockedDoor, rows, columns));
-
+		_doorLock = scene2::PolygonNode::allocWithTexture(redLockedDoor);
+		_doorLock->setScale(0.25, 0.25);
 	}
 	else if (keys[0] == 2)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(blueLockedDoor, rows, columns));
+		_doorLock = scene2::PolygonNode::allocWithTexture(blueLockedDoor);
+		_doorLock->setScale(0.25, 0.25);
 
 	}
 	else if (keys[0] == 3)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(pinkLockedDoor, rows, columns));
+		_doorLock = scene2::PolygonNode::allocWithTexture(pinkLockedDoor);
+		_doorLock->setScale(0.25, 0.25);
 
 	}
 	else if (keys[0] == 4)
 	{
-		setSceneNode(scene2::AnimationNode::alloc(greenLockedDoor, rows, columns));
+		_doorLock = scene2::PolygonNode::allocWithTexture(greenLockedDoor);
+		_doorLock->setScale(0.25, 0.25);
 
 	}
+	_doorLock->setPosition(240, 205);
 	
+	_doorLock->setPriority(level + 0.6f);
+	getSceneNode()->addChild(_doorLock);
+
 	setPos(Vec2(x, level * FLOOR_HEIGHT + FLOOR_OFFSET + DOOR_OFFSET));
 	setAngle(ang);
 	setScale(scale);
@@ -55,7 +65,7 @@ bool Door::init(int x, float ang, Vec2 scale, int level, Color4 color, std::vect
 	setColor(color);
 	_keys = keys;
 	_frame = 0;
-	_blockedEnemy = nullptr;
+	_blockedEnemy = {};
 	_isOpen = false;
 	getSceneNode()->setPriority(level + 0.1f);
 	
@@ -122,16 +132,19 @@ void Door::setDoor(bool open) {
 		cugl::Application::get()->schedule(frame0, 50 + timeDiff * 7);
 	}
 	//std::dynamic_pointer_cast<scene2::AnimationNode>(getSceneNode())->setFrame(_frame);
-	if (_blockedEnemy != nullptr) {
-		CULog("door's old patrol: %d", _blockedEnemy->getOldPatrol().y);
-		Vec2 temp = Vec2(_blockedEnemy->getPatrol().x, _blockedEnemy->getPatrol().y);
-		if (_blockedEnemy->isActive() ) {
-			_blockedEnemy->setPatrol(_blockedEnemy->getOldPatrol().x, _blockedEnemy->getOldPatrol().y);
-			_blockedEnemy->setOldPatrol(temp);
+	if (_blockedEnemy.size() != 0) {
+		for (shared_ptr<Enemy> blockedEnemy : _blockedEnemy)
+		{
+			Vec2 temp = Vec2(blockedEnemy->getPatrol().x, blockedEnemy->getPatrol().y);
+			if (blockedEnemy->isActive()) {
+				blockedEnemy->setPatrol(blockedEnemy->getOldPatrol().x, blockedEnemy->getOldPatrol().y);
+				blockedEnemy->setOldPatrol(temp);
+			}
+			_blockedEnemy = {};
+			//CULog("%d", _blockedEnemy == nullptr);
 		}
-		_blockedEnemy = nullptr;
-		setBlockedEnemy(nullptr);
-		CULog("%d", _blockedEnemy == nullptr);
+		_blockedEnemy = {};
+		
 
 	}
 	

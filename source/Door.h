@@ -9,13 +9,14 @@ using namespace cugl;
 
 class Door : public ConstructionElement {
 private:
-	std::shared_ptr<Enemy> _blockedEnemy;
+	vector < std::shared_ptr<Enemy>> _blockedEnemy;
 	int _frame;
 	int _frameCounter;
 	bool _isOpen;
 	bool _unlocked;
 	/*list of keys that the door.*/
 	std::vector<int> _keys;
+	std::shared_ptr<scene2::PolygonNode> _doorLock;
 public:
 
 	Door();
@@ -36,10 +37,10 @@ public:
 			greenLockedDoor, pinkLockedDoor, redLockedDoor, blueLockedDoor) ? result : nullptr);
 	}
 	
-	void setBlockedEnemy(shared_ptr<Enemy> blockedEnemy) {
-		_blockedEnemy = blockedEnemy;
+	void addBlockedEnemy(std::shared_ptr<Enemy> blockedEnemy) {
+		_blockedEnemy.push_back(blockedEnemy);
 	}
-	shared_ptr<Enemy> getBlockedEnemy() {
+	vector < std::shared_ptr<Enemy>> getBlockedEnemy() {
 		return _blockedEnemy;
 	}
 
@@ -72,6 +73,10 @@ public:
 	}
 	void setUnlocked(bool unlocked) {
 		_unlocked = unlocked;
+	}
+
+	std::shared_ptr<scene2::PolygonNode> getDoorLock() {
+		return _doorLock;
 	}
 
 

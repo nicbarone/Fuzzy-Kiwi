@@ -119,6 +119,34 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"RedDoorLock": {
+			"file": "textures/GameObject/Door/lock_red.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"BlueDoorLock": {
+			"file": "textures/GameObject/Door/lock_blue.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"GreenDoorLock": {
+			"file": "textures/GameObject/Door/lock_green.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"YellowDoorLock": {
+			"file": "textures/GameObject/Door/lock_yellow.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"cagedAnimal": {
 			"file": "textures/GameObject/CagedAnimal/CagedAnimal.png",
 			"minfilter": "nearest",
@@ -428,6 +456,62 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"level13": {
+			"file": "textures/UI/Button/Level13.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level14": {
+			"file": "textures/UI/Button/Level14.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level15": {
+			"file": "textures/UI/Button/Level15.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level16": {
+			"file": "textures/UI/Button/Level16.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level17": {
+			"file": "textures/UI/Button/Level17.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level18": {
+			"file": "textures/UI/Button/Level18.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level19": {
+			"file": "textures/UI/Button/Level19.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level20": {
+			"file": "textures/UI/Button/Level20.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"level1Complete": {
 			"file": "textures/UI/Button/Level1-Complete.png",
 			"minfilter": "nearest",
@@ -507,6 +591,62 @@
 		},
 		"level12Complete": {
 			"file": "textures/UI/Button/Level12-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level13Complete": {
+			"file": "textures/UI/Button/Level13-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level14Complete": {
+			"file": "textures/UI/Button/Level14-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level15Complete": {
+			"file": "textures/UI/Button/Level15-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level16Complete": {
+			"file": "textures/UI/Button/Level16-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level17Complete": {
+			"file": "textures/UI/Button/Level17-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level18Complete": {
+			"file": "textures/UI/Button/Level18-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level19Complete": {
+			"file": "textures/UI/Button/Level19-Complete.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level20Complete": {
+			"file": "textures/UI/Button/Level20-Complete.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -723,8 +863,8 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"PinkKey": {
-			"file": "textures/GameObject/Enemy/PinkKey.png",
+		"YellowKey": {
+			"file": "textures/GameObject/Enemy/YellowKey.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -746,6 +886,160 @@
 		},
 		"loadGame": {
 			"file": "textures/UI/Button/LoadGame.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level1Board": {
+			"file": "textures/UI/Icon/Level1Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level2Board": {
+			"file": "textures/UI/Icon/Level2Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level3Board": {
+			"file": "textures/UI/Icon/Level3Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level4Board": {
+			"file": "textures/UI/Icon/Level4Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level5Board": {
+			"file": "textures/UI/Icon/Level5Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level6Board": {
+			"file": "textures/UI/Icon/Level6Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level7Board": {
+			"file": "textures/UI/Icon/Level7Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level8Board": {
+			"file": "textures/UI/Icon/Level8Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level9Board": {
+			"file": "textures/UI/Icon/Level9Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level10Board": {
+			"file": "textures/UI/Icon/Level10Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level11Board": {
+			"file": "textures/UI/Icon/Level11Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level12Board": {
+			"file": "textures/UI/Icon/Level12Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level13Board": {
+			"file": "textures/UI/Icon/Level13Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level14Board": {
+			"file": "textures/UI/Icon/Level14Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level15Board": {
+			"file": "textures/UI/Icon/Level15Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level16Board": {
+			"file": "textures/UI/Icon/Level16Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level17Board": {
+			"file": "textures/UI/Icon/Level17Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level18Board": {
+			"file": "textures/UI/Icon/Level18Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level19Board": {
+			"file": "textures/UI/Icon/Level19Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"level20Board": {
+			"file": "textures/UI/Icon/Level20Board.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"arrowNextPage": {
+			"file": "textures/UI/Button/ArrowRight.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"arrowPrevPage": {
+			"file": "textures/UI/Button/ArrowLeft.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",

@@ -115,6 +115,7 @@ protected:
     std::shared_ptr<ui::PanelElement> _menuPanel;
     /** The panel to keep track of possess numbers */
     std::shared_ptr<ui::PanelElement> _possessPanel;
+    std::shared_ptr<ui::PanelElement> _levelBoardPanel;
     std::shared_ptr<ui::PanelElement> _joystickPanel;
     /** The button to open menu */
     std::shared_ptr<ui::ButtonElement> _menuButton;
@@ -280,6 +281,10 @@ public:
 
     /** returns a vector of Vec2s representing the <x_pos, level> of closed doors in the level*/
     vector<Vec2> closedDoors();
+
+    int getCurrentLevel() {
+        return _levelIndex;
+    }
 
     bool getBackToMenu() {
         return _backToMenu;

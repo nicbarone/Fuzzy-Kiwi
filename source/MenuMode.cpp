@@ -80,74 +80,16 @@ void MenuMode::update(float progress) {
 }
 
 GameplayMode MenuMode::getGameScene(std::string id, std::shared_ptr<InputManager> inputManager, bool muted) {
-    if (id == "0") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level1.json");
-        _gameplay.init(_assets, 0, reader->readJson(), inputManager, muted);
-        _gameplay.setShowTutorial(1);
-        return _gameplay;
+    for (int i = 0; i < MAX_LEVEL_PAGE * 10; i++) {
+        if (id == to_string(i)) {
+            shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level" + to_string(i + 1) + ".json");
+            _gameplay.init(_assets, i, reader->readJson(), inputManager, muted);
+            if (i <= 4) {
+                _gameplay.setShowTutorial(i+1);
+            }
+            return _gameplay;
+        }
     }
-    else if (id == "1") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level2.json");
-        _gameplay.init(_assets, 1, reader->readJson(), inputManager, muted);
-        _gameplay.setShowTutorial(2);
-        return _gameplay;
-    }
-    else if (id == "2") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level3.json");
-        _gameplay.init(_assets, 2, reader->readJson(), inputManager, muted);
-        _gameplay.setShowTutorial(3);
-        return _gameplay;
-    }
-    else if (id == "3") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level4.json");
-        _gameplay.init(_assets, 3, reader->readJson(), inputManager, muted);
-        _gameplay.setShowTutorial(4);
-        return _gameplay;
-    }
-    else if (id == "4") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level5.json");
-        _gameplay.init(_assets, 4, reader->readJson(), inputManager, muted);
-        return _gameplay;
-    }
-    else if (id == "5") {  
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level6.json");
-        _gameplay.init(_assets, 5, reader->readJson(), inputManager, muted);
-        return _gameplay;
-    }
-    else if (id == "6") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level7.json");
-        _gameplay.init(_assets, 6, reader->readJson(), inputManager, muted);
-        return _gameplay;
-    }
-    else if (id == "7") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level8.json");
-        _gameplay.init(_assets, 7, reader->readJson(), inputManager, muted);
-        return _gameplay;
-    }
-    else if (id == "8") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level9.json");
-        _gameplay.init(_assets, 8, reader->readJson(), inputManager, muted);
-        return _gameplay;
-    }
-    else if (id == "9") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level10.json");
-        _gameplay.init(_assets, 9, reader->readJson(), inputManager, muted);
-        return _gameplay;
-    }
-    else if (id == "10") {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level11.json");
-        _gameplay.init(_assets, 10, reader->readJson(), inputManager, muted);
-        return _gameplay;
-    }
-    else {
-        shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("levels\\level12.json");
-        _gameplay.init(_assets, 11, reader->readJson(), inputManager, muted);
-        return _gameplay;
-    }
-    /*else {
-        throw;
-        return _gameplay;
-    }*/
     return _gameplay;
 }
 

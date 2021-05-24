@@ -126,6 +126,7 @@ void App::update(float timestep) {
     if (!_loaded && counter > 0) {
         _menu.init(_assets);
         _levelSelect.init(_assets);
+        _levelSelect.deactivateButtons();
         _loading.update(0.01f);
         counter = 0;
         if (USE_LEVEL_EDITOR) {
@@ -176,7 +177,7 @@ void App::update(float timestep) {
             _levelSelect.updateAudio();
             _menu.setPlayPressed(false);
             _menu.deactivateButtons();
-            _levelSelect.init(_assets);
+            _levelSelect.activateButtons();
             CULog("si");
             _inMenu = false;
             _inLevelSelect = true;
@@ -206,15 +207,19 @@ void App::update(float timestep) {
             _levelSelect.setBackPressed(false);
             _inGameplay = false;
             _inLevelSelect = true;
+            _levelSelect.setPageChange(_gameplay.getCurrentLevel() / 10 - _levelSelect.getCurrentLevelSelectPage());
+            _levelSelect.activateButtons();
             _levelSelect.updateLevelIcon();
         }
         else if (_gameplay.getNextLevel()) {
             _gameplay.setNextlevel(false);
             std::string level = _gameplay.getNextLevelID();
             if (level == "Location Cleared") {
+                _levelSelect.setPageChange(_gameplay.getCurrentLevel() / 10 - _levelSelect.getCurrentLevelSelectPage());
                 _levelSelect.activateButtons();
                 _levelSelect.setBackPressed(false);
                 _levelSelect.setLevelSelected(false);
+                _levelSelect.activateButtons();
                 _levelSelect.updateLevelIcon();
                 _inLevelSelect = true;
                 _inGameplay = false;

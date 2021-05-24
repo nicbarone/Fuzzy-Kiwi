@@ -82,7 +82,12 @@ bool ui::PanelElement::init(float x, float y, float ang, std::shared_ptr<Texture
 	Entity::setPos(x);
 	Entity::setAngle(ang);
 	_texture = panelTexture;
-	_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 1);
+	if (_texture == nullptr) {
+		_sceneNode = scene2::SceneNode::alloc();
+	}
+	else {
+		_sceneNode = scene2::AnimationNode::alloc(_texture, 1, 1);
+	}
 	//_sceneNode->setScale(0.15, 0.15);
 	_sceneNode->setAnchor(Vec2::ANCHOR_CENTER);
 	_sceneNode->setPosition(x,y);
