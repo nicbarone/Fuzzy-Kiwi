@@ -5,22 +5,22 @@
 		"num_possessions":	3
 	},
 	"enemy":	[{
-			"x_pos":	650.852051,
+			"x_pos":	475.852051,
 			"level":	0,
 			"patrol_start":	200,
-			"patrol_end":	1300,
+			"patrol_end":	200,
 			"keyInt":	[]
 		}, {
-			"x_pos":	650.852051,
+			"x_pos":	550.852051,
 			"level":	0,
-			"patrol_start":	200,
-			"patrol_end":	1300,
+			"patrol_start":	600,
+			"patrol_end":	600,
 			"keyInt":	[]
 		}, {
 			"x_pos":	850.002441,
 			"level":	0,
-			"patrol_start":	532,
-			"patrol_end":	532,
+			"patrol_start":	0,
+			"patrol_end":	1300,
 			"keyInt":	[1]
 		}, {
 			"x_pos":	950.002441,
