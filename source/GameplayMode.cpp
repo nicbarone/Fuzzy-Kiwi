@@ -836,7 +836,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> door = _assets->get<Texture>("door");
     std::shared_ptr<Texture> BlueLockedDoor = _assets->get<Texture>("BlueDoorLock");
     std::shared_ptr<Texture> RedLockedDoor = _assets->get<Texture>("RedDoorLock");
-    std::shared_ptr<Texture> PinkLockedDoor = _assets->get<Texture>("PinkDoorLock");
+    std::shared_ptr<Texture> YellowLockedDoor = _assets->get<Texture>("YellowDoorLock");
     std::shared_ptr<Texture> GreenLockedDoor = _assets->get<Texture>("GreenDoorLock");
 
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
@@ -851,7 +851,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> visionTexture = _assets->get<Texture>("vision-cone");
     std::shared_ptr<Texture> RedKey = _assets->get<Texture>("RedKey");
     std::shared_ptr<Texture> GreenKey = _assets->get<Texture>("GreenKey");
-    std::shared_ptr<Texture> PinkKey = _assets->get<Texture>("PinkKey");
+    std::shared_ptr<Texture> YellowKey = _assets->get<Texture>("YellowKey");
     std::shared_ptr<Texture> BlueKey = _assets->get<Texture>("BlueKey");
 
 
@@ -881,7 +881,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
             }
             _enemyController->addEnemy(objectTemp->getFloat("x_pos"), objectTemp->getInt("level"), 0,
                 key, objectTemp->getFloat("patrol_start"), objectTemp->getFloat("patrol_end"), 5, 
-                enemyTexture, altTexture, enemyHighlightTexture, tableTexture, visionTexture, RedKey, BlueKey, PinkKey, GreenKey);
+                enemyTexture, altTexture, enemyHighlightTexture, tableTexture, visionTexture, RedKey, BlueKey, YellowKey, GreenKey);
             if (objectTemp->getBool("possessed")) {
                 _player->setPos(objectTemp->getFloat("x_pos"));
                 _player->setLevel(objectTemp->getInt("level"));
@@ -920,7 +920,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                 }
             }
             _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE,  key , 1, 8, door, GreenLockedDoor,PinkLockedDoor, PinkLockedDoor, BlueLockedDoor));
+                cugl::Color4::WHITE,  key , 1, 8, door, GreenLockedDoor, YellowLockedDoor, RedLockedDoor, BlueLockedDoor));
             _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos") - 77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
         }
     }
@@ -1272,10 +1272,13 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
 
 
 void GameplayMode::checkDoors() {
+//CULog("player pos %f",_player->getSceneNode()->getWorldPosition().y);
     for (shared_ptr<Door> door : _doors) {
         bool doorState = door->getIsOpen();
 #ifdef CU_MOBILE
-        if (abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
+        if ((door->getLevel() == _player->getLevel() || _player->getCurrentDen() + _player->getCurrentDoor() >= 1) &&
+            abs(_player->getSceneNode()->getWorldPosition().x - screenToWorldCoords(_inputManager->getTapPos()).x + 25) < 350.0f * _inputManager->getRootSceneNode()->getScaleX() &&
+            abs(screenToWorldCoords(_inputManager->getTapPos()).y - door->getSceneNode()->getWorldPosition().y + 25) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
             abs(screenToWorldCoords(_inputManager->getTapPos()).x - door->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
             _inputManager->clearDoubleTapReg();
         }
@@ -1399,6 +1402,7 @@ void GameplayMode::checkStaircaseDoors() {
             
 #ifdef CU_MOBILE
             if ((staircaseDoor->getLevel() == _player->getLevel() || _player->getCurrentDen() + _player->getCurrentDoor() >= 1) &&
+            abs(_player->getSceneNode()->getWorldPosition().x - screenToWorldCoords(_inputManager->getTapPos()).x + 25) < 350.0f * _inputManager->getRootSceneNode()->getScaleX() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).y - staircaseDoor->getSceneNode()->getWorldPosition().y - 20) < 270.0f * _inputManager->getRootSceneNode()->getScaleY() &&
                 abs(screenToWorldCoords(_inputManager->getTapPos()).x - staircaseDoor->getSceneNode()->getWorldPosition().x) < 95.0f * _inputManager->getRootSceneNode()->getScaleX()) {
                 _inputManager->clearDoubleTapReg();

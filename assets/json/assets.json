@@ -119,29 +119,29 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"RedDoorlock": {
-			"file": "textures/GameObject/Door/RedDoorlock.png",
+		"RedDoorLock": {
+			"file": "textures/GameObject/Door/lock_red.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
 		"BlueDoorLock": {
-			"file": "textures/GameObject/Door/BlueDoorLock.png",
+			"file": "textures/GameObject/Door/lock_blue.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"GreenDoorlock": {
-			"file": "textures/GameObject/Door/GreenDoorlock.png",
+		"GreenDoorLock": {
+			"file": "textures/GameObject/Door/lock_green.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"PinkDoorLock": {
-			"file": "textures/GameObject/Door/PinkDoorlock.png",
+		"YellowDoorLock": {
+			"file": "textures/GameObject/Door/lock_yellow.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
@@ -863,8 +863,8 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
-		"PinkKey": {
-			"file": "textures/GameObject/Enemy/PinkKey.png",
+		"YellowKey": {
+			"file": "textures/GameObject/Enemy/YellowKey.png",
 			"minfilter": "nearest",
 			"magfilter": "linear",
 			"wrapS": "clamp",
