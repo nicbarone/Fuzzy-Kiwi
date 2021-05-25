@@ -119,6 +119,34 @@
 			"wrapS": "clamp",
 			"wrapT": "clamp"
 		},
+		"labcoat1": {
+			"file": "textures/GameObject/Door/LabCoats1.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"labcoat2": {
+			"file": "textures/GameObject/Door/LabCoats2.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"labcoat3": {
+			"file": "textures/GameObject/Door/LabCoats3.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
+		"shower": {
+			"file": "textures/GameObject/Door/Shower.png",
+			"minfilter": "nearest",
+			"magfilter": "linear",
+			"wrapS": "clamp",
+			"wrapT": "clamp"
+		},
 		"RedDoorLock": {
 			"file": "textures/GameObject/Door/lock_red.png",
 			"minfilter": "nearest",
