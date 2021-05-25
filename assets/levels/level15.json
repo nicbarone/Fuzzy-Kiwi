@@ -11,10 +11,10 @@
 			"patrol_end":	200,
 			"keyInt":	[]
 		}, {
-			"x_pos":	550.852051,
+			"x_pos":	620.852051,
 			"level":	0,
-			"patrol_start":	600,
-			"patrol_end":	600,
+			"patrol_start":	650,
+			"patrol_end":	650,
 			"keyInt":	[]
 		}, {
 			"x_pos":	850.002441,
@@ -140,7 +140,8 @@
 		}, {
 			"x_pos":	750.852051,
 			"level":	0.205128,
-			"keyInt":	[]
+			"keyInt":	[],
+			"isOpen": true
 		}, {
 			"x_pos":	-50.633179,
 			"level":	1.205128,
