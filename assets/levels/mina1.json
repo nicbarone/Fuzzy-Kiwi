@@ -11,10 +11,10 @@
 			"patrol_end":	450,
 			"keyInt":	[]
 		}, {
-			"x_pos":	250,
+			"x_pos":	0.442505,
 			"level":	1,
-			"patrol_start":	0,
-			"patrol_end":	0,
+			"patrol_start":	325,
+			"patrol_end":	325,
 			"keyInt":	[]
 		}, {
 			"x_pos":	1000.095947,
@@ -36,8 +36,8 @@
 			"keyInt":	[]
 		}],
 	"decorations":	[{
-			"x_pos":	1200.098877,
-			"level":	2,
+			"x_pos":	1400.098877,
+			"level":	1,
 			"objective":	0,
 			"texture":	"caged-animal"
 		}],
@@ -47,17 +47,17 @@
 			"connection":	1,
 			"isDen":	true
 		}, {
-			"x_pos":	-150.271240,
-			"level":	1,
-			"connection":	2,
-			"isDen":	false
-		}, {
-			"x_pos":	1000.271240,
+			"x_pos":	1121.271240,
 			"level":	0,
 			"connection":	1,
 			"isDen":	false
 		}, {
-			"x_pos":	550.175232,
+			"x_pos":	1330.271240,
+			"level":	0,
+			"connection":	2,
+			"isDen":	false
+		}, {
+			"x_pos":	150.175232,
 			"level":	1,
 			"connection":	1,
 			"isDen":	false
@@ -77,8 +77,8 @@
 			"connection":	2,
 			"isDen":	false
 		}, {
-			"x_pos":	400.504822,
-			"level":	1,
+			"x_pos":	-200.504822,
+			"level":	2,
 			"connection":	1,
 			"isDen":	true
 		}],

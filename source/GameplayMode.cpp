@@ -813,6 +813,7 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     _hasControl = true;
     _doors.clear();
     _doorFrames.clear();
+    _decorations.clear();
     _staircaseDoors.clear();
     _catDens.clear();
 
@@ -840,6 +841,10 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     std::shared_ptr<Texture> GreenLockedDoor = _assets->get<Texture>("GreenDoorLock");
 
     std::shared_ptr<Texture> doorFrame = _assets->get<Texture>("doorFrame");
+    std::shared_ptr<Texture> coats1 = _assets->get<Texture>("labcoat1");
+    std::shared_ptr<Texture> coats2 = _assets->get<Texture>("labcoat2");
+    std::shared_ptr<Texture> coats3 = _assets->get<Texture>("labcoat3");
+    std::shared_ptr<Texture> shower = _assets->get<Texture>("shower");
     //caged animal
     std::shared_ptr<Texture> cagedAnimal = _assets->get<Texture>("cagedAnimal");
     // Enemy creation
@@ -919,9 +924,46 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                     key.push_back(stoi(keyArray->get(j)->toString()));
                 }
             }
-            _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE,  key , 1, 8, door, GreenLockedDoor, YellowLockedDoor, RedLockedDoor, BlueLockedDoor));
+            shared_ptr<Door> temp = Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
+                cugl::Color4::WHITE, key, 1, 8, door, GreenLockedDoor, YellowLockedDoor, RedLockedDoor, BlueLockedDoor);
+            if (objectTemp->getBool("isOpen")) {
+                temp->getDoorLock()->setVisible(false);
+                temp->setUnlocked(true);
+                temp->setDoor(true);
+            }
+            _doors.push_back(temp);
             _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos") - 77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
+            int random = rand() % 100;
+            if (temp->getKeys().size() > 0) {
+                random = 99;
+            }
+            shared_ptr<scene2::PolygonNode> deco;
+            if (random < 10) {
+                deco = scene2::PolygonNode::allocWithTexture(shower);
+                deco->setScale(Vec2(0.25, 0.25));
+                deco->setPosition(temp->getPos().x + 150, temp->getSceneNode()->getPositionY());
+                _decorations.push_back(deco);
+            }
+            else if (random < 25) {
+                deco = scene2::PolygonNode::allocWithTexture(coats1);
+                deco->setScale(Vec2(0.25, 0.25));
+                deco->setPosition(temp->getPos().x + 150, temp->getSceneNode()->getPositionY());
+                _decorations.push_back(deco);
+            }
+            else if (random < 40) {
+                deco = scene2::PolygonNode::allocWithTexture(coats2);
+                deco->setScale(Vec2(0.25, 0.25));
+                deco->setPosition(temp->getPos().x + 150, temp->getSceneNode()->getPositionY());
+                _decorations.push_back(deco);
+            }
+            else if (random < 55) {
+                deco = scene2::PolygonNode::allocWithTexture(coats3);
+                deco->setScale(Vec2(0.25, 0.25));
+                deco->setPosition(temp->getPos().x + 150, temp->getSceneNode()->getPositionY());
+                _decorations.push_back(deco);
+            }
+
+            
         }
     }
     if (decorationsJSON != nullptr) {
@@ -978,6 +1020,9 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
     }
     for (auto it = begin(_doors); it != end(_doors); ++it) {
         _rootScene->addChild(it->get()->getSceneNode());
+    }
+    for (auto it = begin(_decorations); it != end(_decorations); ++it) {
+        _rootScene->addChild(*it);
     }
     for (auto it = begin(enemies); it != end(enemies); ++it) {
         if (it->get()->getStartTableNode() != nullptr) {
@@ -1747,6 +1792,7 @@ void GameplayMode::toSaveJson() {
                 tempArray->appendChild(JsonValue::alloc((long)*it2));
             }
             tempObject->appendChild("keyInt", tempArray);
+            tempObject->appendChild("isOpen", JsonValue::alloc(it->get()->getIsOpen()));
             doorArray->appendChild(tempObject);
         }
         //TODO IF WE EVER GET MORE THAN 1 DECORATIONS

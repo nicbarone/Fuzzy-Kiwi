@@ -106,6 +106,7 @@ protected:
     /** A reference to the list of all doors in the level*/
     std::vector<shared_ptr<Door>> _doors;
     std::vector<shared_ptr<DoorFrame>> _doorFrames;
+    std::vector<shared_ptr<scene2::PolygonNode>> _decorations;
     std::shared_ptr<InputManager> _inputManager;
     /** The panel to win level*/
     std::shared_ptr<ui::PanelElement> _winPanel;

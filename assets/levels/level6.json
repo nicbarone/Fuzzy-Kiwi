@@ -1,143 +1,43 @@
 {
 	"player":	{
-		"x_pos":	369.143127,
-		"level":	1,
-		"num_possessions":	3
+		"x_pos":	81,
+		"level":	0,
+		"num_possessions":	1
 	},
-	"enemy":	[{
-			"x_pos":	-100,
-			"level":	0,
-			"patrol_start":	-200,
-			"patrol_end":	0,
-			"keyInt":	[]
-		}, {
-			"x_pos":	600.254272,
-			"level":	0,
-			"patrol_start":	400,
-			"patrol_end":	800,
-			"keyInt":	[]
-		}, {
-			"x_pos":	800.254272,
-			"level":	0,
-			"patrol_start":	700,
-			"patrol_end":	700,
-			"keyInt":	[]
-		}, {
-			"x_pos":	1000.780640,
-			"level":	1,
-			"patrol_start":	1300,
-			"patrol_end":	1300,
-			"keyInt":	[]
-		}, {
-			"x_pos":	-200.315430,
-			"level":	2,
-			"patrol_start":	-300,
-			"patrol_end":	-300,
-			"keyInt":	[1]
-		}, {
-			"x_pos":	645.315430,
-			"level":	2,
-			"patrol_start":	400,
-			"patrol_end":	750,
-			"keyInt":	[]
-		}, {
-			"x_pos":	855.330994,
-			"level":	2,
-			"patrol_start":	750,
-			"patrol_end":	950,
-			"keyInt":	[]
-		}],
+	"enemy":	[{"x_pos": 200, "level": 0, "patrol_start": 200, "patrol_end": 200, "keyInt": []},
+				{"x_pos": 500, "level": 0, "patrol_start": 500, "patrol_end": 800, "keyInt": []},
+				{"x_pos": 350, "level": 1, "patrol_start": 350, "patrol_end": 350, "keyInt": []}],
 	"decorations":	[{
-			"x_pos":	-100.602783,
+			"x_pos":	282,
 			"level":	1,
 			"objective":	0,
 			"texture":	"caged-animal"
 		}],
 	"staircase-door":	[{
-			"x_pos":	-100,
-			"level":	0,
-			"connection":	1,
-			"isDen":	true
-		}, {
-			"x_pos":	400,
+			"x_pos":	492,
 			"level":	0,
 			"connection":	2,
-			"isDen":	true
-		}, {
-			"x_pos":	1300.649902,
-			"level":	0,
-			"connection":	2,
-			"isDen":	true
-		}, {
-			"x_pos":	1400.230469,
-			"level":	0,
-			"connection":	1,
 			"isDen":	false
 		}, {
-			"x_pos":	350.047119,
-			"level":	1,
-			"connection":	1,
-			"isDen":	true
-		}, {
-			"x_pos":	774.559448,
+			"x_pos":	550,
 			"level":	1,
 			"connection":	2,
 			"isDen":	false
 		}, {
-			"x_pos":	1200.019531,
-			"level":	1,
+			"x_pos":	891,
+			"level":	0,
 			"connection":	1,
 			"isDen":	false
 		}, {
-			"x_pos":	100.795349,
-			"level":	2,
-			"connection":	3,
-			"isDen":	true
-		}, {
-			"x_pos":	457.795349,
-			"level":	2,
-			"connection":	3,
-			"isDen":	true
-		}, {
-			"x_pos":	972.330994,
-			"level":	2,
-			"connection":	4,
-			"isDen":	true
-		}, {
-			"x_pos":	1300.331055,
-			"level":	2,
-			"connection":	4,
-			"isDen":	true
-		}, {
-			"x_pos":	1400.924561,
-			"level":	2,
-			"connection":	2,
+			"x_pos":	896,
+			"level":	1,
+			"connection":	1,
 			"isDen":	false
 		}],
 	"door":	[{
-			"x_pos":	200,
-			"level":	0.205128,
+			"x_pos":	712,
+			"level":	1,
 			"keyInt":	[]
-		}, {
-			"x_pos":	1050.450317,
-			"level":	0.205128,
-			"keyInt":	[]
-		}, {
-			"x_pos":	154.143127,
-			"level":	1.205128,
-			"keyInt":	[1]
-		}, {
-			"x_pos":	542.759583,
-			"level":	1.205128,
-			"keyInt":	[1]
-		}, {
-			"x_pos":	255.795349,
-			"level":	2.205128,
-			"keyInt":	[1]
-		}, {
-			"x_pos":	1150.330994,
-			"level":	2.205128,
-			"keyInt":	[1]
 		}],
-	"floor":	3
+	"floor":	2
 }

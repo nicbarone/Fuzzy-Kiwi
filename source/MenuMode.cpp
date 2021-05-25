@@ -115,7 +115,7 @@ void MenuMode::buildScene() {
     });
     _menuPanel->getChildButtons()["play"]->getButton()->activate();
     _menuPanel->createChildButton(950, -700, 200, 50, ui::ButtonState::AVAILABLE, _assets->get<Texture>("loadGame"), Color4f::WHITE, "loadButton");
-    _menuPanel->getChildButtons()["loadButton"]->getButton()->setScale(Vec2(1.2f, 1.2f));
+    _menuPanel->getChildButtons()["loadButton"]->getButton()->setScale(Vec2(6.0f, 6.0f));
     _menuPanel->getChildButtons()["loadButton"]->getButton()->setName("loadButton");
     _menuPanel->getChildButtons()["loadButton"]->getButton()->addListener([=](const std::string& name, bool down) {
         // Only quit when the button is released
