@@ -9,7 +9,7 @@
 			"level":	0,
 			"patrol_start":	540,
 			"patrol_end":	540,
-			"keyInt":	[1]
+			"keyInt":	[]
 		}],
 	"decorations":	[{
 			"x_pos":	1200.698730,
@@ -21,7 +21,7 @@
 	"door":	[{
 			"x_pos":	662.081360,
 			"level":	0,
-			"keyInt":	[1]
+			"keyInt":	[]
 		}],
 	"floor":	1
 }
