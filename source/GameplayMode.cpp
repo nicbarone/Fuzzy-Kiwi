@@ -919,8 +919,14 @@ void GameplayMode::buildScene(std::shared_ptr<JsonValue> json) {
                     key.push_back(stoi(keyArray->get(j)->toString()));
                 }
             }
-            _doors.push_back(Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
-                cugl::Color4::WHITE,  key , 1, 8, door, GreenLockedDoor, YellowLockedDoor, RedLockedDoor, BlueLockedDoor));
+            shared_ptr<Door> temp = Door::alloc(objectTemp->getFloat("x_pos"), 0, Vec2(1, 1), objectTemp->getInt("level"),
+                cugl::Color4::WHITE, key, 1, 8, door, GreenLockedDoor, YellowLockedDoor, RedLockedDoor, BlueLockedDoor);
+            if (objectTemp->getBool("isOpen")) {
+                temp->getDoorLock()->setVisible(false);
+                temp->setUnlocked(true);
+                temp->setDoor(true);
+            }
+            _doors.push_back(temp);
             _doorFrames.push_back(DoorFrame::alloc(objectTemp->getFloat("x_pos") - 77, 0, Vec2(1.0, 1), objectTemp->getInt("level"), cugl::Color4::WHITE, { 1 }, 1, 8, doorFrame));
         }
     }
@@ -1747,6 +1753,7 @@ void GameplayMode::toSaveJson() {
                 tempArray->appendChild(JsonValue::alloc((long)*it2));
             }
             tempObject->appendChild("keyInt", tempArray);
+            tempObject->appendChild("isOpen", JsonValue::alloc(it->get()->getIsOpen()));
             doorArray->appendChild(tempObject);
         }
         //TODO IF WE EVER GET MORE THAN 1 DECORATIONS
