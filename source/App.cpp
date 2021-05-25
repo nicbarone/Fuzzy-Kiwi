@@ -93,6 +93,7 @@ void App::onShutdown() {
  * the background.
  */
 void App::onSuspend() {
+    _gameplay.toSaveJson();
     AudioEngine::get()->pause();
 }
 
